@@ -1,3 +1,5 @@
+import { getConfusableIds } from '../data/kana.js'
+
 export const DEFAULT_HYPERPARAMS = {
   masteryGain: 0.18,
   mistakePenalty: 0.24,
@@ -7,7 +9,13 @@ export const DEFAULT_HYPERPARAMS = {
   recentMistakeBoost: 2.4,
   problemThreshold: 0.45,
   queueSize: 4,
+  targetLatencyMs: 2500,
+  confusionBoost: 1.8,
 }
+
+const CONFUSION_RECENCY_MS = 30 * 60_000
+const RECENT_ANSWERS_LIMIT = 60
+const DAILY_HISTORY_LIMIT = 60
 
 export function createStatsRecord() {
   return {
@@ -28,12 +36,21 @@ export function createStatsRecord() {
   }
 }
 
+export function createEmptyHistory() {
+  return {
+    daily: {},
+    confusions: {},
+    recent: [],
+  }
+}
+
 export function createInitialSession(overrides = {}) {
   return {
     poolIds: [],
     recentHistory: [],
     lastCardId: null,
     mistakeQueue: [],
+    sinceQueuePick: 0,
     mode: 'adaptive',
     ...overrides,
   }
@@ -44,9 +61,12 @@ export function createNextRoundState(shownAt = Date.now()) {
     shownAt,
     mistakes: 0,
     hintUsed: false,
+    confusionLogged: false,
   }
 }
 
+// Инкрементальная проверка для режима автозачета: ошибка фиксируется,
+// как только ввод перестает быть префиксом любого правильного ответа.
 export function evaluateInput(answers, input) {
   if (!input) {
     return 'empty'
@@ -61,6 +81,15 @@ export function evaluateInput(answers, input) {
   }
 
   return 'wrong'
+}
+
+// Проверка полного ответа для режима с Enter.
+export function evaluateSubmission(answers, input) {
+  if (!input) {
+    return 'empty'
+  }
+
+  return answers.includes(input) ? 'correct' : 'wrong'
 }
 
 export function updateCardStats(existingStats, outcome, context, hyperparams) {
@@ -78,7 +107,10 @@ export function updateCardStats(existingStats, outcome, context, hyperparams) {
     stats.streak = 0
     stats.lastErrorAt = now
     stats.lastSeenAt = now
-    const drop = hyperparams.mistakePenalty * (0.45 + stats.mastery * 0.55)
+    // В режиме с Enter ошибка осознанная (полный ответ), штраф полный;
+    // в автозачете срабатывает на первой неверной букве, поэтому мягче.
+    const modeFactor = context.inputMode === 'submit' ? 1 : 0.75
+    const drop = hyperparams.mistakePenalty * modeFactor * (0.45 + stats.mastery * 0.55)
     stats.mastery = clamp(stats.mastery - drop, 0.02, 1)
     return withDerivedFields(stats)
   }
@@ -90,6 +122,11 @@ export function updateCardStats(existingStats, outcome, context, hyperparams) {
     stats.lastSeenAt = now
     const drop = hyperparams.hintPenalty * (0.45 + stats.mastery * 0.5)
     stats.mastery = clamp(stats.mastery - drop, 0.04, 1)
+
+    const latencyMs = Math.max(200, context.latencyMs || 0)
+    stats.avgLatencyMs = stats.avgLatencyMs
+      ? Math.round(stats.avgLatencyMs * 0.82 + latencyMs * 0.18)
+      : latencyMs
     return withDerivedFields(stats)
   }
 
@@ -108,8 +145,9 @@ export function updateCardStats(existingStats, outcome, context, hyperparams) {
       ? Math.round(stats.avgLatencyMs * 0.82 + latencyMs * 0.18)
       : latencyMs
 
+    const target = hyperparams.targetLatencyMs
     const clean = context.mistakesOnCard === 0 && !context.hintUsed
-    const fluencyBonus = latencyMs <= 1700 ? 1.18 : latencyMs >= 4200 ? 0.8 : 1
+    const fluencyBonus = latencyMs <= target * 0.7 ? 1.18 : latencyMs >= target * 1.7 ? 0.8 : 1
     const recoveryPenalty = clean ? 1 : 0.48
     const streakBonus = 1 + Math.min(stats.streak, hyperparams.retireStreak) * 0.045
     const gain =
@@ -141,17 +179,44 @@ export function getAdaptiveWeight(stats, hyperparams, now) {
   const recencyBoost = stats.lastSeenAt === 0 ? 0.35 : clamp((now - stats.lastSeenAt) / 43_200_000, 0, 0.9)
   const recentMistakeBoost = recentFailureHours <= 12 || recentHintHours <= 12 ? hyperparams.recentMistakeBoost : 0
   const accuracyPenalty = totalEvents === 0 ? 0.3 : (100 - stats.eventAccuracy) / 100
+  // Медленные знаки поднимаются: знание есть, но автоматизма нет.
+  const slownessBoost = stats.avgLatencyMs
+    ? clamp(stats.avgLatencyMs / hyperparams.targetLatencyMs - 1, 0, 1.5) * 0.7
+    : 0
   const streakReducer =
     stats.streak >= hyperparams.retireStreak
       ? hyperparams.masteredWeight
       : 1 - Math.min(stats.streak, hyperparams.retireStreak - 1) * 0.06
 
   return clamp(
-    (0.15 + masteryGap ** 1.6 * 2.5 + accuracyPenalty * 1.4 + unseenBoost + recencyBoost + recentMistakeBoost) *
+    (0.15 +
+      masteryGap ** 1.6 * 2.5 +
+      accuracyPenalty * 1.4 +
+      unseenBoost +
+      recencyBoost +
+      recentMistakeBoost +
+      slownessBoost) *
       streakReducer,
     0.05,
     9,
   )
+}
+
+// Множитель для знаков, чьи «двойники» недавно вызывали ошибки:
+// после промаха на シ стоит показать и ツ, чтобы закрепить контраст.
+export function getConfusionMultiplier(cardId, statsMap, hyperparams, now) {
+  for (const confusableId of getConfusableIds(cardId)) {
+    const stats = statsMap[confusableId]
+    if (!stats) {
+      continue
+    }
+    const recentError = stats.lastErrorAt && now - stats.lastErrorAt < CONFUSION_RECENCY_MS
+    const recentHint = stats.lastHintAt && now - stats.lastHintAt < CONFUSION_RECENCY_MS
+    if (recentError || recentHint) {
+      return hyperparams.confusionBoost
+    }
+  }
+  return 1
 }
 
 export function getCardProblemScore(stats, hyperparams, now) {
@@ -160,12 +225,19 @@ export function getCardProblemScore(stats, hyperparams, now) {
   const accuracyGap = totalEvents === 0 ? 0.55 : (100 - stats.eventAccuracy) / 100
   const freshness = stats.lastSeenAt === 0 ? 0.7 : clamp((now - stats.lastSeenAt) / 86_400_000, 0, 0.65)
   const recentMiss = stats.lastErrorAt && now - stats.lastErrorAt < 43_200_000 ? 0.35 : 0
+  const slowness = stats.avgLatencyMs
+    ? clamp(stats.avgLatencyMs / hyperparams.targetLatencyMs - 1, 0, 1) * 0.2
+    : 0
   const streakDiscount = stats.streak >= hyperparams.retireStreak ? -0.22 : 0
 
-  return clamp(masteryGap * 0.45 + accuracyGap * 0.3 + freshness * 0.15 + recentMiss + streakDiscount, 0, 1.5)
+  return clamp(
+    masteryGap * 0.45 + accuracyGap * 0.3 + freshness * 0.15 + recentMiss + slowness + streakDiscount,
+    0,
+    1.5,
+  )
 }
 
-export function pickNextCardId(pool, statsMap, session, mode, hyperparams) {
+export function pickNextCardId(pool, statsMap, session, mode, hyperparams, rng = Math.random) {
   if (!pool.length) {
     return null
   }
@@ -177,6 +249,17 @@ export function pickNextCardId(pool, statsMap, session, mode, hyperparams) {
     candidates = pool
   }
 
+  // Очередь ошибок работает во всех режимах: карточка возвращается
+  // через пару шагов после промаха, пока не будет отвечена чисто.
+  if (session.mistakeQueue.length && session.sinceQueuePick >= 2) {
+    const queuedCard = session.mistakeQueue
+      .map((id) => candidates.find((card) => card.id === id))
+      .find(Boolean)
+    if (queuedCard && rng() < 0.5) {
+      return queuedCard.id
+    }
+  }
+
   if (mode === 'problem') {
     const problemCards = candidates.filter(
       (card) => getCardProblemScore(statsMap[card.id], hyperparams, now) >= hyperparams.problemThreshold,
@@ -186,42 +269,37 @@ export function pickNextCardId(pool, statsMap, session, mode, hyperparams) {
     }
   }
 
-  if (mode === 'mistakes') {
-    const queued = session.mistakeQueue
-      .map((id) => candidates.find((card) => card.id === id))
-      .filter(Boolean)
-    if (queued.length) {
-      return queued[0].id
-    }
-  }
-
   if (mode === 'even') {
-    return chooseRandomCard(candidates).id
+    return chooseRandomCard(candidates, rng).id
   }
 
   return chooseWeightedCard(
-    candidates.map((card) => ({
-      card,
-      weight:
+    candidates.map((card) => {
+      const base =
         mode === 'problem'
           ? getCardProblemScore(statsMap[card.id], hyperparams, now) + 0.2
-          : getAdaptiveWeight(statsMap[card.id], hyperparams, now),
-    })),
+          : getAdaptiveWeight(statsMap[card.id], hyperparams, now)
+      return {
+        card,
+        weight: base * getConfusionMultiplier(card.id, statsMap, hyperparams, now),
+      }
+    }),
+    rng,
   )?.id
 }
 
-function chooseRandomCard(cards) {
-  const index = Math.floor(Math.random() * cards.length)
+function chooseRandomCard(cards, rng) {
+  const index = Math.floor(rng() * cards.length)
   return cards[index]
 }
 
-function chooseWeightedCard(weightedCards) {
+function chooseWeightedCard(weightedCards, rng) {
   const total = weightedCards.reduce((sum, entry) => sum + entry.weight, 0)
   if (total <= 0) {
     return weightedCards[0]?.card ?? null
   }
 
-  let cursor = Math.random() * total
+  let cursor = rng() * total
   for (const entry of weightedCards) {
     cursor -= entry.weight
     if (cursor <= 0) {
@@ -230,6 +308,75 @@ function chooseWeightedCard(weightedCards) {
   }
 
   return weightedCards.at(-1)?.card ?? null
+}
+
+export function getDayKey(timestamp) {
+  const date = new Date(timestamp)
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
+export function recordHistoryEvent(history, outcome, context) {
+  const { now, latencyMs = 0 } = context
+  const dayKey = getDayKey(now)
+  const dayRecord = history.daily[dayKey] ?? {
+    clears: 0,
+    errors: 0,
+    hints: 0,
+    latencySum: 0,
+    latencyCount: 0,
+  }
+  const nextDay = { ...dayRecord }
+
+  if (outcome === 'correct') {
+    nextDay.clears += 1
+  } else if (outcome === 'wrong') {
+    nextDay.errors += 1
+  } else if (outcome === 'hint') {
+    nextDay.hints += 1
+  }
+
+  if (outcome === 'correct' && latencyMs > 0) {
+    nextDay.latencySum += latencyMs
+    nextDay.latencyCount += 1
+  }
+
+  const daily = { ...history.daily, [dayKey]: nextDay }
+  const dayKeys = Object.keys(daily).sort()
+  if (dayKeys.length > DAILY_HISTORY_LIMIT) {
+    for (const staleKey of dayKeys.slice(0, dayKeys.length - DAILY_HISTORY_LIMIT)) {
+      delete daily[staleKey]
+    }
+  }
+
+  let recent = history.recent
+  if (outcome === 'correct' && latencyMs > 0) {
+    recent = [...history.recent, { t: now, l: latencyMs }].slice(-RECENT_ANSWERS_LIMIT)
+  }
+
+  return { ...history, daily, recent }
+}
+
+export function recordConfusion(history, fromCardId, toCardId) {
+  const key = `${fromCardId}>${toCardId}`
+  return {
+    ...history,
+    confusions: {
+      ...history.confusions,
+      [key]: (history.confusions[key] ?? 0) + 1,
+    },
+  }
+}
+
+export function getTopConfusions(history, limit = 6) {
+  return Object.entries(history.confusions)
+    .map(([key, count]) => {
+      const [fromId, toId] = key.split('>')
+      return { fromId, toId, count }
+    })
+    .sort((left, right) => right.count - left.count)
+    .slice(0, limit)
 }
 
 export function getStatsStatus(stats, hyperparams) {

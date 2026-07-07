@@ -8,10 +8,12 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test:e2e": "playwright test"
+    "build:words": "node scripts/build-words.mjs",
+    "test:unit": "node --test \"tests/unit/*.test.js\"",
+    "test:e2e": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
-    "blueimp-md5": "^2.19.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

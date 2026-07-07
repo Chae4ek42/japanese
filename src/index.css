@@ -8,6 +8,10 @@
   --muted-strong: #444;
   --muted: #666;
   --border: #d9d9d9;
+  --accent: #c2452f;
+  --accent-soft: #faeae5;
+  --chart-main: #1c1c1c;
+  --chart-miss: #d9958a;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

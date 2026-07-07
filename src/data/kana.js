@@ -180,6 +180,51 @@ function createEntry(primaryAnswer, slot, hiragana, katakana, aliases = []) {
 export const KANA_GROUPS = baseGroups
 export const GROUP_IDS = KANA_GROUPS.map((group) => group.id)
 
+export const GROUP_PRESETS = [
+  { id: 'base', label: 'Основные', groups: ['vowels', 'k', 's', 't', 'n', 'h', 'm', 'y', 'r', 'w', 'nn'] },
+  { id: 'dakuten', label: 'Звонкие', groups: ['g', 'z', 'd', 'b', 'p'] },
+]
+
+// Группы знаков, которые часто путают визуально (внутри одной азбуки).
+const CONFUSION_SETS = {
+  hiragana: [
+    ['a', 'o'],
+    ['i', 'ri'],
+    ['ki', 'sa'],
+    ['chi', 'ra'],
+    ['nu', 'me'],
+    ['wa', 'ne', 're'],
+    ['ru', 'ro'],
+    ['ha', 'ho', 'ma'],
+  ],
+  katakana: [
+    ['shi', 'tsu'],
+    ['so', 'n'],
+    ['ku', 'ta', 'ke'],
+    ['chi', 'te'],
+    ['no', 'fu'],
+    ['wa', 'u', 'wo'],
+    ['na', 'me'],
+    ['ru', 're'],
+    ['ko', 'yu'],
+  ],
+}
+
+const confusablesById = {}
+for (const [script, sets] of Object.entries(CONFUSION_SETS)) {
+  for (const set of sets) {
+    for (const baseId of set) {
+      const cardId = `${script}:${baseId}`
+      const others = set.filter((other) => other !== baseId).map((other) => `${script}:${other}`)
+      confusablesById[cardId] = [...(confusablesById[cardId] ?? []), ...others]
+    }
+  }
+}
+
+export function getConfusableIds(cardId) {
+  return confusablesById[cardId] ?? []
+}
+
 export const KANA_STATS_CARDS = KANA_GROUPS.flatMap((group) =>
   group.entries.flatMap((entry) => [
     createCard(entry, group.id, 'hiragana'),
@@ -189,56 +234,6 @@ export const KANA_STATS_CARDS = KANA_GROUPS.flatMap((group) =>
 
 export const KANA_STATS_CARD_IDS = KANA_STATS_CARDS.map((card) => card.id)
 export const ALL_CARD_IDS = [...KANA_STATS_CARD_IDS]
-
-export const WORD_BANK = [
-  createWord('hiragana', 'あい', 'ai', 'любовь'),
-  createWord('hiragana', 'いえ', 'ie', 'дом'),
-  createWord('hiragana', 'うえ', 'ue', 'верх'),
-  createWord('hiragana', 'うみ', 'umi', 'море'),
-  createWord('hiragana', 'えき', 'eki', 'станция'),
-  createWord('hiragana', 'おに', 'oni', 'они, демон'),
-  createWord('hiragana', 'さけ', 'sake', 'сакэ'),
-  createWord('hiragana', 'すし', 'sushi', 'суши'),
-  createWord('hiragana', 'たこ', 'tako', 'осьминог'),
-  createWord('hiragana', 'ねこ', 'neko', 'кот'),
-  createWord('hiragana', 'いぬ', 'inu', 'собака'),
-  createWord('hiragana', 'はな', 'hana', 'цветок'),
-  createWord('hiragana', 'ふね', 'fune', 'лодка'),
-  createWord('hiragana', 'へや', 'heya', 'комната'),
-  createWord('hiragana', 'ほし', 'hoshi', 'звезда'),
-  createWord('hiragana', 'まど', 'mado', 'окно'),
-  createWord('hiragana', 'みせ', 'mise', 'магазин'),
-  createWord('hiragana', 'やま', 'yama', 'гора'),
-  createWord('hiragana', 'ゆめ', 'yume', 'сон'),
-  createWord('hiragana', 'よる', 'yoru', 'ночь'),
-  createWord('hiragana', 'らく', 'raku', 'легкость'),
-  createWord('hiragana', 'りんご', 'ringo', 'яблоко'),
-  createWord('hiragana', 'わに', 'wani', 'крокодил'),
-  createWord('hiragana', 'ざる', 'zaru', 'бамбуковое сито'),
-  createWord('hiragana', 'だれ', 'dare', 'кто'),
-  createWord('hiragana', 'ばら', 'bara', 'роза'),
-  createWord('hiragana', 'ぱん', 'pan', 'хлеб'),
-  createWord('katakana', 'アイス', 'aisu', 'мороженое'),
-  createWord('katakana', 'イヌ', 'inu', 'собака'),
-  createWord('katakana', 'ウニ', 'uni', 'морской еж'),
-  createWord('katakana', 'エア', 'ea', 'air'),
-  createWord('katakana', 'オイル', 'oiru', 'масло'),
-  createWord('katakana', 'カメラ', 'kamera', 'камера'),
-  createWord('katakana', 'ケーキ', 'keeki', 'торт'),
-  createWord('katakana', 'コーヒー', 'koohii', 'кофе'),
-  createWord('katakana', 'サウナ', 'sauna', 'сауна'),
-  createWord('katakana', 'スープ', 'suupu', 'суп'),
-  createWord('katakana', 'タクシー', 'takushii', 'такси'),
-  createWord('katakana', 'テレビ', 'terebi', 'телевизор'),
-  createWord('katakana', 'トマト', 'tomato', 'томат'),
-  createWord('katakana', 'ナイフ', 'naifu', 'нож'),
-  createWord('katakana', 'ハーブ', 'haabu', 'травы'),
-  createWord('katakana', 'パン', 'pan', 'хлеб'),
-  createWord('katakana', 'ホテル', 'hoteru', 'отель'),
-  createWord('katakana', 'マスク', 'masuku', 'маска'),
-  createWord('katakana', 'メモ', 'memo', 'заметка'),
-  createWord('katakana', 'ラジオ', 'rajio', 'радио'),
-]
 
 const cardById = Object.fromEntries(KANA_STATS_CARDS.map((card) => [card.id, card]))
 
@@ -276,8 +271,4 @@ export function buildPool(scriptMode, selectedGroups) {
 
     return card.script === scriptMode
   })
-}
-
-function createWord(script, kana, romaji, meaning) {
-  return { script, kana, romaji, meaning }
 }

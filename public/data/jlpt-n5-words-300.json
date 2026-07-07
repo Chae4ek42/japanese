@@ -1,0 +1,5329 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-06T23:04:11.788Z",
+  "count": 300,
+  "schema": {
+    "id": "stable slug",
+    "kanji": "word spelling with kanji or katakana when applicable",
+    "kana": "hiragana/katakana reading",
+    "translation_ru": "primary Russian gloss",
+    "translation_en": "primary English gloss",
+    "notes_ru": "extra Russian glosses when available",
+    "audio": "local mp3 path with native-speaker recording",
+    "pos": "part of speech tags from source dictionary",
+    "jlpt": "target level",
+    "sources": "source attribution per entry"
+  },
+  "sources": {
+    "vocabulary": "https://github.com/elzup/jlpt-word-list",
+    "translations": "https://github.com/AnchorI/jlpt-kanji-dictionary",
+    "audio": "https://github.com/kanjialive/kanji-data-media",
+    "audioLicense": "Kanji Alive media is published under CC BY 4.0; verify redistribution terms before production use."
+  },
+  "words": [
+    {
+      "id": "o-okane-9859876a",
+      "kanji": "お金",
+      "kana": "おかね",
+      "translation_ru": "(разг. см.) かね【金】2",
+      "translation_en": "money",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/o-okane-9859876a.mp3",
+      "pos": "n pol",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "o-san-oniisan-6c88d326",
+      "kanji": "お兄さん",
+      "kana": "おにいさん",
+      "translation_ru": "старший брат",
+      "translation_en": "(someone else's) older brother (formal)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/o-san-oniisan-6c88d326.mp3",
+      "pos": "1 n hon",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "o-san-oneesan-6820a234",
+      "kanji": "お姉さん",
+      "kana": "おねえさん",
+      "translation_ru": "старшая сестра",
+      "translation_en": "older sister (formal)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/o-san-oneesan-6820a234.mp3",
+      "pos": "1 n hon",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "o-i-otearai-e03da3b8",
+      "kanji": "お手洗い",
+      "kana": "おてあらい",
+      "translation_ru": "туалет",
+      "translation_en": "toilet, restroom, bathroom (lit., a place to wash one's hands)",
+      "notes_ru": [
+        "уборная"
+      ],
+      "audio": "/audio/n5-words/o-i-otearai-e03da3b8.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "o-ochiya-1d74555e",
+      "kanji": "お茶",
+      "kana": "おちゃ",
+      "translation_ru": "(разг.) чай",
+      "translation_en": "(green) tea",
+      "notes_ru": [
+        "(ср.) おちゃのこ"
+      ],
+      "audio": "/audio/n5-words/o-ochiya-1d74555e.mp3",
+      "pos": "1 n pol",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "o-san-otousan-b948f13b",
+      "kanji": "お父さん",
+      "kana": "おとうさん",
+      "translation_ru": "1) отец, папа",
+      "translation_en": "father (formal)",
+      "notes_ru": [
+        "2) ваш (его) отец"
+      ],
+      "audio": "/audio/n5-words/o-san-otousan-b948f13b.mp3",
+      "pos": "1 n hon",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "o-san-okaasan-86c29be5",
+      "kanji": "お母さん",
+      "kana": "おかあさん",
+      "translation_ru": "мама, мамочка",
+      "translation_en": "mother (formal)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/o-san-okaasan-86c29be5.mp3",
+      "pos": "1 n hon",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-warui-723a422d",
+      "kanji": "悪い",
+      "kana": "わるい",
+      "translation_ru": "1) плохой, скверный, нехороший, худой, дурной; вредный",
+      "translation_en": "bad, sinful; inferior",
+      "notes_ru": [
+        "2) (тк. как сказ.) виноват, неправ"
+      ],
+      "audio": "/audio/n5-words/i-warui-723a422d.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-yasui-ad63c41b",
+      "kanji": "安い",
+      "kana": "やすい",
+      "translation_ru": "1) ((тж.) 廉い) дешёвый",
+      "translation_en": "inexpensive; cheap (things)",
+      "notes_ru": [
+        "2) спокойный, мирный; (ср.) おやすくない, やすからぬ",
+        "3) (см.) やすい【易い】"
+      ],
+      "audio": "/audio/n5-words/i-yasui-ad63c41b.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "imi-97c6259f",
+      "kanji": "意味",
+      "kana": "いみ",
+      "translation_ru": "смысл, значение",
+      "translation_en": "meaning, significance",
+      "notes_ru": [
+        "{～のある} значащий, имеющий значение; значительный",
+        "{～のない}, 意味をなさない бессмысленный, не имеющий значения (смысла); абсурдный"
+      ],
+      "audio": "/audio/n5-words/imi-97c6259f.mp3",
+      "pos": "n vs vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "u-chigau-9f6d671a",
+      "kanji": "違う",
+      "kana": "ちがう",
+      "translation_ru": "1) быть другим; различаться (в чём-л., по чему-л.)",
+      "translation_en": "to be different; to differ; wrong",
+      "notes_ru": [
+        "{…と～} отличаться от (чего-л.)",
+        "(ср.) ちがった, ちがって"
+      ],
+      "audio": "/audio/n5-words/u-chigau-9f6d671a.mp3",
+      "pos": "1 v5u vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ishiya-bbccd629",
+      "kanji": "医者",
+      "kana": "いしゃ",
+      "translation_ru": "врач, доктор",
+      "translation_en": "doctor; physician",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/ishiya-bbccd629.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-hitotsu-f07a8a30",
+      "kanji": "一つ",
+      "kana": "ひとつ",
+      "translation_ru": "1) один [единственный]",
+      "translation_en": "one thing",
+      "notes_ru": [
+        "{～の} один",
+        "{～にする} объединять [в одно]"
+      ],
+      "audio": "/audio/n5-words/tsu-hitotsu-f07a8a30.mp3",
+      "pos": "1 num",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ichiban-10ee812b",
+      "kanji": "一番",
+      "kana": "いちばん",
+      "translation_ru": "1",
+      "translation_en": "best (most), first, number one",
+      "notes_ru": [
+        "1) первый [номер]",
+        "{～になる} занимать первое место; приходить [к финишу] первым"
+      ],
+      "audio": "/audio/n5-words/ichiban-10ee812b.mp3",
+      "pos": "1 n adj-no",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ame-5c9600a4",
+      "kanji": "雨",
+      "kana": "あめ",
+      "translation_ru": "дождь; (обр.) град (пуль, ударов и т. п.)",
+      "translation_en": "rain",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/ame-5c9600a4.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "eiga-62710bb7",
+      "kanji": "映画",
+      "kana": "えいが",
+      "translation_ru": "1) [кино]фильм",
+      "translation_en": "movie, film",
+      "notes_ru": [
+        "{～にする} экранизировать",
+        "2) (сокр.) кино[театр]"
+      ],
+      "audio": "/audio/n5-words/eiga-62710bb7.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "eigakan-c1ed0161",
+      "kanji": "映画館",
+      "kana": "えいがかん",
+      "translation_ru": "кинотеатр",
+      "translation_en": "movie theater, cinema",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/eigakan-c1ed0161.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "gu-oyogu-951ada77",
+      "kanji": "泳ぐ",
+      "kana": "およぐ",
+      "translation_ru": "1) плавать, плыть (о человеке); купаться (в реке, в море)",
+      "translation_en": "to swim",
+      "notes_ru": [
+        "2) идти неверной (нетвёрдой) походкой, идти пошатываясь",
+        "3) благоденствовать"
+      ],
+      "audio": "/audio/n5-words/gu-oyogu-951ada77.mp3",
+      "pos": "1 v5g vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "eigo-d0768a78",
+      "kanji": "英語",
+      "kana": "えいご",
+      "translation_ru": "английский язык",
+      "translation_en": "English (language)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/eigo-d0768a78.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "eki-df5f7857",
+      "kanji": "駅",
+      "kana": "えき",
+      "translation_ru": "1) [железнодорожная] станция, вокзал",
+      "translation_en": "station",
+      "notes_ru": [
+        "2) (уст.) почтовая станция; постоялый двор"
+      ],
+      "audio": "/audio/n5-words/eki-df5f7857.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-tooi-472bdb50",
+      "kanji": "遠い",
+      "kana": "とおい",
+      "translation_ru": "1) далёкий; отдалённый (в пространстве, во времени); (как сказ.) далеко",
+      "translation_en": "far (away), distant",
+      "notes_ru": [
+        "2) дальний (о родстве); далёкий (об отношениях)",
+        "(ср.) とおからぬ, とおく"
+      ],
+      "audio": "/audio/n5-words/i-tooi-472bdb50.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "enpitsu-a0cba61b",
+      "kanji": "鉛筆",
+      "kana": "えんぴつ",
+      "translation_ru": "карандаш",
+      "translation_en": "pencil",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/enpitsu-a0cba61b.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-kitanai-6c58c990",
+      "kanji": "汚い",
+      "kana": "きたない",
+      "translation_ru": "1) (прям. и перен.) грязный; загрязнённый, запачканный; запятнанный",
+      "translation_en": "dirty, unclean, filthy",
+      "notes_ru": [
+        "2) низкий",
+        "3) корыстный; скупой"
+      ],
+      "audio": "/audio/n5-words/i-kitanai-6c58c990.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "san-okusan-345a6359",
+      "kanji": "奥さん",
+      "kana": "おくさん",
+      "translation_ru": "1) ваша (его) супруга",
+      "translation_en": "(someone else's) wife (hon.)",
+      "notes_ru": [
+        "2) (см.) おくさま"
+      ],
+      "audio": "/audio/n5-words/san-okusan-345a6359.mp3",
+      "pos": "n hon",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "su-osu-e3890697",
+      "kanji": "押す",
+      "kana": "おす",
+      "translation_ru": "толкать",
+      "translation_en": "to push, to press, to stamp (e.g., a passport)",
+      "notes_ru": [
+        "1) ((тж.) 圧す) давить; нажимать, надавливать; сжимать, сдавливать; теснить",
+        "2) пересиливать"
+      ],
+      "audio": "/audio/n5-words/su-osu-e3890697.mp3",
+      "pos": "1 v5s vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ongaku-ebf7febd",
+      "kanji": "音楽",
+      "kana": "おんがく",
+      "translation_ru": "музыка",
+      "translation_en": "Music",
+      "notes_ru": [
+        "{～的} музыкальный"
+      ],
+      "audio": "/audio/n5-words/ongaku-ebf7febd.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "natsu-12c49926",
+      "kanji": "夏",
+      "kana": "なつ",
+      "translation_ru": "1. лето",
+      "translation_en": "summer",
+      "notes_ru": [
+        "{～[の]} летний",
+        "2. летом"
+      ],
+      "audio": "/audio/n5-words/natsu-12c49926.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ie-298e274a",
+      "kanji": "家",
+      "kana": "いえ",
+      "translation_ru": "1) дом",
+      "translation_en": "house, home",
+      "notes_ru": [
+        "2) [свой] дом, семья",
+        "{～の} домашний, семейный"
+      ],
+      "audio": "/audio/n5-words/ie-298e274a.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kazoku-7ccfd117",
+      "kanji": "家族",
+      "kana": "かぞく",
+      "translation_ru": "семья, семейство",
+      "translation_en": "family, members of a family",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kazoku-7ccfd117.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "uta-7c938b42",
+      "kanji": "歌",
+      "kana": "うた",
+      "translation_ru": "песня, песенка",
+      "translation_en": "a song",
+      "notes_ru": [
+        "стихотворение (в форме танка или нагаута)"
+      ],
+      "audio": "/audio/n5-words/uta-7c938b42.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kayoubi-a9dc6bf1",
+      "kanji": "火曜日",
+      "kana": "かようび",
+      "translation_ru": "вторник",
+      "translation_en": "Tuesday",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kayoubi-a9dc6bf1.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "nimotsu-4df7bc41",
+      "kanji": "荷物",
+      "kana": "にもつ",
+      "translation_ru": "груз; багаж, вещи; товар",
+      "translation_en": "luggage; baggage",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/nimotsu-4df7bc41.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kaishiya-959217ce",
+      "kanji": "会社",
+      "kana": "かいしゃ",
+      "translation_ru": "компания, общество, фирма",
+      "translation_en": "company, corporation",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kaishiya-959217ce.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "umi-dc819389",
+      "kanji": "海",
+      "kana": "うみ",
+      "translation_ru": "море",
+      "translation_en": "sea, beach",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/umi-dc819389.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "e-0eb10088",
+      "kanji": "絵",
+      "kana": "え",
+      "translation_ru": "картина, рисунок",
+      "translation_en": "a painting; a picture; a drawing",
+      "notes_ru": [
+        "картина",
+        "картина, изображение, рисунок; иллюстрация"
+      ],
+      "audio": "/audio/n5-words/e-0eb10088.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "soto-d14e2926",
+      "kanji": "外",
+      "kana": "そと",
+      "translation_ru": "снаружи; во вне",
+      "translation_en": "outside, exterior",
+      "notes_ru": [
+        "{～に} снаружи; на дворе, на улице, на свежем воздухе"
+      ],
+      "audio": "/audio/n5-words/soto-d14e2926.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "gaikoku-74d79838",
+      "kanji": "外国",
+      "kana": "がいこく",
+      "translation_ru": "иностранное государство; зарубежные страны, заграница",
+      "translation_en": "foreign country; abroad",
+      "notes_ru": [
+        "{～の} заграничный, зарубежный"
+      ],
+      "audio": "/audio/n5-words/gaikoku-74d79838.mp3",
+      "pos": "n adj-no",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kado-d69ca728",
+      "kanji": "角",
+      "kana": "かど",
+      "translation_ru": "1) угол (внешний); уголок (книги)",
+      "translation_en": "corner (e.g., desk, pavement)",
+      "notes_ru": [
+        "2) (стр.) острый угол"
+      ],
+      "audio": "/audio/n5-words/kado-d69ca728.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "gakou-4c97803b",
+      "kanji": "学校",
+      "kana": "がっこう",
+      "translation_ru": "1) школа, училище; учебное заведение",
+      "translation_en": "a school",
+      "notes_ru": [
+        "2) (перен.) занятия (в учебном заведении)"
+      ],
+      "audio": "/audio/n5-words/gakou-4c97803b.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "gakusei-6c9f02a8",
+      "kanji": "学生",
+      "kana": "がくせい",
+      "translation_ru": "учащийся, студент; слушатель (курсов и т. п.)",
+      "translation_en": "student",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/gakusei-6c9f02a8.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shii-tanoshii-b1bbfecd",
+      "kanji": "楽しい",
+      "kana": "たのしい",
+      "translation_ru": "радостный, весёлый, приятный; счастливый",
+      "translation_en": "enjoyable, fun",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/shii-tanoshii-b1bbfecd.mp3",
+      "pos": "adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-samui-c56d4a04",
+      "kanji": "寒い",
+      "kana": "さむい",
+      "translation_ru": "холодный",
+      "translation_en": "cold (in reference to weather)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/i-samui-c56d4a04.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kanji-46d95ddf",
+      "kanji": "漢字",
+      "kana": "かんじ",
+      "translation_ru": "иероглиф (китайского происхождения)",
+      "translation_en": "kanji; Chinese character",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kanji-46d95ddf.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-amai-f415ffa2",
+      "kanji": "甘い",
+      "kana": "あまい",
+      "translation_ru": "1) сладкий; (обр.) слащавый",
+      "translation_en": "generous, sweet",
+      "notes_ru": [
+        "2) недосоленный; недостаточно крепкий (острый), слабый (о табаке, вине, уксусе и т. п.); не тугой, слабый (напр. о кране); гнущийся, мягкий (напр. о стали)",
+        "3) мягкий (о характере)"
+      ],
+      "audio": "/audio/n5-words/i-amai-f415ffa2.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kao-1b84e184",
+      "kanji": "顔",
+      "kana": "かお",
+      "translation_ru": "1) лицо",
+      "translation_en": "face (body part)",
+      "notes_ru": [
+        "2) (замещает понятия сам, человек:)",
+        "3) вид"
+      ],
+      "audio": "/audio/n5-words/kao-1b84e184.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsukue-e8aa2424",
+      "kanji": "机",
+      "kana": "つくえ",
+      "translation_ru": "стол; парта",
+      "translation_en": "desk",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/tsukue-e8aa2424.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kiru-okiru-2c32b84e",
+      "kanji": "起きる",
+      "kana": "おきる",
+      "translation_ru": "1) вставать [на ноги]; подниматься; вставать (ото сна)",
+      "translation_en": "to get up (e.g., from sleeping); to happen",
+      "notes_ru": [
+        "2) просыпаться; не спать; не ложиться",
+        "3) происходить, случаться, возникать"
+      ],
+      "audio": "/audio/n5-words/kiru-okiru-2c32b84e.mp3",
+      "pos": "1 v1 vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kisaten-fdc7b359",
+      "kanji": "喫茶店",
+      "kana": "きっさてん",
+      "translation_ru": "кафе, закусочная, чайная",
+      "translation_en": "café",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kisaten-fdc7b359.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mi-yasumi-0215f7c8",
+      "kanji": "休み",
+      "kana": "やすみ",
+      "translation_ru": "отдых; перерыв (в работе, занятиях); каникулы",
+      "translation_en": "holiday; day off; absence",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/mi-yasumi-0215f7c8.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "giyuuniyuu-7f546c73",
+      "kanji": "牛乳",
+      "kana": "ぎゅうにゅう",
+      "translation_ru": "[коровье] молоко",
+      "translation_en": "milk",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/giyuuniyuu-7f546c73.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kiyonen-05ed775a",
+      "kanji": "去年",
+      "kana": "きょねん",
+      "translation_ru": "1. прошлый год",
+      "translation_en": "last year",
+      "notes_ru": [
+        "{～の} прошлогодний; прошлого года",
+        "2. в прошлом году"
+      ],
+      "audio": "/audio/n5-words/kiyonen-05ed775a.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-tsuyoi-860918d8",
+      "kanji": "強い",
+      "kana": "つよい",
+      "translation_ru": "1) сильный; могучий",
+      "translation_en": "strong, powerful",
+      "notes_ru": [
+        "2) сильный, интенсивный",
+        "3) крепкий"
+      ],
+      "audio": "/audio/n5-words/i-tsuyoi-860918d8.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-semai-7e599243",
+      "kanji": "狭い",
+      "kana": "せまい",
+      "translation_ru": "узкий, тесный; маленький (о помещении); (обр.) ограниченный (о взглядах, мыслях и т. п.)",
+      "translation_en": "narrow; not spacious",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/i-semai-7e599243.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-chikai-7d7e47fd",
+      "kanji": "近い",
+      "kana": "ちかい",
+      "translation_ru": "близкий; недалёкий",
+      "translation_en": "near, close by, short",
+      "notes_ru": [
+        "(ср.) ちかく【近く】"
+      ],
+      "audio": "/audio/n5-words/i-chikai-7d7e47fd.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kinyoubi-c59f39d0",
+      "kanji": "金曜日",
+      "kana": "きんようび",
+      "translation_ru": "пятница",
+      "translation_en": "Friday",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kinyoubi-c59f39d0.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ginkou-284fa6f6",
+      "kanji": "銀行",
+      "kana": "ぎんこう",
+      "translation_ru": "банк",
+      "translation_en": "bank",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/ginkou-284fa6f6.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-kokonotsu-8fe80af9",
+      "kanji": "九つ",
+      "kana": "ここのつ",
+      "translation_ru": "1) девять",
+      "translation_en": "nine things",
+      "notes_ru": [
+        "2) девять лет",
+        "3) (см.) ここのつどき (и ср.) ここのつはん"
+      ],
+      "audio": "/audio/n5-words/tsu-kokonotsu-8fe80af9.mp3",
+      "pos": "1 num",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kutsu-f0e2db11",
+      "kanji": "靴",
+      "kana": "くつ",
+      "translation_ru": "(уст.) 沓, 履",
+      "translation_en": "shoes, footwear",
+      "notes_ru": [
+        "обувь; ботинки, полуботинки; туфли"
+      ],
+      "audio": "/audio/n5-words/kutsu-f0e2db11.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kutsushita-0809c2ec",
+      "kanji": "靴下",
+      "kana": "くつした",
+      "translation_ru": "носки; чулки",
+      "translation_en": "socks",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kutsushita-0809c2ec.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ani-af79070d",
+      "kanji": "兄",
+      "kana": "あに",
+      "translation_ru": "старший брат",
+      "translation_en": "(my) older brother (humble)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/ani-af79070d.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kiyoudai-38102230",
+      "kanji": "兄弟",
+      "kana": "きょうだい",
+      "translation_ru": "брат; братья; собратья; ((тж.) 姉妹) сестра; сёстры",
+      "translation_en": "siblings (humble), brothers and sisters",
+      "notes_ru": [
+        "{～の} братский; сестринский",
+        "(кн.) братья"
+      ],
+      "audio": "/audio/n5-words/kiyoudai-38102230.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "getsuyoubi-b9663d8e",
+      "kanji": "月曜日",
+      "kana": "げつようび",
+      "translation_ru": "понедельник",
+      "translation_en": "Monday",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/getsuyoubi-b9663d8e.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "inu-c130f8cd",
+      "kanji": "犬",
+      "kana": "いぬ",
+      "translation_ru": "1) собака, пёс",
+      "translation_en": "dog",
+      "notes_ru": [
+        "{～の} собачий, псиный",
+        "2) (прост.) шпик"
+      ],
+      "audio": "/audio/n5-words/inu-c130f8cd.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "seru-miseru-a452bb6c",
+      "kanji": "見せる",
+      "kana": "みせる",
+      "translation_ru": "1) показывать, давать смотреть",
+      "translation_en": "to show, to display",
+      "notes_ru": [
+        "2) делать (придавать) вид"
+      ],
+      "audio": "/audio/n5-words/seru-miseru-a452bb6c.mp3",
+      "pos": "1 v1 vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kotoba-c4c19810",
+      "kanji": "言葉",
+      "kana": "ことば",
+      "translation_ru": "слово",
+      "translation_en": "language; word(s); expression(s)",
+      "notes_ru": [
+        "язык",
+        "1) слово; слова"
+      ],
+      "audio": "/audio/n5-words/kotoba-c4c19810.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-furui-72d6a485",
+      "kanji": "古い",
+      "kana": "ふるい",
+      "translation_ru": "старый",
+      "translation_en": "old (in reference to objects, not people), aged, ancient",
+      "notes_ru": [
+        "1) старый",
+        "(ср.) ふるく"
+      ],
+      "audio": "/audio/n5-words/i-furui-72d6a485.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "bu-yobu-ac8ec180",
+      "kanji": "呼ぶ",
+      "kana": "よぶ",
+      "translation_ru": "1) [по]звать",
+      "translation_en": "to call (one's name); to invite",
+      "notes_ru": [
+        "2) звать, называть",
+        "3) звать, приглашать"
+      ],
+      "audio": "/audio/n5-words/bu-yobu-ac8ec180.mp3",
+      "pos": "1 v5b vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-itsutsu-59c8f336",
+      "kanji": "五つ",
+      "kana": "いつつ",
+      "translation_ru": "1) пять",
+      "translation_en": "five things",
+      "notes_ru": [
+        "2) пять лет (о возрасте)",
+        "3) (см.) いつつどき"
+      ],
+      "audio": "/audio/n5-words/tsu-itsutsu-59c8f336.mp3",
+      "pos": "1 num",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "gogo-d4d9c4f0",
+      "kanji": "午後",
+      "kana": "ごご",
+      "translation_ru": "после полудня",
+      "translation_en": "afternoon, P.M.",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/gogo-d4d9c4f0.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "gozen-cd35996d",
+      "kanji": "午前",
+      "kana": "ごぜん",
+      "translation_ru": "до полудня",
+      "translation_en": "morning, A.M.",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/gozen-cd35996d.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kouen-433eabdf",
+      "kanji": "公園",
+      "kana": "こうえん",
+      "translation_ru": "городской (общедоступный) парк",
+      "translation_en": "a park",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kouen-433eabdf.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-hiroi-b0c59178",
+      "kanji": "広い",
+      "kana": "ひろい",
+      "translation_ru": "широкий",
+      "translation_en": "spacious; wide; broad",
+      "notes_ru": [
+        "просторный",
+        "широкий; обширный; просторный; большой, поместительный (о помещении)"
+      ],
+      "audio": "/audio/n5-words/i-hiroi-b0c59178.mp3",
+      "pos": "adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kouchiya-9e9cd1e6",
+      "kanji": "紅茶",
+      "kana": "こうちゃ",
+      "translation_ru": "[чёрный] чай",
+      "translation_en": "black tea",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kouchiya-9e9cd1e6.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-takai-b332996a",
+      "kanji": "高い",
+      "kana": "たかい",
+      "translation_ru": "1) высокий",
+      "translation_en": "tall, high; expensive",
+      "notes_ru": [
+        "2) громкий",
+        "3) дорогой"
+      ],
+      "audio": "/audio/n5-words/i-takai-b332996a.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-kuroi-16655e86",
+      "kanji": "黒い",
+      "kana": "くろい",
+      "translation_ru": "1) чёрный",
+      "translation_en": "black; dark",
+      "notes_ru": [
+        "2) (прям. и перен.) тёмный"
+      ],
+      "audio": "/audio/n5-words/i-kuroi-16655e86.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ima-7d206603",
+      "kanji": "今",
+      "kana": "いま",
+      "translation_ru": "теперь, сейчас",
+      "translation_en": "now",
+      "notes_ru": [
+        "{～の} теперешний, нынешний",
+        "{～から} а) отныне; впредь; б) теперь, сейчас"
+      ],
+      "audio": "/audio/n5-words/ima-7d206603.mp3",
+      "pos": "1 n adj-no adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kongetsu-439d66c9",
+      "kanji": "今月",
+      "kana": "こんげつ",
+      "translation_ru": "1. этот (текущий) месяц",
+      "translation_en": "this month",
+      "notes_ru": [
+        "2. в этом (текущем) месяце"
+      ],
+      "audio": "/audio/n5-words/kongetsu-439d66c9.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "konshiyuu-a0820288",
+      "kanji": "今週",
+      "kana": "こんしゅう",
+      "translation_ru": "1. эта неделя",
+      "translation_en": "this week",
+      "notes_ru": [
+        "2. на этой неделе"
+      ],
+      "audio": "/audio/n5-words/konshiyuu-a0820288.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "konban-177dd2d8",
+      "kanji": "今晩",
+      "kana": "こんばん",
+      "translation_ru": "1. этот (сегодняшний) вечер",
+      "translation_en": "tonight, this evening",
+      "notes_ru": [
+        "2. сегодня вечером"
+      ],
+      "audio": "/audio/n5-words/konban-177dd2d8.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-komaru-f85f77fd",
+      "kanji": "困る",
+      "kana": "こまる",
+      "translation_ru": "1) находиться в затруднении (затруднительном положении); затрудняться (в чём-л., что-л. сделать); испытывать неудобства; чувствовать неловкость",
+      "translation_en": "to be bothered, to have difficulty",
+      "notes_ru": [
+        "2) страдать (какой-л. болезнью, от чего-л.)",
+        "3) нуждаться"
+      ],
+      "audio": "/audio/n5-words/ru-komaru-f85f77fd.mp3",
+      "pos": "1 v5r vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "satou-691016b6",
+      "kanji": "砂糖",
+      "kana": "さとう",
+      "translation_ru": "сахар",
+      "translation_en": "sugar",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/satou-691016b6.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "saifu-d8d90673",
+      "kanji": "財布",
+      "kana": "さいふ",
+      "translation_ru": "кошелёк, бумажник",
+      "translation_en": "wallet",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/saifu-d8d90673.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ku-saku-b8f10fc6",
+      "kanji": "咲く",
+      "kana": "さく",
+      "translation_ru": "цвести",
+      "translation_en": "to bloom",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/ku-saku-b8f10fc6.mp3",
+      "pos": "1 v5k vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "zashi-bb05c439",
+      "kanji": "雑誌",
+      "kana": "ざっし",
+      "translation_ru": "журнал",
+      "translation_en": "magazine, journal",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/zashi-bb05c439.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-mitsu-62d31881",
+      "kanji": "三つ",
+      "kana": "みっつ",
+      "translation_ru": "1) три",
+      "translation_en": "three things",
+      "notes_ru": [
+        "2) три года (о возрасте)",
+        "(см.) みつ【三つ】"
+      ],
+      "audio": "/audio/n5-words/tsu-mitsu-62d31881.mp3",
+      "pos": "1 num",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "yama-0bc185ff",
+      "kanji": "山",
+      "kana": "やま",
+      "translation_ru": "спекуляция; риск",
+      "translation_en": "mountain",
+      "notes_ru": [
+        "1) гора",
+        "{～の} горный"
+      ],
+      "audio": "/audio/n5-words/yama-0bc185ff.mp3",
+      "pos": "1 n ctr",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shigoto-ad8e25fd",
+      "kanji": "仕事",
+      "kana": "しごと",
+      "translation_ru": "работа; занятие, дело",
+      "translation_en": "work, job, occupation, employment",
+      "notes_ru": [
+        "{～する} работать"
+      ],
+      "audio": "/audio/n5-words/shigoto-ad8e25fd.mp3",
+      "pos": "1 n vs vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-yotsu-4d81bf07",
+      "kanji": "四つ",
+      "kana": "よっつ",
+      "translation_ru": "1) четыре",
+      "translation_en": "four things",
+      "notes_ru": [
+        "2) четыре года (о возрасте)",
+        "3) (см.) よつどき"
+      ],
+      "audio": "/audio/n5-words/tsu-yotsu-4d81bf07.mp3",
+      "pos": "1 num",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "maru-hajimaru-e7469ed6",
+      "kanji": "始まる",
+      "kana": "はじまる",
+      "translation_ru": "начинаться; открываться; брать своё начало",
+      "translation_en": "(something) begins",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/maru-hajimaru-e7469ed6.mp3",
+      "pos": "1 v5r vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ane-1821d2fa",
+      "kanji": "姉",
+      "kana": "あね",
+      "translation_ru": "старшая сестра",
+      "translation_en": "(my) older sister (humble)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/ane-1821d2fa.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kodomo-4ee8d81f",
+      "kanji": "子供",
+      "kana": "こども",
+      "translation_ru": "ребёнок, дитя; сын; дочь; дети",
+      "translation_en": "child(ren)",
+      "notes_ru": [
+        "{～の} детский, ребяческий",
+        "{～のない} бездетный"
+      ],
+      "audio": "/audio/n5-words/kodomo-4ee8d81f.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "nu-shinu-81336b05",
+      "kanji": "死ぬ",
+      "kana": "しぬ",
+      "translation_ru": "умирать, умереть",
+      "translation_en": "to die",
+      "notes_ru": [
+        "(ср.) しんだ, しなれる【死なれる】, しぬべき"
+      ],
+      "audio": "/audio/n5-words/nu-shinu-81336b05.mp3",
+      "pos": "1 v5n vn vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "watashi-34c83ff9",
+      "kanji": "私",
+      "kana": "わたし",
+      "translation_ru": "я",
+      "translation_en": "I, myself",
+      "notes_ru": [
+        "{～の} мой"
+      ],
+      "audio": "/audio/n5-words/watashi-34c83ff9.mp3",
+      "pos": "pn",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kami-10321fec",
+      "kanji": "紙",
+      "kana": "かみ",
+      "translation_ru": "бумага",
+      "translation_en": "paper",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kami-10321fec.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ha-2d82f0b7",
+      "kanji": "歯",
+      "kana": "は",
+      "translation_ru": "1) зуб[ы]",
+      "translation_en": "tooth",
+      "notes_ru": [
+        "{～のない} беззубый",
+        "2) зубья; зубцы"
+      ],
+      "audio": "/audio/n5-words/ha-2d82f0b7.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "jikan-fca2e7c0",
+      "kanji": "時間",
+      "kana": "じかん",
+      "translation_ru": "1) час",
+      "translation_en": "time",
+      "notes_ru": [
+        "2) урок (в учебном заведении)",
+        "3) часы, [определённое] время"
+      ],
+      "audio": "/audio/n5-words/jikan-fca2e7c0.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tokei-f874c39b",
+      "kanji": "時計",
+      "kana": "とけい",
+      "translation_ru": "часы",
+      "translation_en": "a watch; a clock",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/tokei-f874c39b.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsugi-fda41b7f",
+      "kanji": "次",
+      "kana": "つぎ",
+      "translation_ru": "1): {～の} следующий",
+      "translation_en": "next",
+      "notes_ru": [
+        "{～に} затем",
+        "{…の～に} [вслед] за (кем-чем-л.); после (кого-чего-л.)"
+      ],
+      "audio": "/audio/n5-words/tsugi-fda41b7f.mp3",
+      "pos": "1 n adj-no",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "jitenshiya-96d8fa37",
+      "kanji": "自転車",
+      "kana": "じてんしゃ",
+      "translation_ru": "велосипед, самокат",
+      "translation_en": "bicycle",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/jitenshiya-96d8fa37.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "jibun-8acb1dd0",
+      "kanji": "自分",
+      "kana": "じぶん",
+      "translation_ru": "1) сам",
+      "translation_en": "myself, oneself",
+      "notes_ru": [
+        "{～の} свой; личный, собственный",
+        "{～に} самому себе"
+      ],
+      "audio": "/audio/n5-words/jibun-8acb1dd0.mp3",
+      "pos": "1 pn",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "jishiyo-55347eca",
+      "kanji": "辞書",
+      "kana": "じしょ",
+      "translation_ru": "фонетический словарь",
+      "translation_en": "dictionary",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/jishiyo-55347eca.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-nanatsu-cbc9912e",
+      "kanji": "七つ",
+      "kana": "ななつ",
+      "translation_ru": "1) семь",
+      "translation_en": "seven things",
+      "notes_ru": [
+        "2) семь лет (о возрасте)",
+        "3) (см.) ななつどき"
+      ],
+      "audio": "/audio/n5-words/tsu-nanatsu-cbc9912e.mp3",
+      "pos": "1 num",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shiyashin-f590b15d",
+      "kanji": "写真",
+      "kana": "しゃしん",
+      "translation_ru": "фото[карточка], фотоснимок",
+      "translation_en": "a picture; a photograph",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/shiyashin-f590b15d.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kuruma-b2293741",
+      "kanji": "車",
+      "kana": "くるま",
+      "translation_ru": "1) повозка; экипаж; [ручная] тележка; [ломовая] телега; воз; фургон; [авто]машина; такси; вагон",
+      "translation_en": "car, vehicle",
+      "notes_ru": [
+        "2) ((уст.) 俥) коляска рикши, рикша",
+        "3) колесо"
+      ],
+      "audio": "/audio/n5-words/kuruma-b2293741.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-wakai-5b8e27c5",
+      "kanji": "若い",
+      "kana": "わかい",
+      "translation_ru": "1) молодой, юный",
+      "translation_en": "young",
+      "notes_ru": [
+        "2) (перен.) незрелый",
+        "3) малый, меньший (о числе, номере)"
+      ],
+      "audio": "/audio/n5-words/i-wakai-5b8e27c5.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-toru-e9543b90",
+      "kanji": "取る",
+      "kana": "とる",
+      "translation_ru": "брать",
+      "translation_en": "to take (a class); to get (a grade)",
+      "notes_ru": [
+        "получать",
+        "1) ((тж.) 把る) брать [в руки]; взять [в руку]; взять за (что-л.)"
+      ],
+      "audio": "/audio/n5-words/ru-toru-e9543b90.mp3",
+      "pos": "1 v5r vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tegami-2dddda2a",
+      "kanji": "手紙",
+      "kana": "てがみ",
+      "translation_ru": "письмо",
+      "translation_en": "letter",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/tegami-2dddda2a.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "jiyugiyou-d801fde3",
+      "kanji": "授業",
+      "kana": "じゅぎょう",
+      "translation_ru": "1) преподавание, обучение",
+      "translation_en": "a class (of school)",
+      "notes_ru": [
+        "{～する} преподавать; давать уроки",
+        "2) занятия (в учебном заведении)"
+      ],
+      "audio": "/audio/n5-words/jiyugiyou-d801fde3.mp3",
+      "pos": "n vs vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "aki-231c5c64",
+      "kanji": "秋",
+      "kana": "あき",
+      "translation_ru": "осень",
+      "translation_en": "fall (season)",
+      "notes_ru": [
+        "1) осень",
+        "{～の} осенний"
+      ],
+      "audio": "/audio/n5-words/aki-231c5c64.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "u-narau-20aa765e",
+      "kanji": "習う",
+      "kana": "ならう",
+      "translation_ru": "учиться (чему-л.), заниматься (чем-л.)",
+      "translation_en": "to learn",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/u-narau-20aa765e.mp3",
+      "pos": "v5u vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-omoi-e81c0c46",
+      "kanji": "重い",
+      "kana": "おもい",
+      "translation_ru": "1) тяжёлый (по весу); (перен.) тяжёлый, тяжкий (напр. о болезни, о наказании, об ответственности, о преступлении)",
+      "translation_en": "heavy; serious",
+      "notes_ru": [
+        "2) важный, серьёзный"
+      ],
+      "audio": "/audio/n5-words/i-omoi-e81c0c46.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shiyukudai-03e5226c",
+      "kanji": "宿題",
+      "kana": "しゅくだい",
+      "translation_ru": "1) домашнее задание, урок на дом",
+      "translation_en": "homework",
+      "notes_ru": [
+        "2) неразрешённый вопрос, вопрос ждущий разрешения",
+        "{～になる} оставаться неразрешённым"
+      ],
+      "audio": "/audio/n5-words/shiyukudai-03e5226c.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "su-dasu-67a286df",
+      "kanji": "出す",
+      "kana": "だす",
+      "translation_ru": "1) выставлять; высовывать; вынимать; вытаскивать",
+      "translation_en": "to take (something) out; to hand in (something)",
+      "notes_ru": [
+        "2) показать, представить на обозрение",
+        "3) представлять, предъявлять (доказательства, удостоверение и т. п.)"
+      ],
+      "audio": "/audio/n5-words/su-dasu-67a286df.mp3",
+      "pos": "1 v5s vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "haru-be282a45",
+      "kanji": "春",
+      "kana": "はる",
+      "translation_ru": "1) весна",
+      "translation_en": "spring",
+      "notes_ru": [
+        "2) (перен.) любовь, страсть"
+      ],
+      "audio": "/audio/n5-words/haru-be282a45.mp3",
+      "pos": "1 n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mete-hajimete-b86f92f9",
+      "kanji": "初めて",
+      "kana": "はじめて",
+      "translation_ru": "впервые",
+      "translation_en": "for the first time",
+      "notes_ru": [
+        "впервые, в первый раз",
+        "[これは]初めてお目にかかります рад с вами познакомиться"
+      ],
+      "audio": "/audio/n5-words/mete-hajimete-b86f92f9.mp3",
+      "pos": "1 adv adj-no",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tokoro-d99acdf3",
+      "kanji": "所",
+      "kana": "ところ",
+      "translation_ru": "(служебное слово)",
+      "translation_en": "place",
+      "notes_ru": [
+        "1) момент (определённый)",
+        "2) (связ.:)"
+      ],
+      "audio": "/audio/n5-words/tokoro-d99acdf3.mp3",
+      "pos": "1 n adv suf",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-atsui-8f994c89",
+      "kanji": "暑い",
+      "kana": "あつい",
+      "translation_ru": "жаркий; (как сказ.) жарко",
+      "translation_en": "hot (in reference to weather), warm",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/i-atsui-8f994c89.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "onna-826548ed",
+      "kanji": "女",
+      "kana": "おんな",
+      "translation_ru": "женщина",
+      "translation_en": "woman, female",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/onna-826548ed.mp3",
+      "pos": "1 n n-pref",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "no-onnanoko-39d87f04",
+      "kanji": "女の子",
+      "kana": "おんなのこ",
+      "translation_ru": "девочка",
+      "translation_en": "girl",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/no-onnanoko-39d87f04.mp3",
+      "pos": "1 exp n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "sai-chiisai-9a481e9c",
+      "kanji": "小さい",
+      "kana": "ちいさい",
+      "translation_ru": "(см.) ちいさい",
+      "translation_en": "small, little",
+      "notes_ru": [
+        "маленький, небольшой; мелкий"
+      ],
+      "audio": "/audio/n5-words/sai-chiisai-9a481e9c.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shi-sukoshi-ef1f13b8",
+      "kanji": "少し",
+      "kana": "すこし",
+      "translation_ru": "немного, немножко",
+      "translation_en": "little, few",
+      "notes_ru": [
+        "{～の} незначительный"
+      ],
+      "audio": "/audio/n5-words/shi-sukoshi-ef1f13b8.mp3",
+      "pos": "1 adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "nai-sukunai-cec36ae5",
+      "kanji": "少ない",
+      "kana": "すくない",
+      "translation_ru": "(уст.) 尠い, 寡い",
+      "translation_en": "a little; a few",
+      "notes_ru": [
+        "(прил.) иметься в малом количестве; немногочисленный; скудный; редкий"
+      ],
+      "audio": "/audio/n5-words/nai-sukunai-cec36ae5.mp3",
+      "pos": "adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "eru-kieru-a07d0e52",
+      "kanji": "消える",
+      "kana": "きえる",
+      "translation_ru": "1) гаснуть, тухнуть",
+      "translation_en": "to vanish, to disappear",
+      "notes_ru": [
+        "2) таять (о снеге)",
+        "3) исчезать"
+      ],
+      "audio": "/audio/n5-words/eru-kieru-a07d0e52.mp3",
+      "pos": "1 v1 vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "be-tabemono-4a2ff04b",
+      "kanji": "食べ物",
+      "kana": "たべもの",
+      "translation_ru": "еда, пища, кушанье, съестное; снедь; продукты; продовольствие",
+      "translation_en": "food",
+      "notes_ru": [
+        "{～をやる} кормить, давать поесть"
+      ],
+      "audio": "/audio/n5-words/be-tabemono-4a2ff04b.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shiyokudou-a55e974c",
+      "kanji": "食堂",
+      "kana": "しょくどう",
+      "translation_ru": "столовая; буфет (на ж.-д. станции, в театре и т. п.)",
+      "translation_en": "cafeteria, dining hall",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/shiyokudou-a55e974c.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-neru-91061334",
+      "kanji": "寝る",
+      "kana": "ねる",
+      "translation_ru": "ложиться спать",
+      "translation_en": "to sleep; to go to sleep; to go to bed",
+      "notes_ru": [
+        "1) ложиться [спать]",
+        "2) засыпать"
+      ],
+      "audio": "/audio/n5-words/ru-neru-91061334.mp3",
+      "pos": "1 v1 vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shii-atarashii-a92c2761",
+      "kanji": "新しい",
+      "kana": "あたらしい",
+      "translation_ru": "новый; свежий (о хлебе и т. п.)",
+      "translation_en": "new",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/shii-atarashii-a92c2761.mp3",
+      "pos": "adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shinbun-8e052aa3",
+      "kanji": "新聞",
+      "kana": "しんぶん",
+      "translation_ru": "газета",
+      "translation_en": "newspaper",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/shinbun-8e052aa3.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-karai-f55c2273",
+      "kanji": "辛い",
+      "kana": "からい",
+      "translation_ru": "1) острый (на вкус); горький; крепкий (о табаке, уксусе и т. п.); ((тж.) 鹹い) крепко солёный",
+      "translation_en": "hot and spicy; salty",
+      "notes_ru": [
+        "2) (перен.) горький (об опыте, переживаниях)",
+        "3) строгий"
+      ],
+      "audio": "/audio/n5-words/i-karai-f55c2273.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "toshiyokan-3573eaf3",
+      "kanji": "図書館",
+      "kana": "としょかん",
+      "translation_ru": "библиотека ((общественная, в отдельном здании); (ср.) としょしつ)",
+      "translation_en": "library",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/toshiyokan-3573eaf3.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ku-fuku-cb9113c8",
+      "kanji": "吹く",
+      "kana": "ふく",
+      "translation_ru": "1) дуть; дунуть, подуть",
+      "translation_en": "to blow (wind, etc.)",
+      "notes_ru": [
+        "2) играть (на духовом инструменте)",
+        "3) плавить; отливать"
+      ],
+      "audio": "/audio/n5-words/ku-fuku-cb9113c8.mp3",
+      "pos": "1 v5k vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mizu-ab154442",
+      "kanji": "水",
+      "kana": "みず",
+      "translation_ru": "1) вода; холодная вода",
+      "translation_en": "water",
+      "notes_ru": [
+        "{～の} водный; водяной",
+        "2) жидкость"
+      ],
+      "audio": "/audio/n5-words/mizu-ab154442.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "suiyoubi-9d319b0f",
+      "kanji": "水曜日",
+      "kana": "すいようび",
+      "translation_ru": "среда",
+      "translation_en": "Wednesday",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/suiyoubi-9d319b0f.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "reru-hareru-1c4beb90",
+      "kanji": "晴れる",
+      "kana": "はれる",
+      "translation_ru": "проясняться (о небе)",
+      "translation_en": "to be sunny",
+      "notes_ru": [
+        "рассеиваться",
+        "1) проясняться; переставать (о дожде); рассеиваться (о тумане)"
+      ],
+      "audio": "/audio/n5-words/reru-hareru-1c4beb90.mp3",
+      "pos": "1 v1 vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-aoi-2f1acf47",
+      "kanji": "青い",
+      "kana": "あおい",
+      "translation_ru": "1) ((тж.) 蒼い) синий, голубой",
+      "translation_en": "blue",
+      "notes_ru": [
+        "2) зелёный; (ср.) みどり",
+        "3) зелёный, незрелый"
+      ],
+      "audio": "/audio/n5-words/i-aoi-2f1acf47.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-akai-3e363e94",
+      "kanji": "赤い",
+      "kana": "あかい",
+      "translation_ru": "красный",
+      "translation_en": "red",
+      "notes_ru": [
+        "1) красный, алый",
+        "2) (полит.) красный (напр. о коммунистах)"
+      ],
+      "audio": "/audio/n5-words/i-akai-3e363e94.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-kiru-9291c56d",
+      "kanji": "切る",
+      "kana": "きる",
+      "translation_ru": "(как 2-й элемент сложн. гл. показывает, что действие доведено до конца:)",
+      "translation_en": "to cut; to hang up (a phone)",
+      "notes_ru": [
+        "ёмикиру 読み切る прочесть [до конца]",
+        "(ср.) …きれない"
+      ],
+      "audio": "/audio/n5-words/ru-kiru-9291c56d.mp3",
+      "pos": "1 v5r vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kipu-d6daf50a",
+      "kanji": "切符",
+      "kana": "きっぷ",
+      "translation_ru": "1) билет",
+      "translation_en": "a ticket",
+      "notes_ru": [
+        "2) купон, талон (в продовольственной и т. п. карточке)"
+      ],
+      "audio": "/audio/n5-words/kipu-d6daf50a.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "yuki-3bf745ca",
+      "kanji": "雪",
+      "kana": "ゆき",
+      "translation_ru": "снег",
+      "translation_en": "snow",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/yuki-3bf745ca.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "sengetsu-9f37d99c",
+      "kanji": "先月",
+      "kana": "せんげつ",
+      "translation_ru": "прошлый месяц",
+      "translation_en": "last month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/sengetsu-9f37d99c.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "senshiyuu-6ec0b710",
+      "kanji": "先週",
+      "kana": "せんしゅう",
+      "translation_ru": "прошлая неделя",
+      "translation_en": "last week",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/senshiyuu-6ec0b710.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "sensei-6d88d916",
+      "kanji": "先生",
+      "kana": "せんせい",
+      "translation_ru": "1) учитель, преподаватель",
+      "translation_en": "teacher, professor; master; doctor",
+      "notes_ru": [
+        "{～をする} работать учителем",
+        "2) (почтительное обращение (к преподавателю, врачу и т. п.)"
+      ],
+      "audio": "/audio/n5-words/sensei-6d88d916.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "u-arau-fd6e932b",
+      "kanji": "洗う",
+      "kana": "あらう",
+      "translation_ru": "1) мыть; умывать; промывать (напр. глаза); омывать (о волнах); стирать",
+      "translation_en": "to wash",
+      "notes_ru": [
+        "[手や]顔を洗う умываться",
+        "2) (перен.) проверять, расследовать, выяснять (напр. чьё-л. прошлое); доискиваться (напр. до причин чего-л.)"
+      ],
+      "audio": "/audio/n5-words/u-arau-fd6e932b.mp3",
+      "pos": "1 v5u vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mae-03d8d6f3",
+      "kanji": "前",
+      "kana": "まえ",
+      "translation_ru": "1) (после числ.) порция",
+      "translation_en": "before, in front",
+      "notes_ru": [
+        "2) (уст. суф. к именам женщин аристократического происхождения)",
+        "3) (суф. со значением такой, как надо при некоторых существительных)"
+      ],
+      "audio": "/audio/n5-words/mae-03d8d6f3.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "zenbu-015045c4",
+      "kanji": "全部",
+      "kana": "ぜんぶ",
+      "translation_ru": "все, всё, всё целиком; полностью",
+      "translation_en": "all, entire, whole",
+      "notes_ru": [
+        "{～で} всего; целиком, полностью"
+      ],
+      "audio": "/audio/n5-words/zenbu-015045c4.mp3",
+      "pos": "n adj-no adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mado-42673f1d",
+      "kanji": "窓",
+      "kana": "まど",
+      "translation_ru": "1) окно; иллюминатор; витрина; (анат.) отверстие",
+      "translation_en": "window",
+      "notes_ru": [
+        "2) оконное стекло"
+      ],
+      "audio": "/audio/n5-words/mado-42673f1d.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-hashiru-be6656f9",
+      "kanji": "走る",
+      "kana": "はしる",
+      "translation_ru": "1) бежать [бегом] (о ком-л.)",
+      "translation_en": "to run",
+      "notes_ru": [
+        "2) (о быстром движении чего-л.); идти (о поезде, о судне)",
+        "3) бежать, совершать бегство"
+      ],
+      "audio": "/audio/n5-words/ru-hashiru-be6656f9.mp3",
+      "pos": "1 v5r vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-hayai-117815f9",
+      "kanji": "早い",
+      "kana": "はやい",
+      "translation_ru": "быстрый",
+      "translation_en": "early",
+      "notes_ru": [
+        "ранний",
+        "1) ((тк.) 早い) ранний"
+      ],
+      "audio": "/audio/n5-words/i-hayai-117815f9.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tabun-cf0ebb44",
+      "kanji": "多分",
+      "kana": "たぶん",
+      "translation_ru": "вероятно, по всей вероятности",
+      "translation_en": "perhaps, probably, maybe",
+      "notes_ru": [
+        "много",
+        "{～の} много (чего-л.); большой (напр. о вознаграждении)"
+      ],
+      "audio": "/audio/n5-words/tabun-cf0ebb44.mp3",
+      "pos": "1 adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "karada-8d089b46",
+      "kanji": "体",
+      "kana": "からだ",
+      "translation_ru": "1) тело; телосложение, фигура",
+      "translation_en": "body; health",
+      "notes_ru": [
+        "2) (перен.) здоровье",
+        "3) (замещает понятия сам, человек:)"
+      ],
+      "audio": "/audio/n5-words/karada-8d089b46.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "daigaku-c740004b",
+      "kanji": "大学",
+      "kana": "だいがく",
+      "translation_ru": "1) вуз, институт (учебный)",
+      "translation_en": "college; university",
+      "notes_ru": [
+        "2) университет"
+      ],
+      "audio": "/audio/n5-words/daigaku-c740004b.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "daijiyoubu-0ed9e148",
+      "kanji": "大丈夫",
+      "kana": "だいじょうぶ",
+      "translation_ru": "1) [всё] в порядке; ничего, сойдёт; будьте спокойны",
+      "translation_en": "It's ok (all right); No need to worry; Everything is under control",
+      "notes_ru": [
+        "2) наверняка"
+      ],
+      "audio": "/audio/n5-words/daijiyoubu-0ed9e148.mp3",
+      "pos": "1 adj-na",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "gu-nugu-52bcdfc4",
+      "kanji": "脱ぐ",
+      "kana": "ぬぐ",
+      "translation_ru": "снимать (одежду, обувь и т. п.)",
+      "translation_en": "to take off (clothes)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/gu-nugu-52bcdfc4.mp3",
+      "pos": "v5g vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "dare-41c5137b",
+      "kanji": "誰",
+      "kana": "だれ",
+      "translation_ru": "кто",
+      "translation_en": "who",
+      "notes_ru": [
+        "{～の} чей"
+      ],
+      "audio": "/audio/n5-words/dare-41c5137b.mp3",
+      "pos": "pn",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-mijikai-8bd5c7e4",
+      "kanji": "短い",
+      "kana": "みじかい",
+      "translation_ru": "короткий; краткий",
+      "translation_en": "short (length)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/i-mijikai-8bd5c7e4.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tanjiyoubi-f9d46acf",
+      "kanji": "誕生日",
+      "kana": "たんじょうび",
+      "translation_ru": "день рождения",
+      "translation_en": "birthday",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/tanjiyoubi-f9d46acf.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ku-hiku-b5c09767",
+      "kanji": "弾く",
+      "kana": "ひく",
+      "translation_ru": "(を) играть (на щипковых, смычковых и клавишных инструментах)",
+      "translation_en": "to play (a string instrument or piano)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/ku-hiku-b5c09767.mp3",
+      "pos": "v5k vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "otoko-4fa46edf",
+      "kanji": "男",
+      "kana": "おとこ",
+      "translation_ru": "1) мужчина; мужской пол",
+      "translation_en": "man, male",
+      "notes_ru": [
+        "2) [настоящий] мужчина",
+        "{～になる} стать [настоящим] мужчиной (о мальчике)"
+      ],
+      "audio": "/audio/n5-words/otoko-4fa46edf.mp3",
+      "pos": "1 n n-pref",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-shiru-bf686c93",
+      "kanji": "知る",
+      "kana": "しる",
+      "translation_ru": "1) знать",
+      "translation_en": "to know, to understand",
+      "notes_ru": [
+        "2) узнавать (что-л.)",
+        "3) знакомиться (с кем-л.)"
+      ],
+      "audio": "/audio/n5-words/ru-shiru-bf686c93.mp3",
+      "pos": "1 v5r vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "chikatetsu-1286b933",
+      "kanji": "地下鉄",
+      "kana": "ちかてつ",
+      "translation_ru": "метро, метрополитен",
+      "translation_en": "underground train, subway",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/chikatetsu-1286b933.mp3",
+      "pos": "n abbr",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "chizu-24ad8c68",
+      "kanji": "地図",
+      "kana": "ちず",
+      "translation_ru": "карта; план (города); атлас",
+      "translation_en": "a map",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/chizu-24ad8c68.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ku-oku-c609cfa7",
+      "kanji": "置く",
+      "kana": "おく",
+      "translation_ru": "1) класть, ставить; помещать",
+      "translation_en": "to put; to lay; to place",
+      "notes_ru": [
+        "2) оставлять (где что-л.); (ср.) おいてきぼり, おいてくる, おいてゆく",
+        "3) оставлять (в каком-л. виде); позволять продолжать (что-л. делать)"
+      ],
+      "audio": "/audio/n5-words/ku-oku-c609cfa7.mp3",
+      "pos": "1 v5k vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-osoi-f0537e45",
+      "kanji": "遅い",
+      "kana": "おそい",
+      "translation_ru": "1) поздний; запоздалый; поздно",
+      "translation_en": "slow; (to be) late",
+      "notes_ru": [
+        "2) медленный, медлительный",
+        "(ср.) おそく, おそかれはやかれ"
+      ],
+      "audio": "/audio/n5-words/i-osoi-f0537e45.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-kiru-84d315d6",
+      "kanji": "着る",
+      "kana": "きる",
+      "translation_ru": "надевать (что-л.), облачаться (во что-л.); носить (что-л.)",
+      "translation_en": "to put on (clothes above your waist); to wear",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/ru-kiru-84d315d6.mp3",
+      "pos": "1 v1 vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "asa-ef798848",
+      "kanji": "朝",
+      "kana": "あさ",
+      "translation_ru": "утро",
+      "translation_en": "morning",
+      "notes_ru": [
+        "{～[に]} утром",
+        "{～になる} наступает утро"
+      ],
+      "audio": "/audio/n5-words/asa-ef798848.mp3",
+      "pos": "1 n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-nagai-07434018",
+      "kanji": "長い",
+      "kana": "ながい",
+      "translation_ru": "1) длинный",
+      "translation_en": "long, lengthy",
+      "notes_ru": [
+        "2) ((тж.) 永い) долгий, длинный",
+        "(ср.) なが, ながく"
+      ],
+      "audio": "/audio/n5-words/i-nagai-07434018.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-itai-18e8a190",
+      "kanji": "痛い",
+      "kana": "いたい",
+      "translation_ru": "1) больно, болит",
+      "translation_en": "hurt; painful; sore",
+      "notes_ru": [
+        "2) болезненный, чувствительный"
+      ],
+      "audio": "/audio/n5-words/i-itai-18e8a190.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "niwa-e3db4f88",
+      "kanji": "庭",
+      "kana": "にわ",
+      "translation_ru": "сад, двор",
+      "translation_en": "garden",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/niwa-e3db4f88.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tenki-5594d428",
+      "kanji": "天気",
+      "kana": "てんき",
+      "translation_ru": "1) погода",
+      "translation_en": "weather",
+      "notes_ru": [
+        "2) хорошая погода"
+      ],
+      "audio": "/audio/n5-words/tenki-5594d428.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "denki-a93616af",
+      "kanji": "電気",
+      "kana": "でんき",
+      "translation_ru": "1) электричество",
+      "translation_en": "electricity, (electric) light",
+      "notes_ru": [
+        "{～[の]} электрический",
+        "2) электрическое освещение, электричество"
+      ],
+      "audio": "/audio/n5-words/denki-a93616af.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "denshiya-acba95ee",
+      "kanji": "電車",
+      "kana": "でんしゃ",
+      "translation_ru": "трамвай",
+      "translation_en": "electric train",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/denshiya-acba95ee.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "denwa-581e2fa2",
+      "kanji": "電話",
+      "kana": "でんわ",
+      "translation_ru": "телефон; (перен.) разговор по телефону",
+      "translation_en": "a telephone",
+      "notes_ru": [
+        "{～[を]する}, 電話を掛ける звонить [по телефону]",
+        "Kさんから電話でしたよ вам звонил г-н К"
+      ],
+      "audio": "/audio/n5-words/denwa-581e2fa2.mp3",
+      "pos": "1 n vs vt vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "doyoubi-ce206edc",
+      "kanji": "土曜日",
+      "kana": "どようび",
+      "translation_ru": "суббота",
+      "translation_en": "Saturday",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/doyoubi-ce206edc.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "fuyu-55d7ae35",
+      "kanji": "冬",
+      "kana": "ふゆ",
+      "translation_ru": "1",
+      "translation_en": "winter",
+      "notes_ru": [
+        "зима",
+        "{～の} зимний"
+      ],
+      "audio": "/audio/n5-words/fuyu-55d7ae35.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ku-hataraku-1724ae40",
+      "kanji": "働く",
+      "kana": "はたらく",
+      "translation_ru": "1) работать, трудиться",
+      "translation_en": "to work",
+      "notes_ru": [
+        "2) поступать (дурно), совершать (что-л. дурное)",
+        "3) функционировать, действовать"
+      ],
+      "audio": "/audio/n5-words/ku-hataraku-1724ae40.mp3",
+      "pos": "1 v5k vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ji-onaji-8516b8f1",
+      "kanji": "同じ",
+      "kana": "おなじ",
+      "translation_ru": "1) одинаковый, такой же самый",
+      "translation_en": "same, identical",
+      "notes_ru": [
+        "{…と～} такой же как…",
+        "2) тот же"
+      ],
+      "audio": "/audio/n5-words/ji-onaji-8516b8f1.mp3",
+      "pos": "1 adj-f adj-na",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "michi-cf2f4e74",
+      "kanji": "道",
+      "kana": "みち",
+      "translation_ru": "1) ((тж.) 路, 途) дорога, путь; проход; (тех.) траектория",
+      "translation_en": "road, street; way, directions",
+      "notes_ru": [
+        "{～で} по дороге, дорогой; на дороге",
+        "2) (перен.) расстояние; продвижение"
+      ],
+      "audio": "/audio/n5-words/michi-cf2f4e74.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shii-muzukashii-138a4b50",
+      "kanji": "難しい",
+      "kana": "むずかしい",
+      "translation_ru": "трудный",
+      "translation_en": "difficult",
+      "notes_ru": [
+        "сложный",
+        "(см.) むずかしい"
+      ],
+      "audio": "/audio/n5-words/shii-muzukashii-138a4b50.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-futatsu-c83bc7c8",
+      "kanji": "二つ",
+      "kana": "ふたつ",
+      "translation_ru": "1) два",
+      "translation_en": "two things",
+      "notes_ru": [
+        "{～にする}, 二つに分ける делить надвое (пополам)",
+        "{～になる} делиться надвое"
+      ],
+      "audio": "/audio/n5-words/tsu-futatsu-c83bc7c8.mp3",
+      "pos": "num",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "nichiyoubi-dfbbdcb1",
+      "kanji": "日曜日",
+      "kana": "にちようび",
+      "translation_ru": "воскресенье",
+      "translation_en": "Sunday",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/nichiyoubi-dfbbdcb1.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "neko-42100e10",
+      "kanji": "猫",
+      "kana": "ねこ",
+      "translation_ru": "1) кошка, кот",
+      "translation_en": "cat",
+      "notes_ru": [
+        "{～の} кошачий",
+        "2) (прост.) кошечка (о гейше)"
+      ],
+      "audio": "/audio/n5-words/neko-42100e10.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-atsui-ef290d69",
+      "kanji": "熱い",
+      "kana": "あつい",
+      "translation_ru": "1) горячий",
+      "translation_en": "hot (objects)",
+      "notes_ru": [
+        "2) (прост.) пылкий (в чём-л.)"
+      ],
+      "audio": "/audio/n5-words/i-atsui-ef290d69.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-uru-774fb434",
+      "kanji": "売る",
+      "kana": "うる",
+      "translation_ru": "1) продавать",
+      "translation_en": "to sell (v.t.)",
+      "notes_ru": [
+        "2) предавать (напр. друга); изменять (напр. родине)"
+      ],
+      "audio": "/audio/n5-words/ru-uru-774fb434.mp3",
+      "pos": "1 v5r vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-shiroi-e5db8925",
+      "kanji": "白い",
+      "kana": "しろい",
+      "translation_ru": "1) белый",
+      "translation_en": "white",
+      "notes_ru": [
+        "2) пустой, незаполненный (о бланке и т. п.)",
+        "3) незапятнанный; невиновный, невинный"
+      ],
+      "audio": "/audio/n5-words/i-shiroi-e5db8925.mp3",
+      "pos": "adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "bangou-c792b58d",
+      "kanji": "番号",
+      "kana": "ばんごう",
+      "translation_ru": "номер",
+      "translation_en": "number, series of digits",
+      "notes_ru": [
+        "{～！} по порядку [номеров] рассчитайся! (команда)",
+        "{～のない} ненумерованный; без номера"
+      ],
+      "audio": "/audio/n5-words/bangou-c792b58d.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "reru-tsukareru-d21f0af7",
+      "kanji": "疲れる",
+      "kana": "つかれる",
+      "translation_ru": "1) устать, утомиться, умаяться; (тж. как 2-й компонент сложн. гл.)",
+      "translation_en": "to get (become) tired; to become fatigued",
+      "notes_ru": [
+        "(ср.) つかれず",
+        "2) изнашиваться"
+      ],
+      "audio": "/audio/n5-words/reru-tsukareru-d21f0af7.mp3",
+      "pos": "1 v1 vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "hikouki-7346e59f",
+      "kanji": "飛行機",
+      "kana": "ひこうき",
+      "translation_ru": "самолёт",
+      "translation_en": "airplane",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/hikouki-7346e59f.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "biyouin-22e821e0",
+      "kanji": "病院",
+      "kana": "びょういん",
+      "translation_ru": "больница, госпиталь, лазарет",
+      "translation_en": "hospital",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/biyouin-22e821e0.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "biyouki-0eab1373",
+      "kanji": "病気",
+      "kana": "びょうき",
+      "translation_ru": "1) болезнь, заболевание",
+      "translation_en": "illness; sickness",
+      "notes_ru": [
+        "{～[を]する}, 病気[中]である болеть",
+        "{～になる}, 病気に罹る заболевать"
+      ],
+      "audio": "/audio/n5-words/biyouki-0eab1373.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "chichi-4cb883c9",
+      "kanji": "父",
+      "kana": "ちち",
+      "translation_ru": "отец",
+      "translation_en": "(my) father",
+      "notes_ru": [
+        "{～の} отцовский; (ср.) ちちらしい"
+      ],
+      "audio": "/audio/n5-words/chichi-4cb883c9.mp3",
+      "pos": "n hum",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "heya-4236959f",
+      "kanji": "部屋",
+      "kana": "へや",
+      "translation_ru": "комната; номер (в гостинице)",
+      "translation_en": "a room",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/heya-4236959f.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kaze-36bc95f5",
+      "kanji": "風",
+      "kana": "かぜ",
+      "translation_ru": "ветер",
+      "translation_en": "wind, breeze",
+      "notes_ru": [
+        "{～のある}, 風の強い ветреный",
+        "{～のない} безветренный"
+      ],
+      "audio": "/audio/n5-words/kaze-36bc95f5.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "fuku-840c8452",
+      "kanji": "服",
+      "kana": "ふく",
+      "translation_ru": "одежда (гл. обр. европейская), костюм",
+      "translation_en": "clothes",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/fuku-840c8452.mp3",
+      "pos": "1 n n-suf",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mono-6be10aac",
+      "kanji": "物",
+      "kana": "もの",
+      "translation_ru": "вещь, предмет; нечто; то, что…",
+      "translation_en": "thing (concrete object)",
+      "notes_ru": [
+        "{…の～である} принадлежать (кому-л.)",
+        "{～になる} годиться; получаться, удаваться, выходить"
+      ],
+      "audio": "/audio/n5-words/mono-6be10aac.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ku-aruku-b7b95c70",
+      "kanji": "歩く",
+      "kana": "あるく",
+      "translation_ru": "идти [пешком], ходить",
+      "translation_en": "to walk",
+      "notes_ru": [
+        "(ср.) あるいて"
+      ],
+      "audio": "/audio/n5-words/ku-aruku-b7b95c70.mp3",
+      "pos": "v5k vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "haha-190e2a6b",
+      "kanji": "母",
+      "kana": "はは",
+      "translation_ru": "мать",
+      "translation_en": "(my) mother",
+      "notes_ru": [
+        "{～の} материнский"
+      ],
+      "audio": "/audio/n5-words/haha-190e2a6b.mp3",
+      "pos": "n hum",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "boushi-aad0f3c6",
+      "kanji": "帽子",
+      "kana": "ぼうし",
+      "translation_ru": "головной убор; шляпа, шапка, кепка, фуражка",
+      "translation_en": "hat; cap",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/boushi-aad0f3c6.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shii-isogashii-a77d74d3",
+      "kanji": "忙しい",
+      "kana": "いそがしい",
+      "translation_ru": "занятый",
+      "translation_en": "busy (people, days)",
+      "notes_ru": [
+        "занятой"
+      ],
+      "audio": "/audio/n5-words/shii-isogashii-a77d74d3.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "hon-31a7c3d9",
+      "kanji": "本",
+      "kana": "ほん",
+      "translation_ru": "(счётный суф. для предметов цилиндрической формы, напр. для карандашей, пальцев; труб)",
+      "translation_en": "book",
+      "notes_ru": [
+        "1) книга"
+      ],
+      "audio": "/audio/n5-words/hon-31a7c3d9.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ku-migaku-ca01b633",
+      "kanji": "磨く",
+      "kana": "みがく",
+      "translation_ru": "чистить",
+      "translation_en": "to brush (teeth); to polish",
+      "notes_ru": [
+        "1) полировать; шлифовать; чистить (трением); натирать до блеска, наводить лоск",
+        "2) (перен.) отшлифовывать, отделывать (что-л.); развивать (напр. способности); тренировать (напр. память)"
+      ],
+      "audio": "/audio/n5-words/ku-migaku-ca01b633.mp3",
+      "pos": "1 v5k vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "imouto-176942b7",
+      "kanji": "妹",
+      "kana": "いもうと",
+      "translation_ru": "младшая сестра",
+      "translation_en": "younger sister (humble)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/imouto-176942b7.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "maishiyuu-7d46ca86",
+      "kanji": "毎週",
+      "kana": "まいしゅう",
+      "translation_ru": "каждая неделя; каждую неделю, еженедельно; неделя за неделей; из недели в неделю",
+      "translation_en": "every week",
+      "notes_ru": [
+        "{～[の]} еженедельный"
+      ],
+      "audio": "/audio/n5-words/maishiyuu-7d46ca86.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "maiasa-81e3f6f8",
+      "kanji": "毎朝",
+      "kana": "まいあさ",
+      "translation_ru": "каждое утро",
+      "translation_en": "every morning",
+      "notes_ru": [
+        "(см.) まいあさ"
+      ],
+      "audio": "/audio/n5-words/maiasa-81e3f6f8.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mainichi-bb41384b",
+      "kanji": "毎日",
+      "kana": "まいにち",
+      "translation_ru": "каждый день, ежедневно; день за днём, изо дня в день",
+      "translation_en": "every day",
+      "notes_ru": [
+        "{～の} ежедневный"
+      ],
+      "audio": "/audio/n5-words/mainichi-bb41384b.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "maiban-1b8c2ba0",
+      "kanji": "毎晩",
+      "kana": "まいばん",
+      "translation_ru": "1",
+      "translation_en": "every night",
+      "notes_ru": [
+        "1) каждый вечер",
+        "{～の} ежевечерний"
+      ],
+      "audio": "/audio/n5-words/maiban-1b8c2ba0.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "namae-399257f4",
+      "kanji": "名前",
+      "kana": "なまえ",
+      "translation_ru": "имя",
+      "translation_en": "name",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/namae-399257f4.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "rui-akarui-cb582ccc",
+      "kanji": "明るい",
+      "kana": "あかるい",
+      "translation_ru": "1) (прям. и перен.) светлый",
+      "translation_en": "bright (in reference to personality or weather); cheerful",
+      "notes_ru": [
+        "2) сведущий (в чём-л.)"
+      ],
+      "audio": "/audio/n5-words/rui-akarui-cb582ccc.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-omoshiroi-455a0104",
+      "kanji": "面白い",
+      "kana": "おもしろい",
+      "translation_ru": "1) интересный, занятный",
+      "translation_en": "interesting, amusing",
+      "notes_ru": [
+        "2) приятный, хороший; удачный"
+      ],
+      "audio": "/audio/n5-words/i-omoshiroi-455a0104.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mokuyoubi-f8385845",
+      "kanji": "木曜日",
+      "kana": "もくようび",
+      "translation_ru": "четверг",
+      "translation_en": "Thursday",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/mokuyoubi-f8385845.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "yoru-3518566a",
+      "kanji": "夜",
+      "kana": "よる",
+      "translation_ru": "1. ночь; вечер",
+      "translation_en": "evening, night",
+      "notes_ru": [
+        "2. ночью",
+        "ночь; вечер"
+      ],
+      "audio": "/audio/n5-words/yoru-3518566a.mp3",
+      "pos": "1 n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "yasai-f451e8ce",
+      "kanji": "野菜",
+      "kana": "やさい",
+      "translation_ru": "овощи, зелень",
+      "translation_en": "vegetable",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/yasai-f451e8ce.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kusuri-7086336a",
+      "kanji": "薬",
+      "kana": "くすり",
+      "translation_ru": "1) лекарство; медикамент; средство",
+      "translation_en": "medicine",
+      "notes_ru": [
+        "{～の} лечебный",
+        "2) (перен.) польза"
+      ],
+      "audio": "/audio/n5-words/kusuri-7086336a.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tomodachi-5f1fbd52",
+      "kanji": "友達",
+      "kana": "ともだち",
+      "translation_ru": "приятель, товарищ",
+      "translation_en": "friend",
+      "notes_ru": [
+        "{～になる} подружиться"
+      ],
+      "audio": "/audio/n5-words/tomodachi-5f1fbd52.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "bu-asobu-d1314455",
+      "kanji": "遊ぶ",
+      "kana": "あそぶ",
+      "translation_ru": "1) играть (тж. и в какую-л. игру)",
+      "translation_en": "to play; to spend time pleasantly; to hang out",
+      "notes_ru": [
+        "2) развлекаться, забавляться; гулять",
+        "3) вести весёлую (беспутную) жизнь, кутить"
+      ],
+      "audio": "/audio/n5-words/bu-asobu-d1314455.mp3",
+      "pos": "1 v5b vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "yuubinkiyoku-75289c4f",
+      "kanji": "郵便局",
+      "kana": "ゆうびんきょく",
+      "translation_ru": "почта, отделение связи",
+      "translation_en": "post office",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/yuubinkiyoku-75289c4f.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "yuugata-7cde294a",
+      "kanji": "夕方",
+      "kana": "ゆうがた",
+      "translation_ru": "вечер, сумерки",
+      "translation_en": "late afternoon (typically just before dinner time), evening",
+      "notes_ru": [
+        "{～[に]} под вечер; вечером"
+      ],
+      "audio": "/audio/n5-words/yuugata-7cde294a.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "hagaki-a6760309",
+      "kanji": "葉書",
+      "kana": "はがき",
+      "translation_ru": "открытка",
+      "translation_en": "postcard",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/hagaki-a6760309.mp3",
+      "pos": "1 n abbr uk",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "raigetsu-ae7b7166",
+      "kanji": "来月",
+      "kana": "らいげつ",
+      "translation_ru": "следующий (будущий) месяц",
+      "translation_en": "next month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/raigetsu-ae7b7166.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "raishiyuu-676079cb",
+      "kanji": "来週",
+      "kana": "らいしゅう",
+      "translation_ru": "будущая неделя",
+      "translation_en": "next week",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/raishiyuu-676079cb.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "rainen-c1f68ffb",
+      "kanji": "来年",
+      "kana": "らいねん",
+      "translation_ru": "будущий (следующий) год",
+      "translation_en": "next year",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/rainen-c1f68ffb.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mu-tanomu-58a0f7a2",
+      "kanji": "頼む",
+      "kana": "たのむ",
+      "translation_ru": "просить",
+      "translation_en": "to request, to ask (a favor)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/mu-tanomu-58a0f7a2.mp3",
+      "pos": "1 v5m vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "riyuugakusei-51a39082",
+      "kanji": "留学生",
+      "kana": "りゅうがくせい",
+      "translation_ru": "студент, обучающийся за границей; студент-иностранец",
+      "translation_en": "international student",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/riyuugakusei-51a39082.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shii-suzushii-db256f30",
+      "kanji": "涼しい",
+      "kana": "すずしい",
+      "translation_ru": "прохладный; освежающий",
+      "translation_en": "cool, refreshing (in reference to weather)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/shii-suzushii-db256f30.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tai-tsumetai-5ea2a0e8",
+      "kanji": "冷たい",
+      "kana": "つめたい",
+      "translation_ru": "холодный, прохладный",
+      "translation_en": "cold (things, people)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/tai-tsumetai-5ea2a0e8.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "reizouko-36383a45",
+      "kanji": "冷蔵庫",
+      "kana": "れいぞうこ",
+      "translation_ru": "холодильник, холодильный склад",
+      "translation_en": "refrigerator",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/reizouko-36383a45.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ototoi-d99775a0",
+      "kanji": "一昨日",
+      "kana": "おととい",
+      "translation_ru": "1. позапрошлый день",
+      "translation_en": "the day before yesterday",
+      "notes_ru": [
+        "2. позавчера, третьего дня",
+        "позавчера, третьего дня"
+      ],
+      "audio": "/audio/n5-words/ototoi-d99775a0.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "hitori-0e209357",
+      "kanji": "一人",
+      "kana": "ひとり",
+      "translation_ru": "[один] человек; один из …",
+      "translation_en": "one person",
+      "notes_ru": [
+        "один человек",
+        "один [человек]"
+      ],
+      "audio": "/audio/n5-words/hitori-0e209357.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ichinichi-a8ebce6c",
+      "kanji": "一日",
+      "kana": "いちにち",
+      "translation_ru": "1) [один] день; в день",
+      "translation_en": "one day (duration)",
+      "notes_ru": [
+        "{～の} однодневный",
+        "2) целый (весь) день"
+      ],
+      "audio": "/audio/n5-words/ichinichi-a8ebce6c.mp3",
+      "pos": "1 n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "megane-4f1f0af6",
+      "kanji": "眼鏡",
+      "kana": "めがね",
+      "translation_ru": "1) очки, пенснэ",
+      "translation_en": "eye glasses",
+      "notes_ru": [
+        "2) (см.) めがね【鑑識】"
+      ],
+      "audio": "/audio/n5-words/megane-4f1f0af6.mp3",
+      "pos": "1 n uk",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "sakana-fde45209",
+      "kanji": "魚",
+      "kana": "さかな",
+      "translation_ru": "рыба",
+      "translation_en": "fish",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/sakana-fde45209.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kesa-fcb16dc2",
+      "kanji": "今朝",
+      "kana": "けさ",
+      "translation_ru": "сегодня утром",
+      "translation_en": "this morning",
+      "notes_ru": [
+        "(кн.)",
+        "1. это (сегодняшнее) утро"
+      ],
+      "audio": "/audio/n5-words/kesa-fcb16dc2.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kiyou-c402fd02",
+      "kanji": "今日",
+      "kana": "きょう",
+      "translation_ru": "сегодня; этот (нынешний) день",
+      "translation_en": "today, this day",
+      "notes_ru": [
+        "{～の} сегодняшний",
+        "(ср.) こんにち"
+      ],
+      "audio": "/audio/n5-words/kiyou-c402fd02.mp3",
+      "pos": "1 n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kotoshi-c2a4349c",
+      "kanji": "今年",
+      "kana": "ことし",
+      "translation_ru": "1. этот год",
+      "translation_en": "this year",
+      "notes_ru": [
+        "2. в этом году",
+        "этот (текущий) год"
+      ],
+      "audio": "/audio/n5-words/kotoshi-c2a4349c.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kinou-ef58bced",
+      "kanji": "昨日",
+      "kana": "きのう",
+      "translation_ru": "вчера",
+      "translation_en": "yesterday",
+      "notes_ru": [
+        "1. вчерашний день",
+        "2. вчера"
+      ],
+      "audio": "/audio/n5-words/kinou-ef58bced.mp3",
+      "pos": "n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "hito-ce6aac15",
+      "kanji": "人",
+      "kana": "ひと",
+      "translation_ru": "1) человек, люди",
+      "translation_en": "man, person",
+      "notes_ru": [
+        "2) личность, характер",
+        "3) достойный человек; подходящий человек; взрослый человек"
+      ],
+      "audio": "/audio/n5-words/hito-ce6aac15.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "otouto-8d83340a",
+      "kanji": "弟",
+      "kana": "おとうと",
+      "translation_ru": "(связ.) младший брат; (ср.) けい【兄】",
+      "translation_en": "younger brother",
+      "notes_ru": [
+        "младший брат"
+      ],
+      "audio": "/audio/n5-words/otouto-8d83340a.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mise-1601280a",
+      "kanji": "店",
+      "kana": "みせ",
+      "translation_ru": "(уст.) 見世",
+      "translation_en": "store, shop",
+      "notes_ru": [
+        "магазин, лавка; фирма; [торговая] контора"
+      ],
+      "audio": "/audio/n5-words/mise-1601280a.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "futari-a3f13d54",
+      "kanji": "二人",
+      "kana": "ふたり",
+      "translation_ru": "два человека; (ср.) ふたり",
+      "translation_en": "two people",
+      "notes_ru": [
+        "двое, пара"
+      ],
+      "audio": "/audio/n5-words/futari-a3f13d54.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-yatsu-add584aa",
+      "kanji": "八つ",
+      "kana": "やっつ",
+      "translation_ru": "восемь",
+      "translation_en": "eight things",
+      "notes_ru": [
+        "1) восемь",
+        "2) (см.) やつどき; (ср.) おやつ"
+      ],
+      "audio": "/audio/n5-words/tsu-yatsu-add584aa.mp3",
+      "pos": "1 num",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kaze-01a6560a",
+      "kanji": "風邪",
+      "kana": "かぜ",
+      "translation_ru": "простуда",
+      "translation_en": "cold, flu",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kaze-01a6560a.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ashita-82a0002d",
+      "kanji": "明日",
+      "kana": "あした",
+      "translation_ru": "завтрашний день; завтра",
+      "translation_en": "tomorrow",
+      "notes_ru": [
+        "(ср.) あす",
+        "завтра"
+      ],
+      "audio": "/audio/n5-words/ashita-82a0002d.mp3",
+      "pos": "1 n adv",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-mutsu-08242cb3",
+      "kanji": "六つ",
+      "kana": "むっつ",
+      "translation_ru": "1) шесть",
+      "translation_en": "six things",
+      "notes_ru": [
+        "2) шесть лет (о возрасте)",
+        "3) (см.) むつどき"
+      ],
+      "audio": "/audio/n5-words/tsu-mutsu-08242cb3.mp3",
+      "pos": "1 num",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "u-iu-1fd18834",
+      "kanji": "言う",
+      "kana": "いう",
+      "translation_ru": "говорить",
+      "translation_en": "to say",
+      "notes_ru": [
+        "сказать",
+        "называться"
+      ],
+      "audio": "/audio/n5-words/u-iu-1fd18834.mp3",
+      "pos": "1 v5u vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "u-utau-d9f14147",
+      "kanji": "歌う",
+      "kana": "うたう",
+      "translation_ru": "петь (песни)",
+      "translation_en": "to sing",
+      "notes_ru": [
+        "слагать [стихи]"
+      ],
+      "audio": "/audio/n5-words/u-utau-d9f14147.mp3",
+      "pos": "1 v5u vt vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kii-ookii-194758d2",
+      "kanji": "大きい",
+      "kana": "おおきい",
+      "translation_ru": "большой, крупный",
+      "translation_en": "big, large",
+      "notes_ru": [
+        "(ср.) おおきく【大きく】"
+      ],
+      "audio": "/audio/n5-words/kii-ookii-194758d2.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-kaimono-dcf5a401",
+      "kanji": "買い物",
+      "kana": "かいもの",
+      "translation_ru": "покупки",
+      "translation_en": "shopping",
+      "notes_ru": [
+        "1) покупка (действие)",
+        "{～をする} делать покупки"
+      ],
+      "audio": "/audio/n5-words/i-kaimono-dcf5a401.mp3",
+      "pos": "n vs vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kuni-cb5b3403",
+      "kanji": "国",
+      "kana": "くに",
+      "translation_ru": "1) страна, государство",
+      "translation_en": "country; place of origin",
+      "notes_ru": [
+        "2) родина",
+        "3) (ист.) провинция (до 1878 г.)"
+      ],
+      "audio": "/audio/n5-words/kuni-cb5b3403.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ri-kumori-9d965c0b",
+      "kanji": "曇り",
+      "kana": "くもり",
+      "translation_ru": "1) облачность, небо в облаках; пасмурная (облачная) погода; пасмурность",
+      "translation_en": "cloudiness, cloudy weather",
+      "notes_ru": [
+        "2) тень; помутнение; потускнение; тусклость; (фото) вуаль; (обр.) а) уныние; б) подозрение; в) пятно (на репутации и т. п.)"
+      ],
+      "audio": "/audio/n5-words/ri-kumori-9d965c0b.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shiyouyu-6ae2080c",
+      "kanji": "醤油",
+      "kana": "しょうゆ",
+      "translation_ru": "соевый соус",
+      "translation_en": "soy sauce",
+      "notes_ru": [
+        "соя (соус, приправа)"
+      ],
+      "audio": "/audio/n5-words/shiyouyu-6ae2080c.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tsu-tatsu-5c9971ff",
+      "kanji": "立つ",
+      "kana": "たつ",
+      "translation_ru": "1) стоять [вертикально]",
+      "translation_en": "to stand up",
+      "notes_ru": [
+        "2) стоять [на ногах]; стать",
+        "3) ((тж.) 起つ) (прям. и перен.) вставать, подниматься"
+      ],
+      "audio": "/audio/n5-words/tsu-tatsu-5c9971ff.mp3",
+      "pos": "1 v5t vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-tsukuru-5ad95ade",
+      "kanji": "作る",
+      "kana": "つくる",
+      "translation_ru": "1) ((тж.) 造る) делать, изготовлять; создавать; творить",
+      "translation_en": "to make, to create",
+      "notes_ru": [
+        "2) ((тж.) 造る) строить",
+        "3) формировать; организовывать; учреждать"
+      ],
+      "audio": "/audio/n5-words/ru-tsukuru-5ad95ade.mp3",
+      "pos": "1 v5r vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kakeru-dekakeru-c021d42d",
+      "kanji": "出かける",
+      "kana": "でかける",
+      "translation_ru": "выходить",
+      "translation_en": "to go out; to depart",
+      "notes_ru": [
+        "отправляться",
+        "выходить, отправляться"
+      ],
+      "audio": "/audio/n5-words/kakeru-dekakeru-c021d42d.mp3",
+      "pos": "1 v1 vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tokidoki-991336fb",
+      "kanji": "時々",
+      "kana": "ときどき",
+      "translation_ru": "иногда",
+      "translation_en": "sometimes",
+      "notes_ru": [
+        "время от времени",
+        "иногда, время от времени"
+      ],
+      "audio": "/audio/n5-words/tokidoki-991336fb.mp3",
+      "pos": "1 adv adj-no",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mi-nomimono-eaa37782",
+      "kanji": "飲み物",
+      "kana": "のみもの",
+      "translation_ru": "напиток; питьё; пойло",
+      "translation_en": "drink, beverage",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/mi-nomimono-eaa37782.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "hanashi-9ec2b5a5",
+      "kanji": "話",
+      "kana": "はなし",
+      "translation_ru": "сказка; эстрадный рассказ",
+      "translation_en": "talk (chat), story",
+      "notes_ru": [
+        "1) разговор, беседа",
+        "{～をする} разговаривать"
+      ],
+      "audio": "/audio/n5-words/hanashi-9ec2b5a5.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "bangohan-7aa015b7",
+      "kanji": "晩御飯",
+      "kana": "ばんごはん",
+      "translation_ru": "dinner",
+      "translation_en": "dinner, evening meal",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/bangohan-7aa015b7.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "riyoushin-d650e3a0",
+      "kanji": "両親",
+      "kana": "りょうしん",
+      "translation_ru": "родители",
+      "translation_en": "parents (lit., both parents)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/riyoushin-d650e3a0.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "machi-6a996488",
+      "kanji": "町",
+      "kana": "まち",
+      "translation_ru": "1) город (небольшой)",
+      "translation_en": "town; city",
+      "notes_ru": [
+        "2) ((тж.) 街) улица; квартал",
+        "городок"
+      ],
+      "audio": "/audio/n5-words/machi-6a996488.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "me-997aed32",
+      "kanji": "目",
+      "kana": "め",
+      "translation_ru": "(суф. порядковых числительных)",
+      "translation_en": "eye(s)",
+      "notes_ru": [
+        "(связ.:)",
+        "1) скважина; ячея (сети, сита и т. п.); петля (в вязании); промежуток между нитями (в ткани); промежуток между слоями (в древесине и т. п.); промежуток между зубьями (гребня, пилы); клетка (в решётке, на шахматной доске, в узоре)"
+      ],
+      "audio": "/audio/n5-words/me-997aed32.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kokonoka-d48bf953",
+      "kanji": "九日",
+      "kana": "ここのか",
+      "translation_ru": "9 days, 9th of the month",
+      "translation_en": "nine days; ninth day of the month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kokonoka-d48bf953.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "itsuka-ce680968",
+      "kanji": "五日",
+      "kana": "いつか",
+      "translation_ru": "5 days, 5th of the month",
+      "translation_en": "five days; fifth day of the month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/itsuka-ce680968.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "gohan-b22aba90",
+      "kanji": "御飯",
+      "kana": "ごはん",
+      "translation_ru": "rice (cooked), meal",
+      "translation_en": "rice (cooked); meal",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/gohan-b22aba90.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mika-c29fa435",
+      "kanji": "三日",
+      "kana": "みっか",
+      "translation_ru": "3 days, 3rd day of the month",
+      "translation_en": "three days, third day of the month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/mika-c29fa435.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "yoka-824a699b",
+      "kanji": "四日",
+      "kana": "よっか",
+      "translation_ru": "4 days, 4th of the month",
+      "translation_en": "four days; fourth day of the month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/yoka-824a699b.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "nanoka-4f858f6f",
+      "kanji": "七日",
+      "kana": "なのか",
+      "translation_ru": "7 days, 7th of the month",
+      "translation_en": "seven days; seventh day (of the month)",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/nanoka-4f858f6f.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "tooka-9a61f5ef",
+      "kanji": "十日",
+      "kana": "とおか",
+      "translation_ru": "10 days, 10th of the month",
+      "translation_en": "ten days; tenth day of the month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/tooka-9a61f5ef.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-hayai-316b82d4",
+      "kanji": "速い",
+      "kana": "はやい",
+      "translation_ru": "quick, fast, swift",
+      "translation_en": "fast, quick",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/i-hayai-316b82d4.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "hirugohan-e5e55cb8",
+      "kanji": "昼御飯",
+      "kana": "ひるごはん",
+      "translation_ru": "lunch",
+      "translation_en": "lunch, midday meal",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/hirugohan-e5e55cb8.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "asagohan-71378a49",
+      "kanji": "朝御飯",
+      "kana": "あさごはん",
+      "translation_ru": "breakfast",
+      "translation_en": "breakfast",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/asagohan-71378a49.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "futsuka-b0488834",
+      "kanji": "二日",
+      "kana": "ふつか",
+      "translation_ru": "2nd of the month, 2 days",
+      "translation_en": "two days; second day of the month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/futsuka-b0488834.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "youka-579ccc66",
+      "kanji": "八日",
+      "kana": "ようか",
+      "translation_ru": "8 days, 8th of the month",
+      "translation_en": "eight days; eighth day of the month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/youka-579ccc66.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "muika-044651a5",
+      "kanji": "六日",
+      "kana": "むいか",
+      "translation_ru": "6 days, 6th of the month",
+      "translation_en": "six days; sixth day of month",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/muika-044651a5.mp3",
+      "pos": "",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "Kanji Alive / JLPT list",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "i-kurai-bb3531e8",
+      "kanji": "暗い",
+      "kana": "くらい",
+      "translation_ru": "1) тёмный",
+      "translation_en": "dark, gloomy",
+      "notes_ru": [
+        "2) мрачный",
+        "3) тёмный, нехороший"
+      ],
+      "audio": "/audio/n5-words/i-kurai-bb3531e8.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shii-yasashii-81c34c0e",
+      "kanji": "易しい",
+      "kana": "やさしい",
+      "translation_ru": "лёгкий (нетрудный)",
+      "translation_en": "easy, plain, simple",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/shii-yasashii-81c34c0e.mp3",
+      "pos": "adj-i uk",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "isu-17210624",
+      "kanji": "椅子",
+      "kana": "いす",
+      "translation_ru": "стул",
+      "translation_en": "chair",
+      "notes_ru": [
+        "стул; (обр.) пост, место"
+      ],
+      "audio": "/audio/n5-words/isu-17210624.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ishiyo-50b753e4",
+      "kanji": "一緒",
+      "kana": "いっしょ",
+      "translation_ru": "1): {～に} вместе",
+      "translation_en": "together",
+      "notes_ru": [
+        "{～にする} соединять",
+        "{～になる} [при]соединяться; встречаться"
+      ],
+      "audio": "/audio/n5-words/ishiyo-50b753e4.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ku-hiku-de627343",
+      "kanji": "引く",
+      "kana": "ひく",
+      "translation_ru": "1) ((тж.) 曳く) тянуть; тащить; волочить; дёргать",
+      "translation_en": "to pull, to draw; subtract",
+      "notes_ru": [
+        "2) ((тж.) 惹く) притягивать; привлекать",
+        "3) вести"
+      ],
+      "audio": "/audio/n5-words/ku-hiku-de627343.mp3",
+      "pos": "1 v5k vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mu-nomu-a27155b9",
+      "kanji": "飲む",
+      "kana": "のむ",
+      "translation_ru": "1) пить",
+      "translation_en": "to drink",
+      "notes_ru": [
+        "(ср.) のまれる, のませる, のめる【飲める】",
+        "2) пить (спиртное)"
+      ],
+      "audio": "/audio/n5-words/mu-nomu-a27155b9.mp3",
+      "pos": "1 v5m vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "migi-7798e420",
+      "kanji": "右",
+      "kana": "みぎ",
+      "translation_ru": ": {～に} направо, справа",
+      "translation_en": "right hand side",
+      "notes_ru": [
+        "{～へ} направо, вправо",
+        "{～の} а) правый, [находящийся] справа; б) вышеуказанный, вышеупомянутый"
+      ],
+      "audio": "/audio/n5-words/migi-7798e420.mp3",
+      "pos": "1 n adj-no",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "yoko-90696982",
+      "kanji": "横",
+      "kana": "よこ",
+      "translation_ru": "бок, боковая сторона; поперечник; ширина",
+      "translation_en": "beside; side; width",
+      "notes_ru": [
+        "{～に} поперёк; в ширину; горизонтально",
+        "{～から} сбоку, со стороны"
+      ],
+      "audio": "/audio/n5-words/yoko-90696982.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "shita-7b45beb2",
+      "kanji": "下",
+      "kana": "した",
+      "translation_ru": "1): {～に} внизу",
+      "translation_en": "under, below, beneath",
+      "notes_ru": [
+        "{…の～に} под (чем-л.)",
+        "{～から} снизу; из-под (чего-л.)"
+      ],
+      "audio": "/audio/n5-words/shita-7b45beb2.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "heta-d767c434",
+      "kanji": "下手",
+      "kana": "へた",
+      "translation_ru": ": {～な} неумелый, неискусный, неловкий; незнающий; неспособный; плохой, слабый",
+      "translation_en": "unskillful, poor",
+      "notes_ru": [
+        "{…が～である} плохо знать (не уметь) (что-л.) делать",
+        "{…が～になる} разучиться (делать что-л.)"
+      ],
+      "audio": "/audio/n5-words/heta-d767c434.mp3",
+      "pos": "1 adj-na n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "katei-0237c889",
+      "kanji": "家庭",
+      "kana": "かてい",
+      "translation_ru": "семья, дом, домашний очаг",
+      "translation_en": "home; family",
+      "notes_ru": [
+        "{～[の]}, {～的} домашний, семейный"
+      ],
+      "audio": "/audio/n5-words/katei-0237c889.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kudamono-921429fb",
+      "kanji": "果物",
+      "kana": "くだもの",
+      "translation_ru": "фрукт",
+      "translation_en": "fruit",
+      "notes_ru": [
+        "(кн. см.) くだもの",
+        "фрукты, плоды"
+      ],
+      "audio": "/audio/n5-words/kudamono-921429fb.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "hana-a4e98bbb",
+      "kanji": "花",
+      "kana": "はな",
+      "translation_ru": "1) цветок; цветы",
+      "translation_en": "flower",
+      "notes_ru": [
+        "2) цветы вишни ((ср.) さくら【桜】)",
+        "3) цвет, гордость (чего-л.); лучшая пора"
+      ],
+      "audio": "/audio/n5-words/hana-a4e98bbb.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kabin-6630a7a7",
+      "kanji": "花瓶",
+      "kana": "かびん",
+      "translation_ru": "ваза (цветочная)",
+      "translation_en": "(flower) vase",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kabin-6630a7a7.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "u-au-08787053",
+      "kanji": "会う",
+      "kana": "あう",
+      "translation_ru": "встречать",
+      "translation_en": "to meet, to see",
+      "notes_ru": [
+        "встречаться",
+        "видеться"
+      ],
+      "audio": "/audio/n5-words/u-au-08787053.mp3",
+      "pos": "1 v5u vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "haizara-6f2cb84f",
+      "kanji": "灰皿",
+      "kana": "はいざら",
+      "translation_ru": "пепельница",
+      "translation_en": "ashtray",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/haizara-6f2cb84f.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "san-minasan-df964b0a",
+      "kanji": "皆さん",
+      "kana": "みなさん",
+      "translation_ru": "господа (обращение ко всем одновременно)",
+      "translation_en": "all of you, everyone",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/san-minasan-df964b0a.mp3",
+      "pos": "n hon",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "keru-akeru-e20de900",
+      "kanji": "開ける",
+      "kana": "あける",
+      "translation_ru": "открывать",
+      "translation_en": "to open (v.t.)",
+      "notes_ru": [
+        "1) открывать",
+        "2) освобождать (оставляя пустым)"
+      ],
+      "audio": "/audio/n5-words/keru-akeru-e20de900.mp3",
+      "pos": "1 v1 vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kaidan-2a56664b",
+      "kanji": "階段",
+      "kana": "かいだん",
+      "translation_ru": "лестница; лестничный марш; уступ (в открытых разработках)",
+      "translation_en": "stairs",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kaidan-2a56664b.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "eru-oboeru-bc2f0c66",
+      "kanji": "覚える",
+      "kana": "おぼえる",
+      "translation_ru": "1) запоминать; помнить",
+      "translation_en": "to learn, to commit to memory, to remember, to memorize",
+      "notes_ru": [
+        "2) усваивать, понимать; запоминать; изучать",
+        "3) ощущать, чувствовать; сознавать"
+      ],
+      "audio": "/audio/n5-words/eru-oboeru-bc2f0c66.mp3",
+      "pos": "1 v1 vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "keru-kakeru-a330bbab",
+      "kanji": "掛ける",
+      "kana": "かける",
+      "translation_ru": "как 2-й (компонент сложн. гл. указывает на начало и незаконченность действия:)",
+      "translation_en": "to put on (e.g., glasses); to hang (e.g., on a wall)",
+      "notes_ru": [
+        "1) вешать (на что-л.); приставлять, прислонять (к чему-л.)",
+        "2) прилагать (к чему-л.); накладывать (на что-л.)"
+      ],
+      "audio": "/audio/n5-words/keru-kakeru-a330bbab.mp3",
+      "pos": "1 v1 vt uk",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "nai-abunai-974e9d7c",
+      "kanji": "危ない",
+      "kana": "あぶない",
+      "translation_ru": "1) опасный, рискованный",
+      "translation_en": "dangerous, critical",
+      "notes_ru": [
+        "{～！} осторожно!, берегись!",
+        "2) сомнительный, ненадёжный"
+      ],
+      "audio": "/audio/n5-words/nai-abunai-974e9d7c.mp3",
+      "pos": "1 adj-i",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "ru-kaeru-77b5e85f",
+      "kanji": "帰る",
+      "kana": "かえる",
+      "translation_ru": "возвращаться",
+      "translation_en": "to go back, to go home, to return",
+      "notes_ru": [
+        "уходить",
+        "уезжать"
+      ],
+      "audio": "/audio/n5-words/ru-kaeru-77b5e85f.mp3",
+      "pos": "1 v5r vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "mu-yasumu-9647f91a",
+      "kanji": "休む",
+      "kana": "やすむ",
+      "translation_ru": "1. (неперех.)",
+      "translation_en": "to rest, to have a break, to get time off",
+      "notes_ru": [
+        "1) отдыхать; устраивать перерыв; не работать; быть закрытым (о предприятии, школе)",
+        "2) [ложиться] спать"
+      ],
+      "audio": "/audio/n5-words/mu-yasumu-9647f91a.mp3",
+      "pos": "1 v5m vi",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "u-suu-d2f98831",
+      "kanji": "吸う",
+      "kana": "すう",
+      "translation_ru": "вдыхать, втягивать; сосать, высасывать; хлебать",
+      "translation_en": "to breathe in, to suck",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/u-suu-d2f98831.mp3",
+      "pos": "1 v5u vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "giyuuniku-3b6e5c0b",
+      "kanji": "牛肉",
+      "kana": "ぎゅうにく",
+      "translation_ru": "говядина, мясо",
+      "translation_en": "beef",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/giyuuniku-3b6e5c0b.mp3",
+      "pos": "n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "eru-oshieru-5132cc99",
+      "kanji": "教える",
+      "kana": "おしえる",
+      "translation_ru": "1) преподавать (что-л.); учить, обучать (чему-л.); наставлять (в чём-л.)",
+      "translation_en": "to teach, to inform, to instruct",
+      "notes_ru": [
+        "2) объяснять, показывать",
+        "(ср.) おしわる, おしうる【教うる】"
+      ],
+      "audio": "/audio/n5-words/eru-oshieru-5132cc99.mp3",
+      "pos": "1 v1 vt",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    },
+    {
+      "id": "kiyoushitsu-93eaf598",
+      "kanji": "教室",
+      "kana": "きょうしつ",
+      "translation_ru": "класс, аудитория",
+      "translation_en": "classroom",
+      "notes_ru": [],
+      "audio": "/audio/n5-words/kiyoushitsu-93eaf598.mp3",
+      "pos": "1 n",
+      "jlpt": "N5",
+      "sources": {
+        "jlpt": "elzup/jlpt-word-list",
+        "translation": "AnchorI/jlpt-kanji-dictionary",
+        "audio": "Kanji Alive"
+      }
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+import assert from 'node:assert/strict'
+import { describe, it } from 'node:test'
+import {
+  DEFAULT_HYPERPARAMS,
+  createEmptyHistory,
+  createStatsRecord,
+  evaluateInput,
+  evaluateSubmission,
+  getAdaptiveWeight,
+  getConfusionMultiplier,
+  getDayKey,
+  getTopConfusions,
+  pickNextCardId,
+  recordConfusion,
+  recordHistoryEvent,
+  updateCardStats,
+} from '../../src/lib/trainer.js'
+import { buildPool } from '../../src/data/kana.js'
+
+const H = DEFAULT_HYPERPARAMS
+const NOW = Date.parse('2026-07-07T12:00:00Z')
+
+describe('evaluateInput (автозачет)', () => {
+  it('пустой ввод', () => {
+    assert.equal(evaluateInput(['shi', 'si'], ''), 'empty')
+  })
+
+  it('точное совпадение с любым из ответов', () => {
+    assert.equal(evaluateInput(['shi', 'si'], 'shi'), 'correct')
+    assert.equal(evaluateInput(['shi', 'si'], 'si'), 'correct')
+  })
+
+  it('префикс правильного ответа еще не ошибка', () => {
+    assert.equal(evaluateInput(['shi', 'si'], 'sh'), 'pending')
+  })
+
+  it('ошибка на первой неверной букве', () => {
+    assert.equal(evaluateInput(['shi', 'si'], 'x'), 'wrong')
+    assert.equal(evaluateInput(['shi', 'si'], 'sho'), 'wrong')
+  })
+})
+
+describe('evaluateSubmission (режим Enter)', () => {
+  it('принимает только полный правильный ответ', () => {
+    assert.equal(evaluateSubmission(['tsu', 'tu'], 'tsu'), 'correct')
+    assert.equal(evaluateSubmission(['tsu', 'tu'], 'ts'), 'wrong')
+    assert.equal(evaluateSubmission(['tsu', 'tu'], ''), 'empty')
+  })
+})
+
+describe('updateCardStats', () => {
+  it('верный ответ растит мастерство и пишет время', () => {
+    const before = createStatsRecord()
+    const after = updateCardStats(before, 'correct', { now: NOW, latencyMs: 1500, mistakesOnCard: 0, hintUsed: false }, H)
+    assert.ok(after.mastery > before.mastery)
+    assert.equal(after.clears, 1)
+    assert.equal(after.streak, 1)
+    assert.equal(after.avgLatencyMs, 1500)
+    assert.equal(after.fastestLatencyMs, 1500)
+  })
+
+  it('быстрый ответ дает больший прирост, чем медленный', () => {
+    const base = createStatsRecord()
+    const fast = updateCardStats(base, 'correct', { now: NOW, latencyMs: H.targetLatencyMs * 0.5, mistakesOnCard: 0, hintUsed: false }, H)
+    const slow = updateCardStats(base, 'correct', { now: NOW, latencyMs: H.targetLatencyMs * 2, mistakesOnCard: 0, hintUsed: false }, H)
+    assert.ok(fast.mastery > slow.mastery)
+  })
+
+  it('ошибка по Enter штрафует сильнее, чем в автозачете', () => {
+    const base = { ...createStatsRecord(), mastery: 0.6 }
+    const submitWrong = updateCardStats(base, 'wrong', { now: NOW, inputMode: 'submit' }, H)
+    const instantWrong = updateCardStats(base, 'wrong', { now: NOW, inputMode: 'instant' }, H)
+    assert.ok(submitWrong.mastery < instantWrong.mastery)
+    assert.equal(submitWrong.streak, 0)
+  })
+
+  it('подсказка сбрасывает серию, снижает мастерство и учитывает время', () => {
+    const base = { ...createStatsRecord(), mastery: 0.5, streak: 4 }
+    const after = updateCardStats(base, 'hint', { now: NOW, latencyMs: 3000 }, H)
+    assert.equal(after.streak, 0)
+    assert.ok(after.mastery < 0.5)
+    assert.equal(after.avgLatencyMs, 3000)
+  })
+})
+
+describe('getAdaptiveWeight', () => {
+  it('медленная карточка весит больше быстрой при прочих равных', () => {
+    const fast = { ...createStatsRecord(), clears: 5, mastery: 0.5, avgLatencyMs: 1200, lastSeenAt: NOW }
+    const slow = { ...fast, avgLatencyMs: H.targetLatencyMs * 2.2 }
+    assert.ok(getAdaptiveWeight(slow, H, NOW) > getAdaptiveWeight(fast, H, NOW))
+  })
+
+  it('выученная серия снижает вес', () => {
+    const normal = { ...createStatsRecord(), clears: 3, mastery: 0.5, lastSeenAt: NOW }
+    const retired = { ...normal, streak: H.retireStreak }
+    assert.ok(getAdaptiveWeight(retired, H, NOW) < getAdaptiveWeight(normal, H, NOW))
+  })
+})
+
+describe('getConfusionMultiplier', () => {
+  it('буст после недавней ошибки на двойнике', () => {
+    const statsMap = Object.fromEntries(
+      ['katakana:shi', 'katakana:tsu'].map((id) => [id, createStatsRecord()]),
+    )
+    statsMap['katakana:tsu'].lastErrorAt = NOW - 60_000
+    assert.equal(getConfusionMultiplier('katakana:shi', statsMap, H, NOW), H.confusionBoost)
+  })
+
+  it('без недавних ошибок множитель равен 1', () => {
+    const statsMap = Object.fromEntries(
+      ['katakana:shi', 'katakana:tsu'].map((id) => [id, createStatsRecord()]),
+    )
+    assert.equal(getConfusionMultiplier('katakana:shi', statsMap, H, NOW), 1)
+  })
+})
+
+describe('pickNextCardId', () => {
+  function makeStatsMap(pool) {
+    return Object.fromEntries(pool.map((card) => [card.id, createStatsRecord()]))
+  }
+
+  it('возвращает карточку из пула и избегает недавних', () => {
+    const pool = buildPool('hiragana', ['vowels'])
+    const statsMap = makeStatsMap(pool)
+    const session = { recentHistory: ['hiragana:a', 'hiragana:i'], mistakeQueue: [], sinceQueuePick: 0 }
+    for (let i = 0; i < 20; i += 1) {
+      const id = pickNextCardId(pool, statsMap, session, 'adaptive', H)
+      assert.ok(pool.some((card) => card.id === id))
+      assert.ok(!session.recentHistory.includes(id))
+    }
+  })
+
+  it('очередь ошибок возвращает карточку в любом режиме', () => {
+    const pool = buildPool('hiragana', ['vowels', 'k'])
+    const statsMap = makeStatsMap(pool)
+    const session = { recentHistory: [], mistakeQueue: ['hiragana:ke'], sinceQueuePick: 3 }
+    const id = pickNextCardId(pool, statsMap, session, 'even', H, () => 0.1)
+    assert.equal(id, 'hiragana:ke')
+  })
+
+  it('очередь не срабатывает сразу после ошибки', () => {
+    const pool = buildPool('hiragana', ['vowels', 'k'])
+    const statsMap = makeStatsMap(pool)
+    const session = { recentHistory: [], mistakeQueue: ['hiragana:ke'], sinceQueuePick: 0 }
+    const id = pickNextCardId(pool, statsMap, session, 'even', H, () => 0.1)
+    assert.notEqual(id, 'hiragana:ke')
+  })
+
+  it('в адаптивном режиме двойники недавней ошибки поднимаются в весах', () => {
+    const pool = buildPool('katakana', ['s', 't', 'nn'])
+    const statsMap = makeStatsMap(pool)
+    // Ошибка на シ полминуты назад: ツ (двойник) должен выпадать заметно чаще.
+    statsMap['katakana:shi'].lastErrorAt = Date.now() - 30_000
+    const session = { recentHistory: ['katakana:shi'], mistakeQueue: [], sinceQueuePick: 0 }
+
+    let tsuCount = 0
+    const runs = 400
+    for (let i = 0; i < runs; i += 1) {
+      if (pickNextCardId(pool, statsMap, session, 'adaptive', H) === 'katakana:tsu') {
+        tsuCount += 1
+      }
+    }
+    // Без буста ツ выпадала бы ~1/10 раз (11 кандидатов минус блок).
+    assert.ok(tsuCount > runs * 0.14, `ツ выпала ${tsuCount} из ${runs}`)
+  })
+
+  it('пустой пул дает null', () => {
+    assert.equal(pickNextCardId([], {}, { recentHistory: [], mistakeQueue: [], sinceQueuePick: 0 }, 'adaptive', H), null)
+  })
+})
+
+describe('история для графиков', () => {
+  it('дневная запись накапливает исходы и время', () => {
+    let history = createEmptyHistory()
+    history = recordHistoryEvent(history, 'correct', { now: NOW, latencyMs: 2000 })
+    history = recordHistoryEvent(history, 'wrong', { now: NOW })
+    history = recordHistoryEvent(history, 'hint', { now: NOW })
+    const day = history.daily[getDayKey(NOW)]
+    assert.deepEqual(
+      { clears: day.clears, errors: day.errors, hints: day.hints },
+      { clears: 1, errors: 1, hints: 1 },
+    )
+    assert.equal(day.latencySum, 2000)
+    assert.equal(history.recent.length, 1)
+  })
+
+  it('recent хранит не больше 60 верных ответов', () => {
+    let history = createEmptyHistory()
+    for (let i = 0; i < 80; i += 1) {
+      history = recordHistoryEvent(history, 'correct', { now: NOW + i, latencyMs: 1000 + i })
+    }
+    assert.equal(history.recent.length, 60)
+    assert.equal(history.recent.at(-1).l, 1079)
+  })
+
+  it('путаницы агрегируются и сортируются', () => {
+    let history = createEmptyHistory()
+    history = recordConfusion(history, 'katakana:shi', 'katakana:tsu')
+    history = recordConfusion(history, 'katakana:shi', 'katakana:tsu')
+    history = recordConfusion(history, 'katakana:so', 'katakana:n')
+    const top = getTopConfusions(history)
+    assert.equal(top[0].fromId, 'katakana:shi')
+    assert.equal(top[0].count, 2)
+    assert.equal(top.length, 2)
+  })
+})
