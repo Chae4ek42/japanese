@@ -1,16 +1,74 @@
-# React + Vite
+# Тренажёр японской каны и слов
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + Vite фронтенд, Express API и PostgreSQL для сохранения прогресса, словаря и статистики.
 
-Currently, two official plugins are available:
+## Быстрый старт (Docker)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+docker compose up --build
+```
 
-## React Compiler
+Приложение: [http://localhost:8080](http://localhost:8080)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Сервисы:
+- **web** — nginx + собранный фронтенд, прокси `/api` → API
+- **api** — Node.js API
+- **db** — PostgreSQL 16
 
-## Expanding the Oxlint configuration
+Остановка:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+docker compose down
+```
+
+Данные Postgres сохраняются в volume `pgdata`.
+
+## Локальная разработка
+
+### Только фронт (localStorage fallback)
+
+```bash
+npm install
+npm run dev
+```
+
+Если API недоступен, прогресс сохраняется в браузере как раньше.
+
+### Фронт + API + Postgres
+
+```bash
+docker compose up db -d
+cd server && npm install && cd ..
+set DATABASE_URL=postgres://jp:jp@localhost:5432/jp
+npm run dev:api
+npm run dev
+```
+
+Vite проксирует `/api` на `http://127.0.0.1:3000`.
+
+## Сборка слов
+
+```bash
+npm run build:words
+```
+
+## Тесты
+
+```bash
+npm run test:unit
+npm run test:e2e
+```
+
+## API
+
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/api/health` | Проверка API и БД |
+| POST | `/api/users` | Создать пользователя и пустое состояние |
+| GET | `/api/users/:id/state` | Загрузить состояние |
+| PUT | `/api/users/:id/state` | Сохранить состояние (JSON) |
+| DELETE | `/api/users/:id/state` | Сбросить прогресс |
+
+Состояние хранится в PostgreSQL как JSONB: настройки, статистика каны, история, словарь и пользовательские слова.
+
+При первом подключении к API данные из старого `localStorage` автоматически переносятся в базу.

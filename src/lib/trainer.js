@@ -7,10 +7,16 @@ export const DEFAULT_HYPERPARAMS = {
   retireStreak: 6,
   masteredWeight: 0.2,
   recentMistakeBoost: 2.4,
+  recentMistakeHours: 12,
   problemThreshold: 0.45,
   queueSize: 4,
   targetLatencyMs: 2500,
   confusionBoost: 1.8,
+  unseenBoost: 2.8,
+  seenOnlyBoostRatio: 0.55,
+  staleBoost: 1.5,
+  staleAfterHours: 6,
+  staleRampHours: 18,
 }
 
 const CONFUSION_RECENCY_MS = 30 * 60_000
@@ -175,11 +181,12 @@ export function getAdaptiveWeight(stats, hyperparams, now) {
   const totalEvents = stats.clears + stats.errors + stats.hints
   const recentFailureHours = stats.lastErrorAt ? (now - stats.lastErrorAt) / 3_600_000 : Number.POSITIVE_INFINITY
   const recentHintHours = stats.lastHintAt ? (now - stats.lastHintAt) / 3_600_000 : Number.POSITIVE_INFINITY
-  const unseenBoost = totalEvents === 0 ? 1.35 : 0
-  const recencyBoost = stats.lastSeenAt === 0 ? 0.35 : clamp((now - stats.lastSeenAt) / 43_200_000, 0, 0.9)
-  const recentMistakeBoost = recentFailureHours <= 12 || recentHintHours <= 12 ? hyperparams.recentMistakeBoost : 0
+  const recentMistakeBoost =
+    recentFailureHours <= hyperparams.recentMistakeHours ||
+    recentHintHours <= hyperparams.recentMistakeHours
+      ? hyperparams.recentMistakeBoost
+      : 0
   const accuracyPenalty = totalEvents === 0 ? 0.3 : (100 - stats.eventAccuracy) / 100
-  // Медленные знаки поднимаются: знание есть, но автоматизма нет.
   const slownessBoost = stats.avgLatencyMs
     ? clamp(stats.avgLatencyMs / hyperparams.targetLatencyMs - 1, 0, 1.5) * 0.7
     : 0
@@ -188,12 +195,25 @@ export function getAdaptiveWeight(stats, hyperparams, now) {
       ? hyperparams.masteredWeight
       : 1 - Math.min(stats.streak, hyperparams.retireStreak - 1) * 0.06
 
+  // Новые и «забытые» карточки: никогда не показывались, только видели без ответа,
+  // или давно не встречались — получают заметный приоритет над уже отработанными.
+  let noveltyBoost = 0
+  if (stats.exposures === 0) {
+    noveltyBoost = hyperparams.unseenBoost
+  } else if (totalEvents === 0) {
+    noveltyBoost = hyperparams.unseenBoost * hyperparams.seenOnlyBoostRatio
+  } else if (stats.lastSeenAt > 0) {
+    const hoursUnseen = (now - stats.lastSeenAt) / 3_600_000
+    if (hoursUnseen >= hyperparams.staleAfterHours) {
+      noveltyBoost = clamp(hoursUnseen / hyperparams.staleRampHours, 0, hyperparams.staleBoost)
+    }
+  }
+
   return clamp(
     (0.15 +
       masteryGap ** 1.6 * 2.5 +
       accuracyPenalty * 1.4 +
-      unseenBoost +
-      recencyBoost +
+      noveltyBoost +
       recentMistakeBoost +
       slownessBoost) *
       streakReducer,

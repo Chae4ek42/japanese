@@ -12,6 +12,7 @@ export function PracticePanel({
   onStop,
   round,
   sessionStats,
+  showScriptLabel = false,
 }) {
   return (
     <section className="panel practice-panel">
@@ -27,7 +28,11 @@ export function PracticePanel({
         <div className="practice-layout">
           <div className={`practice-stage ${feedback.type ? `is-${feedback.type}` : ''}`}>
             <div className="question-block">
-              <p className="question-script">{activeCard.scriptLabel}</p>
+              {showScriptLabel ? (
+                <p className="script-badge" data-testid="card-script-label">
+                  {activeCard.scriptLabel}
+                </p>
+              ) : null}
               <div className="question-symbol" aria-live="polite">
                 <span data-testid="current-symbol">{activeCard.symbol}</span>
               </div>

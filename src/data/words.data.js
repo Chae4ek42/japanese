@@ -1,4905 +1,22271 @@
 // Сгенерировано scripts/build-words.mjs — не редактировать вручную.
 export default {
  "version": 1,
+ "source": "https://japanese-words.org/ru/training/vocabulary",
  "words": [
   {
-   "id": "o-okane-9859876a",
-   "kanji": "お金",
-   "kana": "おかね",
-   "romaji": "okane",
+   "id": "jw-はい-はい",
+   "kanji": "はい",
+   "kana": "はい",
+   "romaji": "hai",
    "meanings": [
-    "деньги"
+    "да",
+    "кто?",
+    "господин",
+    "госпожа",
+    "вы"
    ],
-   "en": "money",
-   "pos": [
-    "сущ.",
-    "вежл."
-   ],
-   "audio": "/audio/n5-words/o-okane-9859876a.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "o-san-oniisan-6c88d326",
-   "kanji": "お兄さん",
-   "kana": "おにいさん",
-   "romaji": "oniisan",
+   "id": "jw-あなた-あなた",
+   "kanji": "あなた",
+   "kana": "あなた",
+   "romaji": "anata",
    "meanings": [
-    "старший брат"
+    "да",
+    "кто?",
+    "господин",
+    "госпожа",
+    "вы"
    ],
-   "en": "(someone else's) older brother (formal)",
-   "pos": [
-    "сущ.",
-    "вежл."
-   ],
-   "audio": "/audio/n5-words/o-san-oniisan-6c88d326.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "o-san-oneesan-6820a234",
-   "kanji": "お姉さん",
-   "kana": "おねえさん",
-   "romaji": "oneesan",
+   "id": "jw-さい-さい",
+   "kanji": "さい",
+   "kana": "さい",
+   "romaji": "sai",
    "meanings": [
-    "старшая сестра"
+    "да",
+    "кто?",
+    "господин",
+    "госпожа",
+    "вы"
    ],
-   "en": "older sister (formal)",
-   "pos": [
-    "сущ.",
-    "вежл."
-   ],
-   "audio": "/audio/n5-words/o-san-oneesan-6820a234.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "o-i-otearai-e03da3b8",
-   "kanji": "お手洗い",
-   "kana": "おてあらい",
-   "romaji": "otearai",
+   "id": "jw-じん-じん",
+   "kanji": "じん",
+   "kana": "じん",
+   "romaji": "jin",
    "meanings": [
-    "туалет",
-    "уборная"
+    "да",
+    "кто?",
+    "господин",
+    "госпожа",
+    "вы"
    ],
-   "en": "toilet, restroom, bathroom (lit., a place to wash one's hands)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/o-i-otearai-e03da3b8.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "o-ochiya-1d74555e",
-   "kanji": "お茶",
-   "kana": "おちゃ",
-   "romaji": "ocha",
+   "id": "jw-いいえ-いいえ",
+   "kanji": "いいえ",
+   "kana": "いいえ",
+   "romaji": "iie",
    "meanings": [
-    "чай"
+    "кто?",
+    "нет",
+    "господин",
+    "госпожа",
+    "да",
+    "вы"
    ],
-   "en": "(green) tea",
-   "pos": [
-    "сущ.",
-    "вежл."
-   ],
-   "audio": "/audio/n5-words/o-ochiya-1d74555e.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "o-san-otousan-b948f13b",
-   "kanji": "お父さん",
-   "kana": "おとうさん",
-   "romaji": "otousan",
+   "id": "jw-だいがく-だいがく",
+   "kanji": "だいがく",
+   "kana": "だいがく",
+   "romaji": "daigaku",
    "meanings": [
-    "отец",
-    "папа",
-    "ваш отец"
+    "кто?",
+    "нет",
+    "господин",
+    "госпожа",
+    "да",
+    "вы"
    ],
-   "en": "father (formal)",
-   "pos": [
-    "сущ.",
-    "вежл."
-   ],
-   "audio": "/audio/n5-words/o-san-otousan-b948f13b.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "o-san-okaasan-86c29be5",
-   "kanji": "お母さん",
-   "kana": "おかあさん",
-   "romaji": "okaasan",
+   "id": "jw-しゃいん-しゃいん",
+   "kanji": "しゃいん",
+   "kana": "しゃいん",
+   "romaji": "shain",
    "meanings": [
-    "мама",
-    "мамочка"
+    "кто?",
+    "нет",
+    "господин",
+    "госпожа",
+    "да",
+    "вы"
    ],
-   "en": "mother (formal)",
-   "pos": [
-    "сущ.",
-    "вежл."
-   ],
-   "audio": "/audio/n5-words/o-san-okaasan-86c29be5.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "i-warui-723a422d",
-   "kanji": "悪い",
-   "kana": "わるい",
-   "romaji": "warui",
+   "id": "jw-だれ-だれ",
+   "kanji": "だれ",
+   "kana": "だれ",
+   "romaji": "dare",
    "meanings": [
-    "плохой",
-    "скверный",
-    "нехороший",
-    "худой",
-    "дурной",
-    "вредный",
-    "виноват",
-    "неправ"
+    "кто?",
+    "нет",
+    "господин",
+    "госпожа",
+    "да",
+    "вы"
    ],
-   "en": "bad, sinful; inferior",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-warui-723a422d.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "i-yasui-ad63c41b",
-   "kanji": "安い",
-   "kana": "やすい",
-   "romaji": "yasui",
+   "id": "jw-さん-さん",
+   "kanji": "さん",
+   "kana": "さん",
+   "romaji": "san",
    "meanings": [
-    "дешёвый",
-    "недорогой"
+    "нет",
+    "господин",
+    "госпожа",
+    "я",
+    "кто?",
+    "он",
+    "она",
+    "сколько лет?",
+    "исследователь",
+    "ученый",
+    "да",
+    "вы",
+    "учитель",
+    "преподаватель",
+    "служащий фирмы"
    ],
-   "en": "inexpensive; cheap (things)",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-yasui-ad63c41b.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "imi-97c6259f",
-   "kanji": "意味",
-   "kana": "いみ",
-   "romaji": "imi",
+   "id": "jw-どなた-どなた",
+   "kanji": "どなた",
+   "kana": "どなた",
+   "romaji": "donata",
    "meanings": [
-    "смысл",
-    "значение",
-    "значащий",
-    "имеющий значение",
-    "значительный",
-    "абсурдный"
+    "нет",
+    "господин",
+    "госпожа",
+    "я",
+    "кто?",
+    "он",
+    "она",
+    "сколько лет?",
+    "исследователь",
+    "ученый",
+    "да",
+    "вы",
+    "учитель",
+    "преподаватель",
+    "служащий фирмы"
    ],
-   "en": "meaning, significance",
-   "pos": [
-    "сущ.",
-    "суру-глагол",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/imi-97c6259f.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "u-chigau-9f6d671a",
-   "kanji": "違う",
-   "kana": "ちがう",
-   "romaji": "chigau",
+   "id": "jw-きょうし-きょうし",
+   "kanji": "きょうし",
+   "kana": "きょうし",
+   "romaji": "kyoushi",
    "meanings": [
-    "быть другим",
-    "различаться",
-    "отличаться от"
+    "нет",
+    "господин",
+    "госпожа",
+    "я",
+    "кто?",
+    "он",
+    "она",
+    "сколько лет?",
+    "исследователь",
+    "ученый",
+    "да",
+    "вы",
+    "учитель",
+    "преподаватель",
+    "служащий фирмы"
    ],
-   "en": "to be different; to differ; wrong",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/u-chigau-9f6d671a.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "ishiya-bbccd629",
+   "id": "jw-人-じん",
+   "kanji": "人",
+   "kana": "じん",
+   "romaji": "jin",
+   "meanings": [
+    "врач",
+    "больница",
+    "преподаватель",
+    "учитель",
+    "служащий фирмы",
+    "сколько лет?",
+    "студент",
+    "я",
+    "университет",
+    "он",
+    "она",
+    "исследователь",
+    "ученый",
+    "человек",
+    "служащий банка",
+    "год"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
+  },
+  {
+   "id": "jw-病院-びょういん",
+   "kanji": "病院",
+   "kana": "びょういん",
+   "romaji": "byouin",
+   "meanings": [
+    "врач",
+    "больница",
+    "преподаватель",
+    "учитель",
+    "служащий фирмы",
+    "сколько лет?",
+    "студент",
+    "я",
+    "университет",
+    "он",
+    "она",
+    "исследователь",
+    "ученый",
+    "человек",
+    "служащий банка",
+    "год"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
+  },
+  {
+   "id": "jw-研究者-けんきゅうしゃ",
+   "kanji": "研究者",
+   "kana": "けんきゅうしゃ",
+   "romaji": "kenkyuusha",
+   "meanings": [
+    "врач",
+    "больница",
+    "преподаватель",
+    "учитель",
+    "служащий фирмы",
+    "сколько лет?",
+    "студент",
+    "я",
+    "университет",
+    "он",
+    "она",
+    "исследователь",
+    "ученый",
+    "человек",
+    "служащий банка",
+    "год"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
+  },
+  {
+   "id": "jw-医者-いしゃ",
    "kanji": "医者",
    "kana": "いしゃ",
    "romaji": "isha",
    "meanings": [
     "врач",
-    "доктор"
+    "больница",
+    "преподаватель",
+    "учитель",
+    "служащий фирмы",
+    "сколько лет?",
+    "студент",
+    "я",
+    "университет",
+    "он",
+    "она",
+    "исследователь",
+    "ученый",
+    "человек",
+    "служащий банка",
+    "год"
    ],
-   "en": "doctor; physician",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ishiya-bbccd629.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "tsu-hitotsu-f07a8a30",
-   "kanji": "一つ",
-   "kana": "ひとつ",
-   "romaji": "hitotsu",
-   "meanings": [
-    "один единственный",
-    "один",
-    "объединять в одно"
-   ],
-   "en": "one thing",
-   "pos": [
-    "числит."
-   ],
-   "audio": "/audio/n5-words/tsu-hitotsu-f07a8a30.mp3"
-  },
-  {
-   "id": "ichiban-10ee812b",
-   "kanji": "一番",
-   "kana": "いちばん",
-   "romaji": "ichiban",
-   "meanings": [
-    "первый номер",
-    "занимать первое место",
-    "приходить к финишу первым"
-   ],
-   "en": "best (most), first, number one",
-   "pos": [
-    "сущ.",
-    "の-прил."
-   ],
-   "audio": "/audio/n5-words/ichiban-10ee812b.mp3"
-  },
-  {
-   "id": "ame-5c9600a4",
-   "kanji": "雨",
-   "kana": "あめ",
-   "romaji": "ame",
-   "meanings": [
-    "дождь",
-    "град"
-   ],
-   "en": "rain",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ame-5c9600a4.mp3"
-  },
-  {
-   "id": "eiga-62710bb7",
-   "kanji": "映画",
-   "kana": "えいが",
-   "romaji": "eiga",
-   "meanings": [
-    "кинофильм",
-    "экранизировать",
-    "кинотеатр"
-   ],
-   "en": "movie, film",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/eiga-62710bb7.mp3"
-  },
-  {
-   "id": "eigakan-c1ed0161",
-   "kanji": "映画館",
-   "kana": "えいがかん",
-   "romaji": "eigakan",
-   "meanings": [
-    "кинотеатр"
-   ],
-   "en": "movie theater, cinema",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/eigakan-c1ed0161.mp3"
-  },
-  {
-   "id": "gu-oyogu-951ada77",
-   "kanji": "泳ぐ",
-   "kana": "およぐ",
-   "romaji": "oyogu",
-   "meanings": [
-    "плавать",
-    "плыть",
-    "купаться",
-    "идти неверной походкой",
-    "идти пошатываясь",
-    "благоденствовать"
-   ],
-   "en": "to swim",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/gu-oyogu-951ada77.mp3"
-  },
-  {
-   "id": "eigo-d0768a78",
-   "kanji": "英語",
-   "kana": "えいご",
-   "romaji": "eigo",
-   "meanings": [
-    "английский язык"
-   ],
-   "en": "English (language)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/eigo-d0768a78.mp3"
-  },
-  {
-   "id": "eki-df5f7857",
-   "kanji": "駅",
-   "kana": "えき",
-   "romaji": "eki",
-   "meanings": [
-    "железнодорожная станция",
-    "вокзал",
-    "почтовая станция",
-    "постоялый двор"
-   ],
-   "en": "station",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/eki-df5f7857.mp3"
-  },
-  {
-   "id": "i-tooi-472bdb50",
-   "kanji": "遠い",
-   "kana": "とおい",
-   "romaji": "tooi",
-   "meanings": [
-    "далёкий",
-    "отдалённый",
-    "далеко",
-    "дальний"
-   ],
-   "en": "far (away), distant",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-tooi-472bdb50.mp3"
-  },
-  {
-   "id": "enpitsu-a0cba61b",
-   "kanji": "鉛筆",
-   "kana": "えんぴつ",
-   "romaji": "enpitsu",
-   "meanings": [
-    "карандаш"
-   ],
-   "en": "pencil",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/enpitsu-a0cba61b.mp3"
-  },
-  {
-   "id": "i-kitanai-6c58c990",
-   "kanji": "汚い",
-   "kana": "きたない",
-   "romaji": "kitanai",
-   "meanings": [
-    "грязный",
-    "загрязнённый",
-    "запачканный",
-    "запятнанный",
-    "низкий",
-    "корыстный",
-    "скупой"
-   ],
-   "en": "dirty, unclean, filthy",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-kitanai-6c58c990.mp3"
-  },
-  {
-   "id": "san-okusan-345a6359",
-   "kanji": "奥さん",
-   "kana": "おくさん",
-   "romaji": "okusan",
-   "meanings": [
-    "ваша супруга"
-   ],
-   "en": "(someone else's) wife (hon.)",
-   "pos": [
-    "сущ.",
-    "вежл."
-   ],
-   "audio": "/audio/n5-words/san-okusan-345a6359.mp3"
-  },
-  {
-   "id": "su-osu-e3890697",
-   "kanji": "押す",
-   "kana": "おす",
-   "romaji": "osu",
-   "meanings": [
-    "толкать",
-    "давить",
-    "нажимать",
-    "надавливать",
-    "сжимать",
-    "сдавливать",
-    "теснить",
-    "пересиливать"
-   ],
-   "en": "to push, to press, to stamp (e.g., a passport)",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/su-osu-e3890697.mp3"
-  },
-  {
-   "id": "ongaku-ebf7febd",
-   "kanji": "音楽",
-   "kana": "おんがく",
-   "romaji": "ongaku",
-   "meanings": [
-    "музыка",
-    "музыкальный"
-   ],
-   "en": "Music",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ongaku-ebf7febd.mp3"
-  },
-  {
-   "id": "natsu-12c49926",
-   "kanji": "夏",
-   "kana": "なつ",
-   "romaji": "natsu",
-   "meanings": [
-    "1. лето",
-    "летний",
-    "2. летом"
-   ],
-   "en": "summer",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/natsu-12c49926.mp3"
-  },
-  {
-   "id": "ie-298e274a",
-   "kanji": "家",
-   "kana": "いえ",
-   "romaji": "ie",
-   "meanings": [
-    "дом",
-    "свой дом",
-    "семья",
-    "домашний",
-    "семейный"
-   ],
-   "en": "house, home",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ie-298e274a.mp3"
-  },
-  {
-   "id": "kazoku-7ccfd117",
-   "kanji": "家族",
-   "kana": "かぞく",
-   "romaji": "kazoku",
-   "meanings": [
-    "семья",
-    "семейство"
-   ],
-   "en": "family, members of a family",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kazoku-7ccfd117.mp3"
-  },
-  {
-   "id": "uta-7c938b42",
-   "kanji": "歌",
-   "kana": "うた",
-   "romaji": "uta",
-   "meanings": [
-    "песня",
-    "песенка",
-    "стихотворение"
-   ],
-   "en": "a song",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/uta-7c938b42.mp3"
-  },
-  {
-   "id": "kayoubi-a9dc6bf1",
-   "kanji": "火曜日",
-   "kana": "かようび",
-   "romaji": "kayoubi",
-   "meanings": [
-    "вторник"
-   ],
-   "en": "Tuesday",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/kayoubi-a9dc6bf1.mp3"
-  },
-  {
-   "id": "nimotsu-4df7bc41",
-   "kanji": "荷物",
-   "kana": "にもつ",
-   "romaji": "nimotsu",
-   "meanings": [
-    "груз",
-    "багаж",
-    "вещи",
-    "товар"
-   ],
-   "en": "luggage; baggage",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/nimotsu-4df7bc41.mp3"
-  },
-  {
-   "id": "kaishiya-959217ce",
-   "kanji": "会社",
-   "kana": "かいしゃ",
-   "romaji": "kaisha",
-   "meanings": [
-    "компания",
-    "общество",
-    "фирма"
-   ],
-   "en": "company, corporation",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kaishiya-959217ce.mp3"
-  },
-  {
-   "id": "umi-dc819389",
-   "kanji": "海",
-   "kana": "うみ",
-   "romaji": "umi",
-   "meanings": [
-    "море"
-   ],
-   "en": "sea, beach",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/umi-dc819389.mp3"
-  },
-  {
-   "id": "e-0eb10088",
-   "kanji": "絵",
-   "kana": "え",
-   "romaji": "e",
-   "meanings": [
-    "картина",
-    "рисунок",
-    "изображение",
-    "иллюстрация"
-   ],
-   "en": "a painting; a picture; a drawing",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/e-0eb10088.mp3"
-  },
-  {
-   "id": "soto-d14e2926",
-   "kanji": "外",
-   "kana": "そと",
-   "romaji": "soto",
-   "meanings": [
-    "снаружи",
-    "во вне",
-    "на дворе",
-    "на улице",
-    "на свежем воздухе"
-   ],
-   "en": "outside, exterior",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/soto-d14e2926.mp3"
-  },
-  {
-   "id": "gaikoku-74d79838",
-   "kanji": "外国",
-   "kana": "がいこく",
-   "romaji": "gaikoku",
-   "meanings": [
-    "иностранное государство",
-    "зарубежные страны",
-    "заграница",
-    "заграничный",
-    "зарубежный"
-   ],
-   "en": "foreign country; abroad",
-   "pos": [
-    "сущ.",
-    "の-прил."
-   ],
-   "audio": "/audio/n5-words/gaikoku-74d79838.mp3"
-  },
-  {
-   "id": "kado-d69ca728",
-   "kanji": "角",
-   "kana": "かど",
-   "romaji": "kado",
-   "meanings": [
-    "угол",
-    "уголок",
-    "острый угол"
-   ],
-   "en": "corner (e.g., desk, pavement)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kado-d69ca728.mp3"
-  },
-  {
-   "id": "gakou-4c97803b",
-   "kanji": "学校",
-   "kana": "がっこう",
-   "romaji": "gakkou",
-   "meanings": [
-    "школа",
-    "училище",
-    "учебное заведение",
-    "занятия"
-   ],
-   "en": "a school",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/gakou-4c97803b.mp3"
-  },
-  {
-   "id": "gakusei-6c9f02a8",
+   "id": "jw-学生-がくせい",
    "kanji": "学生",
    "kana": "がくせい",
    "romaji": "gakusei",
    "meanings": [
-    "учащийся",
+    "больница",
+    "служащий фирмы",
+    "сколько лет?",
     "студент",
-    "слушатель"
+    "я",
+    "врач",
+    "год",
+    "исследователь",
+    "ученый",
+    "преподаватель",
+    "учитель",
+    "человек"
    ],
-   "en": "student",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/gakusei-6c9f02a8.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "shii-tanoshii-b1bbfecd",
-   "kanji": "楽しい",
-   "kana": "たのしい",
-   "romaji": "tanoshii",
+   "id": "jw-会社員-かいしゃいん",
+   "kanji": "会社員",
+   "kana": "かいしゃいん",
+   "romaji": "kaishain",
    "meanings": [
-    "радостный",
-    "весёлый",
-    "приятный",
-    "счастливый"
+    "больница",
+    "служащий фирмы",
+    "сколько лет?",
+    "студент",
+    "я",
+    "врач",
+    "год",
+    "исследователь",
+    "ученый",
+    "преподаватель",
+    "учитель",
+    "человек"
    ],
-   "en": "enjoyable, fun",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/shii-tanoshii-b1bbfecd.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "i-samui-c56d4a04",
-   "kanji": "寒い",
-   "kana": "さむい",
-   "romaji": "samui",
+   "id": "jw-社員-しゃいん",
+   "kanji": "社員",
+   "kana": "しゃいん",
+   "romaji": "shain",
    "meanings": [
-    "холодный"
+    "преподаватель",
+    "учитель",
+    "служащий фирмы",
+    "студент",
+    "я",
+    "больница",
+    "врач",
+    "служащий банка",
+    "он",
+    "она",
+    "исследователь",
+    "ученый",
+    "человек",
+    "год",
+    "университет"
    ],
-   "en": "cold (in reference to weather)",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-samui-c56d4a04.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "kanji-46d95ddf",
-   "kanji": "漢字",
-   "kana": "かんじ",
-   "romaji": "kanji",
+   "id": "jw-教師-きょうし",
+   "kanji": "教師",
+   "kana": "きょうし",
+   "romaji": "kyoushi",
    "meanings": [
-    "иероглиф"
+    "преподаватель",
+    "учитель",
+    "служащий фирмы",
+    "студент",
+    "я",
+    "больница",
+    "врач",
+    "служащий банка",
+    "он",
+    "она",
+    "исследователь",
+    "ученый",
+    "человек",
+    "год",
+    "университет"
    ],
-   "en": "kanji; Chinese character",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kanji-46d95ddf.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "i-amai-f415ffa2",
-   "kanji": "甘い",
-   "kana": "あまい",
-   "romaji": "amai",
-   "meanings": [
-    "сладкий",
-    "слащавый",
-    "недосоленный",
-    "недостаточно крепкий",
-    "слабый",
-    "не тугой",
-    "гнущийся",
-    "мягкий"
-   ],
-   "en": "generous, sweet",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-amai-f415ffa2.mp3"
-  },
-  {
-   "id": "kao-1b84e184",
-   "kanji": "顔",
-   "kana": "かお",
-   "romaji": "kao",
-   "meanings": [
-    "лицо",
-    "вид"
-   ],
-   "en": "face (body part)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kao-1b84e184.mp3"
-  },
-  {
-   "id": "tsukue-e8aa2424",
-   "kanji": "机",
-   "kana": "つくえ",
-   "romaji": "tsukue",
-   "meanings": [
-    "стол",
-    "парта"
-   ],
-   "en": "desk",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/tsukue-e8aa2424.mp3"
-  },
-  {
-   "id": "kiru-okiru-2c32b84e",
-   "kanji": "起きる",
-   "kana": "おきる",
-   "romaji": "okiru",
-   "meanings": [
-    "вставать на ноги",
-    "подниматься",
-    "вставать",
-    "просыпаться",
-    "не спать",
-    "не ложиться",
-    "происходить",
-    "случаться",
-    "возникать"
-   ],
-   "en": "to get up (e.g., from sleeping); to happen",
-   "pos": [
-    "глагол (ру)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/kiru-okiru-2c32b84e.mp3"
-  },
-  {
-   "id": "kisaten-fdc7b359",
-   "kanji": "喫茶店",
-   "kana": "きっさてん",
-   "romaji": "kissaten",
-   "meanings": [
-    "кафе",
-    "закусочная",
-    "чайная"
-   ],
-   "en": "café",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kisaten-fdc7b359.mp3"
-  },
-  {
-   "id": "mi-yasumi-0215f7c8",
-   "kanji": "休み",
-   "kana": "やすみ",
-   "romaji": "yasumi",
-   "meanings": [
-    "отдых",
-    "перерыв",
-    "каникулы"
-   ],
-   "en": "holiday; day off; absence",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/mi-yasumi-0215f7c8.mp3"
-  },
-  {
-   "id": "giyuuniyuu-7f546c73",
-   "kanji": "牛乳",
-   "kana": "ぎゅうにゅう",
-   "romaji": "gyuunyuu",
-   "meanings": [
-    "коровье молоко"
-   ],
-   "en": "milk",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/giyuuniyuu-7f546c73.mp3"
-  },
-  {
-   "id": "kiyonen-05ed775a",
-   "kanji": "去年",
-   "kana": "きょねん",
-   "romaji": "kyonen",
-   "meanings": [
-    "1. прошлый год",
-    "прошлогодний",
-    "прошлого года",
-    "2. в прошлом году"
-   ],
-   "en": "last year",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/kiyonen-05ed775a.mp3"
-  },
-  {
-   "id": "i-tsuyoi-860918d8",
-   "kanji": "強い",
-   "kana": "つよい",
-   "romaji": "tsuyoi",
-   "meanings": [
-    "сильный",
-    "могучий",
-    "интенсивный",
-    "крепкий"
-   ],
-   "en": "strong, powerful",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-tsuyoi-860918d8.mp3"
-  },
-  {
-   "id": "i-semai-7e599243",
-   "kanji": "狭い",
-   "kana": "せまい",
-   "romaji": "semai",
-   "meanings": [
-    "узкий",
-    "тесный",
-    "маленький",
-    "ограниченный"
-   ],
-   "en": "narrow; not spacious",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-semai-7e599243.mp3"
-  },
-  {
-   "id": "i-chikai-7d7e47fd",
-   "kanji": "近い",
-   "kana": "ちかい",
-   "romaji": "chikai",
-   "meanings": [
-    "близкий",
-    "недалёкий"
-   ],
-   "en": "near, close by, short",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-chikai-7d7e47fd.mp3"
-  },
-  {
-   "id": "kinyoubi-c59f39d0",
-   "kanji": "金曜日",
-   "kana": "きんようび",
-   "romaji": "kinyoubi",
-   "meanings": [
-    "пятница"
-   ],
-   "en": "Friday",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/kinyoubi-c59f39d0.mp3"
-  },
-  {
-   "id": "ginkou-284fa6f6",
-   "kanji": "銀行",
-   "kana": "ぎんこう",
-   "romaji": "ginkou",
-   "meanings": [
-    "банк"
-   ],
-   "en": "bank",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ginkou-284fa6f6.mp3"
-  },
-  {
-   "id": "tsu-kokonotsu-8fe80af9",
-   "kanji": "九つ",
-   "kana": "ここのつ",
-   "romaji": "kokonotsu",
-   "meanings": [
-    "девять",
-    "девять лет"
-   ],
-   "en": "nine things",
-   "pos": [
-    "числит."
-   ],
-   "audio": "/audio/n5-words/tsu-kokonotsu-8fe80af9.mp3"
-  },
-  {
-   "id": "kutsu-f0e2db11",
-   "kanji": "靴",
-   "kana": "くつ",
-   "romaji": "kutsu",
-   "meanings": [
-    "обувь",
-    "ботинки",
-    "туфли"
-   ],
-   "en": "shoes, footwear",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kutsu-f0e2db11.mp3"
-  },
-  {
-   "id": "kutsushita-0809c2ec",
-   "kanji": "靴下",
-   "kana": "くつした",
-   "romaji": "kutsushita",
-   "meanings": [
-    "носки",
-    "чулки"
-   ],
-   "en": "socks",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kutsushita-0809c2ec.mp3"
-  },
-  {
-   "id": "ani-af79070d",
-   "kanji": "兄",
-   "kana": "あに",
-   "romaji": "ani",
-   "meanings": [
-    "старший брат"
-   ],
-   "en": "(my) older brother (humble)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ani-af79070d.mp3"
-  },
-  {
-   "id": "kiyoudai-38102230",
-   "kanji": "兄弟",
-   "kana": "きょうだい",
-   "romaji": "kyoudai",
-   "meanings": [
-    "братья и сёстры",
-    "брат",
-    "сестра"
-   ],
-   "en": "siblings (humble), brothers and sisters",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kiyoudai-38102230.mp3"
-  },
-  {
-   "id": "getsuyoubi-b9663d8e",
-   "kanji": "月曜日",
-   "kana": "げつようび",
-   "romaji": "getsuyoubi",
-   "meanings": [
-    "понедельник"
-   ],
-   "en": "Monday",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/getsuyoubi-b9663d8e.mp3"
-  },
-  {
-   "id": "inu-c130f8cd",
-   "kanji": "犬",
-   "kana": "いぬ",
-   "romaji": "inu",
-   "meanings": [
-    "собака",
-    "пёс",
-    "собачий",
-    "псиный",
-    "шпик"
-   ],
-   "en": "dog",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/inu-c130f8cd.mp3"
-  },
-  {
-   "id": "seru-miseru-a452bb6c",
-   "kanji": "見せる",
-   "kana": "みせる",
-   "romaji": "miseru",
-   "meanings": [
-    "показывать",
-    "давать смотреть",
-    "делать вид"
-   ],
-   "en": "to show, to display",
-   "pos": [
-    "глагол (ру)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/seru-miseru-a452bb6c.mp3"
-  },
-  {
-   "id": "kotoba-c4c19810",
-   "kanji": "言葉",
-   "kana": "ことば",
-   "romaji": "kotoba",
-   "meanings": [
-    "слово",
-    "язык",
-    "слова"
-   ],
-   "en": "language; word(s); expression(s)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kotoba-c4c19810.mp3"
-  },
-  {
-   "id": "i-furui-72d6a485",
-   "kanji": "古い",
-   "kana": "ふるい",
-   "romaji": "furui",
-   "meanings": [
-    "старый"
-   ],
-   "en": "old (in reference to objects, not people), aged, ancient",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-furui-72d6a485.mp3"
-  },
-  {
-   "id": "bu-yobu-ac8ec180",
-   "kanji": "呼ぶ",
-   "kana": "よぶ",
-   "romaji": "yobu",
-   "meanings": [
-    "позвать",
-    "звать",
-    "называть",
-    "приглашать"
-   ],
-   "en": "to call (one's name); to invite",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/bu-yobu-ac8ec180.mp3"
-  },
-  {
-   "id": "tsu-itsutsu-59c8f336",
-   "kanji": "五つ",
-   "kana": "いつつ",
-   "romaji": "itsutsu",
-   "meanings": [
-    "пять",
-    "пять лет"
-   ],
-   "en": "five things",
-   "pos": [
-    "числит."
-   ],
-   "audio": "/audio/n5-words/tsu-itsutsu-59c8f336.mp3"
-  },
-  {
-   "id": "gogo-d4d9c4f0",
-   "kanji": "午後",
-   "kana": "ごご",
-   "romaji": "gogo",
-   "meanings": [
-    "после полудня"
-   ],
-   "en": "afternoon, P.M.",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/gogo-d4d9c4f0.mp3"
-  },
-  {
-   "id": "gozen-cd35996d",
-   "kanji": "午前",
-   "kana": "ごぜん",
-   "romaji": "gozen",
-   "meanings": [
-    "до полудня"
-   ],
-   "en": "morning, A.M.",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/gozen-cd35996d.mp3"
-  },
-  {
-   "id": "kouen-433eabdf",
-   "kanji": "公園",
-   "kana": "こうえん",
-   "romaji": "kouen",
-   "meanings": [
-    "городской парк"
-   ],
-   "en": "a park",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kouen-433eabdf.mp3"
-  },
-  {
-   "id": "i-hiroi-b0c59178",
-   "kanji": "広い",
-   "kana": "ひろい",
-   "romaji": "hiroi",
-   "meanings": [
-    "широкий",
-    "просторный",
-    "обширный",
-    "большой",
-    "поместительный"
-   ],
-   "en": "spacious; wide; broad",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-hiroi-b0c59178.mp3"
-  },
-  {
-   "id": "kouchiya-9e9cd1e6",
-   "kanji": "紅茶",
-   "kana": "こうちゃ",
-   "romaji": "koucha",
-   "meanings": [
-    "чёрный чай"
-   ],
-   "en": "black tea",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kouchiya-9e9cd1e6.mp3"
-  },
-  {
-   "id": "i-takai-b332996a",
-   "kanji": "高い",
-   "kana": "たかい",
-   "romaji": "takai",
-   "meanings": [
-    "высокий",
-    "громкий",
-    "дорогой"
-   ],
-   "en": "tall, high; expensive",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-takai-b332996a.mp3"
-  },
-  {
-   "id": "i-kuroi-16655e86",
-   "kanji": "黒い",
-   "kana": "くろい",
-   "romaji": "kuroi",
-   "meanings": [
-    "чёрный",
-    "тёмный"
-   ],
-   "en": "black; dark",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-kuroi-16655e86.mp3"
-  },
-  {
-   "id": "ima-7d206603",
-   "kanji": "今",
-   "kana": "いま",
-   "romaji": "ima",
-   "meanings": [
-    "теперь",
-    "сейчас",
-    "теперешний",
-    "нынешний",
-    "отныне",
-    "впредь"
-   ],
-   "en": "now",
-   "pos": [
-    "сущ.",
-    "の-прил.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/ima-7d206603.mp3"
-  },
-  {
-   "id": "kongetsu-439d66c9",
-   "kanji": "今月",
-   "kana": "こんげつ",
-   "romaji": "kongetsu",
-   "meanings": [
-    "1. этот месяц",
-    "2. в этом месяце"
-   ],
-   "en": "this month",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/kongetsu-439d66c9.mp3"
-  },
-  {
-   "id": "konshiyuu-a0820288",
-   "kanji": "今週",
-   "kana": "こんしゅう",
-   "romaji": "konshuu",
-   "meanings": [
-    "1. эта неделя",
-    "2. на этой неделе"
-   ],
-   "en": "this week",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/konshiyuu-a0820288.mp3"
-  },
-  {
-   "id": "konban-177dd2d8",
-   "kanji": "今晩",
-   "kana": "こんばん",
-   "romaji": "konban",
-   "meanings": [
-    "1. этот вечер",
-    "2. сегодня вечером"
-   ],
-   "en": "tonight, this evening",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/konban-177dd2d8.mp3"
-  },
-  {
-   "id": "ru-komaru-f85f77fd",
-   "kanji": "困る",
-   "kana": "こまる",
-   "romaji": "komaru",
-   "meanings": [
-    "находиться в затруднении",
-    "затрудняться",
-    "испытывать неудобства",
-    "чувствовать неловкость",
-    "страдать",
-    "нуждаться"
-   ],
-   "en": "to be bothered, to have difficulty",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/ru-komaru-f85f77fd.mp3"
-  },
-  {
-   "id": "satou-691016b6",
-   "kanji": "砂糖",
-   "kana": "さとう",
-   "romaji": "satou",
-   "meanings": [
-    "сахар"
-   ],
-   "en": "sugar",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/satou-691016b6.mp3"
-  },
-  {
-   "id": "saifu-d8d90673",
-   "kanji": "財布",
-   "kana": "さいふ",
-   "romaji": "saifu",
-   "meanings": [
-    "кошелёк",
-    "бумажник"
-   ],
-   "en": "wallet",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/saifu-d8d90673.mp3"
-  },
-  {
-   "id": "ku-saku-b8f10fc6",
-   "kanji": "咲く",
-   "kana": "さく",
-   "romaji": "saku",
-   "meanings": [
-    "цвести"
-   ],
-   "en": "to bloom",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/ku-saku-b8f10fc6.mp3"
-  },
-  {
-   "id": "zashi-bb05c439",
-   "kanji": "雑誌",
-   "kana": "ざっし",
-   "romaji": "zasshi",
-   "meanings": [
-    "журнал"
-   ],
-   "en": "magazine, journal",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/zashi-bb05c439.mp3"
-  },
-  {
-   "id": "tsu-mitsu-62d31881",
-   "kanji": "三つ",
-   "kana": "みっつ",
-   "romaji": "mittsu",
-   "meanings": [
-    "три",
-    "три года"
-   ],
-   "en": "three things",
-   "pos": [
-    "числит."
-   ],
-   "audio": "/audio/n5-words/tsu-mitsu-62d31881.mp3"
-  },
-  {
-   "id": "yama-0bc185ff",
-   "kanji": "山",
-   "kana": "やま",
-   "romaji": "yama",
-   "meanings": [
-    "спекуляция",
-    "риск",
-    "гора",
-    "горный"
-   ],
-   "en": "mountain",
-   "pos": [
-    "сущ.",
-    "счётн. слово"
-   ],
-   "audio": "/audio/n5-words/yama-0bc185ff.mp3"
-  },
-  {
-   "id": "shigoto-ad8e25fd",
-   "kanji": "仕事",
-   "kana": "しごと",
-   "romaji": "shigoto",
-   "meanings": [
-    "работа",
-    "занятие",
-    "дело",
-    "работать"
-   ],
-   "en": "work, job, occupation, employment",
-   "pos": [
-    "сущ.",
-    "суру-глагол",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/shigoto-ad8e25fd.mp3"
-  },
-  {
-   "id": "tsu-yotsu-4d81bf07",
-   "kanji": "四つ",
-   "kana": "よっつ",
-   "romaji": "yottsu",
-   "meanings": [
-    "четыре",
-    "четыре года"
-   ],
-   "en": "four things",
-   "pos": [
-    "числит."
-   ],
-   "audio": "/audio/n5-words/tsu-yotsu-4d81bf07.mp3"
-  },
-  {
-   "id": "maru-hajimaru-e7469ed6",
-   "kanji": "始まる",
-   "kana": "はじまる",
-   "romaji": "hajimaru",
-   "meanings": [
-    "начинаться",
-    "открываться",
-    "брать своё начало"
-   ],
-   "en": "(something) begins",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/maru-hajimaru-e7469ed6.mp3"
-  },
-  {
-   "id": "ane-1821d2fa",
-   "kanji": "姉",
-   "kana": "あね",
-   "romaji": "ane",
-   "meanings": [
-    "старшая сестра"
-   ],
-   "en": "(my) older sister (humble)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ane-1821d2fa.mp3"
-  },
-  {
-   "id": "kodomo-4ee8d81f",
-   "kanji": "子供",
-   "kana": "こども",
-   "romaji": "kodomo",
-   "meanings": [
-    "ребёнок",
-    "дитя",
-    "сын",
-    "дочь",
-    "дети",
-    "детский",
-    "ребяческий",
-    "бездетный"
-   ],
-   "en": "child(ren)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kodomo-4ee8d81f.mp3"
-  },
-  {
-   "id": "nu-shinu-81336b05",
-   "kanji": "死ぬ",
-   "kana": "しぬ",
-   "romaji": "shinu",
-   "meanings": [
-    "умирать",
-    "умереть"
-   ],
-   "en": "to die",
-   "pos": [
-    "глагол (у)",
-    "глагол",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/nu-shinu-81336b05.mp3"
-  },
-  {
-   "id": "watashi-34c83ff9",
+   "id": "jw-私-わたし",
    "kanji": "私",
    "kana": "わたし",
    "romaji": "watashi",
    "meanings": [
-    "мой"
+    "преподаватель",
+    "учитель",
+    "служащий фирмы",
+    "студент",
+    "я",
+    "больница",
+    "врач",
+    "служащий банка",
+    "он",
+    "она",
+    "исследователь",
+    "ученый",
+    "человек",
+    "год",
+    "университет"
    ],
-   "en": "I, myself",
-   "pos": [
-    "местоим."
-   ],
-   "audio": "/audio/n5-words/watashi-34c83ff9.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "kami-10321fec",
-   "kanji": "紙",
-   "kana": "かみ",
-   "romaji": "kami",
+   "id": "jw-せんせい-せんせい",
+   "kanji": "せんせい",
+   "kana": "せんせい",
+   "romaji": "sensei",
    "meanings": [
-    "бумага"
+    "кто?",
+    "господин",
+    "госпожа",
+    "да",
+    "вы",
+    "немного ~",
+    "до ~"
    ],
-   "en": "paper",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kami-10321fec.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "ha-2d82f0b7",
-   "kanji": "歯",
-   "kana": "は",
-   "romaji": "ha",
+   "id": "jw-あのかた-あのかた",
+   "kanji": "あのかた",
+   "kana": "あのかた",
+   "romaji": "anokata",
    "meanings": [
-    "зубы",
-    "беззубый",
-    "зубья",
-    "зубцы"
+    "кто?",
+    "господин",
+    "госпожа",
+    "да",
+    "вы",
+    "немного ~",
+    "до ~"
    ],
-   "en": "tooth",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ha-2d82f0b7.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "2"
   },
   {
-   "id": "jikan-fca2e7c0",
-   "kanji": "時間",
-   "kana": "じかん",
-   "romaji": "jikan",
-   "meanings": [
-    "час",
-    "урок",
-    "часы",
-    "определённое время"
-   ],
-   "en": "time",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/jikan-fca2e7c0.mp3"
-  },
-  {
-   "id": "tokei-f874c39b",
-   "kanji": "時計",
-   "kana": "とけい",
-   "romaji": "tokei",
-   "meanings": [
-    "часы"
-   ],
-   "en": "a watch; a clock",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/tokei-f874c39b.mp3"
-  },
-  {
-   "id": "tsugi-fda41b7f",
-   "kanji": "次",
-   "kana": "つぎ",
-   "romaji": "tsugi",
-   "meanings": [
-    "следующий",
-    "затем"
-   ],
-   "en": "next",
-   "pos": [
-    "сущ.",
-    "の-прил."
-   ],
-   "audio": "/audio/n5-words/tsugi-fda41b7f.mp3"
-  },
-  {
-   "id": "jitenshiya-96d8fa37",
-   "kanji": "自転車",
-   "kana": "じてんしゃ",
-   "romaji": "jitensha",
-   "meanings": [
-    "велосипед",
-    "самокат"
-   ],
-   "en": "bicycle",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/jitenshiya-96d8fa37.mp3"
-  },
-  {
-   "id": "jibun-8acb1dd0",
-   "kanji": "自分",
-   "kana": "じぶん",
-   "romaji": "jibun",
-   "meanings": [
-    "сам",
-    "свой",
-    "личный",
-    "собственный",
-    "самому себе"
-   ],
-   "en": "myself, oneself",
-   "pos": [
-    "местоим."
-   ],
-   "audio": "/audio/n5-words/jibun-8acb1dd0.mp3"
-  },
-  {
-   "id": "jishiyo-55347eca",
+   "id": "jw-辞書-じしょ",
    "kanji": "辞書",
    "kana": "じしょ",
    "romaji": "jisho",
    "meanings": [
-    "фонетический словарь"
+    "тот",
+    "автомобиль",
+    "то",
+    "словарь",
+    "книга",
+    "автоматический карандаш",
+    "зонт",
+    "карандаш",
+    "кофе",
+    "радио",
+    "шариковая ручка",
+    "портфель; кейс",
+    "~ язык",
+    "записная книжка, блокнот",
+    "журнал",
+    "шоколад"
    ],
-   "en": "dictionary",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/jishiyo-55347eca.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
   },
   {
-   "id": "tsu-nanatsu-cbc9912e",
-   "kanji": "七つ",
-   "kana": "ななつ",
-   "romaji": "nanatsu",
+   "id": "jw-シャープペンシル-しゃーぷぺんしる",
+   "kanji": "シャープペンシル",
+   "kana": "しゃーぷぺんしる",
+   "romaji": "shaapupenshiru",
    "meanings": [
-    "семь",
-    "семь лет"
+    "так",
+    "этот, тот",
+    "японский язык",
+    "автоматический карандаш",
+    "то",
+    "записная книжка, блокнот",
+    "тот",
+    "автомобиль",
+    "часы",
+    "это",
+    "журнал",
+    "карточка",
+    "газета",
+    "телевизор",
+    "этот",
+    "книга",
+    "фотоаппарат",
+    "словарь",
+    "~ язык",
+    "шариковая ручка",
+    "карандаш",
+    "компьютер",
+    "радио",
+    "тетрадь"
    ],
-   "en": "seven things",
-   "pos": [
-    "числит."
-   ],
-   "audio": "/audio/n5-words/tsu-nanatsu-cbc9912e.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
   },
   {
-   "id": "shiyashin-f590b15d",
-   "kanji": "写真",
-   "kana": "しゃしん",
-   "romaji": "shashin",
+   "id": "jw-雑誌-ざっし",
+   "kanji": "雑誌",
+   "kana": "ざっし",
+   "romaji": "zasshi",
    "meanings": [
-    "фотокарточка",
-    "фотоснимок"
+    "портфель; кейс",
+    "тот",
+    "ключ",
+    "журнал",
+    "что",
+    "тетрадь",
+    "карточка",
+    "словарь",
+    "стол",
+    "телевизор",
+    "это, то",
+    "то",
+    "автоматический карандаш",
+    "фотоаппарат",
+    "шариковая ручка",
+    "радио",
+    "это",
+    "шоколад",
+    "~ язык",
+    "японский язык"
    ],
-   "en": "a picture; a photograph",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/shiyashin-f590b15d.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
   },
   {
-   "id": "kuruma-b2293741",
+   "id": "jw-手帳-てちょう",
+   "kanji": "手帳",
+   "kana": "てちょう",
+   "romaji": "techou",
+   "meanings": [
+    "так",
+    "визитная карточка",
+    "записная книжка, блокнот",
+    "ключ",
+    "этот",
+    "карандаш",
+    "портфель; кейс",
+    "словарь",
+    "зонт",
+    "тот",
+    "тетрадь",
+    "японский язык",
+    "газета",
+    "радио",
+    "шоколад",
+    "журнал",
+    "это, то",
+    "шариковая ручка",
+    "карточка",
+    "английский язык",
+    "телевизор",
+    "стол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-これ-これ",
+   "kanji": "これ",
+   "kana": "これ",
+   "romaji": "kore",
+   "meanings": [
+    "записная книжка, блокнот",
+    "газета",
+    "кофе",
+    "это",
+    "визитная карточка",
+    "словарь",
+    "карточка",
+    "ключ",
+    "то",
+    "что",
+    "карандаш",
+    "шариковая ручка",
+    "этот",
+    "этот, тот",
+    "компьютер",
+    "подарок, сувенир",
+    "радио",
+    "книга",
+    "тетрадь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-それ-それ",
+   "kanji": "それ",
+   "kana": "それ",
+   "romaji": "sore",
+   "meanings": [
+    "автомобиль",
+    "это, то",
+    "портфель; кейс",
+    "ключ",
+    "этот, тот",
+    "газета",
+    "этот",
+    "зонт",
+    "тот",
+    "компьютер",
+    "книга",
+    "~ язык",
+    "японский язык",
+    "тетрадь",
+    "это",
+    "английский язык"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-車-くるま",
    "kanji": "車",
    "kana": "くるま",
    "romaji": "kuruma",
    "meanings": [
-    "повозка",
-    "экипаж",
-    "ручная тележка",
-    "ломовая телега",
-    "воз",
-    "фургон",
-    "автомашина",
-    "такси",
-    "вагон",
-    "коляска рикши",
-    "рикша",
-    "колесо"
+    "шоколад",
+    "автомобиль",
+    "тот",
+    "словарь",
+    "так",
+    "этот",
+    "карандаш",
+    "автоматический карандаш",
+    "тетрадь",
+    "кофе",
+    "визитная карточка",
+    "подарок, сувенир",
+    "записная книжка, блокнот",
+    "этот, тот",
+    "~ язык",
+    "журнал",
+    "то",
+    "что"
    ],
-   "en": "car, vehicle",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kuruma-b2293741.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
   },
   {
-   "id": "i-wakai-5b8e27c5",
-   "kanji": "若い",
-   "kana": "わかい",
-   "romaji": "wakai",
+   "id": "jw-鉛筆-えんぴつ",
+   "kanji": "鉛筆",
+   "kana": "えんぴつ",
+   "romaji": "enpitsu",
    "meanings": [
-    "молодой",
-    "юный",
-    "незрелый",
-    "малый",
-    "меньший"
+    "шоколад",
+    "визитная карточка",
+    "карандаш",
+    "стул",
+    "тетрадь",
+    "портфель; кейс",
+    "радио",
+    "этот, тот",
+    "стол",
+    "английский язык",
+    "карточка",
+    "~ язык",
+    "фотоаппарат",
+    "кофе",
+    "это, то",
+    "журнал",
+    "зонт",
+    "это"
    ],
-   "en": "young",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-wakai-5b8e27c5.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
   },
   {
-   "id": "ru-toru-e9543b90",
-   "kanji": "取る",
-   "kana": "とる",
-   "romaji": "toru",
+   "id": "jw-その-その",
+   "kanji": "その",
+   "kana": "その",
+   "romaji": "sono",
    "meanings": [
-    "брать",
-    "получать",
-    "брать в руки",
-    "взять в руку",
-    "взять за"
+    "радио",
+    "этот, тот",
+    "тот",
+    "так",
+    "визитная карточка",
+    "кофе",
+    "это",
+    "карточка",
+    "часы",
+    "английский язык",
+    "шоколад",
+    "японский язык",
+    "шариковая ручка",
+    "автомобиль",
+    "что",
+    "фотоаппарат",
+    "зонт",
+    "этот",
+    "стул",
+    "словарь",
+    "карандаш",
+    "подарок, сувенир",
+    "записная книжка, блокнот",
+    "это, то"
    ],
-   "en": "to take (a class); to get (a grade)",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ru-toru-e9543b90.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
   },
   {
-   "id": "tegami-2dddda2a",
-   "kanji": "手紙",
-   "kana": "てがみ",
-   "romaji": "tegami",
+   "id": "jw-何-なん",
+   "kanji": "何",
+   "kana": "なん",
+   "romaji": "nan",
    "meanings": [
-    "письмо"
+    "что",
+    "шоколад",
+    "этот",
+    "шариковая ручка",
+    "журнал",
+    "визитная карточка",
+    "радио",
+    "автоматический карандаш",
+    "часы",
+    "японский язык",
+    "стул",
+    "фотоаппарат",
+    "это, то",
+    "газета",
+    "автомобиль",
+    "тот",
+    "подарок, сувенир",
+    "компьютер",
+    "карандаш",
+    "книга",
+    "это",
+    "ключ",
+    "~ язык",
+    "карточка",
+    "так",
+    "телевизор",
+    "портфель; кейс"
    ],
-   "en": "letter",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/tegami-2dddda2a.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
   },
   {
-   "id": "jiyugiyou-d801fde3",
-   "kanji": "授業",
-   "kana": "じゅぎょう",
-   "romaji": "jugyou",
-   "meanings": [
-    "преподавание",
-    "обучение",
-    "преподавать",
-    "давать уроки",
-    "занятия"
-   ],
-   "en": "a class (of school)",
-   "pos": [
-    "сущ.",
-    "суру-глагол",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/jiyugiyou-d801fde3.mp3"
-  },
-  {
-   "id": "aki-231c5c64",
-   "kanji": "秋",
-   "kana": "あき",
-   "romaji": "aki",
-   "meanings": [
-    "осень",
-    "осенний"
-   ],
-   "en": "fall (season)",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/aki-231c5c64.mp3"
-  },
-  {
-   "id": "u-narau-20aa765e",
-   "kanji": "習う",
-   "kana": "ならう",
-   "romaji": "narau",
-   "meanings": [
-    "учиться",
-    "заниматься"
-   ],
-   "en": "to learn",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/u-narau-20aa765e.mp3"
-  },
-  {
-   "id": "i-omoi-e81c0c46",
-   "kanji": "重い",
-   "kana": "おもい",
-   "romaji": "omoi",
-   "meanings": [
-    "тяжёлый",
-    "тяжкий",
-    "важный",
-    "серьёзный"
-   ],
-   "en": "heavy; serious",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-omoi-e81c0c46.mp3"
-  },
-  {
-   "id": "shiyukudai-03e5226c",
-   "kanji": "宿題",
-   "kana": "しゅくだい",
-   "romaji": "shukudai",
-   "meanings": [
-    "домашнее задание",
-    "урок на дом",
-    "неразрешённый вопрос",
-    "вопрос ждущий разрешения",
-    "оставаться неразрешённым"
-   ],
-   "en": "homework",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/shiyukudai-03e5226c.mp3"
-  },
-  {
-   "id": "su-dasu-67a286df",
-   "kanji": "出す",
-   "kana": "だす",
-   "romaji": "dasu",
-   "meanings": [
-    "выставлять",
-    "высовывать",
-    "вынимать",
-    "вытаскивать",
-    "показать",
-    "представить на обозрение",
-    "представлять",
-    "предъявлять"
-   ],
-   "en": "to take (something) out; to hand in (something)",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/su-dasu-67a286df.mp3"
-  },
-  {
-   "id": "haru-be282a45",
-   "kanji": "春",
-   "kana": "はる",
-   "romaji": "haru",
-   "meanings": [
-    "весна",
-    "любовь",
-    "страсть"
-   ],
-   "en": "spring",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/haru-be282a45.mp3"
-  },
-  {
-   "id": "mete-hajimete-b86f92f9",
-   "kanji": "初めて",
-   "kana": "はじめて",
-   "romaji": "hajimete",
-   "meanings": [
-    "впервые",
-    "в первый раз"
-   ],
-   "en": "for the first time",
-   "pos": [
-    "наречие",
-    "の-прил."
-   ],
-   "audio": "/audio/n5-words/mete-hajimete-b86f92f9.mp3"
-  },
-  {
-   "id": "tokoro-d99acdf3",
-   "kanji": "所",
-   "kana": "ところ",
-   "romaji": "tokoro",
-   "meanings": [
-    "момент"
-   ],
-   "en": "place",
-   "pos": [
-    "сущ.",
-    "наречие",
-    "суффикс"
-   ],
-   "audio": "/audio/n5-words/tokoro-d99acdf3.mp3"
-  },
-  {
-   "id": "i-atsui-8f994c89",
-   "kanji": "暑い",
-   "kana": "あつい",
-   "romaji": "atsui",
-   "meanings": [
-    "жаркий",
-    "жарко"
-   ],
-   "en": "hot (in reference to weather), warm",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-atsui-8f994c89.mp3"
-  },
-  {
-   "id": "onna-826548ed",
-   "kanji": "女",
-   "kana": "おんな",
-   "romaji": "onna",
-   "meanings": [
-    "женщина"
-   ],
-   "en": "woman, female",
-   "pos": [
-    "сущ.",
-    "префикс"
-   ],
-   "audio": "/audio/n5-words/onna-826548ed.mp3"
-  },
-  {
-   "id": "no-onnanoko-39d87f04",
-   "kanji": "女の子",
-   "kana": "おんなのこ",
-   "romaji": "onnanoko",
-   "meanings": [
-    "девочка"
-   ],
-   "en": "girl",
-   "pos": [
-    "выражение",
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/no-onnanoko-39d87f04.mp3"
-  },
-  {
-   "id": "sai-chiisai-9a481e9c",
-   "kanji": "小さい",
-   "kana": "ちいさい",
-   "romaji": "chiisai",
-   "meanings": [
-    "маленький",
-    "небольшой",
-    "мелкий"
-   ],
-   "en": "small, little",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/sai-chiisai-9a481e9c.mp3"
-  },
-  {
-   "id": "shi-sukoshi-ef1f13b8",
-   "kanji": "少し",
-   "kana": "すこし",
-   "romaji": "sukoshi",
-   "meanings": [
-    "немного",
-    "немножко",
-    "незначительный"
-   ],
-   "en": "little, few",
-   "pos": [
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/shi-sukoshi-ef1f13b8.mp3"
-  },
-  {
-   "id": "nai-sukunai-cec36ae5",
-   "kanji": "少ない",
-   "kana": "すくない",
-   "romaji": "sukunai",
-   "meanings": [
-    "мало",
-    "немногочисленный",
-    "скудный"
-   ],
-   "en": "a little; a few",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/nai-sukunai-cec36ae5.mp3"
-  },
-  {
-   "id": "eru-kieru-a07d0e52",
-   "kanji": "消える",
-   "kana": "きえる",
-   "romaji": "kieru",
-   "meanings": [
-    "гаснуть",
-    "тухнуть",
-    "таять",
-    "исчезать"
-   ],
-   "en": "to vanish, to disappear",
-   "pos": [
-    "глагол (ру)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/eru-kieru-a07d0e52.mp3"
-  },
-  {
-   "id": "be-tabemono-4a2ff04b",
-   "kanji": "食べ物",
-   "kana": "たべもの",
-   "romaji": "tabemono",
-   "meanings": [
-    "еда",
-    "пища",
-    "кушанье",
-    "съестное",
-    "снедь",
-    "продукты",
-    "продовольствие",
-    "кормить",
-    "давать поесть"
-   ],
-   "en": "food",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/be-tabemono-4a2ff04b.mp3"
-  },
-  {
-   "id": "shiyokudou-a55e974c",
-   "kanji": "食堂",
-   "kana": "しょくどう",
-   "romaji": "shokudou",
-   "meanings": [
-    "столовая",
-    "буфет"
-   ],
-   "en": "cafeteria, dining hall",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/shiyokudou-a55e974c.mp3"
-  },
-  {
-   "id": "ru-neru-91061334",
-   "kanji": "寝る",
-   "kana": "ねる",
-   "romaji": "neru",
-   "meanings": [
-    "ложиться спать",
-    "засыпать"
-   ],
-   "en": "to sleep; to go to sleep; to go to bed",
-   "pos": [
-    "глагол (ру)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/ru-neru-91061334.mp3"
-  },
-  {
-   "id": "shii-atarashii-a92c2761",
-   "kanji": "新しい",
-   "kana": "あたらしい",
-   "romaji": "atarashii",
-   "meanings": [
-    "новый",
-    "свежий"
-   ],
-   "en": "new",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/shii-atarashii-a92c2761.mp3"
-  },
-  {
-   "id": "shinbun-8e052aa3",
+   "id": "jw-新聞-しんぶん",
    "kanji": "新聞",
    "kana": "しんぶん",
    "romaji": "shinbun",
    "meanings": [
+    "тетрадь",
+    "ключ",
+    "~ язык",
+    "газета",
+    "это",
+    "книга",
+    "радио",
+    "это, то",
+    "автоматический карандаш",
+    "английский язык",
+    "фотоаппарат",
+    "автомобиль",
+    "часы",
+    "карточка",
+    "журнал",
+    "компьютер",
+    "подарок, сувенир",
+    "японский язык",
+    "словарь",
+    "этот",
+    "карандаш",
+    "записная книжка, блокнот",
+    "портфель; кейс"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-英語-えいご",
+   "kanji": "英語",
+   "kana": "えいご",
+   "romaji": "eigo",
+   "meanings": [
+    "английский язык",
+    "так",
+    "что",
+    "подарок, сувенир",
+    "стол",
+    "книга",
+    "карандаш",
+    "радио",
+    "автомобиль",
+    "портфель; кейс",
+    "зонт",
+    "кофе",
+    "журнал",
+    "японский язык",
+    "~ язык",
+    "фотоаппарат",
+    "тетрадь",
+    "часы",
+    "карточка",
+    "то",
+    "этот, тот",
+    "газета",
+    "телевизор"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-ノート-のーと",
+   "kanji": "ノート",
+   "kana": "のーと",
+   "romaji": "nooto",
+   "meanings": [
+    "фотоаппарат",
+    "английский язык",
+    "тетрадь",
+    "подарок, сувенир",
+    "компьютер",
+    "этот",
+    "шариковая ручка",
+    "словарь",
+    "это, то",
+    "шоколад",
+    "тот",
+    "книга",
+    "карточка",
+    "радио",
+    "журнал",
+    "портфель; кейс",
+    "карандаш",
+    "автомобиль"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-本-ほん",
+   "kanji": "本",
+   "kana": "ほん",
+   "romaji": "hon",
+   "meanings": [
+    "книга",
+    "так",
+    "тот",
+    "~ язык",
+    "японский язык",
+    "что",
+    "автоматический карандаш",
+    "газета",
+    "шариковая ручка",
+    "карандаш",
+    "компьютер",
+    "этот, тот",
+    "зонт",
+    "это",
+    "радио",
+    "это, то",
+    "записная книжка, блокнот",
+    "стол",
+    "визитная карточка",
+    "журнал",
+    "шоколад",
+    "английский язык",
+    "стул",
+    "этот",
+    "карточка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-カード-かーど",
+   "kanji": "カード",
+   "kana": "かーど",
+   "romaji": "kaado",
+   "meanings": [
+    "~ язык",
+    "карточка",
+    "зонт",
+    "книга",
+    "это",
+    "автоматический карандаш",
+    "что",
+    "компьютер",
+    "записная книжка, блокнот",
+    "японский язык",
+    "то",
+    "словарь",
+    "автомобиль",
+    "журнал",
+    "этот",
+    "стул",
+    "шариковая ручка",
+    "ключ",
+    "стол",
+    "фотоаппарат"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-かぎ-かぎ",
+   "kanji": "かぎ",
+   "kana": "かぎ",
+   "romaji": "kagi",
+   "meanings": [
+    "это",
+    "шоколад",
+    "автоматический карандаш",
+    "ключ",
+    "визитная карточка",
+    "зонт",
+    "фотоаппарат",
+    "английский язык",
+    "то",
+    "это, то",
+    "часы",
+    "газета",
+    "автомобиль",
+    "стул",
+    "тот",
+    "словарь",
+    "компьютер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-チョコレート-ちょこれーと",
+   "kanji": "チョコレート",
+   "kana": "ちょこれーと",
+   "romaji": "chokoreeto",
+   "meanings": [
+    "компьютер",
+    "это",
+    "карандаш",
+    "шоколад",
+    "английский язык",
+    "что",
+    "радио",
+    "книга",
+    "словарь",
+    "автоматический карандаш",
+    "этот",
+    "шариковая ручка",
+    "телевизор",
+    "зонт",
+    "японский язык",
+    "фотоаппарат",
+    "тот",
+    "подарок, сувенир",
+    "то"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-コーヒー-こーひー",
+   "kanji": "コーヒー",
+   "kana": "こーひー",
+   "romaji": "koohii",
+   "meanings": [
+    "этот",
+    "кофе",
+    "английский язык",
+    "визитная карточка",
+    "автомобиль",
+    "японский язык",
+    "этот, тот",
+    "портфель; кейс",
+    "шариковая ручка",
+    "компьютер",
+    "то",
+    "ключ",
+    "карандаш",
+    "шоколад",
+    "стол",
+    "карточка",
+    "зонт",
+    "фотоаппарат"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-お土産-おみやげ",
+   "kanji": "お土産",
+   "kana": "おみやげ",
+   "romaji": "omiyage",
+   "meanings": [
+    "стул",
+    "тетрадь",
+    "подарок, сувенир",
+    "этот, тот",
+    "радио",
+    "записная книжка, блокнот",
+    "газета",
+    "тот",
+    "автомобиль",
+    "портфель; кейс",
+    "шоколад",
+    "то",
+    "это",
+    "автоматический карандаш",
+    "японский язык",
+    "стол",
+    "часы",
+    "журнал",
+    "~ язык"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-時計-とけい",
+   "kanji": "時計",
+   "kana": "とけい",
+   "romaji": "tokei",
+   "meanings": [
+    "книга",
+    "портфель; кейс",
+    "ключ",
+    "часы",
+    "шоколад",
+    "радио",
+    "японский язык",
+    "журнал",
+    "словарь",
+    "автоматический карандаш",
+    "~ язык",
+    "записная книжка, блокнот",
+    "этот, тот"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-名刺-めいし",
+   "kanji": "名刺",
+   "kana": "めいし",
+   "romaji": "meishi",
+   "meanings": [
+    "радио",
+    "визитная карточка",
+    "шариковая ручка",
+    "кофе",
+    "портфель; кейс",
+    "часы",
+    "ключ",
+    "~ язык",
+    "зонт",
+    "стол",
+    "записная книжка, блокнот",
     "газета"
    ],
-   "en": "newspaper",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/shinbun-8e052aa3.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
   },
   {
-   "id": "i-karai-f55c2273",
-   "kanji": "辛い",
-   "kana": "からい",
-   "romaji": "karai",
+   "id": "jw-かばん-かばん",
+   "kanji": "かばん",
+   "kana": "かばん",
+   "romaji": "kaban",
    "meanings": [
-    "острый",
-    "горький",
-    "солёный"
+    "кофе",
+    "портфель; кейс",
+    "стол",
+    "записная книжка, блокнот",
+    "радио",
+    "подарок, сувенир",
+    "газета",
+    "шариковая ручка",
+    "ключ",
+    "этот, тот",
+    "компьютер",
+    "тот",
+    "карандаш",
+    "этот",
+    "автомобиль",
+    "автоматический карандаш",
+    "так",
+    "книга",
+    "словарь",
+    "зонт",
+    "~ язык",
+    "что",
+    "английский язык",
+    "журнал",
+    "шоколад",
+    "это",
+    "визитная карточка"
    ],
-   "en": "hot and spicy; salty",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-karai-f55c2273.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
   },
   {
-   "id": "toshiyokan-3573eaf3",
-   "kanji": "図書館",
+   "id": "jw-机-つくえ",
+   "kanji": "机",
+   "kana": "つくえ",
+   "romaji": "tsukue",
+   "meanings": [
+    "газета",
+    "шоколад",
+    "стол",
+    "портфель; кейс",
+    "этот",
+    "компьютер",
+    "это, то",
+    "стул",
+    "японский язык",
+    "так",
+    "английский язык",
+    "записная книжка, блокнот",
+    "этот, тот",
+    "это",
+    "визитная карточка",
+    "зонт",
+    "часы",
+    "карандаш",
+    "автомобиль",
+    "словарь",
+    "~ язык"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-あの-あの",
+   "kanji": "あの",
+   "kana": "あの",
+   "romaji": "ano",
+   "meanings": [
+    "тот",
+    "английский язык",
+    "радио",
+    "этот, тот",
+    "что",
+    "автоматический карандаш",
+    "~ язык",
+    "телевизор",
+    "карточка",
+    "автомобиль",
+    "шоколад",
+    "ключ",
+    "кофе",
+    "этот",
+    "компьютер",
+    "японский язык",
+    "тетрадь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-ラジオ-らじお",
+   "kanji": "ラジオ",
+   "kana": "らじお",
+   "romaji": "rajio",
+   "meanings": [
+    "карточка",
+    "радио",
+    "словарь",
+    "визитная карточка",
+    "журнал",
+    "тот",
+    "японский язык",
+    "тетрадь",
+    "газета",
+    "портфель; кейс",
+    "этот, тот",
+    "так",
+    "английский язык",
+    "записная книжка, блокнот",
+    "шариковая ручка",
+    "карандаш",
+    "кофе",
+    "то",
+    "компьютер",
+    "автоматический карандаш",
+    "автомобиль"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-コンピューター-こんぴゅーたー",
+   "kanji": "コンピューター",
+   "kana": "こんぴゅーたー",
+   "romaji": "konpyuutaa",
+   "meanings": [
+    "что",
+    "компьютер",
+    "это",
+    "телевизор",
+    "ключ",
+    "автоматический карандаш",
+    "тетрадь",
+    "подарок, сувенир",
+    "тот",
+    "так",
+    "этот",
+    "радио",
+    "фотоаппарат",
+    "кофе",
+    "словарь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-ボールペン-ぼーるぺん",
+   "kanji": "ボールペン",
+   "kana": "ぼーるぺん",
+   "romaji": "boorupen",
+   "meanings": [
+    "шоколад",
+    "радио",
+    "шариковая ручка",
+    "тот",
+    "портфель; кейс",
+    "газета",
+    "записная книжка, блокнот",
+    "телевизор",
+    "~ язык",
+    "что",
+    "это",
+    "визитная карточка",
+    "кофе",
+    "это, то",
+    "карточка",
+    "японский язык",
+    "словарь",
+    "стул"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-いす-いす",
+   "kanji": "いす",
+   "kana": "いす",
+   "romaji": "isu",
+   "meanings": [
+    "журнал",
+    "подарок, сувенир",
+    "это",
+    "стул",
+    "визитная карточка",
+    "этот",
+    "записная книжка, блокнот",
+    "книга",
+    "карточка",
+    "газета",
+    "телевизор",
+    "тот"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-テレビ-てれび",
+   "kanji": "テレビ",
+   "kana": "てれび",
+   "romaji": "terebi",
+   "meanings": [
+    "этот",
+    "японский язык",
+    "телевизор",
+    "журнал",
+    "~ язык",
+    "ключ",
+    "стол",
+    "английский язык",
+    "подарок, сувенир",
+    "так",
+    "это",
+    "записная книжка, блокнот",
+    "словарь",
+    "зонт",
+    "часы",
+    "портфель; кейс",
+    "кофе",
+    "фотоаппарат",
+    "шоколад",
+    "визитная карточка",
+    "этот, тот",
+    "автомобиль",
+    "тот"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-傘-かさ",
+   "kanji": "傘",
+   "kana": "かさ",
+   "romaji": "kasa",
+   "meanings": [
+    "зонт",
+    "кофе",
+    "что",
+    "книга",
+    "подарок, сувенир",
+    "ключ",
+    "этот",
+    "стул",
+    "фотоаппарат",
+    "тетрадь",
+    "этот, тот",
+    "автомобиль",
+    "карточка",
+    "карандаш",
+    "то",
+    "автоматический карандаш",
+    "японский язык"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-この-この",
+   "kanji": "この",
+   "kana": "この",
+   "romaji": "kono",
+   "meanings": [
+    "этот",
+    "кофе",
+    "так",
+    "журнал",
+    "этот, тот",
+    "английский язык",
+    "тетрадь",
+    "газета",
+    "радио",
+    "тот",
+    "это, то",
+    "книга",
+    "это"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-あれ-あれ",
+   "kanji": "あれ",
+   "kana": "あれ",
+   "romaji": "are",
+   "meanings": [
+    "записная книжка, блокнот",
+    "радио",
+    "то",
+    "что",
+    "стол",
+    "подарок, сувенир",
+    "телевизор",
+    "книга",
+    "~ язык",
+    "журнал",
+    "портфель; кейс",
+    "зонт",
+    "шариковая ручка",
+    "визитная карточка",
+    "тот",
+    "часы",
+    "английский язык",
+    "автомобиль"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-日本語-にほんご",
+   "kanji": "日本語",
+   "kana": "にほんご",
+   "romaji": "nihongo",
+   "meanings": [
+    "телевизор",
+    "журнал",
+    "это",
+    "японский язык",
+    "это, то",
+    "автомобиль",
+    "что",
+    "карандаш",
+    "шоколад",
+    "автоматический карандаш",
+    "стул",
+    "часы",
+    "этот, тот",
+    "английский язык"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-カメラ-かめら",
+   "kanji": "カメラ",
+   "kana": "かめら",
+   "romaji": "kamera",
+   "meanings": [
+    "словарь",
+    "ключ",
+    "газета",
+    "фотоаппарат",
+    "шариковая ручка",
+    "журнал",
+    "компьютер",
+    "радио",
+    "это"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-そう-そう",
+   "kanji": "そう",
+   "kana": "そう",
+   "romaji": "sou",
+   "meanings": [
+    "словарь",
+    "автоматический карандаш",
+    "так",
+    "стол",
+    "кофе",
+    "стул",
+    "карточка",
+    "зонт",
+    "портфель; кейс",
+    "этот, тот",
+    "японский язык",
+    "газета",
+    "компьютер",
+    "фотоаппарат"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-えんぴつ-えんぴつ",
+   "kanji": "えんぴつ",
+   "kana": "えんぴつ",
+   "romaji": "enpitsu",
+   "meanings": [
+    "радио"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "3"
+  },
+  {
+   "id": "jw-万-まん",
+   "kanji": "万",
+   "kana": "まん",
+   "romaji": "man",
+   "meanings": [
+    "страна",
+    "столовая",
+    "обувь",
+    "десять тысяч",
+    "компания, фирма",
+    "лифт",
+    "туалет",
+    "комната",
+    "здесь, сюда",
+    "лестница",
+    "приемная, ресепшен",
+    "этаж",
+    "телефон",
+    "офис, контора",
+    "сколько стоит",
+    "туда, там"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-エレベーター-えれべーたー",
+   "kanji": "エレベーター",
+   "kana": "えれべーたー",
+   "romaji": "erebeetaa",
+   "meanings": [
+    "лифт",
+    "зал заседаний",
+    "туда, там",
+    "там",
+    "телефон",
+    "этаж",
+    "торговый автомат",
+    "вино",
+    "вестибюль",
+    "класс, аудитория",
+    "столовая",
+    "где",
+    "какой этаж"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-ネクタイ-ねくたい",
+   "kanji": "ネクタイ",
+   "kana": "ねくたい",
+   "romaji": "nekutai",
+   "meanings": [
+    "телефон",
+    "эскалатор",
+    "здесь, там",
+    "галстук",
+    "десять тысяч",
+    "прилавок, отдел в магазине",
+    "там",
+    "зал заседаний",
+    "подвальное помещение, подвальный этаж",
+    "комната",
+    "столовая",
+    "обувь",
+    "лестница"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-会社-かいしゃ",
+   "kanji": "会社",
+   "kana": "かいしゃ",
+   "romaji": "kaisha",
+   "meanings": [
+    "комната",
+    "компания, фирма",
+    "приемная, ресепшен",
+    "лифт",
+    "офис, контора",
+    "иена",
+    "вино",
+    "вестибюль",
+    "здесь, сюда",
+    "страна",
+    "туалет",
+    "подвальное помещение, подвальный этаж",
+    "там, здесь",
+    "галстук",
+    "сколько стоит",
+    "там",
+    "этаж",
+    "где"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-地下-ちか",
+   "kanji": "地下",
+   "kana": "ちか",
+   "romaji": "chika",
+   "meanings": [
+    "где",
+    "какой этаж",
+    "подвальное помещение, подвальный этаж",
+    "вино",
+    "прилавок, отдел в магазине",
+    "класс, аудитория",
+    "десять тысяч",
+    "дом",
+    "там, здесь",
+    "галстук",
+    "иена",
+    "лестница",
+    "этаж",
+    "компания, фирма",
+    "торговый автомат",
+    "здесь, там",
+    "эскалатор",
+    "обувь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-売り場-うりば",
+   "kanji": "売り場",
+   "kana": "うりば",
+   "romaji": "uriba",
+   "meanings": [
+    "прилавок, отдел в магазине",
+    "торговый автомат",
+    "эскалатор",
+    "комната",
+    "офис, контора",
+    "подвальное помещение, подвальный этаж",
+    "здесь, там",
+    "обувь",
+    "телефон",
+    "этаж",
+    "вестибюль",
+    "компания, фирма",
+    "туда, там",
+    "сто",
+    "дом"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-あそこ-あそこ",
+   "kanji": "あそこ",
+   "kana": "あそこ",
+   "romaji": "asoko",
+   "meanings": [
+    "там",
+    "там, здесь",
+    "галстук",
+    "прилавок, отдел в магазине",
+    "лифт",
+    "этаж",
+    "сто",
+    "лестница",
+    "столовая",
+    "тысяча",
+    "торговый автомат",
+    "приемная, ресепшен",
+    "здесь, сюда",
+    "компания, фирма",
+    "иена",
+    "десять тысяч"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-いくら-いくら",
+   "kanji": "いくら",
+   "kana": "いくら",
+   "romaji": "ikura",
+   "meanings": [
+    "прилавок, отдел в магазине",
+    "здесь, там",
+    "лестница",
+    "сколько стоит",
+    "вино",
+    "дом",
+    "тысяча",
+    "офис, контора",
+    "обувь",
+    "там",
+    "столовая",
+    "комната",
+    "страна",
+    "эскалатор",
+    "здесь, тут",
+    "там, здесь",
+    "десять тысяч"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-階-かい",
+   "kanji": "階",
+   "kana": "かい",
+   "romaji": "kai",
+   "meanings": [
+    "приемная, ресепшен",
+    "этаж",
+    "сколько стоит",
+    "компания, фирма",
+    "торговый автомат",
+    "вестибюль",
+    "класс, аудитория",
+    "туда, там",
+    "столовая",
+    "здесь, там",
+    "тысяча",
+    "здесь, сюда",
+    "подвальное помещение, подвальный этаж",
+    "туалет",
+    "офис, контора",
+    "сто",
+    "десять тысяч",
+    "здесь, тут"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-トイレ-といれ",
+   "kanji": "トイレ",
+   "kana": "といれ",
+   "romaji": "toire",
+   "meanings": [
+    "тысяча",
+    "туалет",
+    "эскалатор",
+    "столовая",
+    "туда, там",
+    "комната",
+    "этаж",
+    "торговый автомат",
+    "здесь, там",
+    "офис, контора",
+    "сто",
+    "здесь, тут",
+    "страна"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-教室-きょうしつ",
+   "kanji": "教室",
+   "kana": "きょうしつ",
+   "romaji": "kyoushitsu",
+   "meanings": [
+    "лестница",
+    "страна",
+    "класс, аудитория",
+    "десять тысяч",
+    "туда, там",
+    "приемная, ресепшен",
+    "вино",
+    "компания, фирма",
+    "иена",
+    "этаж",
+    "телефон",
+    "прилавок, отдел в магазине",
+    "зал заседаний",
+    "там",
+    "сколько стоит",
+    "торговый автомат",
+    "лифт",
+    "какой этаж",
+    "тысяча",
+    "офис, контора",
+    "здесь, сюда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-事務所-じむしょ",
+   "kanji": "事務所",
+   "kana": "じむしょ",
+   "romaji": "jimusho",
+   "meanings": [
+    "десять тысяч",
+    "офис, контора",
+    "тысяча",
+    "подвальное помещение, подвальный этаж",
+    "иена",
+    "телефон",
+    "страна",
+    "компания, фирма"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-会議室-かいぎしつ",
+   "kanji": "会議室",
+   "kana": "かいぎしつ",
+   "romaji": "kaigishitsu",
+   "meanings": [
+    "прилавок, отдел в магазине",
+    "туда, там",
+    "зал заседаний",
+    "десять тысяч",
+    "здесь, сюда",
+    "комната",
+    "подвальное помещение, подвальный этаж",
+    "торговый автомат",
+    "здесь, там",
+    "вестибюль",
+    "вино"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-どちら-どちら",
+   "kanji": "どちら",
+   "kana": "どちら",
+   "romaji": "dochira",
+   "meanings": [
+    "лифт",
+    "где",
+    "сто",
+    "прилавок, отдел в магазине",
+    "галстук",
+    "этаж",
+    "комната",
+    "офис, контора",
+    "класс, аудитория",
+    "здесь, сюда",
+    "здесь, там",
+    "туда, там",
+    "приемная, ресепшен",
+    "компания, фирма",
+    "вестибюль",
+    "там",
+    "там, здесь",
+    "лестница",
+    "зал заседаний",
+    "самый",
+    "тэмпура (ломтики рыбы или овощей",
+    "зажаренные в тесте)",
+    "который",
+    "вечеринка",
+    "и тот и другой",
+    "лимон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-何階-なんがい",
+   "kanji": "何階",
+   "kana": "なんがい",
+   "romaji": "nangai",
+   "meanings": [
+    "здесь, сюда",
+    "здесь, тут",
+    "какой этаж",
+    "класс, аудитория",
+    "тысяча",
+    "эскалатор"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-エスカレーター-えすかれーたー",
+   "kanji": "エスカレーター",
+   "kana": "えすかれーたー",
+   "romaji": "esukareetaa",
+   "meanings": [
+    "эскалатор",
+    "здесь, там",
+    "там",
+    "лифт",
+    "этаж",
+    "иена",
+    "комната",
+    "туда, там",
+    "какой этаж",
+    "здесь, тут"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-こちら-こちら",
+   "kanji": "こちら",
+   "kana": "こちら",
+   "romaji": "kochira",
+   "meanings": [
+    "здесь, сюда",
+    "дом",
+    "офис, контора",
+    "тысяча",
+    "туда, там",
+    "вестибюль",
+    "зал заседаний"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-お手洗い-おてあらい",
+   "kanji": "お手洗い",
+   "kana": "おてあらい",
+   "romaji": "otearai",
+   "meanings": [
+    "компания, фирма",
+    "какой этаж",
+    "туалет",
+    "сколько стоит",
+    "дом",
+    "офис, контора",
+    "торговый автомат",
+    "страна",
+    "тысяча",
+    "этаж",
+    "лифт",
+    "лестница"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-階段-かいだん",
+   "kanji": "階段",
+   "kana": "かいだん",
+   "romaji": "kaidan",
+   "meanings": [
+    "обувь",
+    "там, здесь",
+    "где",
+    "лестница",
+    "класс, аудитория",
+    "там",
+    "торговый автомат",
+    "здесь, сюда",
+    "столовая",
+    "приемная, ресепшен",
+    "сколько стоит",
+    "туалет",
+    "подвальное помещение, подвальный этаж",
+    "вестибюль",
+    "зал заседаний",
+    "здесь, там",
+    "прилавок, отдел в магазине",
+    "иена"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-どこ-どこ",
+   "kanji": "どこ",
+   "kana": "どこ",
+   "romaji": "doko",
+   "meanings": [
+    "где",
+    "комната",
+    "зал заседаний",
+    "здесь, сюда",
+    "страна",
+    "телефон",
+    "этаж",
+    "торговый автомат",
+    "вестибюль",
+    "туда, там",
+    "компания, фирма",
+    "столовая",
+    "тысяча"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-千-せん",
+   "kanji": "千",
+   "kana": "せん",
+   "romaji": "sen",
+   "meanings": [
+    "страна",
+    "сколько стоит",
+    "дом",
+    "тысяча",
+    "телефон",
+    "туда, там",
+    "иена",
+    "торговый автомат",
+    "этаж",
+    "офис, контора",
+    "прилавок, отдел в магазине",
+    "приемная, ресепшен",
+    "туалет"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-そちら-そちら",
+   "kanji": "そちら",
+   "kana": "そちら",
+   "romaji": "sochira",
+   "meanings": [
+    "какой этаж",
+    "где",
+    "подвальное помещение, подвальный этаж",
+    "здесь, там",
+    "лестница",
+    "десять тысяч",
+    "дом",
+    "иена",
+    "офис, контора"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-自動販売機-じどうはんばいき",
+   "kanji": "自動販売機",
+   "kana": "じどうはんばいき",
+   "romaji": "jidouhanbaiki",
+   "meanings": [
+    "там, здесь",
+    "туда, там",
+    "торговый автомат",
+    "прилавок, отдел в магазине",
+    "какой этаж",
+    "этаж",
+    "лестница",
+    "сколько стоит",
+    "галстук"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-国-くに",
+   "kanji": "国",
+   "kana": "くに",
+   "romaji": "kuni",
+   "meanings": [
+    "столовая",
+    "страна",
+    "приемная, ресепшен",
+    "здесь, сюда",
+    "телефон",
+    "тысяча",
+    "обувь",
+    "десять тысяч",
+    "зал заседаний",
+    "прилавок, отдел в магазине",
+    "этаж",
+    "компания, фирма",
+    "где",
+    "какой этаж",
+    "здесь, тут"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-ロビー-ろびー",
+   "kanji": "ロビー",
+   "kana": "ろびー",
+   "romaji": "robii",
+   "meanings": [
+    "эскалатор",
+    "вестибюль",
+    "здесь, тут",
+    "офис, контора"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-そこ-そこ",
+   "kanji": "そこ",
+   "kana": "そこ",
+   "romaji": "soko",
+   "meanings": [
+    "страна",
+    "прилавок, отдел в магазине",
+    "вестибюль",
+    "там, здесь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-食堂-しょくどう",
+   "kanji": "食堂",
+   "kana": "しょくどう",
+   "romaji": "shokudou",
+   "meanings": [
+    "вестибюль",
+    "приемная, ресепшен",
+    "столовая",
+    "там"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-電話-でんわ",
+   "kanji": "電話",
+   "kana": "でんわ",
+   "romaji": "denwa",
+   "meanings": [
+    "зал заседаний",
+    "десять тысяч",
+    "телефон",
+    "тысяча",
+    "там",
+    "какой этаж",
+    "лифт",
+    "вино",
+    "лестница",
+    "вестибюль",
+    "туалет",
+    "где",
+    "сколько стоит",
+    "прилавок, отдел в магазине",
+    "компания, фирма",
+    "иена",
+    "офис, контора"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-円-えん",
+   "kanji": "円",
+   "kana": "えん",
+   "romaji": "en",
+   "meanings": [
+    "торговый автомат",
+    "сто",
+    "иена",
+    "здесь, тут",
+    "подвальное помещение, подвальный этаж",
+    "зал заседаний",
+    "офис, контора",
+    "сколько стоит",
+    "десять тысяч",
+    "там, здесь",
+    "лестница",
+    "обувь",
+    "этаж",
+    "эскалатор",
+    "там"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-百-ひゃく",
+   "kanji": "百",
+   "kana": "ひゃく",
+   "romaji": "hyaku",
+   "meanings": [
+    "сто",
+    "прилавок, отдел в магазине",
+    "лифт",
+    "вестибюль",
+    "торговый автомат",
+    "сколько стоит",
+    "подвальное помещение, подвальный этаж",
+    "галстук",
+    "телефон",
+    "лестница",
+    "класс, аудитория",
+    "иена",
+    "зал заседаний",
+    "там",
+    "эскалатор"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-靴-くつ",
+   "kanji": "靴",
+   "kana": "くつ",
+   "romaji": "kutsu",
+   "meanings": [
+    "эскалатор",
+    "обувь",
+    "торговый автомат",
+    "офис, контора",
+    "туда, там",
+    "компания, фирма",
+    "сколько стоит",
+    "лестница",
+    "галстук",
+    "там, здесь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-ここ-ここ",
+   "kanji": "ここ",
+   "kana": "ここ",
+   "romaji": "koko",
+   "meanings": [
+    "где",
+    "обувь",
+    "приемная, ресепшен",
+    "здесь, тут"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-ワイン-わいん",
+   "kanji": "ワイン",
+   "kana": "わいん",
+   "romaji": "wain",
+   "meanings": [
+    "столовая",
+    "компания, фирма",
+    "вино",
+    "там, здесь",
+    "телефон",
+    "десять тысяч",
+    "здесь, там",
+    "дом",
+    "сколько стоит",
+    "лестница",
+    "приемная, ресепшен",
+    "сто",
+    "тысяча",
+    "прилавок, отдел в магазине",
+    "галстук",
+    "какой этаж",
+    "этаж"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-部屋-へや",
+   "kanji": "部屋",
+   "kana": "へや",
+   "romaji": "heya",
+   "meanings": [
+    "прилавок, отдел в магазине",
+    "торговый автомат",
+    "комната",
+    "дом",
+    "эскалатор",
+    "лестница",
+    "зал заседаний",
+    "туалет",
+    "лифт",
+    "приемная, ресепшен",
+    "иена",
+    "столовая",
+    "туда, там",
+    "страна",
+    "тысяча"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-あちら-あちら",
+   "kanji": "あちら",
+   "kana": "あちら",
+   "romaji": "achira",
+   "meanings": [
+    "лестница",
+    "прилавок, отдел в магазине",
+    "туда, там",
+    "десять тысяч",
+    "там",
+    "офис, контора",
+    "там, здесь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-うち-うち",
+   "kanji": "うち",
+   "kana": "うち",
+   "romaji": "uchi",
+   "meanings": [
+    "лестница",
+    "дом",
+    "торговый автомат",
+    "обувь",
+    "иена",
+    "там",
+    "офис, контора",
+    "столовая",
+    "прилавок, отдел в магазине",
+    "десять тысяч",
+    "комната",
+    "здесь, сюда",
+    "там, здесь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-受付-うけつけ",
+   "kanji": "受付",
+   "kana": "うけつけ",
+   "romaji": "uketsuke",
+   "meanings": [
+    "этаж",
+    "приемная, ресепшен",
+    "офис, контора",
+    "обувь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "4"
+  },
+  {
+   "id": "jw-ひる-ひる",
+   "kanji": "ひる",
+   "kana": "ひる",
+   "romaji": "hiru",
+   "meanings": [
+    "завтра",
+    "вчера",
+    "послезавтра",
+    "и",
+    "позавчера",
+    "с ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-としょかん-としょかん",
+   "kanji": "としょかん",
    "kana": "としょかん",
    "romaji": "toshokan",
    "meanings": [
-    "библиотека"
+    "завтра",
+    "вчера",
+    "послезавтра",
+    "и",
+    "позавчера",
+    "с ~"
    ],
-   "en": "library",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/toshiyokan-3573eaf3.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "ku-fuku-cb9113c8",
-   "kanji": "吹く",
-   "kana": "ふく",
-   "romaji": "fuku",
+   "id": "jw-あした-あした",
+   "kanji": "あした",
+   "kana": "あした",
+   "romaji": "ashita",
    "meanings": [
-    "дуть",
-    "дунуть",
-    "подуть",
-    "играть",
-    "плавить",
-    "отливать"
+    "завтра",
+    "вчера",
+    "послезавтра",
+    "и",
+    "позавчера",
+    "с ~"
    ],
-   "en": "to blow (wind, etc.)",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/ku-fuku-cb9113c8.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "mizu-ab154442",
-   "kanji": "水",
-   "kana": "みず",
-   "romaji": "mizu",
+   "id": "jw-ふん-ふん",
+   "kanji": "ふん",
+   "kana": "ふん",
+   "romaji": "fun",
    "meanings": [
-    "вода",
-    "холодная вода",
-    "водный",
-    "водяной",
-    "жидкость"
+    "завтра",
+    "вчера",
+    "послезавтра",
+    "и",
+    "позавчера",
+    "с ~"
    ],
-   "en": "water",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/mizu-ab154442.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "suiyoubi-9d319b0f",
-   "kanji": "水曜日",
+   "id": "jw-から-から",
+   "kanji": "から",
+   "kana": "から",
+   "romaji": "kara",
+   "meanings": [
+    "с ~",
+    "и",
+    "завтра",
+    "позавчера",
+    "универмаг",
+    "послезавтра",
+    "сегодня утром",
+    "до",
+    "потому что",
+    "классическая музыка",
+    "понимать",
+    "примерно",
+    "около",
+    "джаз",
+    "караоке",
+    "билет",
+    "хирагана",
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "хорошо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-はん-はん",
+   "kanji": "はん",
+   "kana": "はん",
+   "romaji": "han",
+   "meanings": [
+    "с ~",
+    "и",
+    "завтра",
+    "позавчера",
+    "универмаг",
+    "послезавтра",
+    "сегодня утром",
+    "до",
+    "потому что",
+    "классическая музыка",
+    "понимать",
+    "примерно",
+    "около",
+    "джаз",
+    "караоке",
+    "билет",
+    "хирагана",
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "хорошо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-おわります-おわります",
+   "kanji": "おわります",
+   "kana": "おわります",
+   "romaji": "owarimasu",
+   "meanings": [
+    "с ~",
+    "и",
+    "завтра",
+    "позавчера",
+    "универмаг",
+    "послезавтра",
+    "сегодня утром",
+    "до",
+    "потому что",
+    "классическая музыка",
+    "понимать",
+    "примерно",
+    "около",
+    "джаз",
+    "караоке",
+    "билет",
+    "хирагана",
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "хорошо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-こんばん-こんばん",
+   "kanji": "こんばん",
+   "kana": "こんばん",
+   "romaji": "konban",
+   "meanings": [
+    "с ~",
+    "и",
+    "завтра",
+    "позавчера",
+    "универмаг",
+    "послезавтра",
+    "сегодня утром",
+    "до",
+    "потому что",
+    "классическая музыка",
+    "понимать",
+    "примерно",
+    "около",
+    "джаз",
+    "караоке",
+    "билет",
+    "хирагана",
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "хорошо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-きのう-きのう",
+   "kanji": "きのう",
+   "kana": "きのう",
+   "romaji": "kinou",
+   "meanings": [
+    "сегодня",
+    "вчера",
+    "универмаг",
+    "позавчера",
+    "и",
+    "завтра",
+    "послезавтра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-げつようび-げつようび",
+   "kanji": "げつようび",
+   "kana": "げつようび",
+   "romaji": "getsuyoubi",
+   "meanings": [
+    "сегодня",
+    "вчера",
+    "универмаг",
+    "позавчера",
+    "и",
+    "завтра",
+    "послезавтра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-かようび-かようび",
+   "kanji": "かようび",
+   "kana": "かようび",
+   "romaji": "kayoubi",
+   "meanings": [
+    "сегодня",
+    "вчера",
+    "универмаг",
+    "позавчера",
+    "и",
+    "завтра",
+    "послезавтра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-きょう-きょう",
+   "kanji": "きょう",
+   "kana": "きょう",
+   "romaji": "kyou",
+   "meanings": [
+    "сегодня",
+    "вчера",
+    "универмаг",
+    "позавчера",
+    "и",
+    "завтра",
+    "послезавтра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-デパート-でぱーと",
+   "kanji": "デパート",
+   "kana": "でぱーと",
+   "romaji": "depaato",
+   "meanings": [
+    "и",
+    "универмаг",
+    "позавчера",
+    "сегодня утром"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-と-と",
+   "kanji": "と",
+   "kana": "と",
+   "romaji": "to",
+   "meanings": [
+    "и",
+    "универмаг",
+    "позавчера",
+    "сегодня утром"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-やすみ-やすみ",
+   "kanji": "やすみ",
+   "kana": "やすみ",
+   "romaji": "yasumi",
+   "meanings": [
+    "и",
+    "универмаг",
+    "позавчера",
+    "сегодня утром"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-おととい-おととい",
+   "kanji": "おととい",
+   "kana": "おととい",
+   "romaji": "ototoi",
+   "meanings": [
+    "завтра",
+    "послезавтра",
+    "и",
+    "вчера",
+    "универмаг",
+    "позавчера"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-かいぎ-かいぎ",
+   "kanji": "かいぎ",
+   "kana": "かいぎ",
+   "romaji": "kaigi",
+   "meanings": [
+    "завтра",
+    "послезавтра",
+    "и",
+    "вчера",
+    "универмаг",
+    "позавчера"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-まで-まで",
+   "kanji": "まで",
+   "kana": "まで",
+   "romaji": "made",
+   "meanings": [
+    "сегодня",
+    "позавчера",
+    "и",
+    "вчера",
+    "до"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-すいようび-すいようび",
+   "kanji": "すいようび",
    "kana": "すいようび",
    "romaji": "suiyoubi",
    "meanings": [
-    "среда"
+    "сегодня",
+    "позавчера",
+    "и",
+    "вчера",
+    "до"
    ],
-   "en": "Wednesday",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/suiyoubi-9d319b0f.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "reru-hareru-1c4beb90",
-   "kanji": "晴れる",
-   "kana": "はれる",
-   "romaji": "hareru",
+   "id": "jw-あさって-あさって",
+   "kanji": "あさって",
+   "kana": "あさって",
+   "romaji": "asatte",
    "meanings": [
-    "проясняться",
-    "рассеиваться",
-    "переставать"
+    "вчера",
+    "послезавтра"
    ],
-   "en": "to be sunny",
-   "pos": [
-    "глагол (ру)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/reru-hareru-1c4beb90.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "i-aoi-2f1acf47",
-   "kanji": "青い",
-   "kana": "あおい",
-   "romaji": "aoi",
+   "id": "jw-よる-よる",
+   "kanji": "よる",
+   "kana": "よる",
+   "romaji": "yoru",
    "meanings": [
-    "синий",
-    "голубой",
-    "зелёный"
+    "вчера",
+    "послезавтра"
    ],
-   "en": "blue",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-aoi-2f1acf47.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "i-akai-3e363e94",
-   "kanji": "赤い",
-   "kana": "あかい",
-   "romaji": "akai",
+   "id": "jw-おきます-おきます",
+   "kanji": "おきます",
+   "kana": "おきます",
+   "romaji": "okimasu",
    "meanings": [
-    "красный",
-    "алый"
+    "и",
+    "с ~",
+    "программное обеспечение",
+    "компьютерная программа",
+    "извините"
    ],
-   "en": "red",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-akai-3e363e94.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "ru-kiru-9291c56d",
-   "kanji": "切る",
-   "kana": "きる",
-   "romaji": "kiru",
+   "id": "jw-ゆうびんきょく-ゆうびんきょく",
+   "kanji": "ゆうびんきょく",
+   "kana": "ゆうびんきょく",
+   "romaji": "yuubinkyoku",
    "meanings": [
-    "резать",
-    "отрезать",
-    "вешать трубку"
+    "с ~",
+    "вчера",
+    "универмаг",
+    "послезавтра"
    ],
-   "en": "to cut; to hang up (a phone)",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ru-kiru-9291c56d.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "kipu-d6daf50a",
-   "kanji": "切符",
-   "kana": "きっぷ",
-   "romaji": "kippu",
+   "id": "jw-まいばん-まいばん",
+   "kanji": "まいばん",
+   "kana": "まいばん",
+   "romaji": "maiban",
    "meanings": [
-    "билет",
-    "купон",
-    "талон"
+    "с ~",
+    "вчера",
+    "универмаг",
+    "послезавтра"
    ],
-   "en": "a ticket",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kipu-d6daf50a.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "yuki-3bf745ca",
-   "kanji": "雪",
-   "kana": "ゆき",
-   "romaji": "yuki",
+   "id": "jw-もくようび-もくようび",
+   "kanji": "もくようび",
+   "kana": "もくようび",
+   "romaji": "mokuyoubi",
    "meanings": [
-    "снег"
+    "с ~",
+    "универмаг",
+    "сегодня утром",
+    "завтра",
+    "послезавтра",
+    "до"
    ],
-   "en": "snow",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/yuki-3bf745ca.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "sengetsu-9f37d99c",
-   "kanji": "先月",
-   "kana": "せんげつ",
-   "romaji": "sengetsu",
+   "id": "jw-べんきょうします-べんきょうします",
+   "kanji": "べんきょうします",
+   "kana": "べんきょうします",
+   "romaji": "benkyoushimasu",
    "meanings": [
-    "прошлый месяц"
+    "с ~",
+    "универмаг",
+    "сегодня утром",
+    "завтра",
+    "послезавтра",
+    "до"
    ],
-   "en": "last month",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/sengetsu-9f37d99c.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
   },
   {
-   "id": "senshiyuu-6ec0b710",
-   "kanji": "先週",
+   "id": "jw-ぎんこう-ぎんこう",
+   "kanji": "ぎんこう",
+   "kana": "ぎんこう",
+   "romaji": "ginkou",
+   "meanings": [
+    "вчера",
+    "послезавтра",
+    "и",
+    "позавчера"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-びじゅつかん-びじゅつかん",
+   "kanji": "びじゅつかん",
+   "kana": "びじゅつかん",
+   "romaji": "bijutsukan",
+   "meanings": [
+    "позавчера",
+    "сегодня утром"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-いま-いま",
+   "kanji": "いま",
+   "kana": "いま",
+   "romaji": "ima",
+   "meanings": [
+    "позавчера",
+    "сегодня утром"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-どようび-どようび",
+   "kanji": "どようび",
+   "kana": "どようび",
+   "romaji": "doyoubi",
+   "meanings": [
+    "позавчера",
+    "сегодня утром"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-やすみます-やすみます",
+   "kanji": "やすみます",
+   "kana": "やすみます",
+   "romaji": "yasumimasu",
+   "meanings": [
+    "послезавтра",
+    "с ~",
+    "сегодня утром"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-ばん-ばん",
+   "kanji": "ばん",
+   "kana": "ばん",
+   "romaji": "ban",
+   "meanings": [
+    "послезавтра",
+    "с ~",
+    "сегодня утром"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-ごぜん-ごぜん",
+   "kanji": "ごぜん",
+   "kana": "ごぜん",
+   "romaji": "gozen",
+   "meanings": [
+    "позавчера",
+    "вчера"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-きんようび-きんようび",
+   "kanji": "きんようび",
+   "kana": "きんようび",
+   "romaji": "kinyoubi",
+   "meanings": [
+    "универмаг",
+    "и",
+    "послезавтра",
+    "сегодня утром",
+    "вчера"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-にちようび-にちようび",
+   "kanji": "にちようび",
+   "kana": "にちようび",
+   "romaji": "nichiyoubi",
+   "meanings": [
+    "послезавтра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-まいにち-まいにち",
+   "kanji": "まいにち",
+   "kana": "まいにち",
+   "romaji": "mainichi",
+   "meanings": [
+    "сегодня утром",
+    "завтра",
+    "вчера",
+    "послезавтра",
+    "универмаг"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-けさ-けさ",
+   "kanji": "けさ",
+   "kana": "けさ",
+   "romaji": "kesa",
+   "meanings": [
+    "сегодня утром",
+    "завтра",
+    "вчера",
+    "послезавтра",
+    "универмаг"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-なんじ-なんじ",
+   "kanji": "なんじ",
+   "kana": "なんじ",
+   "romaji": "nanji",
+   "meanings": [
+    "позавчера",
+    "завтра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-なんぷん-なんぷん",
+   "kanji": "なんぷん",
+   "kana": "なんぷん",
+   "romaji": "nanpun",
+   "meanings": [
+    "с ~",
+    "завтра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-まいあさ-まいあさ",
+   "kanji": "まいあさ",
+   "kana": "まいあさ",
+   "romaji": "maiasa",
+   "meanings": [
+    "послезавтра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-ごご-ごご",
+   "kanji": "ごご",
+   "kana": "ごご",
+   "romaji": "gogo",
+   "meanings": [
+    "сегодня утром"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-ひるやすみ-ひるやすみ",
+   "kanji": "ひるやすみ",
+   "kana": "ひるやすみ",
+   "romaji": "hiruyasumi",
+   "meanings": [
+    "сегодня утром",
+    "завтра",
+    "универмаг"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-しけん-しけん",
+   "kanji": "しけん",
+   "kana": "しけん",
+   "romaji": "shiken",
+   "meanings": [
+    "завтра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-えいが-えいが",
+   "kanji": "えいが",
+   "kana": "えいが",
+   "romaji": "eiga",
+   "meanings": [
+    "универмаг"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-じ-じ",
+   "kanji": "じ",
+   "kana": "じ",
+   "romaji": "ji",
+   "meanings": [
+    "вчера",
+    "потому что",
+    "хирагана"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-はたらきます-はたらきます",
+   "kanji": "はたらきます",
+   "kana": "はたらきます",
+   "romaji": "hatarakimasu",
+   "meanings": [
+    "до"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-何時-なんじ",
+   "kanji": "何時",
+   "kana": "なんじ",
+   "romaji": "nanji",
+   "meanings": [
+    "сколько времени",
+    "сегодня",
+    "до",
+    "заседание"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-分-ふん",
+   "kanji": "分",
+   "kana": "ふん",
+   "romaji": "fun",
+   "meanings": [
+    "воскресенье",
+    "универмаг",
+    "обеденный перерыв",
+    "минута"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "5"
+  },
+  {
+   "id": "jw-ようか-ようか",
+   "kanji": "ようか",
+   "kana": "ようか",
+   "romaji": "youka",
+   "meanings": [
+    "когда",
+    "автобус",
+    "он, бойфренд, любовник",
+    "двадцатое число, двадцать дней",
+    "девятое число; девять дней"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-とおか-とおか",
+   "kanji": "とおか",
+   "kana": "とおか",
+   "romaji": "tooka",
+   "meanings": [
+    "когда",
+    "автобус",
+    "он, бойфренд, любовник",
+    "двадцатое число, двадцать дней",
+    "девятое число; девять дней"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-いつ-いつ",
+   "kanji": "いつ",
+   "kana": "いつ",
+   "romaji": "itsu",
+   "meanings": [
+    "когда",
+    "автобус",
+    "он, бойфренд, любовник",
+    "двадцатое число, двадцать дней",
+    "девятое число; девять дней"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-ちかてつ-ちかてつ",
+   "kanji": "ちかてつ",
+   "kana": "ちかてつ",
+   "romaji": "chikatetsu",
+   "meanings": [
+    "когда",
+    "автобус",
+    "он, бойфренд, любовник",
+    "двадцатое число, двадцать дней",
+    "девятое число; девять дней"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-せんしゅう-せんしゅう",
+   "kanji": "せんしゅう",
    "kana": "せんしゅう",
    "romaji": "senshuu",
    "meanings": [
-    "прошлая неделя"
+    "автобус"
    ],
-   "en": "last week",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/senshiyuu-6ec0b710.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "sensei-6d88d916",
-   "kanji": "先生",
-   "kana": "せんせい",
-   "romaji": "sensei",
+   "id": "jw-せんげつ-せんげつ",
+   "kanji": "せんげつ",
+   "kana": "せんげつ",
+   "romaji": "sengetsu",
    "meanings": [
-    "учитель",
-    "преподаватель",
-    "работать учителем"
+    "автобус"
    ],
-   "en": "teacher, professor; master; doctor",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/sensei-6d88d916.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "u-arau-fd6e932b",
-   "kanji": "洗う",
-   "kana": "あらう",
-   "romaji": "arau",
+   "id": "jw-なのか-なのか",
+   "kanji": "なのか",
+   "kana": "なのか",
+   "romaji": "nanoka",
    "meanings": [
-    "мыть",
-    "умывать",
-    "промывать",
-    "омывать",
-    "стирать",
-    "проверять",
-    "расследовать",
-    "выяснять",
-    "доискиваться"
+    "автобус"
    ],
-   "en": "to wash",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/u-arau-fd6e932b.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "mae-03d8d6f3",
-   "kanji": "前",
-   "kana": "まえ",
-   "romaji": "mae",
+   "id": "jw-バス-ばす",
+   "kanji": "バス",
+   "kana": "ばす",
+   "romaji": "basu",
    "meanings": [
-    "порция"
+    "автобус"
    ],
-   "en": "before, in front",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/mae-03d8d6f3.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "zenbu-015045c4",
-   "kanji": "全部",
-   "kana": "ぜんぶ",
-   "romaji": "zenbu",
+   "id": "jw-かのじょ-かのじょ",
+   "kanji": "かのじょ",
+   "kana": "かのじょ",
+   "romaji": "kanojo",
    "meanings": [
-    "все",
-    "всё",
-    "всё целиком",
-    "полностью",
-    "всего",
-    "целиком"
+    "когда"
    ],
-   "en": "all, entire, whole",
-   "pos": [
-    "сущ.",
-    "の-прил.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/zenbu-015045c4.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "mado-42673f1d",
-   "kanji": "窓",
-   "kana": "まど",
-   "romaji": "mado",
+   "id": "jw-なんがつ-なんがつ",
+   "kanji": "なんがつ",
+   "kana": "なんがつ",
+   "romaji": "nangatsu",
    "meanings": [
-    "окно",
-    "иллюминатор",
-    "витрина",
-    "отверстие",
-    "оконное стекло"
+    "когда"
    ],
-   "en": "window",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/mado-42673f1d.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "ru-hashiru-be6656f9",
-   "kanji": "走る",
-   "kana": "はしる",
-   "romaji": "hashiru",
+   "id": "jw-らいねん-らいねん",
+   "kanji": "らいねん",
+   "kana": "らいねん",
+   "romaji": "rainen",
    "meanings": [
-    "бежать бегом",
-    "идти",
-    "бежать",
-    "совершать бегство"
+    "когда"
    ],
-   "en": "to run",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/ru-hashiru-be6656f9.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "i-hayai-117815f9",
-   "kanji": "早い",
-   "kana": "はやい",
-   "romaji": "hayai",
+   "id": "jw-ともだち-ともだち",
+   "kanji": "ともだち",
+   "kana": "ともだち",
+   "romaji": "tomodachi",
    "meanings": [
-    "быстрый",
-    "ранний"
+    "супермаркет",
+    "когда"
    ],
-   "en": "early",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-hayai-117815f9.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "tabun-cf0ebb44",
-   "kanji": "多分",
-   "kana": "たぶん",
-   "romaji": "tabun",
+   "id": "jw-なんねん-なんねん",
+   "kanji": "なんねん",
+   "kana": "なんねん",
+   "romaji": "nannen",
    "meanings": [
-    "вероятно",
-    "по всей вероятности",
-    "много",
-    "большой"
+    "супермаркет",
+    "когда"
    ],
-   "en": "perhaps, probably, maybe",
-   "pos": [
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/tabun-cf0ebb44.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "karada-8d089b46",
-   "kanji": "体",
-   "kana": "からだ",
-   "romaji": "karada",
+   "id": "jw-スーパー-すーぱー",
+   "kanji": "スーパー",
+   "kana": "すーぱー",
+   "romaji": "suupaa",
    "meanings": [
-    "тело",
-    "телосложение",
-    "фигура",
-    "здоровье"
+    "супермаркет",
+    "когда"
    ],
-   "en": "body; health",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/karada-8d089b46.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "daigaku-c740004b",
-   "kanji": "大学",
-   "kana": "だいがく",
-   "romaji": "daigaku",
+   "id": "jw-がっこう-がっこう",
+   "kanji": "がっこう",
+   "kana": "がっこう",
+   "romaji": "gakkou",
    "meanings": [
-    "вуз",
-    "институт",
-    "университет"
+    "супермаркет",
+    "когда"
    ],
-   "en": "college; university",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/daigaku-c740004b.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "daijiyoubu-0ed9e148",
-   "kanji": "大丈夫",
-   "kana": "だいじょうぶ",
-   "romaji": "daijoubu",
+   "id": "jw-ふつか-ふつか",
+   "kanji": "ふつか",
+   "kana": "ふつか",
+   "romaji": "futsuka",
    "meanings": [
-    "всё в порядке",
-    "ничего",
-    "сойдёт",
-    "будьте спокойны",
-    "наверняка"
+    "автобус"
    ],
-   "en": "It's ok (all right); No need to worry; Everything is under control",
-   "pos": [
-    "な-прил."
-   ],
-   "audio": "/audio/n5-words/daijiyoubu-0ed9e148.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "gu-nugu-52bcdfc4",
-   "kanji": "脱ぐ",
-   "kana": "ぬぐ",
-   "romaji": "nugu",
+   "id": "jw-ことし-ことし",
+   "kanji": "ことし",
+   "kana": "ことし",
+   "romaji": "kotoshi",
    "meanings": [
-    "снимать"
+    "автобус"
    ],
-   "en": "to take off (clothes)",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/gu-nugu-52bcdfc4.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "dare-41c5137b",
-   "kanji": "誰",
-   "kana": "だれ",
-   "romaji": "dare",
+   "id": "jw-ついたち-ついたち",
+   "kanji": "ついたち",
+   "kana": "ついたち",
+   "romaji": "tsuitachi",
    "meanings": [
-    "кто",
-    "чей"
+    "когда",
+    "костюм",
+    "надевать",
+    "юмор",
+    "пальто",
+    "пирожное",
+    "торт",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "мы",
+    "часто",
+    "свитер"
    ],
-   "en": "who",
-   "pos": [
-    "местоим."
-   ],
-   "audio": "/audio/n5-words/dare-41c5137b.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "i-mijikai-8bd5c7e4",
-   "kanji": "短い",
-   "kana": "みじかい",
-   "romaji": "mijikai",
+   "id": "jw-きます-きます",
+   "kanji": "きます",
+   "kana": "きます",
+   "romaji": "kimasu",
    "meanings": [
-    "короткий",
-    "краткий"
+    "когда",
+    "костюм",
+    "надевать",
+    "юмор",
+    "пальто",
+    "пирожное",
+    "торт",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "мы",
+    "часто",
+    "свитер"
    ],
-   "en": "short (length)",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-mijikai-8bd5c7e4.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "tanjiyoubi-f9d46acf",
-   "kanji": "誕生日",
+   "id": "jw-かぞく-かぞく",
+   "kanji": "かぞく",
+   "kana": "かぞく",
+   "romaji": "kazoku",
+   "meanings": [
+    "когда",
+    "костюм",
+    "надевать",
+    "юмор",
+    "пальто",
+    "пирожное",
+    "торт",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "мы",
+    "часто",
+    "свитер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-らいげつ-らいげつ",
+   "kanji": "らいげつ",
+   "kana": "らいげつ",
+   "romaji": "raigetsu",
+   "meanings": [
+    "когда",
+    "автобус"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-よっか-よっか",
+   "kanji": "よっか",
+   "kana": "よっか",
+   "romaji": "yokka",
+   "meanings": [
+    "когда",
+    "автобус"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-たんじょうび-たんじょうび",
+   "kanji": "たんじょうび",
    "kana": "たんじょうび",
    "romaji": "tanjoubi",
    "meanings": [
-    "день рождения"
+    "когда"
    ],
-   "en": "birthday",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/tanjiyoubi-f9d46acf.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "ku-hiku-b5c09767",
-   "kanji": "弾く",
-   "kana": "ひく",
-   "romaji": "hiku",
+   "id": "jw-ひとりで-ひとりで",
+   "kanji": "ひとりで",
+   "kana": "ひとりで",
+   "romaji": "hitoride",
    "meanings": [
-    "играть (на инструменте)",
-    "играть"
+    "автобус",
+    "когда"
    ],
-   "en": "to play (a string instrument or piano)",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ku-hiku-b5c09767.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "otoko-4fa46edf",
-   "kanji": "男",
-   "kana": "おとこ",
-   "romaji": "otoko",
+   "id": "jw-でんしゃ-でんしゃ",
+   "kanji": "でんしゃ",
+   "kana": "でんしゃ",
+   "romaji": "densha",
    "meanings": [
-    "мужчина",
-    "мужской пол",
-    "настоящий мужчина",
-    "стать настоящим мужчиной"
+    "автобус",
+    "когда"
    ],
-   "en": "man, male",
-   "pos": [
-    "сущ.",
-    "префикс"
-   ],
-   "audio": "/audio/n5-words/otoko-4fa46edf.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "ru-shiru-bf686c93",
-   "kanji": "知る",
-   "kana": "しる",
-   "romaji": "shiru",
+   "id": "jw-えき-えき",
+   "kanji": "えき",
+   "kana": "えき",
+   "romaji": "eki",
    "meanings": [
-    "знать",
-    "узнавать",
-    "знакомиться"
+    "когда"
    ],
-   "en": "to know, to understand",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ru-shiru-bf686c93.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "chikatetsu-1286b933",
+   "id": "jw-ひと-ひと",
+   "kanji": "ひと",
+   "kana": "ひと",
+   "romaji": "hito",
+   "meanings": [
+    "когда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-ふね-ふね",
+   "kanji": "ふね",
+   "kana": "ふね",
+   "romaji": "fune",
+   "meanings": [
+    "когда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-こんげつ-こんげつ",
+   "kanji": "こんげつ",
+   "kana": "こんげつ",
+   "romaji": "kongetsu",
+   "meanings": [
+    "когда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-かれ-かれ",
+   "kanji": "かれ",
+   "kana": "かれ",
+   "romaji": "kare",
+   "meanings": [
+    "супермаркет",
+    "когда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-ここのか-ここのか",
+   "kanji": "ここのか",
+   "kana": "ここのか",
+   "romaji": "kokonoka",
+   "meanings": [
+    "супермаркет",
+    "когда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-にち-にち",
+   "kanji": "にち",
+   "kana": "にち",
+   "romaji": "nichi",
+   "meanings": [
+    "супермаркет",
+    "когда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-らいしゅう-らいしゅう",
+   "kanji": "らいしゅう",
+   "kana": "らいしゅう",
+   "romaji": "raishuu",
+   "meanings": [
+    "когда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-じてんしゃ-じてんしゃ",
+   "kanji": "じてんしゃ",
+   "kana": "じてんしゃ",
+   "romaji": "jitensha",
+   "meanings": [
+    "автобус"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-２０日-はつか",
+   "kanji": "２０日",
+   "kana": "はつか",
+   "romaji": "hatsuka",
+   "meanings": [
+    "шестое число, шесть дней",
+    "двадцатое число, двадцать дней",
+    "девятое число; девять дней",
+    "второе число, два дня"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
+  },
+  {
+   "id": "jw-地下鉄-ちかてつ",
    "kanji": "地下鉄",
    "kana": "ちかてつ",
    "romaji": "chikatetsu",
    "meanings": [
     "метро",
-    "метрополитен"
+    "станция, вокзал",
+    "велосипед",
+    "прошлый месяц",
+    "один, в одиночку",
+    "третье число, три дня",
+    "автобус",
+    "девятое число; девять дней",
+    "поезд",
+    "прошлая неделя"
    ],
-   "en": "underground train, subway",
-   "pos": [
-    "сущ.",
-    "сокр."
-   ],
-   "audio": "/audio/n5-words/chikatetsu-1286b933.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "chizu-24ad8c68",
-   "kanji": "地図",
-   "kana": "ちず",
-   "romaji": "chizu",
+   "id": "jw-先月-せんげつ",
+   "kanji": "先月",
+   "kana": "せんげつ",
+   "romaji": "sengetsu",
    "meanings": [
-    "карта",
-    "план",
-    "атлас"
+    "прошлый месяц",
+    "следующий год",
+    "семья",
+    "корабль"
    ],
-   "en": "a map",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/chizu-24ad8c68.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "ku-oku-c609cfa7",
-   "kanji": "置く",
-   "kana": "おく",
-   "romaji": "oku",
+   "id": "jw-２日-ふつか",
+   "kanji": "２日",
+   "kana": "ふつか",
+   "romaji": "futsuka",
    "meanings": [
-    "класть",
-    "ставить",
-    "помещать",
-    "оставлять",
-    "позволять продолжать"
+    "второе число, два дня",
+    "когда",
+    "прошлая неделя",
+    "этот месяц"
    ],
-   "en": "to put; to lay; to place",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ku-oku-c609cfa7.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "i-osoi-f0537e45",
-   "kanji": "遅い",
-   "kana": "おそい",
-   "romaji": "osoi",
-   "meanings": [
-    "поздний",
-    "запоздалый",
-    "поздно",
-    "медленный",
-    "медлительный"
-   ],
-   "en": "slow; (to be) late",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-osoi-f0537e45.mp3"
-  },
-  {
-   "id": "ru-kiru-84d315d6",
-   "kanji": "着る",
-   "kana": "きる",
-   "romaji": "kiru",
-   "meanings": [
-    "надевать",
-    "облачаться",
-    "носить"
-   ],
-   "en": "to put on (clothes above your waist); to wear",
-   "pos": [
-    "глагол (ру)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ru-kiru-84d315d6.mp3"
-  },
-  {
-   "id": "asa-ef798848",
-   "kanji": "朝",
-   "kana": "あさ",
-   "romaji": "asa",
-   "meanings": [
-    "утро",
-    "утром",
-    "наступает утро"
-   ],
-   "en": "morning",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/asa-ef798848.mp3"
-  },
-  {
-   "id": "i-nagai-07434018",
-   "kanji": "長い",
-   "kana": "ながい",
-   "romaji": "nagai",
-   "meanings": [
-    "длинный",
-    "долгий"
-   ],
-   "en": "long, lengthy",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-nagai-07434018.mp3"
-  },
-  {
-   "id": "i-itai-18e8a190",
-   "kanji": "痛い",
-   "kana": "いたい",
-   "romaji": "itai",
-   "meanings": [
-    "больно",
-    "болит",
-    "болезненный",
-    "чувствительный"
-   ],
-   "en": "hurt; painful; sore",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-itai-18e8a190.mp3"
-  },
-  {
-   "id": "niwa-e3db4f88",
-   "kanji": "庭",
-   "kana": "にわ",
-   "romaji": "niwa",
-   "meanings": [
-    "сад",
-    "двор"
-   ],
-   "en": "garden",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/niwa-e3db4f88.mp3"
-  },
-  {
-   "id": "tenki-5594d428",
-   "kanji": "天気",
-   "kana": "てんき",
-   "romaji": "tenki",
-   "meanings": [
-    "погода",
-    "хорошая погода"
-   ],
-   "en": "weather",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/tenki-5594d428.mp3"
-  },
-  {
-   "id": "denki-a93616af",
-   "kanji": "電気",
-   "kana": "でんき",
-   "romaji": "denki",
-   "meanings": [
-    "электричество",
-    "электрический",
-    "электрическое освещение"
-   ],
-   "en": "electricity, (electric) light",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/denki-a93616af.mp3"
-  },
-  {
-   "id": "denshiya-acba95ee",
-   "kanji": "電車",
-   "kana": "でんしゃ",
-   "romaji": "densha",
-   "meanings": [
-    "трамвай"
-   ],
-   "en": "electric train",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/denshiya-acba95ee.mp3"
-  },
-  {
-   "id": "denwa-581e2fa2",
-   "kanji": "電話",
-   "kana": "でんわ",
-   "romaji": "denwa",
-   "meanings": [
-    "телефон",
-    "разговор по телефону"
-   ],
-   "en": "a telephone",
-   "pos": [
-    "сущ.",
-    "суру-глагол",
-    "перех.",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/denwa-581e2fa2.mp3"
-  },
-  {
-   "id": "doyoubi-ce206edc",
-   "kanji": "土曜日",
-   "kana": "どようび",
-   "romaji": "doyoubi",
-   "meanings": [
-    "суббота"
-   ],
-   "en": "Saturday",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/doyoubi-ce206edc.mp3"
-  },
-  {
-   "id": "fuyu-55d7ae35",
-   "kanji": "冬",
-   "kana": "ふゆ",
-   "romaji": "fuyu",
-   "meanings": [
-    "зима",
-    "зимний"
-   ],
-   "en": "winter",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/fuyu-55d7ae35.mp3"
-  },
-  {
-   "id": "ku-hataraku-1724ae40",
-   "kanji": "働く",
-   "kana": "はたらく",
-   "romaji": "hataraku",
-   "meanings": [
-    "работать",
-    "трудиться",
-    "поступать",
-    "совершать",
-    "функционировать",
-    "действовать"
-   ],
-   "en": "to work",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/ku-hataraku-1724ae40.mp3"
-  },
-  {
-   "id": "ji-onaji-8516b8f1",
-   "kanji": "同じ",
-   "kana": "おなじ",
-   "romaji": "onaji",
-   "meanings": [
-    "одинаковый",
-    "такой же самый",
-    "такой же как…",
-    "тот же"
-   ],
-   "en": "same, identical",
-   "pos": [
-    "приимен.",
-    "な-прил."
-   ],
-   "audio": "/audio/n5-words/ji-onaji-8516b8f1.mp3"
-  },
-  {
-   "id": "michi-cf2f4e74",
-   "kanji": "道",
-   "kana": "みち",
-   "romaji": "michi",
-   "meanings": [
-    "дорога",
-    "путь",
-    "улица"
-   ],
-   "en": "road, street; way, directions",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/michi-cf2f4e74.mp3"
-  },
-  {
-   "id": "shii-muzukashii-138a4b50",
-   "kanji": "難しい",
-   "kana": "むずかしい",
-   "romaji": "muzukashii",
-   "meanings": [
-    "трудный",
-    "сложный"
-   ],
-   "en": "difficult",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/shii-muzukashii-138a4b50.mp3"
-  },
-  {
-   "id": "tsu-futatsu-c83bc7c8",
-   "kanji": "二つ",
-   "kana": "ふたつ",
-   "romaji": "futatsu",
-   "meanings": [
-    "два",
-    "делиться надвое"
-   ],
-   "en": "two things",
-   "pos": [
-    "числит."
-   ],
-   "audio": "/audio/n5-words/tsu-futatsu-c83bc7c8.mp3"
-  },
-  {
-   "id": "nichiyoubi-dfbbdcb1",
-   "kanji": "日曜日",
-   "kana": "にちようび",
-   "romaji": "nichiyoubi",
-   "meanings": [
-    "воскресенье"
-   ],
-   "en": "Sunday",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/nichiyoubi-dfbbdcb1.mp3"
-  },
-  {
-   "id": "neko-42100e10",
-   "kanji": "猫",
-   "kana": "ねこ",
-   "romaji": "neko",
-   "meanings": [
-    "кошка",
-    "кот",
-    "кошачий",
-    "кошечка"
-   ],
-   "en": "cat",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/neko-42100e10.mp3"
-  },
-  {
-   "id": "i-atsui-ef290d69",
-   "kanji": "熱い",
-   "kana": "あつい",
-   "romaji": "atsui",
-   "meanings": [
-    "горячий",
-    "пылкий"
-   ],
-   "en": "hot (objects)",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-atsui-ef290d69.mp3"
-  },
-  {
-   "id": "ru-uru-774fb434",
-   "kanji": "売る",
-   "kana": "うる",
-   "romaji": "uru",
-   "meanings": [
-    "продавать",
-    "предавать",
-    "изменять"
-   ],
-   "en": "to sell (v.t.)",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ru-uru-774fb434.mp3"
-  },
-  {
-   "id": "i-shiroi-e5db8925",
-   "kanji": "白い",
-   "kana": "しろい",
-   "romaji": "shiroi",
-   "meanings": [
-    "белый",
-    "пустой",
-    "незаполненный",
-    "незапятнанный",
-    "невиновный",
-    "невинный"
-   ],
-   "en": "white",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-shiroi-e5db8925.mp3"
-  },
-  {
-   "id": "bangou-c792b58d",
-   "kanji": "番号",
-   "kana": "ばんごう",
-   "romaji": "bangou",
-   "meanings": [
-    "номер",
-    "по порядку номеров рассчитайся!",
-    "ненумерованный",
-    "без номера"
-   ],
-   "en": "number, series of digits",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/bangou-c792b58d.mp3"
-  },
-  {
-   "id": "reru-tsukareru-d21f0af7",
-   "kanji": "疲れる",
-   "kana": "つかれる",
-   "romaji": "tsukareru",
-   "meanings": [
-    "устать",
-    "утомиться",
-    "умаяться",
-    "изнашиваться"
-   ],
-   "en": "to get (become) tired; to become fatigued",
-   "pos": [
-    "глагол (ру)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/reru-tsukareru-d21f0af7.mp3"
-  },
-  {
-   "id": "hikouki-7346e59f",
-   "kanji": "飛行機",
-   "kana": "ひこうき",
-   "romaji": "hikouki",
-   "meanings": [
-    "самолёт"
-   ],
-   "en": "airplane",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/hikouki-7346e59f.mp3"
-  },
-  {
-   "id": "biyouin-22e821e0",
-   "kanji": "病院",
-   "kana": "びょういん",
-   "romaji": "byouin",
-   "meanings": [
-    "больница",
-    "госпиталь",
-    "лазарет"
-   ],
-   "en": "hospital",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/biyouin-22e821e0.mp3"
-  },
-  {
-   "id": "biyouki-0eab1373",
-   "kanji": "病気",
-   "kana": "びょうき",
-   "romaji": "byouki",
-   "meanings": [
-    "болезнь",
-    "заболевание"
-   ],
-   "en": "illness; sickness",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/biyouki-0eab1373.mp3"
-  },
-  {
-   "id": "chichi-4cb883c9",
-   "kanji": "父",
-   "kana": "ちち",
-   "romaji": "chichi",
-   "meanings": [
-    "отец",
-    "отцовский"
-   ],
-   "en": "(my) father",
-   "pos": [
-    "сущ.",
-    "скромн."
-   ],
-   "audio": "/audio/n5-words/chichi-4cb883c9.mp3"
-  },
-  {
-   "id": "heya-4236959f",
-   "kanji": "部屋",
-   "kana": "へや",
-   "romaji": "heya",
-   "meanings": [
-    "комната",
-    "номер"
-   ],
-   "en": "a room",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/heya-4236959f.mp3"
-  },
-  {
-   "id": "kaze-36bc95f5",
-   "kanji": "風",
-   "kana": "かぜ",
-   "romaji": "kaze",
-   "meanings": [
-    "ветер",
-    "безветренный"
-   ],
-   "en": "wind, breeze",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kaze-36bc95f5.mp3"
-  },
-  {
-   "id": "fuku-840c8452",
-   "kanji": "服",
-   "kana": "ふく",
-   "romaji": "fuku",
-   "meanings": [
-    "одежда",
-    "костюм"
-   ],
-   "en": "clothes",
-   "pos": [
-    "сущ.",
-    "суффикс"
-   ],
-   "audio": "/audio/n5-words/fuku-840c8452.mp3"
-  },
-  {
-   "id": "mono-6be10aac",
-   "kanji": "物",
-   "kana": "もの",
-   "romaji": "mono",
-   "meanings": [
-    "вещь",
-    "предмет",
-    "нечто",
-    "то",
-    "что…",
-    "принадлежать",
-    "годиться",
-    "получаться",
-    "удаваться",
-    "выходить"
-   ],
-   "en": "thing (concrete object)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/mono-6be10aac.mp3"
-  },
-  {
-   "id": "ku-aruku-b7b95c70",
-   "kanji": "歩く",
-   "kana": "あるく",
-   "romaji": "aruku",
-   "meanings": [
-    "идти пешком",
-    "ходить"
-   ],
-   "en": "to walk",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/ku-aruku-b7b95c70.mp3"
-  },
-  {
-   "id": "haha-190e2a6b",
-   "kanji": "母",
-   "kana": "はは",
-   "romaji": "haha",
-   "meanings": [
-    "мать",
-    "материнский"
-   ],
-   "en": "(my) mother",
-   "pos": [
-    "сущ.",
-    "скромн."
-   ],
-   "audio": "/audio/n5-words/haha-190e2a6b.mp3"
-  },
-  {
-   "id": "boushi-aad0f3c6",
-   "kanji": "帽子",
-   "kana": "ぼうし",
-   "romaji": "boushi",
-   "meanings": [
-    "головной убор",
-    "шляпа",
-    "шапка",
-    "кепка",
-    "фуражка"
-   ],
-   "en": "hat; cap",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/boushi-aad0f3c6.mp3"
-  },
-  {
-   "id": "shii-isogashii-a77d74d3",
-   "kanji": "忙しい",
-   "kana": "いそがしい",
-   "romaji": "isogashii",
-   "meanings": [
-    "занятый",
-    "занятой"
-   ],
-   "en": "busy (people, days)",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/shii-isogashii-a77d74d3.mp3"
-  },
-  {
-   "id": "hon-31a7c3d9",
-   "kanji": "本",
-   "kana": "ほん",
-   "romaji": "hon",
-   "meanings": [
-    "напр. для карандашей",
-    "пальцев",
-    "тру",
-    "книга"
-   ],
-   "en": "book",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/hon-31a7c3d9.mp3"
-  },
-  {
-   "id": "ku-migaku-ca01b633",
-   "kanji": "磨く",
-   "kana": "みがく",
-   "romaji": "migaku",
-   "meanings": [
-    "чистить",
-    "полировать",
-    "шлифовать",
-    "натирать до блеска",
-    "наводить лоск",
-    "отшлифовывать",
-    "отделывать",
-    "развивать",
-    "тренировать"
-   ],
-   "en": "to brush (teeth); to polish",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ku-migaku-ca01b633.mp3"
-  },
-  {
-   "id": "imouto-176942b7",
-   "kanji": "妹",
-   "kana": "いもうと",
-   "romaji": "imouto",
-   "meanings": [
-    "младшая сестра"
-   ],
-   "en": "younger sister (humble)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/imouto-176942b7.mp3"
-  },
-  {
-   "id": "maishiyuu-7d46ca86",
-   "kanji": "毎週",
-   "kana": "まいしゅう",
-   "romaji": "maishuu",
-   "meanings": [
-    "каждая неделя",
-    "каждую неделю",
-    "еженедельно",
-    "неделя за неделей",
-    "из недели в неделю",
-    "еженедельный"
-   ],
-   "en": "every week",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/maishiyuu-7d46ca86.mp3"
-  },
-  {
-   "id": "maiasa-81e3f6f8",
-   "kanji": "毎朝",
-   "kana": "まいあさ",
-   "romaji": "maiasa",
-   "meanings": [
-    "каждое утро"
-   ],
-   "en": "every morning",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/maiasa-81e3f6f8.mp3"
-  },
-  {
-   "id": "mainichi-bb41384b",
-   "kanji": "毎日",
-   "kana": "まいにち",
-   "romaji": "mainichi",
-   "meanings": [
-    "каждый день",
-    "ежедневно",
-    "день за днём",
-    "изо дня в день",
-    "ежедневный"
-   ],
-   "en": "every day",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/mainichi-bb41384b.mp3"
-  },
-  {
-   "id": "maiban-1b8c2ba0",
-   "kanji": "毎晩",
-   "kana": "まいばん",
-   "romaji": "maiban",
-   "meanings": [
-    "каждый вечер",
-    "ежевечерний"
-   ],
-   "en": "every night",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/maiban-1b8c2ba0.mp3"
-  },
-  {
-   "id": "namae-399257f4",
-   "kanji": "名前",
-   "kana": "なまえ",
-   "romaji": "namae",
-   "meanings": [
-    "имя"
-   ],
-   "en": "name",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/namae-399257f4.mp3"
-  },
-  {
-   "id": "rui-akarui-cb582ccc",
-   "kanji": "明るい",
-   "kana": "あかるい",
-   "romaji": "akarui",
-   "meanings": [
-    "светлый",
-    "сведущий"
-   ],
-   "en": "bright (in reference to personality or weather); cheerful",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/rui-akarui-cb582ccc.mp3"
-  },
-  {
-   "id": "i-omoshiroi-455a0104",
-   "kanji": "面白い",
-   "kana": "おもしろい",
-   "romaji": "omoshiroi",
-   "meanings": [
-    "интересный",
-    "занятный",
-    "приятный",
-    "хороший",
-    "удачный"
-   ],
-   "en": "interesting, amusing",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-omoshiroi-455a0104.mp3"
-  },
-  {
-   "id": "mokuyoubi-f8385845",
-   "kanji": "木曜日",
-   "kana": "もくようび",
-   "romaji": "mokuyoubi",
-   "meanings": [
-    "четверг"
-   ],
-   "en": "Thursday",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/mokuyoubi-f8385845.mp3"
-  },
-  {
-   "id": "yoru-3518566a",
-   "kanji": "夜",
-   "kana": "よる",
-   "romaji": "yoru",
-   "meanings": [
-    "1. ночь",
-    "вечер",
-    "2. ночью",
-    "ночь"
-   ],
-   "en": "evening, night",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/yoru-3518566a.mp3"
-  },
-  {
-   "id": "yasai-f451e8ce",
-   "kanji": "野菜",
-   "kana": "やさい",
-   "romaji": "yasai",
-   "meanings": [
-    "овощи",
-    "зелень"
-   ],
-   "en": "vegetable",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/yasai-f451e8ce.mp3"
-  },
-  {
-   "id": "kusuri-7086336a",
-   "kanji": "薬",
-   "kana": "くすり",
-   "romaji": "kusuri",
-   "meanings": [
-    "лекарство",
-    "медикамент",
-    "средство",
-    "лечебный",
-    "польза"
-   ],
-   "en": "medicine",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kusuri-7086336a.mp3"
-  },
-  {
-   "id": "tomodachi-5f1fbd52",
-   "kanji": "友達",
-   "kana": "ともだち",
-   "romaji": "tomodachi",
-   "meanings": [
-    "приятель",
-    "товарищ",
-    "подружиться"
-   ],
-   "en": "friend",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/tomodachi-5f1fbd52.mp3"
-  },
-  {
-   "id": "bu-asobu-d1314455",
-   "kanji": "遊ぶ",
-   "kana": "あそぶ",
-   "romaji": "asobu",
-   "meanings": [
-    "играть",
-    "развлекаться",
-    "забавляться",
-    "гулять",
-    "вести весёлую жизнь",
-    "кутить"
-   ],
-   "en": "to play; to spend time pleasantly; to hang out",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/bu-asobu-d1314455.mp3"
-  },
-  {
-   "id": "yuubinkiyoku-75289c4f",
-   "kanji": "郵便局",
-   "kana": "ゆうびんきょく",
-   "romaji": "yuubinkyoku",
-   "meanings": [
-    "почта",
-    "отделение связи"
-   ],
-   "en": "post office",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/yuubinkiyoku-75289c4f.mp3"
-  },
-  {
-   "id": "yuugata-7cde294a",
-   "kanji": "夕方",
-   "kana": "ゆうがた",
-   "romaji": "yuugata",
-   "meanings": [
-    "вечер",
-    "сумерки",
-    "под вечер",
-    "вечером"
-   ],
-   "en": "late afternoon (typically just before dinner time), evening",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/yuugata-7cde294a.mp3"
-  },
-  {
-   "id": "hagaki-a6760309",
-   "kanji": "葉書",
-   "kana": "はがき",
-   "romaji": "hagaki",
-   "meanings": [
-    "открытка"
-   ],
-   "en": "postcard",
-   "pos": [
-    "сущ.",
-    "сокр.",
-    "обычно каной"
-   ],
-   "audio": "/audio/n5-words/hagaki-a6760309.mp3"
-  },
-  {
-   "id": "raigetsu-ae7b7166",
-   "kanji": "来月",
-   "kana": "らいげつ",
-   "romaji": "raigetsu",
-   "meanings": [
-    "следующий месяц"
-   ],
-   "en": "next month",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/raigetsu-ae7b7166.mp3"
-  },
-  {
-   "id": "raishiyuu-676079cb",
+   "id": "jw-来週-らいしゅう",
    "kanji": "来週",
    "kana": "らいしゅう",
    "romaji": "raishuu",
    "meanings": [
-    "будущая неделя"
+    "восьмое число, восемь дней",
+    "следующая неделя",
+    "год",
+    "станция, вокзал",
+    "какое число, сколько дней",
+    "шестое число, шесть дней",
+    "день, число месяца"
    ],
-   "en": "next week",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/raishiyuu-676079cb.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "rainen-c1f68ffb",
-   "kanji": "来年",
-   "kana": "らいねん",
-   "romaji": "rainen",
+   "id": "jw-９日-ここのか",
+   "kanji": "９日",
+   "kana": "ここのか",
+   "romaji": "kokonoka",
    "meanings": [
-    "будущий год"
+    "девятое число; девять дней",
+    "следующая неделя",
+    "день рождения",
+    "этот месяц"
    ],
-   "en": "next year",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/rainen-c1f68ffb.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "mu-tanomu-58a0f7a2",
-   "kanji": "頼む",
-   "kana": "たのむ",
-   "romaji": "tanomu",
+   "id": "jw-日-にち",
+   "kanji": "日",
+   "kana": "にち",
+   "romaji": "nichi",
    "meanings": [
-    "просить"
+    "самолёт",
+    "прошлая неделя",
+    "день, число месяца",
+    "прошлый месяц"
    ],
-   "en": "to request, to ask (a favor)",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/mu-tanomu-58a0f7a2.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "riyuugakusei-51a39082",
-   "kanji": "留学生",
-   "kana": "りゅうがくせい",
-   "romaji": "ryuugakusei",
+   "id": "jw-彼-かれ",
+   "kanji": "彼",
+   "kana": "かれ",
+   "romaji": "kare",
    "meanings": [
-    "студент",
-    "обучающийся за границей",
-    "студент-иностранец"
+    "он, бойфренд, любовник",
+    "прошлый месяц",
+    "школа",
+    "идти"
    ],
-   "en": "international student",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/riyuugakusei-51a39082.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "shii-suzushii-db256f30",
-   "kanji": "涼しい",
-   "kana": "すずしい",
-   "romaji": "suzushii",
+   "id": "jw-飛行機-ひこうき",
+   "kanji": "飛行機",
+   "kana": "ひこうき",
+   "romaji": "hikouki",
    "meanings": [
-    "прохладный",
-    "освежающий"
+    "самолёт",
+    "этот год",
+    "корабль",
+    "какое число, сколько дней"
    ],
-   "en": "cool, refreshing (in reference to weather)",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/shii-suzushii-db256f30.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "tai-tsumetai-5ea2a0e8",
-   "kanji": "冷たい",
-   "kana": "つめたい",
-   "romaji": "tsumetai",
+   "id": "jw-何日-なんにち",
+   "kanji": "何日",
+   "kana": "なんにち",
+   "romaji": "nannichi",
    "meanings": [
-    "холодный",
-    "прохладный"
+    "какое число, сколько дней",
+    "приходить",
+    "день, число месяца",
+    "автобус"
    ],
-   "en": "cold (things, people)",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/tai-tsumetai-5ea2a0e8.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "reizouko-36383a45",
-   "kanji": "冷蔵庫",
-   "kana": "れいぞうこ",
-   "romaji": "reizouko",
+   "id": "jw-何月-なんがつ",
+   "kanji": "何月",
+   "kana": "なんがつ",
+   "romaji": "nangatsu",
    "meanings": [
-    "холодильник",
-    "холодильный склад"
+    "первое число, первый день месяца",
+    "метро",
+    "один, в одиночку",
+    "какой месяц"
    ],
-   "en": "refrigerator",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/reizouko-36383a45.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "ototoi-d99775a0",
-   "kanji": "一昨日",
-   "kana": "おととい",
-   "romaji": "ototoi",
+   "id": "jw-来月-らいげつ",
+   "kanji": "来月",
+   "kana": "らいげつ",
+   "romaji": "raigetsu",
    "meanings": [
-    "1. позапрошлый день",
-    "2. позавчера",
-    "третьего дня",
-    "позавчера"
+    "следующий месяц",
+    "он, бойфренд, любовник",
+    "следующая неделя",
+    "прошлый месяц"
    ],
-   "en": "the day before yesterday",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/ototoi-d99775a0.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "6"
   },
   {
-   "id": "hitori-0e209357",
-   "kanji": "一人",
-   "kana": "ひとり",
-   "romaji": "hitori",
+   "id": "jw-朝ごはん-あさごはん",
+   "kanji": "朝ごはん",
+   "kana": "あさごはん",
+   "romaji": "asagohan",
    "meanings": [
-    "один человек",
-    "один из …"
+    "немного",
+    "иногда",
+    "завтрак",
+    "читать",
+    "хлеб",
+    "вода",
+    "покупать",
+    "снимать",
+    "всегда"
    ],
-   "en": "one person",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/hitori-0e209357.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "ichinichi-a8ebce6c",
-   "kanji": "一日",
-   "kana": "いちにち",
-   "romaji": "ichinichi",
+   "id": "jw-時々-ときどき",
+   "kanji": "時々",
+   "kana": "ときどき",
+   "romaji": "tokidoki",
    "meanings": [
-    "один день",
-    "в день",
-    "однодневный",
-    "целый день"
+    "вода",
+    "читать",
+    "магазин",
+    "иногда",
+    "делать",
+    "фрукты",
+    "еда, вареный рис",
+    "видео",
+    "овощи",
+    "всегда",
+    "письмо",
+    "курить",
+    "табак, сигареты",
+    "снимать",
+    "пиво",
+    "что",
+    "рыба"
    ],
-   "en": "one day (duration)",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/ichinichi-a8ebce6c.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "megane-4f1f0af6",
-   "kanji": "眼鏡",
-   "kana": "めがね",
-   "romaji": "megane",
+   "id": "jw-晩ごはん-ばんごはん",
+   "kanji": "晩ごはん",
+   "kana": "ばんごはん",
+   "romaji": "bangohan",
    "meanings": [
-    "очки",
-    "пенснэ"
+    "ужин",
+    "пиво",
+    "курить",
+    "покупать",
+    "завтрак",
+    "доклад",
+    "вода",
+    "всегда",
+    "еда, вареный рис",
+    "что",
+    "сад",
+    "молоко",
+    "пить, глотать",
+    "вместе",
+    "обед",
+    "немного",
+    "сакэ, спиртное",
+    "иногда",
+    "делать",
+    "писать, рисовать",
+    "чёрный чай",
+    "магазин"
    ],
-   "en": "eye glasses",
-   "pos": [
-    "сущ.",
-    "обычно каной"
-   ],
-   "audio": "/audio/n5-words/megane-4f1f0af6.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "sakana-fde45209",
+   "id": "jw-昼ごはん-ひるごはん",
+   "kanji": "昼ごはん",
+   "kana": "ひるごはん",
+   "romaji": "hirugohan",
+   "meanings": [
+    "обед",
+    "что",
+    "табак, сигареты",
+    "хлеб",
+    "смотреть, видеть",
+    "ужин",
+    "пиво",
+    "фрукты",
+    "курить",
+    "мясо",
+    "делать",
+    "чёрный чай",
+    "вода",
+    "читать",
+    "видео",
+    "писать, рисовать",
+    "затем",
+    "всегда",
+    "покупать",
+    "яйцо",
+    "сок",
+    "встречать",
+    "чай, зеленый чай"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-花見-はなみ",
+   "kanji": "花見",
+   "kana": "はなみ",
+   "romaji": "hanami",
+   "meanings": [
+    "теннис",
+    "любование цветением сакуры",
+    "молоко",
+    "пиво",
+    "вместе",
+    "немного",
+    "фотография",
+    "делать",
+    "сад",
+    "письмо",
+    "читать",
+    "чай, зеленый чай",
+    "фрукты",
+    "футбол",
+    "магазин",
+    "табак, сигареты",
+    "рыба",
+    "еда, вареный рис",
+    "сок",
+    "домашнее задание",
+    "мясо",
+    "завтрак",
+    "снимать",
+    "обед"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-写真-しゃしん",
+   "kanji": "写真",
+   "kana": "しゃしん",
+   "romaji": "shashin",
+   "meanings": [
+    "читать",
+    "смотреть, видеть",
+    "фотография",
+    "немного",
+    "доклад",
+    "сад",
+    "что",
+    "мясо",
+    "вода",
+    "чёрный чай",
+    "пиво",
+    "футбол",
+    "пить, глотать",
+    "курить",
+    "сакэ, спиртное"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-食べます-たべます",
+   "kanji": "食べます",
+   "kana": "たべます",
+   "romaji": "tabemasu",
+   "meanings": [
+    "есть",
+    "снимать",
+    "вода",
+    "домашнее задание",
+    "чёрный чай",
+    "фрукты",
+    "табак, сигареты",
+    "делать",
+    "что",
+    "мясо",
+    "футбол",
+    "обед",
+    "пиво",
+    "молоко"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-お酒-おさけ",
+   "kanji": "お酒",
+   "kana": "おさけ",
+   "romaji": "osake",
+   "meanings": [
+    "вода",
+    "сакэ, спиртное",
+    "видео",
+    "делать",
+    "яйцо",
+    "табак, сигареты"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-宿題-しゅくだい",
+   "kanji": "宿題",
+   "kana": "しゅくだい",
+   "romaji": "shukudai",
+   "meanings": [
+    "всегда",
+    "домашнее задание",
+    "читать",
+    "фотография",
+    "чёрный чай",
+    "завтрак",
+    "яйцо",
+    "сакэ, спиртное",
+    "мясо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-庭-にわ",
+   "kanji": "庭",
+   "kana": "にわ",
+   "romaji": "niwa",
+   "meanings": [
+    "пить, глотать",
+    "сад",
+    "домашнее задание",
+    "любование цветением сакуры",
+    "магазин",
+    "ужин",
+    "теннис",
+    "письмо",
+    "покупать",
+    "затем",
+    "футбол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-する-する",
+   "kanji": "する",
+   "kana": "する",
+   "romaji": "suru",
+   "meanings": [
+    "покупать",
+    "снимать",
+    "делать",
+    "теннис",
+    "ужин",
+    "что",
+    "рыба",
+    "сок",
+    "фотография",
+    "писать, рисовать",
+    "затем",
+    "сад",
+    "пить, глотать",
+    "вода",
+    "чёрный чай",
+    "магазин"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-卵-たまご",
+   "kanji": "卵",
+   "kana": "たまご",
+   "romaji": "tamago",
+   "meanings": [
+    "письмо",
+    "что",
+    "снимать",
+    "яйцо",
+    "иногда",
+    "слышать, слушать",
+    "есть",
+    "фрукты",
+    "еда, вареный рис",
+    "чёрный чай",
+    "курить",
+    "смотреть, видеть",
+    "затем",
+    "немного",
+    "ужин"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-撮ります-とります",
+   "kanji": "撮ります",
+   "kana": "とります",
+   "romaji": "torimasu",
+   "meanings": [
+    "молоко",
+    "хлеб",
+    "снимать",
+    "чёрный чай",
+    "встречать",
+    "покупать",
+    "есть",
+    "теннис",
+    "пить, глотать",
+    "футбол",
+    "рыба",
+    "сад",
+    "письмо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-水-みず",
+   "kanji": "水",
+   "kana": "みず",
+   "romaji": "mizu",
+   "meanings": [
+    "покупать",
+    "вода",
+    "фрукты",
+    "затем",
+    "снимать",
+    "всегда",
+    "теннис",
+    "мясо",
+    "овощи",
+    "завтрак",
+    "молоко",
+    "видео",
+    "рыба",
+    "встречать",
+    "да"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-いっしょに-いっしょに",
+   "kanji": "いっしょに",
+   "kana": "いっしょに",
+   "romaji": "isshoni",
+   "meanings": [
+    "мясо",
+    "смотреть, видеть",
+    "хлеб",
+    "вместе"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-ビデオ-びでお",
+   "kanji": "ビデオ",
+   "kana": "びでお",
+   "romaji": "bideo",
+   "meanings": [
+    "читать",
+    "табак, сигареты",
+    "хлеб",
+    "видео",
+    "чай, зеленый чай",
+    "фотография",
+    "сад",
+    "ужин",
+    "да",
+    "любование цветением сакуры",
+    "фрукты",
+    "овощи",
+    "встречать",
+    "слышать, слушать",
+    "футбол",
+    "пить, глотать",
+    "завтрак",
+    "есть",
+    "сакэ, спиртное"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-書きます-かきます",
+   "kanji": "書きます",
+   "kana": "かきます",
+   "romaji": "kakimasu",
+   "meanings": [
+    "яйцо",
+    "футбол",
+    "писать, рисовать",
+    "сакэ, спиртное",
+    "фотография",
+    "да",
+    "курить",
+    "делать",
+    "сад",
+    "табак, сигареты",
+    "обед",
+    "теннис",
+    "пиво",
+    "домашнее задание",
+    "любование цветением сакуры",
+    "мясо",
+    "читать",
+    "письмо",
+    "чёрный чай",
+    "слышать, слушать",
+    "доклад",
+    "пить, глотать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-会います-あいます",
+   "kanji": "会います",
+   "kana": "あいます",
+   "romaji": "aimasu",
+   "meanings": [
+    "обед",
+    "встречать",
+    "письмо",
+    "сакэ, спиртное",
+    "теннис",
+    "фрукты",
+    "ужин",
+    "чай, зеленый чай",
+    "всегда",
+    "вместе",
+    "иногда",
+    "пиво",
+    "футбол",
+    "домашнее задание",
+    "доклад",
+    "сок",
+    "слышать, слушать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-買います-かいます",
+   "kanji": "買います",
+   "kana": "かいます",
+   "romaji": "kaimasu",
+   "meanings": [
+    "видео",
+    "покупать",
+    "любование цветением сакуры",
+    "всегда",
+    "теннис",
+    "мясо",
+    "чёрный чай",
+    "пиво",
+    "немного",
+    "делать",
+    "доклад",
+    "пить, глотать",
+    "читать",
+    "чай, зеленый чай",
+    "обед",
+    "писать, рисовать",
+    "рыба",
+    "снимать",
+    "встречать",
+    "футбол",
+    "что"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-野菜-やさい",
+   "kanji": "野菜",
+   "kana": "やさい",
+   "romaji": "yasai",
+   "meanings": [
+    "фотография",
+    "встречать",
+    "пить, глотать",
+    "овощи",
+    "смотреть, видеть",
+    "снимать",
+    "видео"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-肉-にく",
+   "kanji": "肉",
+   "kana": "にく",
+   "romaji": "niku",
+   "meanings": [
+    "ужин",
+    "мясо",
+    "магазин",
+    "делать",
+    "теннис",
+    "писать, рисовать",
+    "фрукты",
+    "яйцо",
+    "вместе",
+    "видео",
+    "хлеб",
+    "читать",
+    "покупать",
+    "овощи",
+    "всегда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-読みます-よみます",
+   "kanji": "読みます",
+   "kana": "よみます",
+   "romaji": "yomimasu",
+   "meanings": [
+    "читать",
+    "фотография",
+    "чай, зеленый чай",
+    "молоко",
+    "слышать, слушать",
+    "фрукты",
+    "да",
+    "овощи",
+    "покупать",
+    "что",
+    "встречать",
+    "вместе",
+    "затем"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-ジュース-じゅーす",
+   "kanji": "ジュース",
+   "kana": "じゅーす",
+   "romaji": "juusu",
+   "meanings": [
+    "затем",
+    "мясо",
+    "сок",
+    "чай, зеленый чай",
+    "фотография",
+    "что",
+    "чёрный чай",
+    "магазин",
+    "теннис",
+    "домашнее задание",
+    "есть",
+    "еда, вареный рис",
+    "слышать, слушать",
+    "футбол",
+    "пить, глотать",
+    "всегда",
+    "сакэ, спиртное",
+    "письмо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-たばこ-たばこ",
+   "kanji": "たばこ",
+   "kana": "たばこ",
+   "romaji": "tabako",
+   "meanings": [
+    "видео",
+    "иногда",
+    "рыба",
+    "табак, сигареты",
+    "любование цветением сакуры",
+    "есть",
+    "да",
+    "писать, рисовать",
+    "пить, глотать",
+    "хлеб"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-ええ-ええ",
+   "kanji": "ええ",
+   "kana": "ええ",
+   "romaji": "ee",
+   "meanings": [
+    "да",
+    "слышать, слушать",
+    "пить, глотать",
+    "чёрный чай",
+    "любование цветением сакуры",
+    "еда, вареный рис",
+    "мясо",
+    "сакэ, спиртное",
+    "доклад",
+    "смотреть, видеть",
+    "что",
+    "магазин",
+    "чай, зеленый чай",
+    "завтрак",
+    "читать",
+    "сад",
+    "фрукты"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-いつも-いつも",
+   "kanji": "いつも",
+   "kana": "いつも",
+   "romaji": "itsumo",
+   "meanings": [
+    "всегда",
+    "письмо",
+    "писать, рисовать",
+    "сад",
+    "читать",
+    "футбол",
+    "покупать",
+    "курить",
+    "доклад",
+    "пиво",
+    "вместе"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-ごはん-ごはん",
+   "kanji": "ごはん",
+   "kana": "ごはん",
+   "romaji": "gohan",
+   "meanings": [
+    "еда, вареный рис",
+    "снимать",
+    "рыба",
+    "теннис",
+    "чай, зеленый чай",
+    "да",
+    "что",
+    "покупать",
+    "яйцо",
+    "хлеб"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-魚-さかな",
    "kanji": "魚",
    "kana": "さかな",
    "romaji": "sakana",
    "meanings": [
-    "рыба"
+    "встречать",
+    "табак, сигареты",
+    "затем",
+    "рыба",
+    "вода",
+    "пить, глотать",
+    "фрукты",
+    "сакэ, спиртное",
+    "что",
+    "слышать, слушать"
    ],
-   "en": "fish",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/sakana-fde45209.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "kesa-fcb16dc2",
-   "kanji": "今朝",
-   "kana": "けさ",
-   "romaji": "kesa",
+   "id": "jw-果物-くだもの",
+   "kanji": "果物",
+   "kana": "くだもの",
+   "romaji": "kudamono",
    "meanings": [
-    "сегодня утром",
-    "1. это утро"
+    "еда, вареный рис",
+    "фрукты",
+    "писать, рисовать",
+    "магазин",
+    "чёрный чай",
+    "яйцо",
+    "завтрак",
+    "письмо",
+    "ужин"
    ],
-   "en": "this morning",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/kesa-fcb16dc2.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "kiyou-c402fd02",
-   "kanji": "今日",
-   "kana": "きょう",
-   "romaji": "kyou",
+   "id": "jw-レポート-れぽーと",
+   "kanji": "レポート",
+   "kana": "れぽーと",
+   "romaji": "repooto",
    "meanings": [
-    "сегодня",
-    "этот день",
-    "сегодняшний"
+    "доклад",
+    "да",
+    "сад",
+    "есть",
+    "ужин",
+    "курить",
+    "всегда",
+    "фрукты",
+    "встречать",
+    "вода",
+    "мясо",
+    "пиво",
+    "домашнее задание",
+    "письмо",
+    "снимать",
+    "завтрак",
+    "иногда",
+    "что"
    ],
-   "en": "today, this day",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/kiyou-c402fd02.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "kotoshi-c2a4349c",
-   "kanji": "今年",
-   "kana": "ことし",
-   "romaji": "kotoshi",
+   "id": "jw-ミルク-みるく",
+   "kanji": "ミルク",
+   "kana": "みるく",
+   "romaji": "miruku",
    "meanings": [
-    "1. этот год",
-    "2. в этом году",
-    "этот год"
+    "сакэ, спиртное",
+    "чёрный чай",
+    "иногда",
+    "молоко",
+    "фрукты",
+    "хлеб",
+    "еда, вареный рис",
+    "курить",
+    "немного",
+    "сок",
+    "есть",
+    "домашнее задание",
+    "завтрак"
    ],
-   "en": "this year",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/kotoshi-c2a4349c.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "kinou-ef58bced",
-   "kanji": "昨日",
-   "kana": "きのう",
-   "romaji": "kinou",
+   "id": "jw-聞きます-ききます",
+   "kanji": "聞きます",
+   "kana": "ききます",
+   "romaji": "kikimasu",
    "meanings": [
-    "вчера",
-    "1. вчерашний день",
-    "2. вчера"
+    "слышать, слушать",
+    "сад",
+    "фотография",
+    "писать, рисовать",
+    "иногда",
+    "ужин",
+    "любование цветением сакуры",
+    "чёрный чай",
+    "завтрак",
+    "магазин",
+    "рыба",
+    "домашнее задание",
+    "что",
+    "вода",
+    "спрашивать"
    ],
-   "en": "yesterday",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/kinou-ef58bced.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "hito-ce6aac15",
-   "kanji": "人",
-   "kana": "ひと",
-   "romaji": "hito",
+   "id": "jw-パン-ぱん",
+   "kanji": "パン",
+   "kana": "ぱん",
+   "romaji": "pan",
    "meanings": [
-    "человек",
-    "люди",
-    "личность",
-    "характер",
-    "достойный человек",
-    "подходящий человек",
-    "взрослый человек"
+    "сакэ, спиртное",
+    "сок",
+    "всегда",
+    "хлеб",
+    "иногда",
+    "курить",
+    "мясо",
+    "еда, вареный рис",
+    "футбол",
+    "писать, рисовать"
    ],
-   "en": "man, person",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/hito-ce6aac15.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "otouto-8d83340a",
-   "kanji": "弟",
-   "kana": "おとうと",
-   "romaji": "otouto",
+   "id": "jw-飲みます-のみます",
+   "kanji": "飲みます",
+   "kana": "のみます",
+   "romaji": "nomimasu",
    "meanings": [
-    "младший брат"
+    "рыба",
+    "писать, рисовать",
+    "ужин",
+    "пить, глотать",
+    "смотреть, видеть",
+    "магазин",
+    "любование цветением сакуры",
+    "чёрный чай",
+    "сад",
+    "фотография",
+    "сервис, обслуживание",
+    "пить спиртное",
+    "ехать, садиться",
+    "обливаться, принимать",
+    "входить, поступать",
+    "делать пересадку",
+    "звонить по телефону"
    ],
-   "en": "younger brother",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/otouto-8d83340a.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "mise-1601280a",
+   "id": "jw-テニス-てにす",
+   "kanji": "テニス",
+   "kana": "てにす",
+   "romaji": "tenisu",
+   "meanings": [
+    "рыба",
+    "вода",
+    "завтрак",
+    "теннис",
+    "вместе",
+    "видео",
+    "встречать",
+    "писать, рисовать",
+    "ужин",
+    "чёрный чай",
+    "табак, сигареты",
+    "фотография"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-お茶-おちゃ",
+   "kanji": "お茶",
+   "kana": "おちゃ",
+   "romaji": "ocha",
+   "meanings": [
+    "чай, зеленый чай",
+    "немного",
+    "сакэ, спиртное",
+    "обед",
+    "делать",
+    "чёрный чай",
+    "затем",
+    "доклад",
+    "пиво",
+    "вместе",
+    "состояние здоровья",
+    "самочувствие",
+    "сонный",
+    "слабый",
+    "день",
+    "дата",
+    "один раз",
+    "однажды",
+    "сумо",
+    "ни разу",
+    "никогда",
+    "упражнение",
+    "чайная церемония",
+    "сильный",
+    "останавливаться на ночь",
+    "ночевать",
+    "убирать",
+    "делать уборку",
+    "подниматься",
+    "взбираться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-それから-それから",
+   "kanji": "それから",
+   "kana": "それから",
+   "romaji": "sorekara",
+   "meanings": [
+    "да",
+    "читать",
+    "затем",
+    "домашнее задание",
+    "сакэ, спиртное",
+    "пить, глотать",
+    "футбол",
+    "еда, вареный рис",
+    "писать, рисовать",
+    "вода",
+    "делать",
+    "любование цветением сакуры",
+    "завтрак"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-サッカー-さっかー",
+   "kanji": "サッカー",
+   "kana": "さっかー",
+   "romaji": "sakkaa",
+   "meanings": [
+    "футбол",
+    "фрукты",
+    "писать, рисовать",
+    "видео",
+    "обед",
+    "вместе",
+    "снимать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-店-みせ",
    "kanji": "店",
    "kana": "みせ",
    "romaji": "mise",
    "meanings": [
     "магазин",
-    "лавка"
+    "встречать",
+    "теннис",
+    "овощи",
+    "да",
+    "снимать",
+    "доклад",
+    "чёрный чай",
+    "футбол",
+    "обед",
+    "затем",
+    "сок",
+    "молоко"
    ],
-   "en": "store, shop",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/mise-1601280a.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "futari-a3f13d54",
-   "kanji": "二人",
-   "kana": "ふたり",
-   "romaji": "futari",
+   "id": "jw-手紙-てがみ",
+   "kanji": "手紙",
+   "kana": "てがみ",
+   "romaji": "tegami",
    "meanings": [
-    "два человека",
-    "двое",
-    "пара"
+    "иногда",
+    "домашнее задание",
+    "вместе",
+    "письмо",
+    "да",
+    "мясо"
    ],
-   "en": "two people",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/futari-a3f13d54.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "tsu-yatsu-add584aa",
-   "kanji": "八つ",
-   "kana": "やっつ",
-   "romaji": "yattsu",
+   "id": "jw-見ます-みます",
+   "kanji": "見ます",
+   "kana": "みます",
+   "romaji": "mimasu",
    "meanings": [
-    "восемь"
+    "смотреть, видеть",
+    "вместе",
+    "фрукты",
+    "слышать, слушать",
+    "затем",
+    "курить",
+    "чёрный чай",
+    "всегда"
    ],
-   "en": "eight things",
-   "pos": [
-    "числит."
-   ],
-   "audio": "/audio/n5-words/tsu-yatsu-add584aa.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "kaze-01a6560a",
-   "kanji": "風邪",
-   "kana": "かぜ",
-   "romaji": "kaze",
+   "id": "jw-吸います-すいます",
+   "kanji": "吸います",
+   "kana": "すいます",
+   "romaji": "suimasu",
    "meanings": [
-    "простуда"
+    "вместе",
+    "затем",
+    "сок",
+    "курить",
+    "рыба",
+    "да",
+    "хлеб",
+    "делать",
+    "иногда",
+    "читать",
+    "теннис"
    ],
-   "en": "cold, flu",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kaze-01a6560a.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "ashita-82a0002d",
-   "kanji": "明日",
-   "kana": "あした",
-   "romaji": "ashita",
+   "id": "jw-ビール-びーる",
+   "kanji": "ビール",
+   "kana": "びーる",
+   "romaji": "biiru",
    "meanings": [
-    "завтрашний день",
-    "завтра"
+    "вместе",
+    "домашнее задание",
+    "пить, глотать",
+    "пиво",
+    "мясо",
+    "писать, рисовать",
+    "слышать, слушать",
+    "молоко",
+    "читать",
+    "встречать",
+    "магазин",
+    "курить",
+    "видео"
    ],
-   "en": "tomorrow",
-   "pos": [
-    "сущ.",
-    "наречие"
-   ],
-   "audio": "/audio/n5-words/ashita-82a0002d.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "tsu-mutsu-08242cb3",
-   "kanji": "六つ",
-   "kana": "むっつ",
-   "romaji": "muttsu",
+   "id": "jw-ちょっと-ちょっと",
+   "kanji": "ちょっと",
+   "kana": "ちょっと",
+   "romaji": "chotto",
    "meanings": [
-    "шесть",
-    "шесть лет"
+    "вместе",
+    "немного",
+    "затем",
+    "смотреть, видеть",
+    "рыба",
+    "теннис",
+    "хлеб",
+    "да",
+    "любование цветением сакуры"
    ],
-   "en": "six things",
-   "pos": [
-    "числит."
-   ],
-   "audio": "/audio/n5-words/tsu-mutsu-08242cb3.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "u-iu-1fd18834",
-   "kanji": "言う",
-   "kana": "いう",
-   "romaji": "iu",
+   "id": "jw-何-なに",
+   "kanji": "何",
+   "kana": "なに",
+   "romaji": "nani",
    "meanings": [
-    "говорить",
-    "сказать",
-    "называться"
+    "слышать, слушать",
+    "яйцо",
+    "что",
+    "овощи",
+    "теннис",
+    "магазин",
+    "да"
    ],
-   "en": "to say",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/u-iu-1fd18834.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "u-utau-d9f14147",
-   "kanji": "歌う",
-   "kana": "うたう",
-   "romaji": "utau",
+   "id": "jw-紅茶-こうちゃ",
+   "kanji": "紅茶",
+   "kana": "こうちゃ",
+   "romaji": "koucha",
    "meanings": [
-    "петь",
-    "слагать стихи"
+    "сад",
+    "чёрный чай",
+    "ужин",
+    "всегда",
+    "пить, глотать",
+    "снимать",
+    "молоко",
+    "фрукты",
+    "любование цветением сакуры",
+    "письмо"
    ],
-   "en": "to sing",
-   "pos": [
-    "глагол (у)",
-    "перех.",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/u-utau-d9f14147.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
   },
   {
-   "id": "kii-ookii-194758d2",
-   "kanji": "大きい",
+   "id": "jw-牛乳-ぎゅうにゅう",
+   "kanji": "牛乳",
+   "kana": "ぎゅうにゅう",
+   "romaji": "gyuunyuu",
+   "meanings": [
+    "домашнее задание",
+    "снимать",
+    "вода",
+    "молоко"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "7"
+  },
+  {
+   "id": "jw-セロテープ-せろてーぷ",
+   "kanji": "セロテープ",
+   "kana": "せろてーぷ",
+   "romaji": "seroteepu",
+   "meanings": [
+    "палочки для еды",
+    "скотч",
+    "клейкая лента",
+    "вилка",
+    "давать",
+    "дарить",
+    "ложка",
+    "персональный компьютер",
+    "звонить",
+    "нож",
+    "Рождество",
+    "дырокол",
+    "рубашка",
+    "подарок",
+    "получать",
+    "с этих пор",
+    "скоро",
+    "электронное письмо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-はし-はし",
+   "kanji": "はし",
+   "kana": "はし",
+   "romaji": "hashi",
+   "meanings": [
+    "палочки для еды",
+    "скотч",
+    "клейкая лента",
+    "вилка",
+    "давать",
+    "дарить",
+    "ложка",
+    "персональный компьютер",
+    "звонить",
+    "нож",
+    "Рождество",
+    "дырокол",
+    "рубашка",
+    "подарок",
+    "получать",
+    "с этих пор",
+    "скоро",
+    "электронное письмо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-かけます-かけます",
+   "kanji": "かけます",
+   "kana": "かけます",
+   "romaji": "kakemasu",
+   "meanings": [
+    "палочки для еды",
+    "скотч",
+    "клейкая лента",
+    "вилка",
+    "давать",
+    "дарить",
+    "ложка",
+    "персональный компьютер",
+    "звонить",
+    "нож",
+    "Рождество",
+    "дырокол",
+    "рубашка",
+    "подарок",
+    "получать",
+    "с этих пор",
+    "скоро",
+    "электронное письмо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-ならいます-ならいます",
+   "kanji": "ならいます",
+   "kana": "ならいます",
+   "romaji": "naraimasu",
+   "meanings": [
+    "палочки для еды",
+    "скотч",
+    "клейкая лента",
+    "вилка",
+    "давать",
+    "дарить",
+    "ложка",
+    "персональный компьютер",
+    "звонить",
+    "нож",
+    "Рождество",
+    "дырокол",
+    "рубашка",
+    "подарок",
+    "получать",
+    "с этих пор",
+    "скоро",
+    "электронное письмо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-ちち-ちち",
+   "kanji": "ちち",
+   "kana": "ちち",
+   "romaji": "chichi",
+   "meanings": [
+    "с этих пор",
+    "скоро",
+    "скотч",
+    "клейкая лента",
+    "ложка",
+    "нож",
+    "получать",
+    "электронное письмо",
+    "Рождество",
+    "давать",
+    "дарить",
+    "мобильный телефон",
+    "рубашка",
+    "палочки для еды",
+    "вилка",
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-これから-これから",
+   "kanji": "これから",
+   "kana": "これから",
+   "romaji": "korekara",
+   "meanings": [
+    "с этих пор",
+    "скоро",
+    "скотч",
+    "клейкая лента",
+    "ложка",
+    "нож",
+    "получать",
+    "электронное письмо",
+    "Рождество",
+    "давать",
+    "дарить",
+    "мобильный телефон",
+    "рубашка",
+    "палочки для еды",
+    "вилка",
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-おくります-おくります",
+   "kanji": "おくります",
+   "kana": "おくります",
+   "romaji": "okurimasu",
+   "meanings": [
+    "с этих пор",
+    "скоро",
+    "скотч",
+    "клейкая лента",
+    "ложка",
+    "нож",
+    "получать",
+    "электронное письмо",
+    "Рождество",
+    "давать",
+    "дарить",
+    "мобильный телефон",
+    "рубашка",
+    "палочки для еды",
+    "вилка",
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-クリスマス-くりすます",
+   "kanji": "クリスマス",
+   "kana": "くりすます",
+   "romaji": "kurisumasu",
+   "meanings": [
+    "с этих пор",
+    "скоро",
+    "скотч",
+    "клейкая лента",
+    "ложка",
+    "нож",
+    "получать",
+    "электронное письмо",
+    "Рождество",
+    "давать",
+    "дарить",
+    "мобильный телефон",
+    "рубашка",
+    "палочки для еды",
+    "вилка",
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-もらいます-もらいます",
+   "kanji": "もらいます",
+   "kana": "もらいます",
+   "romaji": "moraimasu",
+   "meanings": [
+    "скотч",
+    "клейкая лента",
+    "получать",
+    "нож",
+    "подарок",
+    "звонить",
+    "дырокол",
+    "рубашка",
+    "Рождество",
+    "давать",
+    "дарить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-ナイフ-ないふ",
+   "kanji": "ナイフ",
+   "kana": "ないふ",
+   "romaji": "naifu",
+   "meanings": [
+    "скотч",
+    "клейкая лента",
+    "получать",
+    "нож",
+    "подарок",
+    "звонить",
+    "дырокол",
+    "рубашка",
+    "Рождество",
+    "давать",
+    "дарить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-おかあさん-おかあさん",
+   "kanji": "おかあさん",
+   "kana": "おかあさん",
+   "romaji": "okaasan",
+   "meanings": [
+    "вилка",
+    "давать",
+    "дарить",
+    "ножницы",
+    "звонить",
+    "нож",
+    "скоросшиватель",
+    "степлер",
+    "получать",
+    "рубашка",
+    "дырокол",
+    "ложка",
+    "ещё не",
+    "Рождество",
+    "мобильный телефон",
+    "уже",
+    "электронное письмо",
+    "палочки для еды"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-ケータイ-けーたい",
+   "kanji": "ケータイ",
+   "kana": "けーたい",
+   "romaji": "keetai",
+   "meanings": [
+    "вилка",
+    "давать",
+    "дарить",
+    "ножницы",
+    "звонить",
+    "нож",
+    "скоросшиватель",
+    "степлер",
+    "получать",
+    "рубашка",
+    "дырокол",
+    "ложка",
+    "ещё не",
+    "Рождество",
+    "мобильный телефон",
+    "уже",
+    "электронное письмо",
+    "палочки для еды"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-ホッチキス-ほっちきす",
+   "kanji": "ホッチキス",
+   "kana": "ほっちきす",
+   "romaji": "hocchikisu",
+   "meanings": [
+    "получать",
+    "скоросшиватель",
+    "степлер",
+    "электронное письмо",
+    "давать",
+    "дарить",
+    "подарок",
+    "уже",
+    "персональный компьютер",
+    "рубашка",
+    "мобильный телефон",
+    "дырокол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-にもつ-にもつ",
+   "kanji": "にもつ",
+   "kana": "にもつ",
+   "romaji": "nimotsu",
+   "meanings": [
+    "получать",
+    "скоросшиватель",
+    "степлер",
+    "электронное письмо",
+    "давать",
+    "дарить",
+    "подарок",
+    "уже",
+    "персональный компьютер",
+    "рубашка",
+    "мобильный телефон",
+    "дырокол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-おしえます-おしえます",
+   "kanji": "おしえます",
+   "kana": "おしえます",
+   "romaji": "oshiemasu",
+   "meanings": [
+    "скотч",
+    "клейкая лента",
+    "звонить",
+    "Рождество",
+    "электронное письмо",
+    "получать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-あげます-あげます",
+   "kanji": "あげます",
+   "kana": "あげます",
+   "romaji": "agemasu",
+   "meanings": [
+    "давать",
+    "дарить",
+    "дырокол",
+    "звонить",
+    "скотч",
+    "клейкая лента",
+    "подарок",
+    "рубашка",
+    "ещё не",
+    "уже",
+    "Рождество",
+    "получать",
+    "вилка",
+    "электронное письмо",
+    "с этих пор",
+    "скоро",
+    "ложка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-かります-かります",
+   "kanji": "かります",
+   "kana": "かります",
+   "romaji": "karimasu",
+   "meanings": [
+    "давать",
+    "дарить",
+    "дырокол",
+    "звонить",
+    "скотч",
+    "клейкая лента",
+    "подарок",
+    "рубашка",
+    "ещё не",
+    "уже",
+    "Рождество",
+    "получать",
+    "вилка",
+    "электронное письмо",
+    "с этих пор",
+    "скоро",
+    "ложка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-スプーン-すぷーん",
+   "kanji": "スプーン",
+   "kana": "すぷーん",
+   "romaji": "supuun",
+   "meanings": [
+    "ложка",
+    "персональный компьютер",
+    "ещё не",
+    "палочки для еды",
+    "с этих пор",
+    "скоро",
+    "подарок"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-はさみ-はさみ",
+   "kanji": "はさみ",
+   "kana": "はさみ",
+   "romaji": "hasami",
+   "meanings": [
+    "ножницы",
+    "скотч",
+    "клейкая лента",
+    "рубашка",
+    "электронное письмо",
+    "дырокол",
+    "ложка",
+    "звонить",
+    "ещё не",
+    "уже",
+    "давать",
+    "дарить",
+    "получать",
+    "палочки для еды",
+    "подарок",
+    "еще немного",
+    "останавливать; закреплять",
+    "гасить, выключать",
+    "вставать",
+    "соль",
+    "брать, взять, получать",
+    "ответ",
+    "садиться",
+    "включать, зажигать",
+    "карта",
+    "держать",
+    "объяснять, сказать, сообщить",
+    "электричество, электрический свет",
+    "вопрос, проблема",
+    "спешить, торопиться",
+    "чтение",
+    "копировать",
+    "показывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-はな-はな",
+   "kanji": "はな",
+   "kana": "はな",
+   "romaji": "hana",
+   "meanings": [
+    "ножницы",
+    "скотч",
+    "клейкая лента",
+    "рубашка",
+    "электронное письмо",
+    "дырокол",
+    "ложка",
+    "звонить",
+    "ещё не",
+    "уже",
+    "давать",
+    "дарить",
+    "получать",
+    "палочки для еды",
+    "подарок",
+    "еще немного",
+    "останавливать; закреплять",
+    "гасить, выключать",
+    "вставать",
+    "соль",
+    "брать, взять, получать",
+    "ответ",
+    "садиться",
+    "включать, зажигать",
+    "карта",
+    "держать",
+    "объяснять, сказать, сообщить",
+    "электричество, электрический свет",
+    "вопрос, проблема",
+    "спешить, торопиться",
+    "чтение",
+    "копировать",
+    "показывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-もう-もう",
+   "kanji": "もう",
+   "kana": "もう",
+   "romaji": "mou",
+   "meanings": [
+    "ножницы",
+    "скотч",
+    "клейкая лента",
+    "рубашка",
+    "электронное письмо",
+    "дырокол",
+    "ложка",
+    "звонить",
+    "ещё не",
+    "уже",
+    "давать",
+    "дарить",
+    "получать",
+    "палочки для еды",
+    "подарок",
+    "еще немного",
+    "останавливать; закреплять",
+    "гасить, выключать",
+    "вставать",
+    "соль",
+    "брать, взять, получать",
+    "ответ",
+    "садиться",
+    "включать, зажигать",
+    "карта",
+    "держать",
+    "объяснять, сказать, сообщить",
+    "электричество, электрический свет",
+    "вопрос, проблема",
+    "спешить, торопиться",
+    "чтение",
+    "копировать",
+    "показывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-シャツ-しゃつ",
+   "kanji": "シャツ",
+   "kana": "しゃつ",
+   "romaji": "shatsu",
+   "meanings": [
+    "персональный компьютер",
+    "скотч",
+    "клейкая лента",
+    "рубашка",
+    "подарок",
+    "ложка",
+    "вилка",
+    "скоросшиватель",
+    "степлер",
+    "палочки для еды",
+    "с этих пор",
+    "скоро",
+    "получать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-パソコン-ぱそこん",
+   "kanji": "パソコン",
+   "kana": "ぱそこん",
+   "romaji": "pasokon",
+   "meanings": [
+    "персональный компьютер",
+    "скотч",
+    "клейкая лента",
+    "рубашка",
+    "подарок",
+    "ложка",
+    "вилка",
+    "скоросшиватель",
+    "степлер",
+    "палочки для еды",
+    "с этих пор",
+    "скоро",
+    "получать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-プレゼント-ぷれぜんと",
+   "kanji": "プレゼント",
+   "kana": "ぷれぜんと",
+   "romaji": "purezento",
+   "meanings": [
+    "дырокол",
+    "подарок",
+    "ложка",
+    "давать",
+    "дарить",
+    "звонить",
+    "Рождество",
+    "ещё не",
+    "палочки для еды",
+    "уже",
+    "электронное письмо",
+    "получать",
+    "скоросшиватель",
+    "степлер",
+    "с этих пор",
+    "скоро"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-おかね-おかね",
+   "kanji": "おかね",
+   "kana": "おかね",
+   "romaji": "okane",
+   "meanings": [
+    "дырокол",
+    "подарок",
+    "ложка",
+    "давать",
+    "дарить",
+    "звонить",
+    "Рождество",
+    "ещё не",
+    "палочки для еды",
+    "уже",
+    "электронное письмо",
+    "получать",
+    "скоросшиватель",
+    "степлер",
+    "с этих пор",
+    "скоро"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-パンチ-ぱんち",
+   "kanji": "パンチ",
+   "kana": "ぱんち",
+   "romaji": "panchi",
+   "meanings": [
+    "дырокол",
+    "подарок",
+    "ложка",
+    "давать",
+    "дарить",
+    "звонить",
+    "Рождество",
+    "ещё не",
+    "палочки для еды",
+    "уже",
+    "электронное письмо",
+    "получать",
+    "скоросшиватель",
+    "степлер",
+    "с этих пор",
+    "скоро"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-メール-めーる",
+   "kanji": "メール",
+   "kana": "めーる",
+   "romaji": "meeru",
+   "meanings": [
+    "звонить",
+    "электронное письмо",
+    "Рождество",
+    "давать",
+    "дарить",
+    "мобильный телефон",
+    "уже",
+    "скотч",
+    "клейкая лента"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-まだ-まだ",
+   "kanji": "まだ",
+   "kana": "まだ",
+   "romaji": "mada",
+   "meanings": [
+    "скоросшиватель",
+    "степлер",
+    "рубашка",
+    "ещё не",
+    "Рождество",
+    "уже"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-きっぷ-きっぷ",
+   "kanji": "きっぷ",
+   "kana": "きっぷ",
+   "romaji": "kippu",
+   "meanings": [
+    "скоросшиватель",
+    "степлер",
+    "получать",
+    "рубашка",
+    "дырокол",
+    "с этих пор",
+    "скоро",
+    "Рождество"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-はは-はは",
+   "kanji": "はは",
+   "kana": "はは",
+   "romaji": "haha",
+   "meanings": [
+    "давать",
+    "дарить",
+    "с этих пор",
+    "скоро",
+    "персональный компьютер",
+    "ещё не",
+    "скотч",
+    "клейкая лента",
+    "мобильный телефон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-かみ-かみ",
+   "kanji": "かみ",
+   "kana": "かみ",
+   "romaji": "kami",
+   "meanings": [
+    "давать",
+    "дарить",
+    "с этих пор",
+    "скоро",
+    "персональный компьютер",
+    "ещё не",
+    "скотч",
+    "клейкая лента",
+    "мобильный телефон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-おとうさん-おとうさん",
+   "kanji": "おとうさん",
+   "kana": "おとうさん",
+   "romaji": "otousan",
+   "meanings": [
+    "дырокол",
+    "давать",
+    "дарить",
+    "подарок",
+    "Рождество",
+    "скотч",
+    "клейкая лента",
+    "уже"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-かします-かします",
+   "kanji": "かします",
+   "kana": "かします",
+   "romaji": "kashimasu",
+   "meanings": [
+    "ложка",
+    "рубашка",
+    "дырокол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-けしゴム-けしごむ",
+   "kanji": "けしゴム",
+   "kana": "けしごむ",
+   "romaji": "keshigomu",
+   "meanings": [
+    "звонить",
+    "Рождество",
+    "давать",
+    "дарить",
+    "палочки для еды",
+    "мобильный телефон",
+    "получать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-ねんがじょう-ねんがじょう",
+   "kanji": "ねんがじょう",
+   "kana": "ねんがじょう",
+   "romaji": "nengajou",
+   "meanings": [
+    "звонить",
+    "с этих пор",
+    "скоро",
+    "скотч",
+    "клейкая лента",
+    "электронное письмо",
+    "давать",
+    "дарить",
+    "получать",
+    "дырокол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-きります-きります",
+   "kanji": "きります",
+   "kana": "きります",
+   "romaji": "kirimasu",
+   "meanings": [
+    "уже",
+    "ещё не",
+    "вилка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-て-て",
+   "kanji": "て",
+   "kana": "て",
+   "romaji": "te",
+   "meanings": [
+    "рубашка",
+    "уже",
+    "палочки для еды"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "8"
+  },
+  {
+   "id": "jw-いい-いい",
+   "kanji": "いい",
+   "kana": "いい",
+   "romaji": "ii",
+   "meanings": [
+    "как",
+    "очень",
+    "хороший",
+    "не очень",
+    "красивый",
+    "чистый",
+    "оживлённый",
+    "шумный",
+    "какой"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-たのしい-たのしい",
+   "kanji": "たのしい",
+   "kana": "たのしい",
+   "romaji": "tanoshii",
+   "meanings": [
+    "как",
+    "очень",
+    "хороший",
+    "не очень",
+    "красивый",
+    "чистый",
+    "оживлённый",
+    "шумный",
+    "какой"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-どう-どう",
+   "kanji": "どう",
+   "kana": "どう",
+   "romaji": "dou",
+   "meanings": [
+    "как",
+    "очень",
+    "хороший",
+    "не очень",
+    "красивый",
+    "чистый",
+    "оживлённый",
+    "шумный",
+    "какой"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-しずか-しずか",
+   "kanji": "しずか",
+   "kana": "しずか",
+   "romaji": "shizuka",
+   "meanings": [
+    "как",
+    "очень",
+    "хороший",
+    "не очень",
+    "красивый",
+    "чистый",
+    "оживлённый",
+    "шумный",
+    "какой"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-ハンサム-はんさむ",
+   "kanji": "ハンサム",
+   "kana": "はんさむ",
+   "romaji": "hansamu",
+   "meanings": [
+    "красивый",
+    "не очень",
+    "какой",
+    "вкусный",
+    "хороший",
+    "очень",
+    "ресторан"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-さむい-さむい",
+   "kanji": "さむい",
+   "kana": "さむい",
+   "romaji": "samui",
+   "meanings": [
+    "красивый",
+    "не очень",
+    "какой",
+    "вкусный",
+    "хороший",
+    "очень",
+    "ресторан"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-ひくい-ひくい",
+   "kanji": "ひくい",
+   "kana": "ひくい",
+   "romaji": "hikui",
+   "meanings": [
+    "красивый",
+    "не очень",
+    "какой",
+    "вкусный",
+    "хороший",
+    "очень",
+    "ресторан"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-やすい-やすい",
+   "kanji": "やすい",
+   "kana": "やすい",
+   "romaji": "yasui",
+   "meanings": [
+    "красивый",
+    "не очень",
+    "какой",
+    "вкусный",
+    "хороший",
+    "очень",
+    "ресторан"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-おもしろい-おもしろい",
+   "kanji": "おもしろい",
+   "kana": "おもしろい",
+   "romaji": "omoshiroi",
+   "meanings": [
+    "интересный",
+    "очень",
+    "хороший",
+    "оживлённый",
+    "шумный",
+    "красивый",
+    "какой",
+    "ресторан",
+    "к тому же",
+    "не очень",
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-ゆうめい-ゆうめい",
+   "kanji": "ゆうめい",
+   "kana": "ゆうめい",
+   "romaji": "yuumei",
+   "meanings": [
+    "интересный",
+    "очень",
+    "хороший",
+    "оживлённый",
+    "шумный",
+    "красивый",
+    "какой",
+    "ресторан",
+    "к тому же",
+    "не очень",
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-げんき-げんき",
+   "kanji": "げんき",
+   "kana": "げんき",
+   "romaji": "genki",
+   "meanings": [
+    "интересный",
+    "очень",
+    "хороший",
+    "оживлённый",
+    "шумный",
+    "красивый",
+    "какой",
+    "ресторан",
+    "к тому же",
+    "не очень",
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-にぎやか-にぎやか",
+   "kanji": "にぎやか",
+   "kana": "にぎやか",
+   "romaji": "nigiyaka",
+   "meanings": [
+    "интересный",
+    "очень",
+    "хороший",
+    "оживлённый",
+    "шумный",
+    "красивый",
+    "какой",
+    "ресторан",
+    "к тому же",
+    "не очень",
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-やさしい-やさしい",
+   "kanji": "やさしい",
+   "kana": "やさしい",
+   "romaji": "yasashii",
+   "meanings": [
+    "очень",
+    "ресторан",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "вкусный",
+    "чистый",
+    "хороший",
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-とても-とても",
+   "kanji": "とても",
+   "kana": "とても",
+   "romaji": "totemo",
+   "meanings": [
+    "очень",
+    "ресторан",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "вкусный",
+    "чистый",
+    "хороший",
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-りょう-りょう",
+   "kanji": "りょう",
+   "kana": "りょう",
+   "romaji": "ryou",
+   "meanings": [
+    "вкусный",
+    "оживлённый",
+    "шумный",
+    "интересный",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "не очень",
+    "к тому же",
+    "чистый",
+    "очень",
+    "как",
+    "хороший"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-おいしい-おいしい",
+   "kanji": "おいしい",
+   "kana": "おいしい",
+   "romaji": "oishii",
+   "meanings": [
+    "вкусный",
+    "оживлённый",
+    "шумный",
+    "интересный",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "не очень",
+    "к тому же",
+    "чистый",
+    "очень",
+    "как",
+    "хороший"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-そして-そして",
+   "kanji": "そして",
+   "kana": "そして",
+   "romaji": "soshite",
+   "meanings": [
+    "вкусный",
+    "оживлённый",
+    "шумный",
+    "интересный",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "не очень",
+    "к тому же",
+    "чистый",
+    "очень",
+    "как",
+    "хороший"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-しろい-しろい",
+   "kanji": "しろい",
+   "kana": "しろい",
+   "romaji": "shiroi",
+   "meanings": [
+    "вкусный",
+    "оживлённый",
+    "шумный",
+    "интересный",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "не очень",
+    "к тому же",
+    "чистый",
+    "очень",
+    "как",
+    "хороший"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-ひま-ひま",
+   "kanji": "ひま",
+   "kana": "ひま",
+   "romaji": "hima",
+   "meanings": [
+    "очень",
+    "не очень",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "хороший"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-ちいさい-ちいさい",
+   "kanji": "ちいさい",
+   "kana": "ちいさい",
+   "romaji": "chiisai",
+   "meanings": [
+    "очень",
+    "не очень",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "хороший"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-しんせつ-しんせつ",
+   "kanji": "しんせつ",
+   "kana": "しんせつ",
+   "romaji": "shinsetsu",
+   "meanings": [
+    "хороший",
+    "красивый",
+    "не очень",
+    "изящный",
+    "чудесный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-あたらしい-あたらしい",
+   "kanji": "あたらしい",
+   "kana": "あたらしい",
+   "romaji": "atarashii",
+   "meanings": [
+    "хороший",
+    "красивый",
+    "не очень",
+    "изящный",
+    "чудесный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-よい-よい",
+   "kanji": "よい",
+   "kana": "よい",
+   "romaji": "yoi",
+   "meanings": [
+    "хороший",
+    "красивый",
+    "не очень",
+    "изящный",
+    "чудесный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-いそがしい-いそがしい",
+   "kanji": "いそがしい",
+   "kana": "いそがしい",
+   "romaji": "isogashii",
+   "meanings": [
+    "хороший",
+    "красивый",
+    "чистый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-あつい-あつい",
+   "kanji": "あつい",
+   "kana": "あつい",
+   "romaji": "atsui",
+   "meanings": [
+    "оживлённый",
+    "шумный",
+    "не очень",
+    "какой",
+    "хороший",
+    "очень",
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-おおきい-おおきい",
+   "kanji": "おおきい",
    "kana": "おおきい",
    "romaji": "ookii",
    "meanings": [
-    "большой",
-    "крупный"
+    "оживлённый",
+    "шумный",
+    "не очень",
+    "какой",
+    "хороший",
+    "очень",
+    "как"
    ],
-   "en": "big, large",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/kii-ookii-194758d2.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
   },
   {
-   "id": "i-kaimono-dcf5a401",
-   "kanji": "買い物",
-   "kana": "かいもの",
-   "romaji": "kaimono",
+   "id": "jw-あまり-あまり",
+   "kanji": "あまり",
+   "kana": "あまり",
+   "romaji": "amari",
    "meanings": [
-    "покупки",
-    "покупка",
-    "делать покупки"
+    "не очень",
+    "интересный",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "чистый",
+    "вкусный",
+    "очень",
+    "ресторан"
    ],
-   "en": "shopping",
-   "pos": [
-    "сущ.",
-    "суру-глагол",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/i-kaimono-dcf5a401.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
   },
   {
-   "id": "kuni-cb5b3403",
-   "kanji": "国",
-   "kana": "くに",
-   "romaji": "kuni",
+   "id": "jw-わるい-わるい",
+   "kanji": "わるい",
+   "kana": "わるい",
+   "romaji": "warui",
    "meanings": [
-    "страна",
-    "государство",
-    "родина",
-    "провинция"
+    "не очень",
+    "интересный",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "чистый",
+    "вкусный",
+    "очень",
+    "ресторан"
    ],
-   "en": "country; place of origin",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kuni-cb5b3403.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
   },
   {
-   "id": "ri-kumori-9d965c0b",
+   "id": "jw-すてき-すてき",
+   "kanji": "すてき",
+   "kana": "すてき",
+   "romaji": "suteki",
+   "meanings": [
+    "не очень",
+    "интересный",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "чистый",
+    "вкусный",
+    "очень",
+    "ресторан"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-やま-やま",
+   "kanji": "やま",
+   "kana": "やま",
+   "romaji": "yama",
+   "meanings": [
+    "не очень",
+    "очень",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-レストラン-れすとらん",
+   "kanji": "レストラン",
+   "kana": "れすとらん",
+   "romaji": "resutoran",
+   "meanings": [
+    "очень",
+    "какой",
+    "ресторан",
+    "к тому же",
+    "красивый",
+    "изящный",
+    "чудесный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-べんり-べんり",
+   "kanji": "べんり",
+   "kana": "べんり",
+   "romaji": "benri",
+   "meanings": [
+    "не очень",
+    "какой",
+    "ресторан",
+    "красивый",
+    "хороший",
+    "чистый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-くろい-くろい",
+   "kanji": "くろい",
+   "kana": "くろい",
+   "romaji": "kuroi",
+   "meanings": [
+    "не очень",
+    "какой",
+    "ресторан",
+    "красивый",
+    "хороший",
+    "чистый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-たかい-たかい",
+   "kanji": "たかい",
+   "kana": "たかい",
+   "romaji": "takai",
+   "meanings": [
+    "интересный",
+    "красивый",
+    "чистый",
+    "изящный",
+    "чудесный",
+    "хороший"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-むずかしい-むずかしい",
+   "kanji": "むずかしい",
+   "kana": "むずかしい",
+   "romaji": "muzukashii",
+   "meanings": [
+    "красивый",
+    "чистый",
+    "не очень",
+    "хороший"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-きれい-きれい",
+   "kanji": "きれい",
+   "kana": "きれい",
+   "romaji": "kirei",
+   "meanings": [
+    "красивый",
+    "чистый",
+    "не очень",
+    "хороший"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-どんな-どんな",
+   "kanji": "どんな",
+   "kana": "どんな",
+   "romaji": "donna",
+   "meanings": [
+    "какой",
+    "интересный",
+    "очень",
+    "как",
+    "вкусный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-あかい-あかい",
+   "kanji": "あかい",
+   "kana": "あかい",
+   "romaji": "akai",
+   "meanings": [
+    "какой",
+    "интересный",
+    "очень",
+    "как",
+    "вкусный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-せいかつ-せいかつ",
+   "kanji": "せいかつ",
+   "kana": "せいかつ",
+   "romaji": "seikatsu",
+   "meanings": [
+    "какой",
+    "интересный",
+    "очень",
+    "как",
+    "вкусный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-ところ-ところ",
+   "kanji": "ところ",
+   "kana": "ところ",
+   "romaji": "tokoro",
+   "meanings": [
+    "какой",
+    "красивый",
+    "изящный",
+    "чудесный",
+    "интересный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-しごと-しごと",
+   "kanji": "しごと",
+   "kana": "しごと",
+   "romaji": "shigoto",
+   "meanings": [
+    "интересный",
+    "красивый",
+    "хороший",
+    "очень",
+    "оживлённый",
+    "шумный",
+    "ресторан"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-さくら-さくら",
+   "kanji": "さくら",
+   "kana": "さくら",
+   "romaji": "sakura",
+   "meanings": [
+    "хороший",
+    "красивый",
+    "чистый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-まち-まち",
+   "kanji": "まち",
+   "kana": "まち",
+   "romaji": "machi",
+   "meanings": [
+    "к тому же",
+    "красивый",
+    "изящный",
+    "чудесный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-たべもの-たべもの",
+   "kanji": "たべもの",
+   "kana": "たべもの",
+   "romaji": "tabemono",
+   "meanings": [
+    "не очень",
+    "вкусный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-つめたい-つめたい",
+   "kanji": "つめたい",
+   "kana": "つめたい",
+   "romaji": "tsumetai",
+   "meanings": [
+    "оживлённый",
+    "шумный",
+    "хороший",
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-あおい-あおい",
+   "kanji": "あおい",
+   "kana": "あおい",
+   "romaji": "aoi",
+   "meanings": [
+    "как"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-黒い-くろい",
+   "kanji": "黒い",
+   "kana": "くろい",
+   "romaji": "kuroi",
+   "meanings": [
+    "свободный",
+    "чёрный",
+    "трудный, сложный",
+    "лёгкий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "9"
+  },
+  {
+   "id": "jw-かたかな-かたかな",
+   "kanji": "かたかな",
+   "kana": "かたかな",
+   "romaji": "katakana",
+   "meanings": [
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "потому что",
+    "муж",
+    "музыка",
+    "хорошо",
+    "совсем не",
+    "примерно",
+    "около",
+    "караоке",
+    "понимать",
+    "неумелый",
+    "жена",
+    "любимый",
+    "бейсбол",
+    "латинский алфавит",
+    "катакана",
+    "классическая музыка",
+    "нелюбимый",
+    "ненавистный",
+    "хирагана",
+    "путешествие",
+    "поездка",
+    "джаз",
+    "много",
+    "находиться",
+    "различный",
+    "выключатель",
+    "панда",
+    "стол",
+    "кровать",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "дверь",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-つま-つま",
+   "kanji": "つま",
+   "kana": "つま",
+   "romaji": "tsuma",
+   "meanings": [
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "потому что",
+    "муж",
+    "музыка",
+    "хорошо",
+    "совсем не",
+    "примерно",
+    "около",
+    "караоке",
+    "понимать",
+    "неумелый",
+    "жена",
+    "любимый",
+    "бейсбол",
+    "латинский алфавит",
+    "катакана",
+    "классическая музыка",
+    "нелюбимый",
+    "ненавистный",
+    "хирагана",
+    "путешествие",
+    "поездка",
+    "джаз",
+    "много",
+    "находиться",
+    "различный",
+    "выключатель",
+    "панда",
+    "стол",
+    "кровать",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "дверь",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-あります-あります",
+   "kanji": "あります",
+   "kana": "あります",
+   "romaji": "arimasu",
+   "meanings": [
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "потому что",
+    "муж",
+    "музыка",
+    "хорошо",
+    "совсем не",
+    "примерно",
+    "около",
+    "караоке",
+    "понимать",
+    "неумелый",
+    "жена",
+    "любимый",
+    "бейсбол",
+    "латинский алфавит",
+    "катакана",
+    "классическая музыка",
+    "нелюбимый",
+    "ненавистный",
+    "хирагана",
+    "путешествие",
+    "поездка",
+    "джаз",
+    "много",
+    "находиться",
+    "различный",
+    "выключатель",
+    "панда",
+    "стол",
+    "кровать",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "дверь",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-じかん-じかん",
+   "kanji": "じかん",
+   "kana": "じかん",
+   "romaji": "jikan",
+   "meanings": [
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "потому что",
+    "муж",
+    "музыка",
+    "хорошо",
+    "совсем не",
+    "примерно",
+    "около",
+    "караоке",
+    "понимать",
+    "неумелый",
+    "жена",
+    "любимый",
+    "бейсбол",
+    "латинский алфавит",
+    "катакана",
+    "классическая музыка",
+    "нелюбимый",
+    "ненавистный",
+    "хирагана",
+    "путешествие",
+    "поездка",
+    "джаз",
+    "много",
+    "находиться",
+    "различный",
+    "выключатель",
+    "панда",
+    "стол",
+    "кровать",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "дверь",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-全然-ぜんぜん",
+   "kanji": "全然",
+   "kana": "ぜんぜん",
+   "romaji": "zenzen",
+   "meanings": [
+    "ребёнок",
+    "муж",
+    "жена",
+    "буква",
+    "знак",
+    "любимый",
+    "совсем не",
+    "музыка",
+    "латинский алфавит",
+    "иероглиф",
+    "супруга",
+    "время",
+    "песня",
+    "неумелый",
+    "картина",
+    "дело",
+    "приготовление пищи",
+    "быстро",
+    "рано",
+    "мало",
+    "немного",
+    "бейсбол",
+    "напиток",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "мелкие деньги",
+    "умелый",
+    "кабуки"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-好き-すき",
+   "kanji": "好き",
+   "kana": "すき",
+   "romaji": "suki",
+   "meanings": [
+    "ребёнок",
+    "муж",
+    "жена",
+    "буква",
+    "знак",
+    "любимый",
+    "совсем не",
+    "музыка",
+    "латинский алфавит",
+    "иероглиф",
+    "супруга",
+    "время",
+    "песня",
+    "неумелый",
+    "картина",
+    "дело",
+    "приготовление пищи",
+    "быстро",
+    "рано",
+    "мало",
+    "немного",
+    "бейсбол",
+    "напиток",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "мелкие деньги",
+    "умелый",
+    "кабуки"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-子ども-こども",
+   "kanji": "子ども",
+   "kana": "こども",
+   "romaji": "kodomo",
+   "meanings": [
+    "ребёнок",
+    "муж",
+    "жена",
+    "буква",
+    "знак",
+    "любимый",
+    "совсем не",
+    "музыка",
+    "латинский алфавит",
+    "иероглиф",
+    "супруга",
+    "время",
+    "песня",
+    "неумелый",
+    "картина",
+    "дело",
+    "приготовление пищи",
+    "быстро",
+    "рано",
+    "мало",
+    "немного",
+    "бейсбол",
+    "напиток",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "мелкие деньги",
+    "умелый",
+    "кабуки"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-約束-やくそく",
+   "kanji": "約束",
+   "kana": "やくそく",
+   "romaji": "yakusoku",
+   "meanings": [
+    "ребёнок",
+    "муж",
+    "жена",
+    "буква",
+    "знак",
+    "любимый",
+    "совсем не",
+    "музыка",
+    "латинский алфавит",
+    "иероглиф",
+    "супруга",
+    "время",
+    "песня",
+    "неумелый",
+    "картина",
+    "дело",
+    "приготовление пищи",
+    "быстро",
+    "рано",
+    "мало",
+    "немного",
+    "бейсбол",
+    "напиток",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "мелкие деньги",
+    "умелый",
+    "кабуки"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-漢字-かんじ",
+   "kanji": "漢字",
+   "kana": "かんじ",
+   "romaji": "kanji",
+   "meanings": [
+    "картина",
+    "жена",
+    "время",
+    "любимый",
+    "совсем не",
+    "нелюбимый",
+    "ненавистный",
+    "музыка",
+    "приготовление пищи",
+    "муж",
+    "супруга",
+    "ребёнок",
+    "латинский алфавит",
+    "иероглиф",
+    "бейсбол",
+    "дело",
+    "напиток",
+    "быстро",
+    "рано",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "неумелый",
+    "умелый",
+    "песня"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-絵-え",
+   "kanji": "絵",
+   "kana": "え",
+   "romaji": "e",
+   "meanings": [
+    "картина",
+    "жена",
+    "время",
+    "любимый",
+    "совсем не",
+    "нелюбимый",
+    "ненавистный",
+    "музыка",
+    "приготовление пищи",
+    "муж",
+    "супруга",
+    "ребёнок",
+    "латинский алфавит",
+    "иероглиф",
+    "бейсбол",
+    "дело",
+    "напиток",
+    "быстро",
+    "рано",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "неумелый",
+    "умелый",
+    "песня"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-音楽-おんがく",
+   "kanji": "音楽",
+   "kana": "おんがく",
+   "romaji": "ongaku",
+   "meanings": [
+    "картина",
+    "жена",
+    "время",
+    "любимый",
+    "совсем не",
+    "нелюбимый",
+    "ненавистный",
+    "музыка",
+    "приготовление пищи",
+    "муж",
+    "супруга",
+    "ребёнок",
+    "латинский алфавит",
+    "иероглиф",
+    "бейсбол",
+    "дело",
+    "напиток",
+    "быстро",
+    "рано",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "неумелый",
+    "умелый",
+    "песня"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-主人-しゅじん",
+   "kanji": "主人",
+   "kana": "しゅじん",
+   "romaji": "shujin",
+   "meanings": [
+    "картина",
+    "жена",
+    "время",
+    "любимый",
+    "совсем не",
+    "нелюбимый",
+    "ненавистный",
+    "музыка",
+    "приготовление пищи",
+    "муж",
+    "супруга",
+    "ребёнок",
+    "латинский алфавит",
+    "иероглиф",
+    "бейсбол",
+    "дело",
+    "напиток",
+    "быстро",
+    "рано",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "неумелый",
+    "умелый",
+    "песня"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-ご主人-ごしゅじん",
+   "kanji": "ご主人",
+   "kana": "ごしゅじん",
+   "romaji": "goshujin",
+   "meanings": [
+    "муж",
+    "время",
+    "картина",
+    "музыка",
+    "латинский алфавит",
+    "приготовление пищи",
+    "жена",
+    "любимый",
+    "песня",
+    "неумелый",
+    "напиток",
+    "дело",
+    "быстро",
+    "рано",
+    "иероглиф",
+    "супруга",
+    "умелый",
+    "кабуки",
+    "путешествие",
+    "поездка",
+    "нелюбимый",
+    "ненавистный",
+    "ребёнок"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-夫-おっと",
+   "kanji": "夫",
+   "kana": "おっと",
+   "romaji": "otto",
+   "meanings": [
+    "муж",
+    "время",
+    "картина",
+    "музыка",
+    "латинский алфавит",
+    "приготовление пищи",
+    "жена",
+    "любимый",
+    "песня",
+    "неумелый",
+    "напиток",
+    "дело",
+    "быстро",
+    "рано",
+    "иероглиф",
+    "супруга",
+    "умелый",
+    "кабуки",
+    "путешествие",
+    "поездка",
+    "нелюбимый",
+    "ненавистный",
+    "ребёнок"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-時間-じかん",
+   "kanji": "時間",
+   "kana": "じかん",
+   "romaji": "jikan",
+   "meanings": [
+    "муж",
+    "время",
+    "картина",
+    "музыка",
+    "латинский алфавит",
+    "приготовление пищи",
+    "жена",
+    "любимый",
+    "песня",
+    "неумелый",
+    "напиток",
+    "дело",
+    "быстро",
+    "рано",
+    "иероглиф",
+    "супруга",
+    "умелый",
+    "кабуки",
+    "путешествие",
+    "поездка",
+    "нелюбимый",
+    "ненавистный",
+    "ребёнок"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-うた-うた",
+   "kanji": "うた",
+   "kana": "うた",
+   "romaji": "uta",
+   "meanings": [
+    "танец",
+    "много",
+    "примерно",
+    "около",
+    "иметь",
+    "быть",
+    "есть",
+    "хирагана",
+    "концерт",
+    "билет",
+    "караоке",
+    "подработка",
+    "катакана",
+    "классическая музыка",
+    "потому что"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-ダンス-だんす",
+   "kanji": "ダンス",
+   "kana": "だんす",
+   "romaji": "dansu",
+   "meanings": [
+    "танец",
+    "много",
+    "примерно",
+    "около",
+    "иметь",
+    "быть",
+    "есть",
+    "хирагана",
+    "концерт",
+    "билет",
+    "караоке",
+    "подработка",
+    "катакана",
+    "классическая музыка",
+    "потому что"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-チケット-ちけっと",
+   "kanji": "チケット",
+   "kana": "ちけっと",
+   "romaji": "chiketto",
+   "meanings": [
+    "танец",
+    "много",
+    "примерно",
+    "около",
+    "иметь",
+    "быть",
+    "есть",
+    "хирагана",
+    "концерт",
+    "билет",
+    "караоке",
+    "подработка",
+    "катакана",
+    "классическая музыка",
+    "потому что"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-だいたい-だいたい",
+   "kanji": "だいたい",
+   "kana": "だいたい",
+   "romaji": "daitai",
+   "meanings": [
+    "танец",
+    "много",
+    "примерно",
+    "около",
+    "иметь",
+    "быть",
+    "есть",
+    "хирагана",
+    "концерт",
+    "билет",
+    "караоке",
+    "подработка",
+    "катакана",
+    "классическая музыка",
+    "потому что"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-かぶき-かぶき",
+   "kanji": "かぶき",
+   "kana": "かぶき",
+   "romaji": "kabuki",
+   "meanings": [
+    "спорт",
+    "потому что",
+    "примерно",
+    "около",
+    "билет",
+    "понимать",
+    "джаз",
+    "подработка",
+    "караоке",
+    "концерт",
+    "много"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-スポーツ-すぽーつ",
+   "kanji": "スポーツ",
+   "kana": "すぽーつ",
+   "romaji": "supootsu",
+   "meanings": [
+    "спорт",
+    "потому что",
+    "примерно",
+    "около",
+    "билет",
+    "понимать",
+    "джаз",
+    "подработка",
+    "караоке",
+    "концерт",
+    "много"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-家内-かない",
+   "kanji": "家内",
+   "kana": "かない",
+   "romaji": "kanai",
+   "meanings": [
+    "быстро",
+    "рано",
+    "картина",
+    "буква",
+    "знак",
+    "время",
+    "ребёнок",
+    "любимый",
+    "совсем не",
+    "латинский алфавит",
+    "музыка",
+    "приготовление пищи",
+    "бейсбол",
+    "супруга",
+    "иероглиф",
+    "мало",
+    "немного",
+    "муж",
+    "жена",
+    "песня",
+    "неумелый",
+    "путешествие",
+    "поездка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-料理-りょうり",
+   "kanji": "料理",
+   "kana": "りょうり",
+   "romaji": "ryouri",
+   "meanings": [
+    "быстро",
+    "рано",
+    "картина",
+    "буква",
+    "знак",
+    "время",
+    "ребёнок",
+    "любимый",
+    "совсем не",
+    "латинский алфавит",
+    "музыка",
+    "приготовление пищи",
+    "бейсбол",
+    "супруга",
+    "иероглиф",
+    "мало",
+    "немного",
+    "муж",
+    "жена",
+    "песня",
+    "неумелый",
+    "путешествие",
+    "поездка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-早く-はやく",
+   "kanji": "早く",
+   "kana": "はやく",
+   "romaji": "hayaku",
+   "meanings": [
+    "быстро",
+    "рано",
+    "картина",
+    "буква",
+    "знак",
+    "время",
+    "ребёнок",
+    "любимый",
+    "совсем не",
+    "латинский алфавит",
+    "музыка",
+    "приготовление пищи",
+    "бейсбол",
+    "супруга",
+    "иероглиф",
+    "мало",
+    "немного",
+    "муж",
+    "жена",
+    "песня",
+    "неумелый",
+    "путешествие",
+    "поездка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-奥さん-おくさん",
+   "kanji": "奥さん",
+   "kana": "おくさん",
+   "romaji": "okusan",
+   "meanings": [
+    "быстро",
+    "рано",
+    "картина",
+    "буква",
+    "знак",
+    "время",
+    "ребёнок",
+    "любимый",
+    "совсем не",
+    "латинский алфавит",
+    "музыка",
+    "приготовление пищи",
+    "бейсбол",
+    "супруга",
+    "иероглиф",
+    "мало",
+    "немного",
+    "муж",
+    "жена",
+    "песня",
+    "неумелый",
+    "путешествие",
+    "поездка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-わかります-わかります",
+   "kanji": "わかります",
+   "kana": "わかります",
+   "romaji": "wakarimasu",
+   "meanings": [
+    "понимать",
+    "иметь",
+    "быть",
+    "есть",
+    "хорошо",
+    "караоке",
+    "хирагана",
+    "концерт",
+    "подработка",
+    "потому что",
+    "танец",
+    "спорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-コンサート-こんさーと",
+   "kanji": "コンサート",
+   "kana": "こんさーと",
+   "romaji": "konsaato",
+   "meanings": [
+    "понимать",
+    "иметь",
+    "быть",
+    "есть",
+    "хорошо",
+    "караоке",
+    "хирагана",
+    "концерт",
+    "подработка",
+    "потому что",
+    "танец",
+    "спорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-やくそく-やくそく",
+   "kanji": "やくそく",
+   "kana": "やくそく",
+   "romaji": "yakusoku",
+   "meanings": [
+    "понимать",
+    "иметь",
+    "быть",
+    "есть",
+    "хорошо",
+    "караоке",
+    "хирагана",
+    "концерт",
+    "подработка",
+    "потому что",
+    "танец",
+    "спорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-おんがく-おんがく",
+   "kanji": "おんがく",
+   "kana": "おんがく",
+   "romaji": "ongaku",
+   "meanings": [
+    "понимать",
+    "иметь",
+    "быть",
+    "есть",
+    "хорошо",
+    "караоке",
+    "хирагана",
+    "концерт",
+    "подработка",
+    "потому что",
+    "танец",
+    "спорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-妻-つま",
+   "kanji": "妻",
+   "kana": "つま",
+   "romaji": "tsuma",
+   "meanings": [
+    "жена",
+    "картина",
+    "муж",
+    "любимый",
+    "латинский алфавит",
+    "время",
+    "бейсбол",
+    "супруга",
+    "дело",
+    "мало",
+    "немного",
+    "умелый",
+    "музыка",
+    "путешествие",
+    "поездка",
+    "ребёнок",
+    "кабуки",
+    "обещание",
+    "договорённость",
+    "быстро",
+    "рано"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-用事-ようじ",
+   "kanji": "用事",
+   "kana": "ようじ",
+   "romaji": "youji",
+   "meanings": [
+    "жена",
+    "картина",
+    "муж",
+    "любимый",
+    "латинский алфавит",
+    "время",
+    "бейсбол",
+    "супруга",
+    "дело",
+    "мало",
+    "немного",
+    "умелый",
+    "музыка",
+    "путешествие",
+    "поездка",
+    "ребёнок",
+    "кабуки",
+    "обещание",
+    "договорённость",
+    "быстро",
+    "рано"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-少し-すこし",
+   "kanji": "少し",
+   "kana": "すこし",
+   "romaji": "sukoshi",
+   "meanings": [
+    "буква",
+    "знак",
+    "ребёнок",
+    "латинский алфавит",
+    "картина",
+    "неумелый",
+    "приготовление пищи",
+    "муж",
+    "жена",
+    "любимый",
+    "мало",
+    "немного",
+    "нелюбимый",
+    "ненавистный",
+    "мелкие деньги",
+    "иероглиф",
+    "время",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "супруга",
+    "быстро",
+    "рано"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-字-じ",
+   "kanji": "字",
+   "kana": "じ",
+   "romaji": "ji",
+   "meanings": [
+    "буква",
+    "знак",
+    "ребёнок",
+    "латинский алфавит",
+    "картина",
+    "неумелый",
+    "приготовление пищи",
+    "муж",
+    "жена",
+    "любимый",
+    "мало",
+    "немного",
+    "нелюбимый",
+    "ненавистный",
+    "мелкие деньги",
+    "иероглиф",
+    "время",
+    "обещание",
+    "договорённость",
+    "путешествие",
+    "поездка",
+    "супруга",
+    "быстро",
+    "рано"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-野球-やきゅう",
+   "kanji": "野球",
+   "kana": "やきゅう",
+   "romaji": "yakyuu",
+   "meanings": [
+    "время",
+    "бейсбол",
+    "супруга",
+    "жена",
+    "буква",
+    "знак",
+    "нелюбимый",
+    "ненавистный",
+    "быстро",
+    "рано",
+    "иероглиф",
+    "муж",
+    "картина",
+    "неумелый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-こまかいおかね-こまかいおかね",
+   "kanji": "こまかいおかね",
+   "kana": "こまかいおかね",
+   "romaji": "komakaiokane",
+   "meanings": [
+    "много",
+    "понимать",
+    "хирагана",
+    "потому что",
+    "караоке",
+    "хорошо",
+    "иметь",
+    "быть",
+    "есть",
+    "джаз",
+    "спорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-りょうり-りょうり",
+   "kanji": "りょうり",
+   "kana": "りょうり",
+   "romaji": "ryouri",
+   "meanings": [
+    "много",
+    "понимать",
+    "хирагана",
+    "потому что",
+    "караоке",
+    "хорошо",
+    "иметь",
+    "быть",
+    "есть",
+    "джаз",
+    "спорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-たくさん-たくさん",
+   "kanji": "たくさん",
+   "kana": "たくさん",
+   "romaji": "takusan",
+   "meanings": [
+    "много",
+    "понимать",
+    "хирагана",
+    "потому что",
+    "караоке",
+    "хорошо",
+    "иметь",
+    "быть",
+    "есть",
+    "джаз",
+    "спорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-下手-へた",
+   "kanji": "下手",
+   "kana": "へた",
+   "romaji": "heta",
+   "meanings": [
+    "ребёнок",
+    "латинский алфавит",
+    "муж",
+    "супруга",
+    "неумелый",
+    "быстро",
+    "рано",
+    "жена",
+    "картина",
+    "совсем не",
+    "обещание",
+    "договорённость"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-きらい-きらい",
+   "kanji": "きらい",
+   "kana": "きらい",
+   "romaji": "kirai",
+   "meanings": [
+    "потому что",
+    "классическая музыка",
+    "понимать",
+    "примерно",
+    "около",
+    "джаз",
+    "караоке",
+    "билет",
+    "хирагана",
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "хорошо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-すこし-すこし",
+   "kanji": "すこし",
+   "kana": "すこし",
+   "romaji": "sukoshi",
+   "meanings": [
+    "потому что",
+    "классическая музыка",
+    "понимать",
+    "примерно",
+    "около",
+    "джаз",
+    "караоке",
+    "билет",
+    "хирагана",
+    "иметь",
+    "быть",
+    "есть",
+    "спорт",
+    "хорошо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-旅行-りょこう",
+   "kanji": "旅行",
+   "kana": "りょこう",
+   "romaji": "ryokou",
+   "meanings": [
+    "муж",
+    "нелюбимый",
+    "ненавистный",
+    "музыка",
+    "совсем не",
+    "любимый",
+    "картина",
+    "бейсбол",
+    "песня",
+    "кабуки",
+    "путешествие",
+    "поездка",
+    "неумелый",
+    "обещание",
+    "договорённость"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-歌舞伎-かぶき",
+   "kanji": "歌舞伎",
+   "kana": "かぶき",
+   "romaji": "kabuki",
+   "meanings": [
+    "любимый",
+    "нелюбимый",
+    "ненавистный",
+    "ребёнок",
+    "бейсбол",
+    "напиток",
+    "муж",
+    "жена",
+    "кабуки",
+    "неумелый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-アルバイト-あるばいと",
+   "kanji": "アルバイト",
+   "kana": "あるばいと",
+   "romaji": "arubaito",
+   "meanings": [
+    "классическая музыка",
+    "хорошо",
+    "караоке",
+    "подработка",
+    "концерт",
+    "спорт",
+    "хирагана",
+    "костюм",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "надевать",
+    "часто",
+    "свитер",
+    "робот",
+    "юмор",
+    "пальто"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-よく-よく",
+   "kanji": "よく",
+   "kana": "よく",
+   "romaji": "yoku",
+   "meanings": [
+    "классическая музыка",
+    "хорошо",
+    "караоке",
+    "подработка",
+    "концерт",
+    "спорт",
+    "хирагана",
+    "костюм",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "надевать",
+    "часто",
+    "свитер",
+    "робот",
+    "юмор",
+    "пальто"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-クラシック-くらしっく",
+   "kanji": "クラシック",
+   "kana": "くらしっく",
+   "romaji": "kurashikku",
+   "meanings": [
+    "классическая музыка",
+    "хорошо",
+    "караоке",
+    "подработка",
+    "концерт",
+    "спорт",
+    "хирагана",
+    "костюм",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "надевать",
+    "часто",
+    "свитер",
+    "робот",
+    "юмор",
+    "пальто"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "10"
+  },
+  {
+   "id": "jw-犬-いぬ",
+   "kanji": "犬",
+   "kana": "いぬ",
+   "romaji": "inu",
+   "meanings": [
+    "собака"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-電池-いぬ",
+   "kanji": "電池",
+   "kana": "いぬ",
+   "romaji": "inu",
+   "meanings": [
+    "собака"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-左-いぬ",
+   "kanji": "左",
+   "kana": "いぬ",
+   "romaji": "inu",
+   "meanings": [
+    "собака"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-近く-いぬ",
+   "kanji": "近く",
+   "kana": "いぬ",
+   "romaji": "inu",
+   "meanings": [
+    "собака"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-上-うえ",
+   "kanji": "上",
+   "kana": "うえ",
+   "romaji": "ue",
+   "meanings": [
+    "верх",
+    "вверх",
+    "наверху"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-犬-うえ",
+   "kanji": "犬",
+   "kana": "うえ",
+   "romaji": "ue",
+   "meanings": [
+    "верх",
+    "вверх",
+    "наверху"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-男の子-うえ",
+   "kanji": "男の子",
+   "kana": "うえ",
+   "romaji": "ue",
+   "meanings": [
+    "верх",
+    "вверх",
+    "наверху"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-下-うえ",
+   "kanji": "下",
+   "kana": "うえ",
+   "romaji": "ue",
+   "meanings": [
+    "верх",
+    "вверх",
+    "наверху"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-けん-けん",
+   "kanji": "けん",
+   "kana": "けん",
+   "romaji": "ken",
+   "meanings": [
+    "быть",
+    "находиться",
+    "различный",
+    "выключатель",
+    "панда",
+    "стол",
+    "кровать",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "дверь",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-そと-そと",
+   "kanji": "そと",
+   "kana": "そと",
+   "romaji": "soto",
+   "meanings": [
+    "быть",
+    "находиться",
+    "различный",
+    "выключатель",
+    "панда",
+    "стол",
+    "кровать",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "дверь",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-ひだり-ひだり",
+   "kanji": "ひだり",
+   "kana": "ひだり",
+   "romaji": "hidari",
+   "meanings": [
+    "здание",
+    "быть",
+    "находиться",
+    "различный",
+    "панда",
+    "выключатель",
+    "кровать",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-ビル-びる",
+   "kanji": "ビル",
+   "kana": "びる",
+   "romaji": "biru",
+   "meanings": [
+    "здание",
+    "быть",
+    "находиться",
+    "различный",
+    "панда",
+    "выключатель",
+    "кровать",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-いぬ-いぬ",
+   "kanji": "いぬ",
+   "kana": "いぬ",
+   "romaji": "inu",
+   "meanings": [
+    "здание",
+    "быть",
+    "находиться",
+    "различный",
+    "панда",
+    "выключатель",
+    "кровать",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-まど-まど",
+   "kanji": "まど",
+   "kana": "まど",
+   "romaji": "mado",
+   "meanings": [
+    "здание",
+    "быть",
+    "находиться",
+    "различный",
+    "панда",
+    "выключатель",
+    "кровать",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-なか-なか",
+   "kanji": "なか",
+   "kana": "なか",
+   "romaji": "naka",
+   "meanings": [
+    "быть",
+    "находиться",
+    "панда",
+    "выключатель",
+    "почтовый ящик",
+    "кровать",
+    "дверь",
+    "различный",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-こうえん-こうえん",
+   "kanji": "こうえん",
+   "kana": "こうえん",
+   "romaji": "kouen",
+   "meanings": [
+    "быть",
+    "находиться",
+    "панда",
+    "выключатель",
+    "почтовый ящик",
+    "кровать",
+    "дверь",
+    "различный",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-います-います",
+   "kanji": "います",
+   "kana": "います",
+   "romaji": "imasu",
+   "meanings": [
+    "быть",
+    "находиться",
+    "панда",
+    "выключатель",
+    "почтовый ящик",
+    "кровать",
+    "дверь",
+    "различный",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-男の子-たな",
+   "kanji": "男の子",
+   "kana": "たな",
+   "romaji": "tana",
+   "meanings": [
+    "полка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-前-たな",
+   "kanji": "前",
+   "kana": "たな",
+   "romaji": "tana",
+   "meanings": [
+    "полка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-間-たな",
+   "kanji": "間",
+   "kana": "たな",
+   "romaji": "tana",
+   "meanings": [
+    "полка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-棚-たな",
+   "kanji": "棚",
+   "kana": "たな",
+   "romaji": "tana",
+   "meanings": [
+    "полка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-前-まえ",
+   "kanji": "前",
+   "kana": "まえ",
+   "romaji": "mae",
+   "meanings": [
+    "впереди",
+    "перед"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-犬-まえ",
+   "kanji": "犬",
+   "kana": "まえ",
+   "romaji": "mae",
+   "meanings": [
+    "впереди",
+    "перед"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-上-まえ",
+   "kanji": "上",
+   "kana": "まえ",
+   "romaji": "mae",
+   "meanings": [
+    "впереди",
+    "перед"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-電池-まえ",
+   "kanji": "電池",
+   "kana": "まえ",
+   "romaji": "mae",
+   "meanings": [
+    "впереди",
+    "перед"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-きっさてん-きっさてん",
+   "kanji": "きっさてん",
+   "kana": "きっさてん",
+   "romaji": "kissaten",
+   "meanings": [
+    "различный",
+    "сзади",
+    "позади",
+    "панда",
+    "дверь",
+    "кровать",
+    "быть",
+    "находиться",
+    "почтовый ящик",
+    "стол",
+    "конец",
+    "я",
+    "здесь, сюда",
+    "по-всякому, разнообразно",
+    "виза",
+    "быть нужным, требоваться",
+    "здесь, там, туда",
+    "слово, язык",
+    "ты"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-いろいろ-いろいろ",
+   "kanji": "いろいろ",
+   "kana": "いろいろ",
+   "romaji": "iroiro",
+   "meanings": [
+    "различный",
+    "сзади",
+    "позади",
+    "панда",
+    "дверь",
+    "кровать",
+    "быть",
+    "находиться",
+    "почтовый ящик",
+    "стол",
+    "конец",
+    "я",
+    "здесь, сюда",
+    "по-всякому, разнообразно",
+    "виза",
+    "быть нужным, требоваться",
+    "здесь, там, туда",
+    "слово, язык",
+    "ты"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-き-き",
+   "kanji": "き",
+   "kana": "き",
+   "romaji": "ki",
+   "meanings": [
+    "различный",
+    "сзади",
+    "позади",
+    "панда",
+    "дверь",
+    "кровать",
+    "быть",
+    "находиться",
+    "почтовый ящик",
+    "стол",
+    "конец",
+    "я",
+    "здесь, сюда",
+    "по-всякому, разнообразно",
+    "виза",
+    "быть нужным, требоваться",
+    "здесь, там, туда",
+    "слово, язык",
+    "ты"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-男の子-おとこのこ",
+   "kanji": "男の子",
+   "kana": "おとこのこ",
+   "romaji": "otokonoko",
+   "meanings": [
+    "мальчик"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-右-おとこのこ",
+   "kanji": "右",
+   "kana": "おとこのこ",
+   "romaji": "otokonoko",
+   "meanings": [
+    "мальчик"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-間-おとこのこ",
+   "kanji": "間",
+   "kana": "おとこのこ",
+   "romaji": "otokonoko",
+   "meanings": [
+    "мальчик"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-屋-おとこのこ",
+   "kanji": "~屋",
+   "kana": "おとこのこ",
+   "romaji": "otokonoko",
+   "meanings": [
+    "мальчик"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-おんなのこ-おんなのこ",
+   "kanji": "おんなのこ",
+   "kana": "おんなのこ",
+   "romaji": "onnanoko",
+   "meanings": [
+    "различный",
+    "панда",
+    "выключатель",
+    "быть",
+    "находиться",
+    "кровать",
+    "круглосуточный магазин",
+    "дверь",
+    "и так далее",
+    "самый",
+    "здание",
+    "почтовый ящик",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-もの-もの",
+   "kanji": "もの",
+   "kana": "もの",
+   "romaji": "mono",
+   "meanings": [
+    "различный",
+    "панда",
+    "выключатель",
+    "быть",
+    "находиться",
+    "кровать",
+    "круглосуточный магазин",
+    "дверь",
+    "и так далее",
+    "самый",
+    "здание",
+    "почтовый ящик",
+    "сзади",
+    "позади"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-れいぞうこ-れいぞうこ",
+   "kanji": "れいぞうこ",
+   "kana": "れいぞうこ",
+   "romaji": "reizouko",
+   "meanings": [
+    "сзади",
+    "позади",
+    "различный",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "стол",
+    "кровать",
+    "дверь",
+    "быть",
+    "находиться",
+    "и так далее",
+    "панда",
+    "выключатель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-たな-たな",
+   "kanji": "たな",
+   "kana": "たな",
+   "romaji": "tana",
+   "meanings": [
+    "сзади",
+    "позади",
+    "различный",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "стол",
+    "кровать",
+    "дверь",
+    "быть",
+    "находиться",
+    "и так далее",
+    "панда",
+    "выключатель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-うしろ-うしろ",
+   "kanji": "うしろ",
+   "kana": "うしろ",
+   "romaji": "ushiro",
+   "meanings": [
+    "сзади",
+    "позади",
+    "различный",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "стол",
+    "кровать",
+    "дверь",
+    "быть",
+    "находиться",
+    "и так далее",
+    "панда",
+    "выключатель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-のりば-のりば",
+   "kanji": "のりば",
+   "kana": "のりば",
+   "romaji": "noriba",
+   "meanings": [
+    "сзади",
+    "позади",
+    "различный",
+    "круглосуточный магазин",
+    "почтовый ящик",
+    "стол",
+    "кровать",
+    "дверь",
+    "быть",
+    "находиться",
+    "и так далее",
+    "панда",
+    "выключатель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-木-はこ",
+   "kanji": "木",
+   "kana": "はこ",
+   "romaji": "hako",
+   "meanings": [
+    "коробка",
+    "ящик"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-中-はこ",
+   "kanji": "中",
+   "kana": "はこ",
+   "romaji": "hako",
+   "meanings": [
+    "коробка",
+    "ящик"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-箱-はこ",
+   "kanji": "箱",
+   "kana": "はこ",
+   "romaji": "hako",
+   "meanings": [
+    "коробка",
+    "ящик"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-象-はこ",
+   "kanji": "象",
+   "kana": "はこ",
+   "romaji": "hako",
+   "meanings": [
+    "коробка",
+    "ящик"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "11"
+  },
+  {
+   "id": "jw-弟さん-おとうとさん",
+   "kanji": "弟さん",
+   "kana": "おとうとさん",
+   "romaji": "otoutosan",
+   "meanings": [
+    "один человек",
+    "младший брат",
+    "счётный суф. для плоских предметов, лист",
+    "один",
+    "три",
+    "сколько примерно",
+    "пять",
+    "счетный суффикс для машин, механизмов и",
+    "семь",
+    "~ раз",
+    "родители",
+    "~ часов",
+    "рис с карри",
+    "мандарин",
+    "старший брат",
+    "младшая сестра",
+    "все",
+    "бутерброд",
+    "~ недель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-みかん-みかん",
+   "kanji": "みかん",
+   "kana": "みかん",
+   "romaji": "mikan",
+   "meanings": [
+    "братья и сестры",
+    "младший брат",
+    "мандарин",
+    "открытка",
+    "старшая сестра",
+    "всё, всего",
+    "яблоко",
+    "студент-иностранец",
+    "старший брат",
+    "девять",
+    "восемь",
+    "заграница",
+    "счётный суф. для плоских предметов, лист",
+    "примерно ~",
+    "только",
+    "один человек",
+    "родители",
+    "~ недель",
+    "класс",
+    "конверт",
+    "бутерброд",
+    "семь",
+    "почтовая марка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-両親-りょうしん",
+   "kanji": "両親",
+   "kana": "りょうしん",
+   "romaji": "ryoushin",
+   "meanings": [
+    "два человека",
+    "~ часов",
+    "класс",
+    "родители",
+    "семь",
+    "старший брат",
+    "младшая сестра",
+    "яблоко",
+    "~ лет",
+    "сколько примерно",
+    "студент-иностранец",
+    "девять",
+    "два",
+    "открытка",
+    "пять",
+    "~ раз",
+    "мандарин",
+    "счётный суф. для людей",
+    "три",
+    "счетный суффикс для машин, механизмов и",
+    "всё, всего",
+    "~ месяцев",
+    "требоваться",
+    "счётный суф. для плоских предметов, лист",
+    "братья и сестры",
+    "примерно ~",
+    "сколько",
+    "заграница"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-封筒-ふうとう",
+   "kanji": "封筒",
+   "kana": "ふうとう",
+   "romaji": "fuutou",
+   "meanings": [
+    "девять",
+    "сколько примерно",
+    "конверт",
+    "почтовая марка",
+    "младшая сестра",
+    "класс",
+    "открытка",
+    "счётный суф. для плоских предметов, лист",
+    "один человек",
+    "пять",
+    "~ часов",
+    "примерно ~",
+    "младший брат",
+    "только",
+    "~ раз",
+    "старшая сестра",
+    "~ недель",
+    "требоваться",
+    "яблоко"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-７つ-ななつ",
+   "kanji": "７つ",
+   "kana": "ななつ",
+   "romaji": "nanatsu",
+   "meanings": [
+    "семь",
+    "~ недель",
+    "счётный суф. для людей",
+    "все",
+    "требоваться",
+    "старший брат",
+    "бутерброд",
+    "четыре",
+    "один человек",
+    "примерно ~",
+    "счетный суффикс для машин, механизмов и",
+    "три",
+    "мандарин",
+    "младшая сестра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-５つ-いつつ",
+   "kanji": "５つ",
+   "kana": "いつつ",
+   "romaji": "itsutsu",
+   "meanings": [
+    "один",
+    "пять",
+    "студент-иностранец",
+    "только",
+    "младший брат",
+    "шесть",
+    "бутерброд",
+    "девять",
+    "младшая сестра",
+    "старшая сестра",
+    "~ месяцев",
+    "всё, всего",
+    "примерно ~",
+    "старший брат",
+    "класс",
+    "два",
+    "требоваться",
+    "два человека",
+    "счётный суф. для плоских предметов, лист",
+    "родители",
+    "семь",
+    "три"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-サンドイッチ-さんどいっち",
+   "kanji": "サンドイッチ",
+   "kana": "さんどいっち",
+   "romaji": "sandoicchi",
+   "meanings": [
+    "семь",
+    "открытка",
+    "счетный суффикс для машин, механизмов и",
+    "бутерброд",
+    "мандарин",
+    "~ часов",
+    "младшая сестра",
+    "старшая сестра",
+    "все",
+    "один человек",
+    "требоваться",
+    "~ лет",
+    "почтовая марка",
+    "~ раз",
+    "счётный суф. для людей",
+    "~ недель",
+    "конверт",
+    "шесть",
+    "младший брат",
+    "старший брат"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-６つ-むっつ",
+   "kanji": "６つ",
+   "kana": "むっつ",
+   "romaji": "muttsu",
+   "meanings": [
+    "два",
+    "шесть",
+    "требоваться",
+    "счетный суффикс для машин, механизмов и",
+    "заграница",
+    "все",
+    "счётный суф. для людей",
+    "восемь",
+    "один человек",
+    "всё, всего",
+    "мороженое",
+    "три",
+    "~ лет",
+    "только",
+    "старшая сестра",
+    "открытка",
+    "два человека"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-１つ-ひとつ",
+   "kanji": "１つ",
+   "kana": "ひとつ",
+   "romaji": "hitotsu",
+   "meanings": [
+    "один",
+    "старший брат",
+    "младший брат",
+    "счетный суффикс для машин, механизмов и",
+    "конверт",
+    "все",
+    "рис с карри",
+    "семь",
+    "шесть",
+    "младшая сестра",
+    "открытка",
+    "студент-иностранец",
+    "~ месяцев",
+    "требоваться",
+    "сколько",
+    "два человека",
+    "почтовая марка",
+    "~ недель",
+    "всё, всего",
+    "сколько примерно",
+    "четыре",
+    "восемь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-人-にん",
+   "kanji": "人",
+   "kana": "にん",
+   "romaji": "nin",
+   "meanings": [
+    "все",
+    "счётный суф. для плоских предметов, лист",
+    "счётный суф. для людей",
+    "~ раз",
+    "один",
+    "девять",
+    "старшая сестра",
+    "старший брат",
+    "сколько",
+    "десять",
+    "яблоко",
+    "заграница",
+    "мандарин",
+    "~ недель",
+    "~ лет",
+    "два человека",
+    "рис с карри",
+    "сколько примерно",
+    "один человек",
+    "только",
+    "мороженое",
+    "братья и сестры",
+    "класс",
+    "требоваться",
+    "младший брат",
+    "~ месяцев",
+    "всё, всего",
+    "пять",
+    "~ часов",
+    "бутерброд",
+    "восемь",
+    "студент-иностранец"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-お姉さん-おねえさん",
+   "kanji": "お姉さん",
+   "kana": "おねえさん",
+   "romaji": "oneesan",
+   "meanings": [
+    "младшая сестра",
+    "шесть",
+    "старшая сестра",
+    "пять",
+    "девять",
+    "мандарин",
+    "студент-иностранец",
+    "младший брат",
+    "примерно ~",
+    "класс",
+    "все",
+    "рис с карри",
+    "~ недель",
+    "счётный суф. для людей",
+    "сколько примерно",
+    "бутерброд",
+    "восемь",
+    "почтовая марка",
+    "два",
+    "~ лет",
+    "заграница",
+    "десять",
+    "мороженое",
+    "семь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-全部で-ぜんぶで",
+   "kanji": "全部で",
+   "kana": "ぜんぶで",
+   "romaji": "zenbude",
+   "meanings": [
+    "все",
+    "~ часов",
+    "рис с карри",
+    "всё, всего",
+    "младшая сестра",
+    "два",
+    "старший брат",
+    "студент-иностранец",
+    "старшая сестра",
+    "требоваться",
+    "восемь",
+    "мороженое",
+    "только",
+    "братья и сестры",
+    "три",
+    "сколько примерно",
+    "младший брат",
+    "~ недель",
+    "родители",
+    "четыре",
+    "мандарин",
+    "заграница",
+    "один человек",
+    "примерно ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-兄-あに",
+   "kanji": "兄",
+   "kana": "あに",
+   "romaji": "ani",
+   "meanings": [
+    "яблоко",
+    "старший брат",
+    "девять",
+    "заграница",
+    "рис с карри",
+    "младший брат",
+    "конверт",
+    "~ лет",
+    "один",
+    "десять",
+    "~ часов",
+    "два человека",
+    "сколько",
+    "счетный суффикс для машин, механизмов и"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-カレーライス-かれーらいす",
+   "kanji": "カレーライス",
+   "kana": "かれーらいす",
+   "romaji": "kareeraisu",
+   "meanings": [
+    "~ недель",
+    "всё, всего",
+    "рис с карри",
+    "четыре",
+    "мороженое",
+    "яблоко",
+    "примерно ~",
+    "~ месяцев",
+    "старшая сестра",
+    "три",
+    "младшая сестра",
+    "мандарин",
+    "требоваться",
+    "семь",
+    "сколько",
+    "родители",
+    "класс",
+    "старший брат",
+    "два",
+    "счётный суф. для людей",
+    "только"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-クラス-くらす",
+   "kanji": "クラス",
+   "kana": "くらす",
+   "romaji": "kurasu",
+   "meanings": [
+    "конверт",
+    "мороженое",
+    "требоваться",
+    "класс",
+    "примерно ~",
+    "рис с карри",
+    "один человек",
+    "студент-иностранец",
+    "яблоко",
+    "четыре",
+    "шесть",
+    "счётный суф. для плоских предметов, лист",
+    "младший брат",
+    "мандарин",
+    "~ лет",
+    "старший брат",
+    "счётный суф. для людей",
+    "бутерброд",
+    "родители"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-２つ-ふたつ",
+   "kanji": "２つ",
+   "kana": "ふたつ",
+   "romaji": "futatsu",
+   "meanings": [
+    "родители",
+    "рис с карри",
+    "два",
+    "шесть",
+    "только",
+    "открытка",
+    "сколько",
+    "~ месяцев",
+    "десять",
+    "старший брат",
+    "братья и сестры",
+    "девять",
+    "студент-иностранец",
+    "заграница",
+    "мороженое",
+    "примерно ~",
+    "младшая сестра",
+    "два человека",
+    "конверт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-かかります-かかります",
+   "kanji": "かかります",
+   "kana": "かかります",
+   "romaji": "kakarimasu",
+   "meanings": [
+    "старшая сестра",
+    "счетный суффикс для машин, механизмов и",
+    "рис с карри",
+    "требоваться",
+    "почтовая марка",
+    "два",
+    "примерно ~",
+    "старший брат",
+    "один человек",
+    "пять",
+    "десять",
+    "шесть",
+    "младшая сестра",
+    "класс",
+    "сколько примерно"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-どのくらい-どのくらい",
+   "kanji": "どのくらい",
+   "kana": "どのくらい",
+   "romaji": "donokurai",
+   "meanings": [
+    "~ часов",
+    "сколько примерно",
+    "старшая сестра",
+    "счётный суф. для людей",
+    "восемь",
+    "сколько",
+    "все",
+    "пять",
+    "всё, всего",
+    "~ месяцев",
+    "два человека",
+    "только",
+    "бутерброд",
+    "почтовая марка",
+    "старший брат",
+    "мороженое",
+    "младший брат",
+    "родители",
+    "студент-иностранец",
+    "~ лет",
+    "рис с карри",
+    "счетный суффикс для машин, механизмов и"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-妹さん-いもうとさん",
+   "kanji": "妹さん",
+   "kana": "いもうとさん",
+   "romaji": "imoutosan",
+   "meanings": [
+    "пять",
+    "студент-иностранец",
+    "младшая сестра",
+    "сколько",
+    "два человека",
+    "мандарин",
+    "шесть",
+    "старший брат",
+    "старшая сестра",
+    "всё, всего",
+    "два",
+    "младший брат",
+    "~ часов",
+    "три",
+    "мороженое",
+    "рис с карри"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-だけ-だけ",
+   "kanji": "だけ",
+   "kana": "だけ",
+   "romaji": "dake",
+   "meanings": [
+    "девять",
+    "бутерброд",
+    "примерно ~",
+    "только",
+    "младшая сестра",
+    "семь",
+    "требоваться",
+    "братья и сестры",
+    "младший брат",
+    "заграница",
+    "десять",
+    "сколько",
+    "сколько примерно",
+    "старший брат",
+    "почтовая марка",
+    "четыре",
+    "два человека"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-１人-ひとり",
+   "kanji": "１人",
+   "kana": "ひとり",
+   "romaji": "hitori",
+   "meanings": [
+    "требоваться",
+    "младшая сестра",
+    "мандарин",
+    "один человек",
+    "старший брат",
+    "счётный суф. для людей",
+    "младший брат",
+    "заграница",
+    "все",
+    "два",
+    "примерно ~",
+    "четыре",
+    "родители",
+    "братья и сестры",
+    "рис с карри",
+    "~ часов",
+    "десять",
+    "два человека",
+    "девять",
+    "~ недель",
+    "мороженое"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-台-だい",
+   "kanji": "台",
+   "kana": "だい",
+   "romaji": "dai",
+   "meanings": [
+    "требоваться",
+    "старшая сестра",
+    "счетный суффикс для машин, механизмов и",
+    "родители",
+    "счётный суф. для людей",
+    "бутерброд",
+    "заграница",
+    "~ недель",
+    "открытка",
+    "яблоко",
+    "старший брат",
+    "сколько",
+    "мороженое",
+    "все"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-留学生-りゅうがくせい",
+   "kanji": "留学生",
+   "kana": "りゅうがくせい",
+   "romaji": "ryuugakusei",
+   "meanings": [
+    "студент-иностранец",
+    "пять",
+    "мандарин",
+    "два",
+    "рис с карри",
+    "три",
+    "яблоко",
+    "старшая сестра",
+    "открытка",
+    "старший брат",
+    "счётный суф. для плоских предметов, лист",
+    "один",
+    "младшая сестра",
+    "счётный суф. для людей",
+    "всё, всего",
+    "~ недель",
+    "примерно ~",
+    "родители",
+    "сколько примерно",
+    "семь",
+    "бутерброд",
+    "заграница"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-外国-がいこく",
+   "kanji": "外国",
+   "kana": "がいこく",
+   "romaji": "gaikoku",
+   "meanings": [
+    "открытка",
+    "~ раз",
+    "заграница",
+    "три",
+    "яблоко",
+    "четыре",
+    "всё, всего",
+    "один человек",
+    "старший брат",
+    "~ недель",
+    "десять",
+    "братья и сестры",
+    "семь",
+    "бутерброд",
+    "мандарин",
+    "все",
+    "сколько",
+    "старшая сестра",
+    "младший брат"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-みんな-みんな",
+   "kanji": "みんな",
+   "kana": "みんな",
+   "romaji": "minna",
+   "meanings": [
+    "все",
+    "~ месяцев",
+    "четыре",
+    "рис с карри",
+    "девять",
+    "восемь",
+    "младший брат",
+    "класс",
+    "яблоко",
+    "пять",
+    "заграница",
+    "десять",
+    "шесть",
+    "мороженое",
+    "счётный суф. для людей",
+    "конверт",
+    "требоваться",
+    "старший брат",
+    "только"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-姉-あね",
+   "kanji": "姉",
+   "kana": "あね",
+   "romaji": "ane",
+   "meanings": [
+    "старшая сестра",
+    "два человека",
+    "заграница",
+    "~ раз",
+    "счётный суф. для людей",
+    "только",
+    "младший брат",
+    "счётный суф. для плоских предметов, лист",
+    "один",
+    "бутерброд",
+    "~ часов",
+    "открытка",
+    "мороженое",
+    "сколько примерно",
+    "три",
+    "девять",
+    "десять",
+    "восемь",
+    "старший брат",
+    "~ лет",
+    "студент-иностранец",
+    "яблоко",
+    "~ недель",
+    "младшая сестра",
+    "братья и сестры",
+    "один человек",
+    "пять",
+    "почтовая марка",
+    "~ месяцев"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-８つ-やっつ",
+   "kanji": "８つ",
+   "kana": "やっつ",
+   "romaji": "yattsu",
+   "meanings": [
+    "~ недель",
+    "старшая сестра",
+    "восемь",
+    "сколько",
+    "бутерброд",
+    "младшая сестра",
+    "примерно ~",
+    "младший брат",
+    "счетный суффикс для машин, механизмов и"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-３つ-みっつ",
+   "kanji": "３つ",
+   "kana": "みっつ",
+   "romaji": "mittsu",
+   "meanings": [
+    "конверт",
+    "восемь",
+    "три",
+    "младший брат",
+    "яблоко",
+    "заграница",
+    "младшая сестра",
+    "~ часов",
+    "два человека",
+    "мороженое",
+    "десять",
+    "старшая сестра",
+    "четыре",
+    "сколько примерно",
+    "рис с карри",
+    "девять",
+    "студент-иностранец"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-アイスクリーム-あいすくりーむ",
+   "kanji": "アイスクリーム",
+   "kana": "あいすくりーむ",
+   "romaji": "aisukuriimu",
+   "meanings": [
+    "мороженое",
+    "семь",
+    "счетный суффикс для машин, механизмов и",
+    "сколько примерно",
+    "все",
+    "требоваться",
+    "всё, всего",
+    "рис с карри",
+    "~ раз",
+    "старший брат",
+    "младший брат",
+    "~ часов",
+    "бутерброд",
+    "почтовая марка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-弟-おとうと",
+   "kanji": "弟",
+   "kana": "おとうと",
+   "romaji": "otouto",
+   "meanings": [
+    "семь",
+    "~ часов",
+    "младший брат",
+    "открытка",
+    "один",
+    "три",
+    "мороженое",
+    "рис с карри",
+    "всё, всего",
+    "счётный суф. для людей",
+    "старший брат",
+    "десять",
+    "шесть",
+    "~ недель",
+    "счётный суф. для плоских предметов, лист",
+    "старшая сестра",
+    "два"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-枚-まい",
+   "kanji": "枚",
+   "kana": "まい",
+   "romaji": "mai",
+   "meanings": [
+    "сколько примерно",
+    "счётный суф. для плоских предметов, лист",
+    "один",
+    "~ лет",
+    "десять",
+    "сколько",
+    "рис с карри",
+    "младший брат",
+    "два",
+    "младшая сестра",
+    "старшая сестра",
+    "класс",
+    "два человека",
+    "счетный суффикс для машин, механизмов и",
+    "~ часов",
+    "пять",
+    "~ месяцев",
+    "девять",
+    "восемь",
+    "заграница",
+    "все",
+    "шесть",
+    "открытка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-切手-きって",
+   "kanji": "切手",
+   "kana": "きって",
+   "romaji": "kitte",
+   "meanings": [
+    "конверт",
+    "примерно ~",
+    "почтовая марка",
+    "рис с карри",
+    "старший брат",
+    "девять",
+    "восемь",
+    "студент-иностранец",
+    "всё, всего",
+    "четыре",
+    "шесть",
+    "семь",
+    "бутерброд",
+    "младшая сестра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-４つ-よっつ",
+   "kanji": "４つ",
+   "kana": "よっつ",
+   "romaji": "yottsu",
+   "meanings": [
+    "~ часов",
+    "четыре",
+    "требоваться",
+    "счётный суф. для людей",
+    "сколько примерно",
+    "один",
+    "старшая сестра",
+    "конверт",
+    "счётный суф. для плоских предметов, лист",
+    "братья и сестры",
+    "старший брат",
+    "рис с карри",
+    "~ раз",
+    "счетный суффикс для машин, механизмов и",
+    "младший брат",
+    "один человек",
+    "всё, всего",
+    "два человека",
+    "родители",
+    "мороженое",
+    "примерно ~",
+    "девять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-りんご-りんご",
+   "kanji": "りんご",
+   "kana": "りんご",
+   "romaji": "ringo",
+   "meanings": [
+    "счетный суффикс для машин, механизмов и",
+    "яблоко",
+    "~ часов",
+    "шесть",
+    "~ месяцев",
+    "старший брат",
+    "пять",
+    "десять",
+    "родители",
+    "примерно ~",
+    "класс",
+    "один человек",
+    "девять",
+    "старшая сестра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-妹-いもうと",
+   "kanji": "妹",
+   "kana": "いもうと",
+   "romaji": "imouto",
+   "meanings": [
+    "родители",
+    "младшая сестра",
+    "один человек",
+    "требоваться",
+    "один",
+    "старшая сестра",
+    "яблоко",
+    "мороженое"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-お兄さん-おにいさん",
+   "kanji": "お兄さん",
+   "kana": "おにいさん",
+   "romaji": "oniisan",
+   "meanings": [
+    "старший брат",
+    "старшая сестра",
+    "счётный суф. для плоских предметов, лист",
+    "братья и сестры",
+    "три",
+    "все",
+    "~ лет",
+    "сколько",
+    "примерно ~",
+    "бутерброд",
+    "почтовая марка",
+    "требоваться",
+    "конверт",
+    "рис с карри",
+    "студент-иностранец",
+    "два",
+    "счётный суф. для людей",
+    "девять",
+    "восемь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-はがき-はがき",
+   "kanji": "はがき",
+   "kana": "はがき",
+   "romaji": "hagaki",
+   "meanings": [
+    "младшая сестра",
+    "класс",
+    "открытка",
+    "рис с карри",
+    "старший брат",
+    "~ месяцев",
+    "~ часов",
+    "конверт",
+    "яблоко",
+    "два",
+    "семь",
+    "старшая сестра",
+    "только",
+    "счётный суф. для плоских предметов, лист",
+    "почтовая марка",
+    "~ раз",
+    "шесть",
+    "два человека",
+    "пять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-９つ-ここのつ",
+   "kanji": "９つ",
+   "kana": "ここのつ",
+   "romaji": "kokonotsu",
+   "meanings": [
+    "два человека",
+    "почтовая марка",
+    "девять",
+    "всё, всего",
+    "счётный суф. для людей",
+    "старший брат",
+    "~ месяцев",
+    "конверт",
+    "семь",
+    "студент-иностранец",
+    "сколько примерно",
+    "только",
+    "заграница",
+    "два",
+    "бутерброд",
+    "пять",
+    "открытка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-兄弟-きょうだい",
+   "kanji": "兄弟",
+   "kana": "きょうだい",
+   "romaji": "kyoudai",
+   "meanings": [
+    "студент-иностранец",
+    "старшая сестра",
+    "~ часов",
+    "братья и сестры",
+    "мороженое",
+    "два человека",
+    "восемь",
+    "~ недель",
+    "младший брат",
+    "десять",
+    "младшая сестра",
+    "класс",
+    "всё, всего",
+    "счетный суффикс для машин, механизмов и",
+    "два",
+    "все",
+    "счётный суф. для людей",
+    "родители",
+    "~ раз"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-いくつ-いくつ",
+   "kanji": "いくつ",
+   "kana": "いくつ",
+   "romaji": "ikutsu",
+   "meanings": [
+    "сколько",
+    "бутерброд",
+    "открытка",
+    "младший брат",
+    "только",
+    "рис с карри",
+    "восемь",
+    "мандарин",
+    "шесть",
+    "старший брат",
+    "два человека",
+    "три",
+    "студент-иностранец",
+    "младшая сестра",
+    "пять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-２人-ふたり",
+   "kanji": "２人",
+   "kana": "ふたり",
+   "romaji": "futari",
+   "meanings": [
+    "два",
+    "старший брат",
+    "примерно ~",
+    "два человека",
+    "класс",
+    "старшая сестра",
+    "один человек",
+    "~ недель",
+    "бутерброд",
+    "десять",
+    "один",
+    "почтовая марка",
+    "сколько примерно"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-きょうだい-きょうだい",
+   "kanji": "きょうだい",
+   "kana": "きょうだい",
+   "romaji": "kyoudai",
+   "meanings": [
+    "примерно ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-いもうと-いもうと",
+   "kanji": "いもうと",
+   "kana": "いもうと",
+   "romaji": "imouto",
+   "meanings": [
+    "примерно ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-ななつ-ななつ",
+   "kanji": "ななつ",
+   "kana": "ななつ",
+   "romaji": "nanatsu",
+   "meanings": [
+    "примерно ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-いもうとさん-いもうとさん",
+   "kanji": "いもうとさん",
+   "kana": "いもうとさん",
+   "romaji": "imoutosan",
+   "meanings": [
+    "примерно ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-りょうしん-りょうしん",
+   "kanji": "りょうしん",
+   "kana": "りょうしん",
+   "romaji": "ryoushin",
+   "meanings": [
+    "примерно ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-とお-とお",
+   "kanji": "とお",
+   "kana": "とお",
+   "romaji": "too",
+   "meanings": [
+    "примерно ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-やっつ-やっつ",
+   "kanji": "やっつ",
+   "kana": "やっつ",
+   "romaji": "yattsu",
+   "meanings": [
+    "примерно ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "12"
+  },
+  {
+   "id": "jw-軽い-かるい",
+   "kanji": "軽い",
+   "kana": "かるい",
+   "romaji": "karui",
+   "meanings": [
+    "иметься в малом количестве",
+    "осень",
+    "весна",
+    "море",
+    "океан",
+    "мир",
+    "сладкий",
+    "впервые",
+    "погода",
+    "поздний",
+    "медленный",
+    "облачность",
+    "тёплый",
+    "прохладный",
+    "куриное мясо",
+    "аэропорт",
+    "простой",
+    "легкий",
+    "острый",
+    "фестиваль",
+    "праздник",
+    "быстрый",
+    "ранний",
+    "свинина",
+    "далёкий",
+    "тяжёлый",
+    "быть многочисленным",
+    "клён",
+    "красные осенние листья клёна",
+    "лето",
+    "близкий",
+    "говядина",
+    "дождь",
+    "икэбана",
+    "зима",
+    "время года",
+    "сезон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-少ない-すくない",
+   "kanji": "少ない",
+   "kana": "すくない",
+   "romaji": "sukunai",
+   "meanings": [
+    "иметься в малом количестве",
+    "осень",
+    "весна",
+    "море",
+    "океан",
+    "мир",
+    "сладкий",
+    "впервые",
+    "погода",
+    "поздний",
+    "медленный",
+    "облачность",
+    "тёплый",
+    "прохладный",
+    "куриное мясо",
+    "аэропорт",
+    "простой",
+    "легкий",
+    "острый",
+    "фестиваль",
+    "праздник",
+    "быстрый",
+    "ранний",
+    "свинина",
+    "далёкий",
+    "тяжёлый",
+    "быть многочисленным",
+    "клён",
+    "красные осенние листья клёна",
+    "лето",
+    "близкий",
+    "говядина",
+    "дождь",
+    "икэбана",
+    "зима",
+    "время года",
+    "сезон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-遅い-おそい",
+   "kanji": "遅い",
+   "kana": "おそい",
+   "romaji": "osoi",
+   "meanings": [
+    "иметься в малом количестве",
+    "осень",
+    "весна",
+    "море",
+    "океан",
+    "мир",
+    "сладкий",
+    "впервые",
+    "погода",
+    "поздний",
+    "медленный",
+    "облачность",
+    "тёплый",
+    "прохладный",
+    "куриное мясо",
+    "аэропорт",
+    "простой",
+    "легкий",
+    "острый",
+    "фестиваль",
+    "праздник",
+    "быстрый",
+    "ранний",
+    "свинина",
+    "далёкий",
+    "тяжёлый",
+    "быть многочисленным",
+    "клён",
+    "красные осенние листья клёна",
+    "лето",
+    "близкий",
+    "говядина",
+    "дождь",
+    "икэбана",
+    "зима",
+    "время года",
+    "сезон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-天気-てんき",
+   "kanji": "天気",
+   "kana": "てんき",
+   "romaji": "tenki",
+   "meanings": [
+    "иметься в малом количестве",
+    "осень",
+    "весна",
+    "море",
+    "океан",
+    "мир",
+    "сладкий",
+    "впервые",
+    "погода",
+    "поздний",
+    "медленный",
+    "облачность",
+    "тёплый",
+    "прохладный",
+    "куриное мясо",
+    "аэропорт",
+    "простой",
+    "легкий",
+    "острый",
+    "фестиваль",
+    "праздник",
+    "быстрый",
+    "ранний",
+    "свинина",
+    "далёкий",
+    "тяжёлый",
+    "быть многочисленным",
+    "клён",
+    "красные осенние листья клёна",
+    "лето",
+    "близкий",
+    "говядина",
+    "дождь",
+    "икэбана",
+    "зима",
+    "время года",
+    "сезон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-涼しい-すずしい",
+   "kanji": "涼しい",
+   "kana": "すずしい",
+   "romaji": "suzushii",
+   "meanings": [
+    "весна",
+    "море",
+    "океан",
+    "мир",
+    "погода",
+    "облачность",
+    "тёплый",
+    "сладкий",
+    "прохладный",
+    "фестиваль",
+    "праздник",
+    "говядина",
+    "клён",
+    "красные осенние листья клёна",
+    "аэропорт",
+    "острый",
+    "сукияки",
+    "дождь",
+    "далёкий",
+    "быть многочисленным",
+    "впервые",
+    "близкий",
+    "иметься в малом количестве",
+    "тяжёлый",
+    "куриное мясо",
+    "лето",
+    "время года",
+    "сезон",
+    "простой",
+    "легкий",
+    "снег"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-春-はる",
+   "kanji": "春",
+   "kana": "はる",
+   "romaji": "haru",
+   "meanings": [
+    "весна",
+    "море",
+    "океан",
+    "мир",
+    "погода",
+    "облачность",
+    "тёплый",
+    "сладкий",
+    "прохладный",
+    "фестиваль",
+    "праздник",
+    "говядина",
+    "клён",
+    "красные осенние листья клёна",
+    "аэропорт",
+    "острый",
+    "сукияки",
+    "дождь",
+    "далёкий",
+    "быть многочисленным",
+    "впервые",
+    "близкий",
+    "иметься в малом количестве",
+    "тяжёлый",
+    "куриное мясо",
+    "лето",
+    "время года",
+    "сезон",
+    "простой",
+    "легкий",
+    "снег"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-辛い-からい",
+   "kanji": "辛い",
+   "kana": "からい",
+   "romaji": "karai",
+   "meanings": [
+    "весна",
+    "море",
+    "океан",
+    "мир",
+    "погода",
+    "облачность",
+    "тёплый",
+    "сладкий",
+    "прохладный",
+    "фестиваль",
+    "праздник",
+    "говядина",
+    "клён",
+    "красные осенние листья клёна",
+    "аэропорт",
+    "острый",
+    "сукияки",
+    "дождь",
+    "далёкий",
+    "быть многочисленным",
+    "впервые",
+    "близкий",
+    "иметься в малом количестве",
+    "тяжёлый",
+    "куриное мясо",
+    "лето",
+    "время года",
+    "сезон",
+    "простой",
+    "легкий",
+    "снег"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-海-うみ",
+   "kanji": "海",
+   "kana": "うみ",
+   "romaji": "umi",
+   "meanings": [
+    "весна",
+    "море",
+    "океан",
+    "мир",
+    "погода",
+    "облачность",
+    "тёплый",
+    "сладкий",
+    "прохладный",
+    "фестиваль",
+    "праздник",
+    "говядина",
+    "клён",
+    "красные осенние листья клёна",
+    "аэропорт",
+    "острый",
+    "сукияки",
+    "дождь",
+    "далёкий",
+    "быть многочисленным",
+    "впервые",
+    "близкий",
+    "иметься в малом количестве",
+    "тяжёлый",
+    "куриное мясо",
+    "лето",
+    "время года",
+    "сезон",
+    "простой",
+    "легкий",
+    "снег"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-豚肉-ぶたにく",
+   "kanji": "豚肉",
+   "kana": "ぶたにく",
+   "romaji": "butaniku",
+   "meanings": [
+    "быстрый",
+    "ранний",
+    "тёплый",
+    "море",
+    "океан",
+    "иметься в малом количестве",
+    "куриное мясо",
+    "сладкий",
+    "время года",
+    "сезон",
+    "фестиваль",
+    "праздник",
+    "говядина",
+    "облачность",
+    "прохладный",
+    "дождь",
+    "свинина",
+    "быть многочисленным",
+    "далёкий",
+    "впервые",
+    "аэропорт",
+    "мир",
+    "острый",
+    "осень",
+    "снег",
+    "зима"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-とり肉-とりにく",
+   "kanji": "とり肉",
+   "kana": "とりにく",
+   "romaji": "toriniku",
+   "meanings": [
+    "быстрый",
+    "ранний",
+    "тёплый",
+    "море",
+    "океан",
+    "иметься в малом количестве",
+    "куриное мясо",
+    "сладкий",
+    "время года",
+    "сезон",
+    "фестиваль",
+    "праздник",
+    "говядина",
+    "облачность",
+    "прохладный",
+    "дождь",
+    "свинина",
+    "быть многочисленным",
+    "далёкий",
+    "впервые",
+    "аэропорт",
+    "мир",
+    "острый",
+    "осень",
+    "снег",
+    "зима"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-季節-きせつ",
+   "kanji": "季節",
+   "kana": "きせつ",
+   "romaji": "kisetsu",
+   "meanings": [
+    "быстрый",
+    "ранний",
+    "тёплый",
+    "море",
+    "океан",
+    "иметься в малом количестве",
+    "куриное мясо",
+    "сладкий",
+    "время года",
+    "сезон",
+    "фестиваль",
+    "праздник",
+    "говядина",
+    "облачность",
+    "прохладный",
+    "дождь",
+    "свинина",
+    "быть многочисленным",
+    "далёкий",
+    "впервые",
+    "аэропорт",
+    "мир",
+    "острый",
+    "осень",
+    "снег",
+    "зима"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-早い-はやい",
+   "kanji": "早い",
+   "kana": "はやい",
+   "romaji": "hayai",
+   "meanings": [
+    "быстрый",
+    "ранний",
+    "тёплый",
+    "море",
+    "океан",
+    "иметься в малом количестве",
+    "куриное мясо",
+    "сладкий",
+    "время года",
+    "сезон",
+    "фестиваль",
+    "праздник",
+    "говядина",
+    "облачность",
+    "прохладный",
+    "дождь",
+    "свинина",
+    "быть многочисленным",
+    "далёкий",
+    "впервые",
+    "аэропорт",
+    "мир",
+    "острый",
+    "осень",
+    "снег",
+    "зима"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-暖かい-あたたかい",
+   "kanji": "暖かい",
+   "kana": "あたたかい",
+   "romaji": "atatakai",
+   "meanings": [
+    "тёплый",
+    "сладкий",
+    "мир",
+    "иметься в малом количестве",
+    "говядина",
+    "осень",
+    "фестиваль",
+    "праздник",
+    "весна",
+    "время года",
+    "сезон",
+    "аэропорт",
+    "тяжёлый",
+    "облачность",
+    "снег",
+    "простой",
+    "легкий",
+    "дождь",
+    "море",
+    "океан",
+    "далёкий",
+    "близкий",
+    "погода",
+    "впервые",
+    "сасими",
+    "куриное мясо",
+    "быстрый",
+    "ранний",
+    "прохладный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-近い-ちかい",
+   "kanji": "近い",
+   "kana": "ちかい",
+   "romaji": "chikai",
+   "meanings": [
+    "тёплый",
+    "сладкий",
+    "мир",
+    "иметься в малом количестве",
+    "говядина",
+    "осень",
+    "фестиваль",
+    "праздник",
+    "весна",
+    "время года",
+    "сезон",
+    "аэропорт",
+    "тяжёлый",
+    "облачность",
+    "снег",
+    "простой",
+    "легкий",
+    "дождь",
+    "море",
+    "океан",
+    "далёкий",
+    "близкий",
+    "погода",
+    "впервые",
+    "сасими",
+    "куриное мясо",
+    "быстрый",
+    "ранний",
+    "прохладный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-雨-あめ",
+   "kanji": "雨",
+   "kana": "あめ",
+   "romaji": "ame",
+   "meanings": [
+    "тёплый",
+    "сладкий",
+    "мир",
+    "иметься в малом количестве",
+    "говядина",
+    "осень",
+    "фестиваль",
+    "праздник",
+    "весна",
+    "время года",
+    "сезон",
+    "аэропорт",
+    "тяжёлый",
+    "облачность",
+    "снег",
+    "простой",
+    "легкий",
+    "дождь",
+    "море",
+    "океан",
+    "далёкий",
+    "близкий",
+    "погода",
+    "впервые",
+    "сасими",
+    "куриное мясо",
+    "быстрый",
+    "ранний",
+    "прохладный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-初めて-はじめて",
+   "kanji": "初めて",
+   "kana": "はじめて",
+   "romaji": "hajimete",
+   "meanings": [
+    "осень",
+    "весна",
+    "впервые",
+    "погода",
+    "мир",
+    "говядина",
+    "фестиваль",
+    "праздник",
+    "тёплый",
+    "время года",
+    "сезон",
+    "зима",
+    "тяжёлый",
+    "облачность",
+    "сукияки",
+    "свинина",
+    "лето",
+    "острый",
+    "куриное мясо",
+    "быстрый",
+    "ранний",
+    "сасими",
+    "близкий",
+    "иметься в малом количестве",
+    "икэбана",
+    "аэропорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-牛肉-ぎゅうにく",
+   "kanji": "牛肉",
+   "kana": "ぎゅうにく",
+   "romaji": "gyuuniku",
+   "meanings": [
+    "осень",
+    "весна",
+    "впервые",
+    "погода",
+    "мир",
+    "говядина",
+    "фестиваль",
+    "праздник",
+    "тёплый",
+    "время года",
+    "сезон",
+    "зима",
+    "тяжёлый",
+    "облачность",
+    "сукияки",
+    "свинина",
+    "лето",
+    "острый",
+    "куриное мясо",
+    "быстрый",
+    "ранний",
+    "сасими",
+    "близкий",
+    "иметься в малом количестве",
+    "икэбана",
+    "аэропорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-秋-あき",
+   "kanji": "秋",
+   "kana": "あき",
+   "romaji": "aki",
+   "meanings": [
+    "осень",
+    "весна",
+    "впервые",
+    "погода",
+    "мир",
+    "говядина",
+    "фестиваль",
+    "праздник",
+    "тёплый",
+    "время года",
+    "сезон",
+    "зима",
+    "тяжёлый",
+    "облачность",
+    "сукияки",
+    "свинина",
+    "лето",
+    "острый",
+    "куриное мясо",
+    "быстрый",
+    "ранний",
+    "сасими",
+    "близкий",
+    "иметься в малом количестве",
+    "икэбана",
+    "аэропорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-紅葉-もみじ",
+   "kanji": "紅葉",
+   "kana": "もみじ",
+   "romaji": "momiji",
+   "meanings": [
+    "весна",
+    "фестиваль",
+    "праздник",
+    "тёплый",
+    "клён",
+    "красные осенние листья клёна",
+    "море",
+    "океан",
+    "впервые",
+    "иметься в малом количестве",
+    "время года",
+    "сезон",
+    "осень",
+    "сасими",
+    "куриное мясо",
+    "быть многочисленным",
+    "аэропорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-冬-ふゆ",
+   "kanji": "冬",
+   "kana": "ふゆ",
+   "romaji": "fuyu",
+   "meanings": [
+    "море",
+    "океан",
+    "поздний",
+    "медленный",
+    "говядина",
+    "зима",
+    "аэропорт",
+    "облачность",
+    "простой",
+    "легкий",
+    "близкий",
+    "весна",
+    "осень",
+    "впервые",
+    "острый",
+    "тяжёлый",
+    "куриное мясо",
+    "время года",
+    "сезон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-世界-せかい",
+   "kanji": "世界",
+   "kana": "せかい",
+   "romaji": "sekai",
+   "meanings": [
+    "мир",
+    "быстрый",
+    "ранний",
+    "впервые",
+    "иметься в малом количестве",
+    "клён",
+    "красные осенние листья клёна",
+    "снег",
+    "куриное мясо",
+    "простой",
+    "легкий",
+    "прохладный",
+    "море",
+    "океан",
+    "далёкий",
+    "облачность",
+    "икэбана",
+    "время года",
+    "сезон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-雪-ゆき",
+   "kanji": "雪",
+   "kana": "ゆき",
+   "romaji": "yuki",
+   "meanings": [
+    "мир",
+    "быстрый",
+    "ранний",
+    "впервые",
+    "иметься в малом количестве",
+    "клён",
+    "красные осенние листья клёна",
+    "снег",
+    "куриное мясо",
+    "простой",
+    "легкий",
+    "прохладный",
+    "море",
+    "океан",
+    "далёкий",
+    "облачность",
+    "икэбана",
+    "время года",
+    "сезон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-すくない-すくない",
+   "kanji": "すくない",
+   "kana": "すくない",
+   "romaji": "sukunai",
+   "meanings": [
+    "гораздо",
+    "значительно",
+    "сладкий",
+    "вечеринка",
+    "мир",
+    "время года",
+    "сезон",
+    "прохладный",
+    "говядина",
+    "фестиваль",
+    "праздник",
+    "и тот и другой",
+    "быть многочисленным",
+    "отель",
+    "погода",
+    "самый",
+    "который",
+    "впервые",
+    "иметься в малом количестве",
+    "лимон",
+    "острый",
+    "аэропорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-はる-はる",
+   "kanji": "はる",
+   "kana": "はる",
+   "romaji": "haru",
+   "meanings": [
+    "гораздо",
+    "значительно",
+    "сладкий",
+    "вечеринка",
+    "мир",
+    "время года",
+    "сезон",
+    "прохладный",
+    "говядина",
+    "фестиваль",
+    "праздник",
+    "и тот и другой",
+    "быть многочисленным",
+    "отель",
+    "погода",
+    "самый",
+    "который",
+    "впервые",
+    "иметься в малом количестве",
+    "лимон",
+    "острый",
+    "аэропорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-ずっと-ずっと",
+   "kanji": "ずっと",
+   "kana": "ずっと",
+   "romaji": "zutto",
+   "meanings": [
+    "гораздо",
+    "значительно",
+    "сладкий",
+    "вечеринка",
+    "мир",
+    "время года",
+    "сезон",
+    "прохладный",
+    "говядина",
+    "фестиваль",
+    "праздник",
+    "и тот и другой",
+    "быть многочисленным",
+    "отель",
+    "погода",
+    "самый",
+    "который",
+    "впервые",
+    "иметься в малом количестве",
+    "лимон",
+    "острый",
+    "аэропорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-あめ-あめ",
+   "kanji": "あめ",
+   "kana": "あめ",
+   "romaji": "ame",
+   "meanings": [
+    "гораздо",
+    "значительно",
+    "сладкий",
+    "вечеринка",
+    "мир",
+    "время года",
+    "сезон",
+    "прохладный",
+    "говядина",
+    "фестиваль",
+    "праздник",
+    "и тот и другой",
+    "быть многочисленным",
+    "отель",
+    "погода",
+    "самый",
+    "который",
+    "впервые",
+    "иметься в малом количестве",
+    "лимон",
+    "острый",
+    "аэропорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-おもい-おもい",
+   "kanji": "おもい",
+   "kana": "おもい",
+   "romaji": "omoi",
+   "meanings": [
+    "гораздо",
+    "значительно",
+    "вечеринка",
+    "и тот и другой",
+    "лимон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-どちらも-どちらも",
+   "kanji": "どちらも",
+   "kana": "どちらも",
+   "romaji": "dochiramo",
+   "meanings": [
+    "гораздо",
+    "значительно",
+    "вечеринка",
+    "и тот и другой",
+    "лимон"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-甘い-あまい",
+   "kanji": "甘い",
+   "kana": "あまい",
+   "romaji": "amai",
+   "meanings": [
+    "сладкий",
+    "быстрый",
+    "ранний",
+    "мир",
+    "море",
+    "океан",
+    "быть многочисленным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-なつ-なつ",
+   "kanji": "なつ",
+   "kana": "なつ",
+   "romaji": "natsu",
+   "meanings": [
+    "вечеринка",
+    "самый",
+    "тэмпура (ломтики рыбы или овощей",
+    "зажаренные в тесте)",
+    "который",
+    "гораздо",
+    "значительно"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-重い-おもい",
+   "kanji": "重い",
+   "kana": "おもい",
+   "romaji": "omoi",
+   "meanings": [
+    "впервые",
+    "тяжёлый",
+    "быстрый",
+    "ранний",
+    "море",
+    "океан",
+    "погода"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-空港-くうこう",
+   "kanji": "空港",
+   "kana": "くうこう",
+   "romaji": "kuukou",
+   "meanings": [
+    "поздний",
+    "медленный",
+    "аэропорт",
+    "облачность",
+    "снег",
+    "впервые",
+    "время года",
+    "сезон",
+    "острый",
+    "куриное мясо",
+    "близкий",
+    "икэбана",
+    "простой",
+    "легкий",
+    "иметься в малом количестве"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-とおい-とおい",
+   "kanji": "とおい",
+   "kana": "とおい",
+   "romaji": "tooi",
+   "meanings": [
+    "и тот и другой",
+    "тэмпура (ломтики рыбы или овощей",
+    "зажаренные в тесте)",
+    "гораздо",
+    "значительно",
+    "лимон",
+    "вечеринка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-うみ-うみ",
+   "kanji": "うみ",
+   "kana": "うみ",
+   "romaji": "umi",
+   "meanings": [
+    "и тот и другой",
+    "тэмпура (ломтики рыбы или овощей",
+    "зажаренные в тесте)",
+    "гораздо",
+    "значительно",
+    "лимон",
+    "вечеринка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-レモン-れもん",
+   "kanji": "レモン",
+   "kana": "れもん",
+   "romaji": "remon",
+   "meanings": [
+    "и тот и другой",
+    "тэмпура (ломтики рыбы или овощей",
+    "зажаренные в тесте)",
+    "гораздо",
+    "значительно",
+    "лимон",
+    "вечеринка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-生け花-いけばな",
+   "kanji": "生け花",
+   "kana": "いけばな",
+   "romaji": "ikebana",
+   "meanings": [
+    "говядина",
+    "аэропорт",
+    "облачность",
+    "снег",
+    "дождь",
+    "мир",
+    "море",
+    "океан",
+    "острый",
+    "тяжёлый",
+    "иметься в малом количестве",
+    "быстрый",
+    "ранний",
+    "простой",
+    "легкий",
+    "икэбана"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-夏-なつ",
+   "kanji": "夏",
+   "kana": "なつ",
+   "romaji": "natsu",
+   "meanings": [
+    "осень",
+    "куриное мясо",
+    "клён",
+    "красные осенние листья клёна",
+    "облачность",
+    "простой",
+    "легкий",
+    "далёкий",
+    "быть многочисленным",
+    "лето",
+    "говядина",
+    "фестиваль",
+    "праздник",
+    "море",
+    "океан",
+    "быстрый",
+    "ранний",
+    "икэбана"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-多い-おおい",
+   "kanji": "多い",
+   "kana": "おおい",
+   "romaji": "ooi",
+   "meanings": [
+    "осень",
+    "куриное мясо",
+    "клён",
+    "красные осенние листья клёна",
+    "облачность",
+    "простой",
+    "легкий",
+    "далёкий",
+    "быть многочисленным",
+    "лето",
+    "говядина",
+    "фестиваль",
+    "праздник",
+    "море",
+    "океан",
+    "быстрый",
+    "ранний",
+    "икэбана"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-曇り-くもり",
    "kanji": "曇り",
    "kana": "くもり",
    "romaji": "kumori",
    "meanings": [
     "облачность",
-    "небо в облаках",
-    "пасмурная погода",
-    "пасмурность",
-    "тень",
-    "помутнение",
-    "потускнение",
-    "тусклость",
-    "вуаль",
-    "уныние",
-    "подозрение",
-    "пятно"
+    "фестиваль",
+    "праздник",
+    "простой",
+    "легкий",
+    "острый",
+    "быстрый",
+    "ранний",
+    "время года",
+    "сезон",
+    "сукияки",
+    "мир",
+    "дождь",
+    "впервые",
+    "клён",
+    "красные осенние листья клёна",
+    "тёплый",
+    "аэропорт",
+    "лето",
+    "сасими",
+    "далёкий",
+    "погода",
+    "прохладный",
+    "говядина",
+    "иметься в малом количестве"
    ],
-   "en": "cloudiness, cloudy weather",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ri-kumori-9d965c0b.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
   },
   {
-   "id": "shiyouyu-6ae2080c",
-   "kanji": "醤油",
-   "kana": "しょうゆ",
-   "romaji": "shouyu",
+   "id": "jw-簡単-かんたん",
+   "kanji": "簡単",
+   "kana": "かんたん",
+   "romaji": "kantan",
    "meanings": [
-    "соевый соус",
-    "соя"
+    "облачность",
+    "фестиваль",
+    "праздник",
+    "простой",
+    "легкий",
+    "острый",
+    "быстрый",
+    "ранний",
+    "время года",
+    "сезон",
+    "сукияки",
+    "мир",
+    "дождь",
+    "впервые",
+    "клён",
+    "красные осенние листья клёна",
+    "тёплый",
+    "аэропорт",
+    "лето",
+    "сасими",
+    "далёкий",
+    "погода",
+    "прохладный",
+    "говядина",
+    "иметься в малом количестве"
    ],
-   "en": "soy sauce",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/shiyouyu-6ae2080c.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
   },
   {
-   "id": "tsu-tatsu-5c9971ff",
-   "kanji": "立つ",
-   "kana": "たつ",
-   "romaji": "tatsu",
+   "id": "jw-祭り-まつり",
+   "kanji": "祭り",
+   "kana": "まつり",
+   "romaji": "matsuri",
    "meanings": [
-    "стоять вертикально",
-    "стоять на ногах",
-    "стать",
+    "фестиваль",
+    "праздник",
+    "зима",
+    "облачность",
+    "море",
+    "океан",
+    "осень"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-遠い-とおい",
+   "kanji": "遠い",
+   "kana": "とおい",
+   "romaji": "tooi",
+   "meanings": [
+    "куриное мясо",
+    "весна",
+    "тяжёлый",
+    "далёкий",
+    "клён",
+    "красные осенние листья клёна",
+    "быть многочисленным",
+    "дождь",
+    "впервые",
+    "сасими",
+    "прохладный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-刺身-さしみ",
+   "kanji": "刺身",
+   "kana": "さしみ",
+   "romaji": "sashimi",
+   "meanings": [
+    "сладкий",
+    "время года",
+    "сезон",
+    "погода",
+    "быть многочисленным",
+    "осень",
+    "сасими",
+    "острый",
+    "аэропорт",
+    "мир",
+    "лето"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "13"
+  },
+  {
+   "id": "jw-つり-つり",
+   "kanji": "つり",
+   "kana": "つり",
+   "romaji": "tsuri",
+   "meanings": [
+    "где-то",
+    "где-нибудь",
+    "приблизительно",
+    "бассейн",
+    "узкий, тесный",
+    "хотеть , желаемый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-ごろ-ごろ",
+   "kanji": "ごろ",
+   "kana": "ごろ",
+   "romaji": "goro",
+   "meanings": [
+    "где-то",
+    "где-нибудь",
+    "приблизительно",
+    "бассейн",
+    "узкий, тесный",
+    "хотеть , желаемый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-どこか-どこか",
+   "kanji": "どこか",
+   "kana": "どこか",
+   "romaji": "dokoka",
+   "meanings": [
+    "где-то",
+    "где-нибудь",
+    "приблизительно",
+    "бассейн",
+    "узкий, тесный",
+    "хотеть , желаемый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-かわ-かわ",
+   "kanji": "かわ",
+   "kana": "かわ",
+   "romaji": "kawa",
+   "meanings": [
+    "где-то",
+    "где-нибудь",
+    "приблизительно",
+    "бассейн",
+    "узкий, тесный",
+    "хотеть , желаемый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-ひろい-ひろい",
+   "kanji": "ひろい",
+   "kana": "ひろい",
+   "romaji": "hiroi",
+   "meanings": [
+    "приблизительно",
+    "где-то",
+    "где-нибудь",
+    "бассейн"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-さんぽします-さんぽします",
+   "kanji": "さんぽします",
+   "kana": "さんぽします",
+   "romaji": "sanposhimasu",
+   "meanings": [
+    "приблизительно",
+    "где-то",
+    "где-нибудь",
+    "бассейн"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-プール-ぷーる",
+   "kanji": "プール",
+   "kana": "ぷーる",
+   "romaji": "puuru",
+   "meanings": [
+    "приблизительно",
+    "где-то",
+    "где-нибудь",
+    "бассейн"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-むかえます-むかえます",
+   "kanji": "むかえます",
+   "kana": "むかえます",
+   "romaji": "mukaemasu",
+   "meanings": [
+    "где-то",
+    "где-нибудь",
+    "приблизительно"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-しょうがつ-しょうがつ",
+   "kanji": "しょうがつ",
+   "kana": "しょうがつ",
+   "romaji": "shougatsu",
+   "meanings": [
+    "где-то",
+    "где-нибудь",
+    "приблизительно"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-けいざい-けいざい",
+   "kanji": "けいざい",
+   "kana": "けいざい",
+   "romaji": "keizai",
+   "meanings": [
+    "где-то",
+    "где-нибудь",
+    "приблизительно",
+    "программное обеспечение",
+    "компьютерная программа",
+    "каталог",
+    "извините"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-つかれます-つかれます",
+   "kanji": "つかれます",
+   "kana": "つかれます",
+   "romaji": "tsukaremasu",
+   "meanings": [
+    "где-то",
+    "где-нибудь",
+    "приблизительно",
+    "программное обеспечение",
+    "компьютерная программа",
+    "каталог",
+    "извините"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-およぎます-およぎます",
+   "kanji": "およぎます",
+   "kana": "およぎます",
+   "romaji": "oyogimasu",
+   "meanings": [
+    "бассейн",
+    "где-то",
+    "где-нибудь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-せまい-せまい",
+   "kanji": "せまい",
+   "kana": "せまい",
+   "romaji": "semai",
+   "meanings": [
+    "бассейн",
+    "где-то",
+    "где-нибудь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-びじゅつ-びじゅつ",
+   "kanji": "びじゅつ",
+   "kana": "びじゅつ",
+   "romaji": "bijutsu",
+   "meanings": [
+    "бассейн",
+    "где-то",
+    "где-нибудь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-しょくじします-しょくじします",
+   "kanji": "しょくじします",
+   "kana": "しょくじします",
+   "romaji": "shokujishimasu",
+   "meanings": [
+    "бассейн",
+    "где-то",
+    "где-нибудь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-とうろく-とうろく",
+   "kanji": "とうろく",
+   "kana": "とうろく",
+   "romaji": "touroku",
+   "meanings": [
+    "бассейн",
+    "где-то",
+    "где-нибудь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-スキー-すきー",
+   "kanji": "スキー",
+   "kana": "すきー",
+   "romaji": "sukii",
+   "meanings": [
+    "где-то",
+    "где-нибудь",
+    "приблизительно"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-あそびます-あそびます",
+   "kanji": "あそびます",
+   "kana": "あそびます",
+   "romaji": "asobimasu",
+   "meanings": [
+    "приблизительно",
+    "где-то",
+    "где-нибудь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-けっこんします-けっこんします",
+   "kanji": "けっこんします",
+   "kana": "けっこんします",
+   "romaji": "kekkonshimasu",
+   "meanings": [
+    "приблизительно",
+    "где-то",
+    "где-нибудь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-しゅうまつ-しゅうまつ",
+   "kanji": "しゅうまつ",
+   "kana": "しゅうまつ",
+   "romaji": "shuumatsu",
+   "meanings": [
+    "приблизительно"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-ほしい-ほしい",
+   "kanji": "ほしい",
+   "kana": "ほしい",
+   "romaji": "hoshii",
+   "meanings": [
+    "где-то",
+    "где-нибудь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-欲しい-ほしい",
+   "kanji": "欲しい",
+   "kana": "ほしい",
+   "romaji": "hoshii",
+   "meanings": [
+    "приблизительно",
+    "река",
+    "регистрация",
+    "хотеть , желаемый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-広い-ひろい",
+   "kanji": "広い",
+   "kana": "ひろい",
+   "romaji": "hiroi",
+   "meanings": [
+    "регистрация",
+    "что-нибудь, что-то",
+    "рыбалка",
+    "широкий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-迎えます-むかえます",
+   "kanji": "迎えます",
+   "kana": "むかえます",
+   "romaji": "mukaemasu",
+   "meanings": [
+    "встречать, принимать",
+    "плавать",
+    "где-то; где-нибудь",
+    "широкий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "14"
+  },
+  {
+   "id": "jw-手伝います-てつだいます",
+   "kanji": "手伝います",
+   "kana": "てつだいます",
+   "romaji": "tetsudaimasu",
+   "meanings": [
+    "сразу",
+    "показывать",
+    "помогать",
+    "еще немного",
+    "адрес",
+    "имя",
+    "уже",
+    "потом, позднее",
+    "ответ",
+    "карта",
+    "чтение",
+    "выходить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-砂糖-さとう",
+   "kanji": "砂糖",
+   "kana": "さとう",
+   "romaji": "satou",
+   "meanings": [
+    "сахар",
+    "звать, вызвать",
+    "входить",
+    "способ, образ действий",
+    "ответ",
+    "соль",
+    "брать, взять, получать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-持ちます-もちます",
+   "kanji": "持ちます",
+   "kana": "もちます",
+   "romaji": "mochimasu",
+   "meanings": [
     "вставать",
-    "подниматься"
+    "сахар",
+    "объяснять, сказать, сообщить",
+    "держать",
+    "использовать",
+    "входить",
+    "копировать",
+    "сразу",
+    "ответ",
+    "включать, зажигать",
+    "открывать",
+    "соль",
+    "паспорт",
+    "уже",
+    "прямо, не сворачивая",
+    "останавливать; закреплять"
    ],
-   "en": "to stand up",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/tsu-tatsu-5c9971ff.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "ru-tsukuru-5ad95ade",
-   "kanji": "作る",
-   "kana": "つくる",
-   "romaji": "tsukuru",
+   "id": "jw-入ります-いります",
+   "kanji": "入ります",
+   "kana": "いります",
+   "romaji": "irimasu",
    "meanings": [
-    "делать",
-    "изготовлять",
-    "создавать"
+    "соль",
+    "входить",
+    "кондиционер",
+    "медленно, не спеша",
+    "закрывать",
+    "копировать",
+    "держать",
+    "садиться",
+    "объяснять, сказать, сообщить",
+    "выходить",
+    "ответ",
+    "имя",
+    "электричество, электрический свет",
+    "уже"
    ],
-   "en": "to make, to create",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ru-tsukuru-5ad95ade.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "kakeru-dekakeru-c021d42d",
-   "kanji": "出かける",
-   "kana": "でかける",
-   "romaji": "dekakeru",
+   "id": "jw-使います-つかいます",
+   "kanji": "使います",
+   "kana": "つかいます",
+   "romaji": "tsukaimasu",
+   "meanings": [
+    "копировать",
+    "использовать",
+    "ответ",
+    "спешить, торопиться",
+    "чтение",
+    "имя",
+    "ждать",
+    "потом, позднее",
+    "идти",
+    "садиться",
+    "сахар",
+    "опять, снова",
+    "паспорт",
+    "звать, вызвать",
+    "гасить, выключать",
+    "показывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-まっすぐ-まっすぐ",
+   "kanji": "まっすぐ",
+   "kana": "まっすぐ",
+   "romaji": "massugu",
+   "meanings": [
+    "прямо, не сворачивая",
+    "включать, зажигать",
+    "кондиционер",
+    "выходить",
+    "помогать",
+    "потом, позднее",
+    "звать, вызвать",
+    "чтение",
+    "соль"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-教えます-おしえます",
+   "kanji": "教えます",
+   "kana": "おしえます",
+   "romaji": "oshiemasu",
+   "meanings": [
+    "ждать",
+    "объяснять, сказать, сообщить",
+    "вопрос, проблема",
+    "сахар",
+    "гасить, выключать",
+    "открывать",
+    "медленно, не спеша",
+    "помогать",
+    "садиться",
+    "опять, снова",
+    "вставать",
+    "идти",
+    "имя",
+    "показывать",
+    "кондиционер",
+    "копировать",
+    "потом, позднее",
+    "брать, взять, получать",
+    "ответ"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-つけます-つけます",
+   "kanji": "つけます",
+   "kana": "つけます",
+   "romaji": "tsukemasu",
+   "meanings": [
+    "копировать",
+    "включать, зажигать",
+    "звать, вызвать",
+    "объяснять, сказать, сообщить",
+    "медленно, не спеша",
+    "электричество, электрический свет",
+    "чтение",
+    "спешить, торопиться",
+    "соль",
+    "кондиционер",
+    "садиться",
+    "адрес",
+    "показывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-答え-こたえ",
+   "kanji": "答え",
+   "kana": "こたえ",
+   "romaji": "kotae",
+   "meanings": [
+    "способ, образ действий",
+    "электричество, электрический свет",
+    "ответ",
+    "еще немного",
+    "идти",
+    "кондиционер",
+    "садиться",
+    "звать, вызвать",
+    "гасить, выключать",
+    "показывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-パスポート-ぱすぽーと",
+   "kanji": "パスポート",
+   "kana": "ぱすぽーと",
+   "romaji": "pasupooto",
+   "meanings": [
+    "карта",
+    "паспорт",
+    "спешить, торопиться",
+    "копировать",
+    "гасить, выключать",
+    "медленно, не спеша",
+    "останавливать; закреплять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-コピーする-こぴーする",
+   "kanji": "コピーする",
+   "kana": "こぴーする",
+   "romaji": "kopiisuru",
+   "meanings": [
+    "карта",
+    "копировать",
+    "закрывать",
+    "ответ",
+    "садиться",
+    "говорить, разговаривать",
+    "опять, снова",
+    "чтение",
+    "использовать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-方-かた",
+   "kanji": "方",
+   "kana": "かた",
+   "romaji": "kata",
+   "meanings": [
+    "потом, позднее",
+    "способ, образ действий",
+    "садиться",
+    "сахар",
+    "закрывать",
+    "копировать",
+    "входить",
+    "вставать",
+    "электричество, электрический свет",
+    "говорить, разговаривать",
+    "еще немного",
+    "объяснять, сказать, сообщить",
+    "имя",
+    "господин",
+    "госпожа"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-消します-けします",
+   "kanji": "消します",
+   "kana": "けします",
+   "romaji": "keshimasu",
+   "meanings": [
+    "потом, позднее",
+    "гасить, выключать",
+    "звать, вызвать",
+    "идти",
+    "открывать",
+    "входить",
+    "сразу",
+    "медленно, не спеша",
+    "использовать",
+    "сахар",
+    "держать",
+    "опять, снова",
+    "говорить, разговаривать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-閉めます-しめます",
+   "kanji": "閉めます",
+   "kana": "しめます",
+   "romaji": "shimemasu",
+   "meanings": [
+    "способ, образ действий",
+    "входить",
+    "выходить",
+    "закрывать",
+    "использовать",
+    "прямо, не сворачивая",
+    "вставать",
+    "гасить, выключать",
+    "помогать",
+    "паспорт",
+    "звать, вызвать",
+    "карта",
+    "потом, позднее",
+    "кондиционер",
+    "показывать",
+    "медленно, не спеша",
+    "сразу"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-ゆっくり-ゆっくり",
+   "kanji": "ゆっくり",
+   "kana": "ゆっくり",
+   "romaji": "yukkuri",
+   "meanings": [
+    "показывать",
+    "копировать",
+    "медленно, не спеша",
+    "идти",
+    "закрывать",
+    "сразу",
+    "садиться",
+    "имя",
+    "опять, снова",
+    "гасить, выключать",
+    "выходить",
+    "ответ",
+    "помогать",
+    "еще немного",
+    "адрес"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-エアコン-えあこん",
+   "kanji": "エアコン",
+   "kana": "えあこん",
+   "romaji": "eakon",
+   "meanings": [
+    "кондиционер",
+    "чтение",
+    "держать",
+    "сахар",
+    "брать, взять, получать",
+    "показывать",
+    "садиться",
+    "электричество, электрический свет",
+    "паспорт",
+    "идти",
+    "потом, позднее",
+    "помогать",
+    "имя",
+    "останавливать; закреплять",
+    "открывать",
+    "копировать",
+    "закрывать",
+    "способ, образ действий",
+    "опять, снова",
+    "медленно, не спеша"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-立ちます-たちます",
+   "kanji": "立ちます",
+   "kana": "たちます",
+   "romaji": "tachimasu",
+   "meanings": [
+    "вставать",
+    "брать, взять, получать",
+    "имя",
+    "еще немного",
+    "останавливать; закреплять",
+    "копировать",
+    "использовать",
+    "включать, зажигать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-もう少し-もうすこし",
+   "kanji": "もう少し",
+   "kana": "もうすこし",
+   "romaji": "mousukoshi",
+   "meanings": [
+    "сахар",
+    "еще немного",
+    "кондиционер",
+    "чтение",
+    "копировать",
+    "останавливать; закреплять",
+    "потом, позднее",
+    "брать, взять, получать",
+    "уже",
+    "соль",
+    "входить",
+    "садиться",
+    "использовать",
+    "помогать",
+    "ждать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-名前-なまえ",
+   "kanji": "名前",
+   "kana": "なまえ",
+   "romaji": "namae",
+   "meanings": [
+    "опять, снова",
+    "еще немного",
+    "вопрос, проблема",
+    "имя",
+    "звать, вызвать",
+    "идти",
+    "держать",
+    "показывать",
+    "закрывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-住所-じゅうしょ",
+   "kanji": "住所",
+   "kana": "じゅうしょ",
+   "romaji": "juusho",
+   "meanings": [
+    "адрес",
+    "карта",
+    "использовать",
+    "открывать",
+    "гасить, выключать",
+    "входить",
+    "копировать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-また-また",
+   "kanji": "また",
+   "kana": "また",
+   "romaji": "mata",
+   "meanings": [
+    "копировать",
+    "опять, снова",
+    "помогать",
+    "сахар",
+    "включать, зажигать",
+    "уже",
+    "говорить, разговаривать",
+    "входить",
+    "использовать",
+    "имя",
+    "держать",
+    "садиться",
+    "паспорт",
+    "спешить, торопиться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-呼びます-よびます",
+   "kanji": "呼びます",
+   "kana": "よびます",
+   "romaji": "yobimasu",
+   "meanings": [
+    "адрес",
+    "входить",
+    "звать, вызвать",
+    "включать, зажигать",
+    "брать, взять, получать",
+    "прямо, не сворачивая",
+    "объяснять, сказать, сообщить",
+    "вставать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-読み方-よみかた",
+   "kanji": "読み方",
+   "kana": "よみかた",
+   "romaji": "yomikata",
+   "meanings": [
+    "чтение",
+    "адрес",
+    "говорить, разговаривать",
+    "звать, вызвать",
+    "уже",
+    "использовать",
+    "опять, снова",
+    "вставать",
+    "останавливать; закреплять",
+    "держать",
+    "имя",
+    "брать, взять, получать",
+    "закрывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-あとで-あとで",
+   "kanji": "あとで",
+   "kana": "あとで",
+   "romaji": "atode",
+   "meanings": [
+    "идти",
+    "садиться",
+    "потом, позднее",
+    "объяснять, сказать, сообщить",
+    "сахар",
+    "включать, зажигать",
+    "опять, снова",
+    "имя",
+    "показывать",
+    "открывать",
+    "способ, образ действий",
+    "сразу",
+    "говорить, разговаривать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-出ます-でます",
+   "kanji": "出ます",
+   "kana": "でます",
+   "romaji": "demasu",
+   "meanings": [
+    "вопрос, проблема",
+    "имя",
+    "помогать",
+    "выходить",
+    "способ, образ действий",
+    "уже",
+    "держать",
+    "ждать",
+    "закрывать",
+    "использовать",
+    "идти",
+    "опять, снова",
+    "садиться",
+    "звать, вызвать",
+    "открывать",
+    "адрес",
+    "выходить, появляться, окончить",
+    "представлять, подавать , отправлять, дос",
+    "пить спиртное",
+    "душ",
+    "делать пересадку",
+    "тёмный",
+    "рот",
+    "появляться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-すぐ-すぐ",
+   "kanji": "すぐ",
+   "kana": "すぐ",
+   "romaji": "sugu",
+   "meanings": [
+    "сразу",
+    "электричество, электрический свет",
+    "ждать",
+    "кондиционер",
+    "карта",
+    "использовать",
+    "адрес",
+    "останавливать; закреплять",
+    "держать",
+    "чтение",
+    "опять, снова",
+    "прямо, не сворачивая",
+    "паспорт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "15"
+  },
+  {
+   "id": "jw-待ちます-まちます",
+   "kanji": "待ちます",
+   "kana": "まちます",
+   "romaji": "machimasu",
    "meanings": [
     "выходить",
-    "отправляться"
+    "держать",
+    "ждать",
+    "использовать",
+    "кондиционер",
+    "карта",
+    "закрывать",
+    "уже",
+    "имя"
    ],
-   "en": "to go out; to depart",
-   "pos": [
-    "глагол (ру)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/kakeru-dekakeru-c021d42d.mp3"
-  },
-  {
-   "id": "tokidoki-991336fb",
-   "kanji": "時々",
-   "kana": "ときどき",
-   "romaji": "tokidoki",
-   "meanings": [
-    "иногда",
-    "время от времени"
-   ],
-   "en": "sometimes",
-   "pos": [
-    "наречие",
-    "の-прил."
-   ],
-   "audio": "/audio/n5-words/tokidoki-991336fb.mp3"
-  },
-  {
-   "id": "mi-nomimono-eaa37782",
-   "kanji": "飲み物",
-   "kana": "のみもの",
-   "romaji": "nomimono",
-   "meanings": [
-    "напиток",
-    "питьё",
-    "пойло"
-   ],
-   "en": "drink, beverage",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/mi-nomimono-eaa37782.mp3"
-  },
-  {
-   "id": "hanashi-9ec2b5a5",
-   "kanji": "話",
-   "kana": "はなし",
-   "romaji": "hanashi",
-   "meanings": [
-    "сказка",
-    "эстрадный рассказ",
-    "разговор",
-    "беседа",
-    "разговаривать"
-   ],
-   "en": "talk (chat), story",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/hanashi-9ec2b5a5.mp3"
-  },
-  {
-   "id": "bangohan-7aa015b7",
-   "kanji": "晩御飯",
-   "kana": "ばんごはん",
-   "romaji": "bangohan",
-   "meanings": [
-    "dinner"
-   ],
-   "en": "dinner, evening meal",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/bangohan-7aa015b7.mp3"
-  },
-  {
-   "id": "riyoushin-d650e3a0",
-   "kanji": "両親",
-   "kana": "りょうしん",
-   "romaji": "ryoushin",
-   "meanings": [
-    "родители"
-   ],
-   "en": "parents (lit., both parents)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/riyoushin-d650e3a0.mp3"
-  },
-  {
-   "id": "machi-6a996488",
-   "kanji": "町",
-   "kana": "まち",
-   "romaji": "machi",
-   "meanings": [
-    "город",
-    "улица",
-    "квартал",
-    "городок"
-   ],
-   "en": "town; city",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/machi-6a996488.mp3"
-  },
-  {
-   "id": "me-997aed32",
-   "kanji": "目",
-   "kana": "め",
-   "romaji": "me",
-   "meanings": [
-    "скважина",
-    "ячея",
-    "петля",
-    "промежуток между нитями",
-    "промежуток между слоями",
-    "промежуток между зубьями",
-    "клетка"
-   ],
-   "en": "eye(s)",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/me-997aed32.mp3"
-  },
-  {
-   "id": "kokonoka-d48bf953",
-   "kanji": "九日",
-   "kana": "ここのか",
-   "romaji": "kokonoka",
-   "meanings": [
-    "9 days",
-    "9th of the month"
-   ],
-   "en": "nine days; ninth day of the month",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/kokonoka-d48bf953.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "itsuka-ce680968",
-   "kanji": "五日",
-   "kana": "いつか",
-   "romaji": "itsuka",
+   "id": "jw-座ります-すわります",
+   "kanji": "座ります",
+   "kana": "すわります",
+   "romaji": "suwarimasu",
    "meanings": [
-    "5 days",
-    "5th of the month"
+    "сразу",
+    "чтение",
+    "идти",
+    "садиться",
+    "электричество, электрический свет",
+    "помогать",
+    "опять, снова",
+    "брать, взять, получать",
+    "ждать",
+    "соль",
+    "говорить, разговаривать",
+    "имя",
+    "вставать",
+    "спешить, торопиться",
+    "адрес"
    ],
-   "en": "five days; fifth day of the month",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/itsuka-ce680968.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "gohan-b22aba90",
-   "kanji": "御飯",
-   "kana": "ごはん",
-   "romaji": "gohan",
+   "id": "jw-急ぎます-いそぎます",
+   "kanji": "急ぎます",
+   "kana": "いそぎます",
+   "romaji": "isogimasu",
    "meanings": [
-    "rice",
-    "meal"
+    "останавливать; закреплять",
+    "сразу",
+    "ответ",
+    "спешить, торопиться",
+    "выходить",
+    "садиться",
+    "открывать",
+    "использовать",
+    "вопрос, проблема"
    ],
-   "en": "rice (cooked); meal",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/gohan-b22aba90.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "mika-c29fa435",
-   "kanji": "三日",
-   "kana": "みっか",
-   "romaji": "mikka",
+   "id": "jw-問題-もんだい",
+   "kanji": "問題",
+   "kana": "もんだい",
+   "romaji": "mondai",
    "meanings": [
-    "3 days",
-    "3rd day of the month"
+    "электричество, электрический свет",
+    "идти",
+    "адрес",
+    "вопрос, проблема"
    ],
-   "en": "three days, third day of the month",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/mika-c29fa435.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "yoka-824a699b",
-   "kanji": "四日",
-   "kana": "よっか",
-   "romaji": "yokka",
+   "id": "jw-見せます-みせます",
+   "kanji": "見せます",
+   "kana": "みせます",
+   "romaji": "misemasu",
    "meanings": [
-    "4 days",
-    "4th of the month"
+    "включать, зажигать",
+    "показывать",
+    "ответ",
+    "использовать",
+    "карта",
+    "сразу",
+    "закрывать",
+    "помогать",
+    "медленно, не спеша",
+    "электричество, электрический свет"
    ],
-   "en": "four days; fourth day of the month",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/yoka-824a699b.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "nanoka-4f858f6f",
-   "kanji": "七日",
-   "kana": "なのか",
-   "romaji": "nanoka",
+   "id": "jw-降ります-ふります",
+   "kanji": "降ります",
+   "kana": "ふります",
+   "romaji": "furimasu",
    "meanings": [
-    "7 days",
-    "7th of the month"
+    "идти",
+    "ждать",
+    "ответ",
+    "помогать",
+    "выходить",
+    "способ, образ действий",
+    "говорить, разговаривать",
+    "электричество, электрический свет",
+    "входить",
+    "использовать"
    ],
-   "en": "seven days; seventh day (of the month)",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/nanoka-4f858f6f.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "tooka-9a61f5ef",
-   "kanji": "十日",
-   "kana": "とおか",
-   "romaji": "tooka",
+   "id": "jw-地図-ちず",
+   "kanji": "地図",
+   "kana": "ちず",
+   "romaji": "chizu",
    "meanings": [
-    "10 days",
-    "10th of the month"
+    "ответ",
+    "карта",
+    "помогать",
+    "идти",
+    "способ, образ действий",
+    "вставать",
+    "копировать"
    ],
-   "en": "ten days; tenth day of the month",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/tooka-9a61f5ef.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "i-hayai-316b82d4",
-   "kanji": "速い",
-   "kana": "はやい",
-   "romaji": "hayai",
+   "id": "jw-取ります-とります",
+   "kanji": "取ります",
+   "kana": "とります",
+   "romaji": "torimasu",
    "meanings": [
-    "quick",
-    "fast",
-    "swift"
+    "использовать",
+    "адрес",
+    "брать, взять, получать",
+    "ответ",
+    "электричество, электрический свет",
+    "прямо, не сворачивая",
+    "копировать"
    ],
-   "en": "fast, quick",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/i-hayai-316b82d4.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "hirugohan-e5e55cb8",
-   "kanji": "昼御飯",
-   "kana": "ひるごはん",
-   "romaji": "hirugohan",
+   "id": "jw-話します-はなします",
+   "kanji": "話します",
+   "kana": "はなします",
+   "romaji": "hanashimasu",
    "meanings": [
-    "lunch"
+    "брать, взять, получать",
+    "вопрос, проблема",
+    "электричество, электрический свет",
+    "говорить, разговаривать",
+    "объяснять, сказать, сообщить",
+    "чтение",
+    "включать, зажигать",
+    "останавливать; закреплять",
+    "держать",
+    "кондиционер",
+    "медленно, не спеша",
+    "идти",
+    "ответ",
+    "показывать"
    ],
-   "en": "lunch, midday meal",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/hirugohan-e5e55cb8.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "asagohan-71378a49",
-   "kanji": "朝御飯",
-   "kana": "あさごはん",
-   "romaji": "asagohan",
+   "id": "jw-止めます-とめます",
+   "kanji": "止めます",
+   "kana": "とめます",
+   "romaji": "tomemasu",
    "meanings": [
-    "breakfast"
+    "звать, вызвать",
+    "останавливать; закреплять",
+    "использовать",
+    "ждать"
    ],
-   "en": "breakfast",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/asagohan-71378a49.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "futsuka-b0488834",
-   "kanji": "二日",
-   "kana": "ふつか",
-   "romaji": "futsuka",
+   "id": "jw-塩-しお",
+   "kanji": "塩",
+   "kana": "しお",
+   "romaji": "shio",
    "meanings": [
-    "2nd of the month",
-    "2 days"
+    "соль",
+    "карта",
+    "держать",
+    "показывать"
    ],
-   "en": "two days; second day of the month",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/futsuka-b0488834.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "youka-579ccc66",
-   "kanji": "八日",
-   "kana": "ようか",
-   "romaji": "youka",
+   "id": "jw-電気-でんき",
+   "kanji": "電気",
+   "kana": "でんき",
+   "romaji": "denki",
    "meanings": [
-    "8 days",
-    "8th of the month"
+    "чтение",
+    "электричество, электрический свет",
+    "гасить, выключать",
+    "звать, вызвать"
    ],
-   "en": "eight days; eighth day of the month",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/youka-579ccc66.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "muika-044651a5",
-   "kanji": "六日",
-   "kana": "むいか",
-   "romaji": "muika",
+   "id": "jw-開けます-あけます",
+   "kanji": "開けます",
+   "kana": "あけます",
+   "romaji": "akemasu",
    "meanings": [
-    "6 days",
-    "6th of the month"
+    "открывать",
+    "кондиционер",
+    "гасить, выключать",
+    "закрывать",
+    "сразу",
+    "потом, позднее",
+    "звать, вызвать"
    ],
-   "en": "six days; sixth day of month",
+   "en": "",
    "pos": [],
-   "audio": "/audio/n5-words/muika-044651a5.mp3"
+   "audio": "",
+   "lessonId": "15"
   },
   {
-   "id": "i-kurai-bb3531e8",
+   "id": "jw-資料-けんきゅうする",
+   "kanji": "資料",
+   "kana": "けんきゅうする",
+   "romaji": "kenkyuusuru",
+   "meanings": [
+    "изучать",
+    "исследовать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-研究する-けんきゅうする",
+   "kanji": "研究する",
+   "kana": "けんきゅうする",
+   "romaji": "kenkyuusuru",
+   "meanings": [
+    "изучать",
+    "исследовать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-住みます-けんきゅうする",
+   "kanji": "住みます",
+   "kana": "けんきゅうする",
+   "romaji": "kenkyuusuru",
+   "meanings": [
+    "изучать",
+    "исследовать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-製品-けんきゅうする",
+   "kanji": "製品",
+   "kana": "けんきゅうする",
+   "romaji": "kenkyuusuru",
+   "meanings": [
+    "изучать",
+    "исследовать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-服-おきます",
+   "kanji": "服",
+   "kana": "おきます",
+   "romaji": "okimasu",
+   "meanings": [
+    "класть",
+    "ставить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-置きます-おきます",
+   "kanji": "置きます",
+   "kana": "おきます",
+   "romaji": "okimasu",
+   "meanings": [
+    "класть",
+    "ставить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-歯医者-おきます",
+   "kanji": "歯医者",
+   "kana": "おきます",
+   "romaji": "okimasu",
+   "meanings": [
+    "класть",
+    "ставить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-経済-おきます",
+   "kanji": "経済",
+   "kana": "おきます",
+   "romaji": "okimasu",
+   "meanings": [
+    "класть",
+    "ставить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-カタログ-かたろぐ",
+   "kanji": "カタログ",
+   "kana": "かたろぐ",
+   "romaji": "katarogu",
+   "meanings": [
+    "каталог",
+    "извините"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-はいしゃ-はいしゃ",
+   "kanji": "はいしゃ",
+   "kana": "はいしゃ",
+   "romaji": "haisha",
+   "meanings": [
+    "каталог",
+    "извините"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-じこくひょう-じこくひょう",
+   "kanji": "じこくひょう",
+   "kana": "じこくひょう",
+   "romaji": "jikokuhyou",
+   "meanings": [
+    "каталог",
+    "извините"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-こうこう-こうこう",
+   "kanji": "こうこう",
+   "kana": "こうこう",
+   "romaji": "koukou",
+   "meanings": [
+    "каталог",
+    "извините"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-つくります-つくります",
+   "kanji": "つくります",
+   "kana": "つくります",
+   "romaji": "tsukurimasu",
+   "meanings": [
+    "каталог",
+    "программное обеспечение",
+    "компьютерная программа",
+    "извините"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-しやくしょ-しやくしょ",
+   "kanji": "しやくしょ",
+   "kana": "しやくしょ",
+   "romaji": "shiyakusho",
+   "meanings": [
+    "каталог",
+    "программное обеспечение",
+    "компьютерная программа",
+    "извините"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-しりょう-しりょう",
+   "kanji": "しりょう",
+   "kana": "しりょう",
+   "romaji": "shiryou",
+   "meanings": [
+    "каталог",
+    "программное обеспечение",
+    "компьютерная программа",
+    "извините"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-独身-ふく",
+   "kanji": "独身",
+   "kana": "ふく",
+   "romaji": "fuku",
+   "meanings": [
+    "одежда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-服-ふく",
+   "kanji": "服",
+   "kana": "ふく",
+   "romaji": "fuku",
+   "meanings": [
+    "одежда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-市役所-ふく",
+   "kanji": "市役所",
+   "kana": "ふく",
+   "romaji": "fuku",
+   "meanings": [
+    "одежда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-製品-ふく",
+   "kanji": "製品",
+   "kana": "ふく",
+   "romaji": "fuku",
+   "meanings": [
+    "одежда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "16"
+  },
+  {
+   "id": "jw-長い-ながい",
+   "kanji": "長い",
+   "kana": "ながい",
+   "romaji": "nagai",
+   "meanings": [
+    "длинный",
+    "посещать, осматривать",
+    "какой, который",
+    "ухо"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-おなか-おなか",
+   "kanji": "おなか",
+   "kana": "おなか",
+   "romaji": "onaka",
+   "meanings": [
+    "живот",
+    "номер",
+    "толкать, жать, теснить",
+    "делать пересадку",
+    "сервис, обслуживание",
+    "волосы",
+    "лицо",
+    "входить, поступать",
+    "длинный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-短い-みじかい",
+   "kanji": "短い",
+   "kana": "みじかい",
+   "romaji": "mijikai",
+   "meanings": [
+    "глаз, глаза",
+    "короткий",
+    "который, какой",
+    "выходить, появляться, окончить",
+    "синтоистский храм",
+    "голова",
+    "живот",
+    "представлять, подавать , отправлять, дос",
+    "входить, поступать",
+    "лицо",
+    "ехать, садиться",
+    "сервис, обслуживание",
+    "зуб, зубы",
+    "длинный",
+    "делать пересадку",
+    "тёмный",
+    "душ",
+    "спортивный бег"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-背-せ",
+   "kanji": "背",
+   "kana": "せ",
+   "romaji": "se",
+   "meanings": [
+    "нос",
+    "душ",
+    "ехать, садиться",
+    "спина",
+    "живот",
+    "звонить по телефону",
+    "молодой",
+    "обливаться, принимать",
+    "нога",
+    "каким образом"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-髪-かみ",
+   "kanji": "髪",
+   "kana": "かみ",
+   "romaji": "kami",
+   "meanings": [
+    "выходить, появляться, окончить",
+    "душ",
+    "волосы",
+    "молодой",
+    "выходить",
+    "посещать, осматривать",
+    "тело",
+    "какой, который",
+    "номер",
+    "который, какой",
+    "голова",
+    "ехать, садиться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-サービス-さーびす",
+   "kanji": "サービス",
+   "kana": "さーびす",
+   "romaji": "saabisu",
+   "meanings": [
+    "обливаться, принимать",
+    "начинать",
+    "сервис, обслуживание",
+    "светлый",
+    "короткий",
+    "зуб, зубы",
+    "лицо",
+    "душ",
+    "буддийский храм",
+    "глаз, глаза",
+    "ехать, садиться",
+    "делать пересадку",
+    "звонить по телефону"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-どうやって-どうやって",
+   "kanji": "どうやって",
+   "kana": "どうやって",
+   "romaji": "douyatte",
+   "meanings": [
+    "ехать, садиться",
+    "буддийский храм",
+    "нога",
+    "каким образом",
+    "длинный",
+    "обливаться, принимать",
+    "рот",
+    "делать пересадку",
+    "короткий",
+    "синтоистский храм",
+    "номер",
+    "посещать, осматривать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-寺-てら",
+   "kanji": "寺",
+   "kana": "てら",
+   "romaji": "tera",
+   "meanings": [
+    "буддийский храм",
+    "какой, который",
+    "толкать, жать, теснить",
+    "лицо",
+    "душ",
+    "короткий",
+    "делать пересадку",
+    "зуб, зубы",
+    "обливаться, принимать",
+    "который, какой",
+    "посещать, осматривать",
+    "тёмный",
+    "выходить, появляться, окончить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-下ろします-おろします",
+   "kanji": "下ろします",
+   "kana": "おろします",
+   "romaji": "oroshimasu",
+   "meanings": [
+    "снимать, опускать",
+    "душ",
+    "спортивный бег",
+    "толкать, жать, теснить",
+    "голова",
+    "представлять, подавать , отправлять, дос",
+    "сервис, обслуживание",
+    "какой, который",
+    "буддийский храм",
+    "выходить, появляться, окончить",
+    "звонить по телефону",
+    "живот",
+    "пить спиртное",
+    "делать пересадку"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-見学します-けんがくします",
+   "kanji": "見学します",
+   "kana": "けんがくします",
+   "romaji": "kengakushimasu",
+   "meanings": [
+    "посещать, осматривать",
+    "который, какой",
+    "нога",
+    "зуб, зубы",
+    "сервис, обслуживание",
+    "зелёный",
+    "молодой",
+    "пить спиртное",
+    "волосы",
+    "спортивный бег",
+    "делать пересадку",
+    "синтоистский храм",
+    "тело",
+    "голова",
+    "обливаться, принимать",
+    "душ",
+    "входить, поступать",
+    "глаз, глаза"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-体-からだ",
+   "kanji": "体",
+   "kana": "からだ",
+   "romaji": "karada",
+   "meanings": [
+    "тело",
+    "спортивный бег",
+    "входить, поступать",
+    "голова",
+    "ехать, садиться",
+    "посещать, осматривать",
+    "звонить по телефону",
+    "какой, который",
+    "светлый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-明るい-あかるい",
+   "kanji": "明るい",
+   "kana": "あかるい",
+   "romaji": "akarui",
+   "meanings": [
+    "какой, который",
+    "толкать, жать, теснить",
+    "светлый",
+    "зелёный",
+    "который, какой",
+    "буддийский храм",
+    "делать пересадку",
+    "синтоистский храм",
+    "каким образом",
+    "спортивный бег",
+    "ехать, садиться",
+    "ухо",
+    "душ",
+    "сервис, обслуживание",
+    "рот",
+    "короткий",
+    "нос"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-若い-わかい",
+   "kanji": "若い",
+   "kana": "わかい",
+   "romaji": "wakai",
+   "meanings": [
+    "молодой",
+    "синтоистский храм",
+    "входить, поступать",
+    "обливаться, принимать",
+    "лицо",
+    "волосы",
+    "живот",
+    "зелёный",
+    "который, какой",
+    "буддийский храм",
+    "рот",
+    "сервис, обслуживание",
+    "зуб, зубы"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-耳-みみ",
+   "kanji": "耳",
+   "kana": "みみ",
+   "romaji": "mimi",
+   "meanings": [
+    "тело",
+    "ухо",
+    "спина",
+    "лицо",
+    "тёмный",
+    "который, какой",
+    "представлять, подавать , отправлять, дос",
+    "глаз, глаза",
+    "длинный",
+    "живот",
+    "начинать",
+    "звонить по телефону",
+    "толкать, жать, теснить",
+    "сервис, обслуживание",
+    "входить, поступать",
+    "волосы",
+    "номер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-出します-だします",
+   "kanji": "出します",
+   "kana": "だします",
+   "romaji": "dashimasu",
+   "meanings": [
+    "тело",
+    "светлый",
+    "представлять, подавать , отправлять, дос",
+    "каким образом",
+    "выходить, появляться, окончить",
+    "звонить по телефону",
+    "нога",
+    "ухо",
+    "нос",
+    "волосы",
+    "какой, который"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-電話します-でんわします",
+   "kanji": "電話します",
+   "kana": "でんわします",
+   "romaji": "denwashimasu",
+   "meanings": [
+    "звонить по телефону",
+    "входить, поступать",
+    "синтоистский храм",
+    "снимать, опускать",
+    "нос",
+    "представлять, подавать , отправлять, дос",
+    "светлый",
+    "спортивный бег",
+    "какой, который",
+    "рот",
+    "спина",
+    "посещать, осматривать",
+    "зелёный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-浴びます-あびます",
+   "kanji": "浴びます",
+   "kana": "あびます",
+   "romaji": "abimasu",
+   "meanings": [
+    "буддийский храм",
+    "обливаться, принимать",
+    "волосы",
+    "голова",
+    "светлый",
+    "молодой",
+    "сервис, обслуживание"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-頭-あたま",
+   "kanji": "頭",
+   "kana": "あたま",
+   "romaji": "atama",
+   "meanings": [
+    "делать пересадку",
+    "голова",
+    "лицо",
+    "короткий",
+    "молодой",
+    "который, какой",
+    "вкладывать, вставлять, опускать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-シャワー-しゃわー",
+   "kanji": "シャワー",
+   "kana": "しゃわー",
+   "romaji": "shawaa",
+   "meanings": [
+    "делать пересадку",
+    "ехать, садиться",
+    "спина",
+    "душ",
+    "сервис, обслуживание",
+    "зуб, зубы",
+    "короткий",
+    "какой, который",
+    "живот",
+    "буддийский храм",
+    "зелёный",
+    "тёмный",
+    "вкладывать, вставлять, опускать",
+    "входить, поступать",
+    "спортивный бег",
+    "нос"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-入れます-いれます",
+   "kanji": "入れます",
+   "kana": "いれます",
+   "romaji": "iremasu",
+   "meanings": [
+    "глаз, глаза",
+    "нога",
+    "вкладывать, вставлять, опускать",
+    "снимать, опускать",
+    "ухо",
+    "тело",
+    "тёмный",
+    "обливаться, принимать",
+    "номер",
+    "звонить по телефону",
+    "который, какой",
+    "пить спиртное",
+    "короткий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-顔-かお",
+   "kanji": "顔",
+   "kana": "かお",
+   "romaji": "kao",
+   "meanings": [
+    "волосы",
+    "номер",
+    "короткий",
+    "лицо",
+    "душ",
+    "выходить, появляться, окончить",
+    "спортивный бег",
+    "буддийский храм",
+    "ухо",
+    "который, какой",
+    "тёмный",
+    "пить спиртное",
+    "каким образом"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-神社-じんじゃ",
+   "kanji": "神社",
+   "kana": "じんじゃ",
+   "romaji": "jinja",
+   "meanings": [
+    "обливаться, принимать",
+    "синтоистский храм",
+    "нос",
+    "спортивный бег",
+    "входить, поступать",
+    "начинать",
+    "лицо",
+    "нога",
+    "зелёный",
+    "волосы",
+    "выходить, появляться, окончить",
+    "делать пересадку",
+    "голова",
+    "вкладывать, вставлять, опускать",
+    "душ",
+    "светлый",
+    "короткий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-ジョギング-じょぎんぐ",
+   "kanji": "ジョギング",
+   "kana": "じょぎんぐ",
+   "romaji": "jogingu",
+   "meanings": [
+    "короткий",
+    "спортивный бег",
+    "ухо",
+    "звонить по телефону",
+    "толкать, жать, теснить",
+    "нос",
+    "выходить, появляться, окончить",
+    "длинный",
+    "ехать, садиться",
+    "входить, поступать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-どれ-どれ",
+   "kanji": "どれ",
+   "kana": "どれ",
+   "romaji": "dore",
+   "meanings": [
+    "живот",
+    "выходить",
+    "какой, который",
+    "рот",
+    "входить, поступать",
+    "выходить, появляться, окончить",
+    "буддийский храм",
+    "светлый",
+    "волосы",
+    "толкать, жать, теснить",
+    "ехать, садиться",
+    "голова",
+    "молодой",
+    "посещать, осматривать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-どの-どの",
+   "kanji": "どの",
+   "kana": "どの",
+   "romaji": "dono",
+   "meanings": [
+    "светлый",
+    "тело",
+    "который, какой",
+    "живот",
+    "спортивный бег",
+    "длинный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-降ります-おります",
+   "kanji": "降ります",
+   "kana": "おります",
+   "romaji": "orimasu",
+   "meanings": [
+    "выходить",
+    "делать пересадку",
+    "какой, который",
+    "душ",
+    "спина",
+    "звонить по телефону",
+    "зуб, зубы",
+    "посещать, осматривать",
+    "тёмный",
+    "ехать, садиться",
+    "каким образом",
+    "нога",
+    "который, какой",
+    "волосы",
+    "номер",
+    "сервис, обслуживание",
+    "молодой",
+    "буддийский храм",
+    "ухо",
+    "выходить, появляться, окончить",
+    "синтоистский храм"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-足-あし",
+   "kanji": "足",
+   "kana": "あし",
+   "romaji": "ashi",
+   "meanings": [
+    "синтоистский храм",
+    "буддийский храм",
+    "нога",
+    "входить, поступать",
+    "спина",
+    "спортивный бег",
+    "сервис, обслуживание",
+    "волосы",
+    "посещать, осматривать",
+    "зуб, зубы",
+    "рот",
+    "длинный",
+    "звонить по телефону",
+    "который, какой",
+    "живот",
+    "номер",
+    "толкать, жать, теснить",
+    "выходить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-乗り換えます-のりかえます",
+   "kanji": "乗り換えます",
+   "kana": "のりかえます",
+   "romaji": "norikaemasu",
+   "meanings": [
+    "снимать, опускать",
+    "лицо",
+    "делать пересадку",
+    "душ",
+    "выходить, появляться, окончить",
+    "ухо",
+    "сервис, обслуживание",
+    "вкладывать, вставлять, опускать",
+    "тело",
+    "выходить",
+    "голова"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-入ります-はいります",
+   "kanji": "入ります",
+   "kana": "はいります",
+   "romaji": "hairimasu",
+   "meanings": [
+    "посещать, осматривать",
+    "вкладывать, вставлять, опускать",
+    "длинный",
+    "входить, поступать",
+    "глаз, глаза",
+    "короткий",
+    "тело",
+    "делать пересадку",
+    "спортивный бег"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-緑-みどり",
+   "kanji": "緑",
+   "kana": "みどり",
+   "romaji": "midori",
+   "meanings": [
+    "снимать, опускать",
+    "душ",
+    "зелёный",
+    "посещать, осматривать",
+    "живот",
+    "длинный",
+    "короткий",
+    "начинать",
+    "представлять, подавать , отправлять, дос"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-番-ばん",
+   "kanji": "番",
+   "kana": "ばん",
+   "romaji": "ban",
+   "meanings": [
+    "пить спиртное",
+    "номер",
+    "молодой",
+    "снимать, опускать",
+    "синтоистский храм",
+    "представлять, подавать , отправлять, дос",
+    "лицо",
+    "каким образом",
+    "тёмный",
+    "душ"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-乗ります-のります",
+   "kanji": "乗ります",
+   "kana": "のります",
+   "romaji": "norimasu",
+   "meanings": [
+    "делать пересадку",
+    "лицо",
+    "ехать, садиться",
+    "представлять, подавать , отправлять, дос",
+    "спортивный бег",
+    "зуб, зубы",
+    "номер",
+    "короткий",
+    "входить, поступать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-始めます-はじめます",
+   "kanji": "始めます",
+   "kana": "はじめます",
+   "romaji": "hajimemasu",
+   "meanings": [
+    "вкладывать, вставлять, опускать",
+    "снимать, опускать",
+    "начинать",
+    "нос",
+    "лицо",
+    "синтоистский храм"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-押します-おします",
+   "kanji": "押します",
+   "kana": "おします",
+   "romaji": "oshimasu",
+   "meanings": [
+    "каким образом",
+    "посещать, осматривать",
+    "толкать, жать, теснить",
+    "звонить по телефону",
+    "тело",
+    "начинать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-暗い-くらい",
    "kanji": "暗い",
    "kana": "くらい",
    "romaji": "kurai",
    "meanings": [
+    "зелёный",
     "тёмный",
-    "мрачный",
-    "нехороший"
+    "выходить",
+    "буддийский храм"
    ],
-   "en": "dark, gloomy",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/i-kurai-bb3531e8.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
   },
   {
-   "id": "shii-yasashii-81c34c0e",
-   "kanji": "易しい",
-   "kana": "やさしい",
-   "romaji": "yasashii",
+   "id": "jw-鼻-はな",
+   "kanji": "鼻",
+   "kana": "はな",
+   "romaji": "hana",
    "meanings": [
-    "лёгкий"
+    "нос",
+    "лицо",
+    "длинный",
+    "снимать, опускать",
+    "тело",
+    "посещать, осматривать",
+    "пить спиртное"
    ],
-   "en": "easy, plain, simple",
-   "pos": [
-    "い-прил.",
-    "обычно каной"
-   ],
-   "audio": "/audio/n5-words/shii-yasashii-81c34c0e.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
   },
   {
-   "id": "isu-17210624",
-   "kanji": "椅子",
-   "kana": "いす",
-   "romaji": "isu",
+   "id": "jw-歯-は",
+   "kanji": "歯",
+   "kana": "は",
+   "romaji": "ha",
    "meanings": [
-    "стул",
-    "пост",
+    "светлый",
+    "номер",
+    "зуб, зубы",
+    "снимать, опускать",
+    "тёмный",
+    "спортивный бег",
+    "звонить по телефону",
+    "душ",
+    "длинный",
+    "представлять, подавать , отправлять, дос",
+    "лицо",
+    "короткий",
+    "молодой"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-口-くち",
+   "kanji": "口",
+   "kana": "くち",
+   "romaji": "kuchi",
+   "meanings": [
+    "молодой",
+    "какой, который",
+    "выходить",
+    "рот",
+    "представлять, подавать , отправлять, дос",
+    "ухо",
+    "посещать, осматривать",
+    "вкладывать, вставлять, опускать",
+    "душ",
+    "глаз, глаза"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-目-め",
+   "kanji": "目",
+   "kana": "め",
+   "romaji": "me",
+   "meanings": [
+    "молодой",
+    "душ",
+    "глаз, глаза",
+    "представлять, подавать , отправлять, дос",
+    "обливаться, принимать",
+    "ухо",
+    "нос",
+    "буддийский храм",
+    "зелёный",
+    "-й по счету"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "17"
+  },
+  {
+   "id": "jw-しゅっちょうします-しゅっちょうします",
+   "kanji": "しゅっちょうします",
+   "kana": "しゅっちょうします",
+   "romaji": "shucchoushimasu",
+   "meanings": [
+    "ванна",
+    "простуда",
+    "горло",
+    "до ~",
+    "немного ~",
+    "терять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-したぎ-したぎ",
+   "kanji": "したぎ",
+   "kana": "したぎ",
+   "romaji": "shitagi",
+   "meanings": [
+    "ванна",
+    "простуда",
+    "горло",
+    "до ~",
+    "немного ~",
+    "терять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-おふろ-おふろ",
+   "kanji": "おふろ",
+   "kana": "おふろ",
+   "romaji": "ofuro",
+   "meanings": [
+    "ванна",
+    "простуда",
+    "горло",
+    "до ~",
+    "немного ~",
+    "терять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-ぬぎます-ぬぎます",
+   "kanji": "ぬぎます",
+   "kana": "ぬぎます",
+   "romaji": "nugimasu",
+   "meanings": [
+    "ванна",
+    "простуда",
+    "горло",
+    "до ~",
+    "немного ~",
+    "терять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-かぜ-かぜ",
+   "kanji": "かぜ",
+   "kana": "かぜ",
+   "romaji": "kaze",
+   "meanings": [
+    "простуда",
+    "терять",
+    "горло",
+    "до ~",
+    "немного ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-けんこうほけんしょう-けんこうほけんしょう",
+   "kanji": "けんこうほけんしょう",
+   "kana": "けんこうほけんしょう",
+   "romaji": "kenkouhokenshou",
+   "meanings": [
+    "простуда",
+    "терять",
+    "горло",
+    "до ~",
+    "немного ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-もっていきます-もっていきます",
+   "kanji": "もっていきます",
+   "kana": "もっていきます",
+   "romaji": "motteikimasu",
+   "meanings": [
+    "простуда",
+    "терять",
+    "горло",
+    "до ~",
+    "немного ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-なくします-なくします",
+   "kanji": "なくします",
+   "kana": "なくします",
+   "romaji": "nakushimasu",
+   "meanings": [
+    "простуда",
+    "терять",
+    "горло",
+    "до ~",
+    "немного ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-ですから-ですから",
+   "kanji": "ですから",
+   "kana": "ですから",
+   "romaji": "desukara",
+   "meanings": [
+    "простуда",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-びょうき-びょうき",
+   "kanji": "びょうき",
+   "kana": "びょうき",
+   "romaji": "byouki",
+   "meanings": [
+    "простуда",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-もってきます-もってきます",
+   "kanji": "もってきます",
+   "kana": "もってきます",
+   "romaji": "mottekimasu",
+   "meanings": [
+    "простуда",
+    "горло",
+    "немного ~",
+    "до ~",
+    "терять",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-のど-のど",
+   "kanji": "のど",
+   "kana": "のど",
+   "romaji": "nodo",
+   "meanings": [
+    "простуда",
+    "горло",
+    "немного ~",
+    "до ~",
+    "терять",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-しんぱいします-しんぱいします",
+   "kanji": "しんぱいします",
+   "kana": "しんぱいします",
+   "romaji": "shinpaishimasu",
+   "meanings": [
+    "простуда",
+    "горло",
+    "немного ~",
+    "до ~",
+    "терять",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-はらいます-はらいます",
+   "kanji": "はらいます",
+   "kana": "はらいます",
+   "romaji": "haraimasu",
+   "meanings": [
+    "простуда",
+    "ванна"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-でかけます-でかけます",
+   "kanji": "でかけます",
+   "kana": "でかけます",
+   "romaji": "dekakemasu",
+   "meanings": [
+    "простуда",
+    "ванна"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-わすれます-わすれます",
+   "kanji": "わすれます",
+   "kana": "わすれます",
+   "romaji": "wasuremasu",
+   "meanings": [
+    "терять",
+    "до ~",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-あぶない-あぶない",
+   "kanji": "あぶない",
+   "kana": "あぶない",
+   "romaji": "abunai",
+   "meanings": [
+    "простуда",
+    "ванна"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-うわぎ-うわぎ",
+   "kanji": "うわぎ",
+   "kana": "うわぎ",
+   "romaji": "uwagi",
+   "meanings": [
+    "горло"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-きんえん-きんえん",
+   "kanji": "きんえん",
+   "kana": "きんえん",
+   "romaji": "kinen",
+   "meanings": [
+    "немного ~",
+    "до ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-おふろにはいります-おふろにはいります",
+   "kanji": "おふろにはいります",
+   "kana": "おふろにはいります",
+   "romaji": "ofuronihairimasu",
+   "meanings": [
+    "немного ~",
+    "до ~"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-だいじょうぶ-だいじょうぶ",
+   "kanji": "だいじょうぶ",
+   "kana": "だいじょうぶ",
+   "romaji": "daijoubu",
+   "meanings": [
+    "простуда",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-くすり-くすり",
+   "kanji": "くすり",
+   "kana": "くすり",
+   "romaji": "kusuri",
+   "meanings": [
+    "простуда",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-くすりをのみます-くすりをのみます",
+   "kanji": "くすりをのみます",
+   "kana": "くすりをのみます",
+   "romaji": "kusuriwonomimasu",
+   "meanings": [
+    "простуда",
+    "ванна"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-おぼえます-おぼえます",
+   "kanji": "おぼえます",
+   "kana": "おぼえます",
+   "romaji": "oboemasu",
+   "meanings": [
+    "немного ~",
+    "простуда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-ざんぎょうします-ざんぎょうします",
+   "kanji": "ざんぎょうします",
+   "kana": "ざんぎょうします",
+   "romaji": "zangyoushimasu",
+   "meanings": [
+    "горло",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-かえします-かえします",
+   "kanji": "かえします",
+   "kana": "かえします",
+   "romaji": "kaeshimasu",
+   "meanings": [
+    "простуда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-ねつ-ねつ",
+   "kanji": "ねつ",
+   "kana": "ねつ",
+   "romaji": "netsu",
+   "meanings": [
+    "простуда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-たいせつ-たいせつ",
+   "kanji": "たいせつ",
+   "kana": "たいせつ",
+   "romaji": "taisetsu",
+   "meanings": [
+    "терять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-大丈夫-だいじょうぶ",
+   "kanji": "大丈夫",
+   "kana": "だいじょうぶ",
+   "romaji": "daijoubu",
+   "meanings": [
+    "поэтому",
+    "забывать",
+    "врач",
+    "всё в порядке, ничего"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-脱ぎます-ぬぎます",
+   "kanji": "脱ぎます",
+   "kana": "ぬぎます",
+   "romaji": "nugimasu",
+   "meanings": [
+    "беспокоиться, волноваться",
+    "снимать",
+    "ванна",
+    "быть в командировке"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-持って来ます-もってきます",
+   "kanji": "持って来ます",
+   "kana": "もってきます",
+   "romaji": "mottekimasu",
+   "meanings": [
+    "важный, серьёзный, ценный",
+    "приносить",
+    "горло",
+    "возвращать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-病気-びょうき",
+   "kanji": "病気",
+   "kana": "びょうき",
+   "romaji": "byouki",
+   "meanings": [
+    "терять",
+    "горло",
+    "принимать ванну",
+    "болезнь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "18"
+  },
+  {
+   "id": "jw-部長-ぶちょう",
+   "kanji": "部長",
+   "kana": "ぶちょう",
+   "romaji": "buchou",
+   "meanings": [
+    "начальник департамента",
+    "хобби",
+    "дневник",
+    "президент компании",
+    "менять",
+    "обменивать",
+    "быть в состоянии",
+    "мочь",
+    "уметь",
+    "международный",
+    "молитва",
+    "метр",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "петь",
+    "играть",
+    "начальник отдела",
+    "животное",
+    "заказывать",
+    "бронировать",
+    "пианино",
+    "рояль",
+    "наличные деньги"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-予約します-よやくします",
+   "kanji": "予約します",
+   "kana": "よやくします",
+   "romaji": "yoyakushimasu",
+   "meanings": [
+    "начальник департамента",
+    "хобби",
+    "дневник",
+    "президент компании",
+    "менять",
+    "обменивать",
+    "быть в состоянии",
+    "мочь",
+    "уметь",
+    "международный",
+    "молитва",
+    "метр",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "петь",
+    "играть",
+    "начальник отдела",
+    "животное",
+    "заказывать",
+    "бронировать",
+    "пианино",
+    "рояль",
+    "наличные деньги"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-日記-にっき",
+   "kanji": "日記",
+   "kana": "にっき",
+   "romaji": "nikki",
+   "meanings": [
+    "начальник департамента",
+    "хобби",
+    "дневник",
+    "президент компании",
+    "менять",
+    "обменивать",
+    "быть в состоянии",
+    "мочь",
+    "уметь",
+    "международный",
+    "молитва",
+    "метр",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "петь",
+    "играть",
+    "начальник отдела",
+    "животное",
+    "заказывать",
+    "бронировать",
+    "пианино",
+    "рояль",
+    "наличные деньги"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-できます-できます",
+   "kanji": "できます",
+   "kana": "できます",
+   "romaji": "dekimasu",
+   "meanings": [
+    "начальник департамента",
+    "хобби",
+    "дневник",
+    "президент компании",
+    "менять",
+    "обменивать",
+    "быть в состоянии",
+    "мочь",
+    "уметь",
+    "международный",
+    "молитва",
+    "метр",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "петь",
+    "играть",
+    "начальник отдела",
+    "животное",
+    "заказывать",
+    "бронировать",
+    "пианино",
+    "рояль",
+    "наличные деньги"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-ひきます-ひきます",
+   "kanji": "ひきます",
+   "kana": "ひきます",
+   "romaji": "hikimasu",
+   "meanings": [
+    "Интернет",
+    "метр",
+    "быть в состоянии",
+    "мочь",
+    "уметь",
+    "пианино",
+    "рояль",
+    "размер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-うま-うま",
+   "kanji": "うま",
+   "kana": "うま",
+   "romaji": "uma",
+   "meanings": [
+    "Интернет",
+    "метр",
+    "быть в состоянии",
+    "мочь",
+    "уметь",
+    "пианино",
+    "рояль",
+    "размер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-しゃちょう-しゃちょう",
+   "kanji": "しゃちょう",
+   "kana": "しゃちょう",
+   "romaji": "shachou",
+   "meanings": [
+    "Интернет",
+    "метр",
+    "быть в состоянии",
+    "мочь",
+    "уметь",
+    "пианино",
+    "рояль",
+    "размер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-インターネット-いんたーねっと",
+   "kanji": "インターネット",
+   "kana": "いんたーねっと",
+   "romaji": "intaanetto",
+   "meanings": [
+    "Интернет",
+    "метр",
+    "быть в состоянии",
+    "мочь",
+    "уметь",
+    "пианино",
+    "рояль",
+    "размер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-よやくします-よやくします",
+   "kanji": "よやくします",
+   "kana": "よやくします",
+   "romaji": "yoyakushimasu",
+   "meanings": [
+    "пианино",
+    "рояль",
+    "метр"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-しゅみ-しゅみ",
+   "kanji": "しゅみ",
+   "kana": "しゅみ",
+   "romaji": "shumi",
+   "meanings": [
+    "пианино",
+    "рояль",
+    "метр"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-ピアノ-ぴあの",
+   "kanji": "ピアノ",
+   "kana": "ぴあの",
+   "romaji": "piano",
+   "meanings": [
+    "пианино",
+    "рояль",
+    "метр"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-うんてんします-うんてんします",
+   "kanji": "うんてんします",
+   "kana": "うんてんします",
+   "romaji": "untenshimasu",
+   "meanings": [
+    "пианино",
+    "рояль",
+    "метр"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-捨てます-すてます",
+   "kanji": "捨てます",
+   "kana": "すてます",
+   "romaji": "sutemasu",
+   "meanings": [
+    "выбрасывать",
+    "хобби",
+    "президент компании",
+    "водить машину",
+    "петь",
+    "дневник",
+    "менять",
+    "обменивать",
+    "международный",
+    "молитва",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "начальник отдела",
+    "играть",
+    "начальник департамента",
+    "наличные деньги",
+    "животное",
+    "заказывать",
+    "бронировать",
+    "мыть",
+    "стирать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-洗います-あらいます",
+   "kanji": "洗います",
+   "kana": "あらいます",
+   "romaji": "araimasu",
+   "meanings": [
+    "выбрасывать",
+    "хобби",
+    "президент компании",
+    "водить машину",
+    "петь",
+    "дневник",
+    "менять",
+    "обменивать",
+    "международный",
+    "молитва",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "начальник отдела",
+    "играть",
+    "начальник департамента",
+    "наличные деньги",
+    "животное",
+    "заказывать",
+    "бронировать",
+    "мыть",
+    "стирать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-国際-こくさい",
+   "kanji": "国際",
+   "kana": "こくさい",
+   "romaji": "kokusai",
+   "meanings": [
+    "выбрасывать",
+    "хобби",
+    "президент компании",
+    "водить машину",
+    "петь",
+    "дневник",
+    "менять",
+    "обменивать",
+    "международный",
+    "молитва",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "начальник отдела",
+    "играть",
+    "начальник департамента",
+    "наличные деньги",
+    "животное",
+    "заказывать",
+    "бронировать",
+    "мыть",
+    "стирать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-馬-うま",
+   "kanji": "馬",
+   "kana": "うま",
+   "romaji": "uma",
+   "meanings": [
+    "выбрасывать",
+    "хобби",
+    "президент компании",
+    "водить машину",
+    "петь",
+    "дневник",
+    "менять",
+    "обменивать",
+    "международный",
+    "молитва",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "начальник отдела",
+    "играть",
+    "начальник департамента",
+    "наличные деньги",
+    "животное",
+    "заказывать",
+    "бронировать",
+    "мыть",
+    "стирать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-課長-かちょう",
+   "kanji": "課長",
+   "kana": "かちょう",
+   "romaji": "kachou",
+   "meanings": [
+    "хобби",
+    "дневник",
+    "президент компании",
+    "водить машину",
+    "выбрасывать",
+    "начальник отдела",
+    "петь",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "начальник департамента",
+    "играть",
+    "животное",
+    "молитва",
+    "менять",
+    "обменивать",
+    "наличные деньги",
+    "мыть",
+    "стирать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-趣味-しゅみ",
+   "kanji": "趣味",
+   "kana": "しゅみ",
+   "romaji": "shumi",
+   "meanings": [
+    "хобби",
+    "дневник",
+    "президент компании",
+    "водить машину",
+    "выбрасывать",
+    "начальник отдела",
+    "петь",
+    "лошадь",
+    "собирать",
+    "коллекционировать",
+    "начальник департамента",
+    "играть",
+    "животное",
+    "молитва",
+    "менять",
+    "обменивать",
+    "наличные деньги",
+    "мыть",
+    "стирать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-動物-どうぶつ",
+   "kanji": "動物",
+   "kana": "どうぶつ",
+   "romaji": "doubutsu",
+   "meanings": [
+    "дневник",
+    "водить машину",
+    "петь",
+    "выбрасывать",
+    "собирать",
+    "коллекционировать",
+    "животное",
+    "менять",
+    "обменивать",
+    "заказывать",
+    "бронировать",
+    "играть",
+    "мыть",
+    "стирать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-社長-しゃちょう",
+   "kanji": "社長",
+   "kana": "しゃちょう",
+   "romaji": "shachou",
+   "meanings": [
+    "президент компании",
+    "международный",
+    "лошадь",
+    "водить машину",
+    "менять",
+    "обменивать",
+    "начальник отдела",
+    "выбрасывать",
+    "животное",
+    "хобби"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-運転します-うんてんします",
+   "kanji": "運転します",
+   "kana": "うんてんします",
+   "romaji": "untenshimasu",
+   "meanings": [
+    "водить машину",
+    "петь",
+    "наличные деньги",
+    "начальник департамента",
+    "заказывать",
+    "бронировать",
+    "молитва",
+    "менять",
+    "обменивать",
+    "лошадь",
+    "животное"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-歌います-うたいます",
+   "kanji": "歌います",
+   "kana": "うたいます",
+   "romaji": "utaimasu",
+   "meanings": [
+    "петь",
+    "менять",
+    "обменивать",
+    "выбрасывать",
+    "президент компании",
+    "молитва",
+    "собирать",
+    "коллекционировать",
+    "играть",
+    "дневник",
+    "водить машину",
+    "начальник отдела",
+    "заказывать",
+    "бронировать",
+    "международный",
+    "хобби"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "19"
+  },
+  {
+   "id": "jw-ダイエット-だいえっと",
+   "kanji": "ダイエット",
+   "kana": "だいえっと",
+   "romaji": "daietto",
+   "meanings": [
+    "Спасибо за заботу.",
+    "скоро",
+    "диета",
+    "но",
+    "постепенно",
+    "гольф"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-そうじします-そうじします",
+   "kanji": "そうじします",
+   "kana": "そうじします",
+   "romaji": "soujishimasu",
+   "meanings": [
+    "Спасибо за заботу.",
+    "скоро",
+    "диета",
+    "но",
+    "постепенно",
+    "гольф"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-おかげさまで-おかげさまで",
+   "kanji": "おかげさまで",
+   "kana": "おかげさまで",
+   "romaji": "okagesamade",
+   "meanings": [
+    "Спасибо за заботу.",
+    "скоро",
+    "диета",
+    "но",
+    "постепенно",
+    "гольф"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-もうすぐ-もうすぐ",
+   "kanji": "もうすぐ",
+   "kana": "もうすぐ",
+   "romaji": "mousugu",
+   "meanings": [
+    "Спасибо за заботу.",
+    "скоро",
+    "диета",
+    "но",
+    "постепенно",
+    "гольф"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-よわい-よわい",
+   "kanji": "よわい",
+   "kana": "よわい",
+   "romaji": "yowai",
+   "meanings": [
+    "скоро",
+    "постепенно",
+    "но",
+    "гольф",
+    "диета",
+    "Спасибо за заботу."
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-ひ-ひ",
+   "kanji": "ひ",
+   "kana": "ひ",
+   "romaji": "hi",
+   "meanings": [
+    "скоро",
+    "постепенно",
+    "но",
+    "гольф",
+    "диета",
+    "Спасибо за заботу."
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-でも-でも",
+   "kanji": "でも",
+   "kana": "でも",
+   "romaji": "demo",
+   "meanings": [
+    "скоро",
+    "постепенно",
+    "но",
+    "гольф",
+    "диета",
+    "Спасибо за заботу."
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-つよい-つよい",
+   "kanji": "つよい",
+   "kana": "つよい",
+   "romaji": "tsuyoi",
+   "meanings": [
+    "постепенно",
+    "состояние здоровья",
+    "самочувствие",
+    "но",
+    "скоро",
+    "гольф",
+    "диета",
+    "день",
+    "дата",
+    "останавливаться на ночь",
+    "ночевать",
+    "сонный",
+    "сильный",
+    "становиться",
+    "наступать",
+    "чайная церемония",
+    "Спасибо за заботу.",
+    "ни разу",
+    "никогда",
+    "подниматься",
+    "взбираться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-だんだん-だんだん",
+   "kanji": "だんだん",
+   "kana": "だんだん",
+   "romaji": "dandan",
+   "meanings": [
+    "постепенно",
+    "состояние здоровья",
+    "самочувствие",
+    "но",
+    "скоро",
+    "гольф",
+    "диета",
+    "день",
+    "дата",
+    "останавливаться на ночь",
+    "ночевать",
+    "сонный",
+    "сильный",
+    "становиться",
+    "наступать",
+    "чайная церемония",
+    "Спасибо за заботу.",
+    "ни разу",
+    "никогда",
+    "подниматься",
+    "взбираться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-なります-なります",
+   "kanji": "なります",
+   "kana": "なります",
+   "romaji": "narimasu",
+   "meanings": [
+    "постепенно",
+    "состояние здоровья",
+    "самочувствие",
+    "но",
+    "скоро",
+    "гольф",
+    "диета",
+    "день",
+    "дата",
+    "останавливаться на ночь",
+    "ночевать",
+    "сонный",
+    "сильный",
+    "становиться",
+    "наступать",
+    "чайная церемония",
+    "Спасибо за заботу.",
+    "ни разу",
+    "никогда",
+    "подниматься",
+    "взбираться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-洗濯します-せんたくします",
+   "kanji": "洗濯します",
+   "kana": "せんたくします",
+   "romaji": "sentakushimasu",
+   "meanings": [
+    "сумо",
+    "слабый",
+    "состояние здоровья",
+    "самочувствие",
+    "подниматься",
+    "взбираться",
+    "сонный",
+    "убирать",
+    "делать уборку",
+    "один раз",
+    "однажды",
+    "день",
+    "дата",
+    "упражнение",
+    "останавливаться на ночь",
+    "ночевать",
+    "стирать (одежду",
+    "белье)",
+    "ни разу",
+    "никогда",
+    "сильный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-一度-いちど",
+   "kanji": "一度",
+   "kana": "いちど",
+   "romaji": "ichido",
+   "meanings": [
+    "сумо",
+    "слабый",
+    "состояние здоровья",
+    "самочувствие",
+    "подниматься",
+    "взбираться",
+    "сонный",
+    "убирать",
+    "делать уборку",
+    "один раз",
+    "однажды",
+    "день",
+    "дата",
+    "упражнение",
+    "останавливаться на ночь",
+    "ночевать",
+    "стирать (одежду",
+    "белье)",
+    "ни разу",
+    "никогда",
+    "сильный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-相撲-すもう",
+   "kanji": "相撲",
+   "kana": "すもう",
+   "romaji": "sumou",
+   "meanings": [
+    "сумо",
+    "слабый",
+    "состояние здоровья",
+    "самочувствие",
+    "подниматься",
+    "взбираться",
+    "сонный",
+    "убирать",
+    "делать уборку",
+    "один раз",
+    "однажды",
+    "день",
+    "дата",
+    "упражнение",
+    "останавливаться на ночь",
+    "ночевать",
+    "стирать (одежду",
+    "белье)",
+    "ни разу",
+    "никогда",
+    "сильный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-練習-れんしゅう",
+   "kanji": "練習",
+   "kana": "れんしゅう",
+   "romaji": "renshuu",
+   "meanings": [
+    "сумо",
+    "слабый",
+    "состояние здоровья",
+    "самочувствие",
+    "подниматься",
+    "взбираться",
+    "сонный",
+    "убирать",
+    "делать уборку",
+    "один раз",
+    "однажды",
+    "день",
+    "дата",
+    "упражнение",
+    "останавливаться на ночь",
+    "ночевать",
+    "стирать (одежду",
+    "белье)",
+    "ни разу",
+    "никогда",
+    "сильный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-調子-ちょうし",
+   "kanji": "調子",
+   "kana": "ちょうし",
+   "romaji": "choushi",
+   "meanings": [
+    "слабый",
+    "состояние здоровья",
+    "самочувствие",
+    "сумо",
+    "подниматься",
+    "взбираться",
+    "сонный",
+    "убирать",
+    "делать уборку",
+    "день",
+    "дата",
+    "останавливаться на ночь",
+    "ночевать",
+    "упражнение",
+    "один раз",
+    "однажды",
+    "ни разу",
+    "никогда",
+    "сильный",
+    "стирать (одежду",
+    "белье)",
+    "чайная церемония"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-弱い-よわい",
+   "kanji": "弱い",
+   "kana": "よわい",
+   "romaji": "yowai",
+   "meanings": [
+    "слабый",
+    "состояние здоровья",
+    "самочувствие",
+    "сумо",
+    "подниматься",
+    "взбираться",
+    "сонный",
+    "убирать",
+    "делать уборку",
+    "день",
+    "дата",
+    "останавливаться на ночь",
+    "ночевать",
+    "упражнение",
+    "один раз",
+    "однажды",
+    "ни разу",
+    "никогда",
+    "сильный",
+    "стирать (одежду",
+    "белье)",
+    "чайная церемония"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-登ります-のぼります",
+   "kanji": "登ります",
+   "kana": "のぼります",
+   "romaji": "noborimasu",
+   "meanings": [
+    "слабый",
+    "состояние здоровья",
+    "самочувствие",
+    "сумо",
+    "подниматься",
+    "взбираться",
+    "сонный",
+    "убирать",
+    "делать уборку",
+    "день",
+    "дата",
+    "останавливаться на ночь",
+    "ночевать",
+    "упражнение",
+    "один раз",
+    "однажды",
+    "ни разу",
+    "никогда",
+    "сильный",
+    "стирать (одежду",
+    "белье)",
+    "чайная церемония"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-いちど-いちど",
+   "kanji": "いちど",
+   "kana": "いちど",
+   "romaji": "ichido",
+   "meanings": [
+    "диета",
+    "скоро",
+    "Спасибо за заботу.",
+    "становиться",
+    "наступать",
+    "гольф",
+    "но"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-とまります-とまります",
+   "kanji": "とまります",
+   "kana": "とまります",
+   "romaji": "tomarimasu",
+   "meanings": [
+    "диета",
+    "скоро",
+    "Спасибо за заботу.",
+    "становиться",
+    "наступать",
+    "гольф",
+    "но"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-ねむい-ねむい",
+   "kanji": "ねむい",
+   "kana": "ねむい",
+   "romaji": "nemui",
+   "meanings": [
+    "диета",
+    "скоро",
+    "Спасибо за заботу.",
+    "становиться",
+    "наступать",
+    "гольф",
+    "но"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-強い-つよい",
+   "kanji": "強い",
+   "kana": "つよい",
+   "romaji": "tsuyoi",
+   "meanings": [
+    "состояние здоровья",
+    "самочувствие",
+    "убирать",
+    "делать уборку",
+    "один раз",
+    "однажды",
+    "упражнение",
+    "день",
+    "дата",
+    "останавливаться на ночь",
+    "ночевать",
+    "сильный",
+    "сумо",
+    "стирать (одежду",
+    "белье)",
+    "слабый"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "20"
+  },
+  {
+   "id": "jw-着物-きもの",
+   "kanji": "着物",
+   "kana": "きもの",
+   "romaji": "kimono",
+   "meanings": [
+    "кимоно",
+    "начало",
+    "быть нужным, требоваться",
+    "виза",
+    "там, туда",
+    "слово, язык",
+    "здесь, там, туда",
+    "здесь, сюда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-どっち-どっち",
+   "kanji": "どっち",
+   "kana": "どっち",
+   "romaji": "docchi",
+   "meanings": [
+    "какой, который, где, куда",
+    "здесь, сюда",
+    "конец",
+    "начало",
+    "товарищ, господин",
+    "узнавать, изучать, расследовать",
+    "здесь, там, туда",
+    "ремонтировать, чинить, исправлять",
+    "нет"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-よかったら-よかったら",
+   "kanji": "よかったら",
+   "kana": "よかったら",
+   "romaji": "yokattara",
+   "meanings": [
+    "да",
+    "я",
+    "если нет возражений",
+    "быть нужным, требоваться",
+    "какой, который, где, куда",
+    "виза",
+    "там, туда",
+    "товарищ, господин",
+    "здесь, сюда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-君-くん",
+   "kanji": "君",
+   "kana": "くん",
+   "romaji": "kun",
+   "meanings": [
+    "все, все вместе",
+    "товарищ, господин",
+    "нет",
+    "кимоно",
+    "да",
+    "здесь, сюда",
+    "по-всякому, разнообразно",
+    "ремонтировать, чинить, исправлять",
+    "если нет возражений",
+    "я",
+    "ты",
+    "узнавать, изучать, расследовать",
+    "начало"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-あっち-あっち",
+   "kanji": "あっち",
+   "kana": "あっち",
+   "romaji": "acchi",
+   "meanings": [
+    "да",
+    "там, туда",
+    "товарищ, господин",
+    "нет",
+    "все, все вместе",
+    "какой, который, где, куда",
+    "начало",
+    "по-всякому, разнообразно",
+    "ремонтировать, чинить, исправлять",
+    "виза",
+    "узнавать, изучать, расследовать",
+    "здесь, сюда",
+    "я",
+    "здесь, там, туда",
+    "если нет возражений"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-そっち-そっち",
+   "kanji": "そっち",
+   "kana": "そっち",
+   "romaji": "socchi",
+   "meanings": [
+    "слово, язык",
+    "все, все вместе",
+    "здесь, там, туда",
+    "кимоно",
+    "если нет возражений",
+    "там, туда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-修理します-しゅうりします",
+   "kanji": "修理します",
+   "kana": "しゅうりします",
+   "romaji": "shuurishimasu",
+   "meanings": [
+    "какой, который, где, куда",
+    "ремонтировать, чинить, исправлять",
+    "кимоно",
+    "товарищ, господин",
+    "я",
+    "да",
+    "если нет возражений",
+    "виза",
+    "нет",
+    "по-всякому, разнообразно",
+    "начало",
+    "все, все вместе"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-君-きみ",
+   "kanji": "君",
+   "kana": "きみ",
+   "romaji": "kimi",
+   "meanings": [
+    "по-всякому, разнообразно",
+    "там, туда",
+    "начало",
+    "ты",
+    "быть нужным, требоваться",
+    "виза",
+    "слово, язык",
+    "кимоно",
+    "конец",
+    "если нет возражений",
+    "да",
+    "здесь, там, туда",
+    "все, все вместе",
+    "узнавать, изучать, расследовать",
+    "товарищ, господин",
+    "какой, который, где, куда",
+    "здесь, сюда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-言葉-ことば",
+   "kanji": "言葉",
+   "kana": "ことば",
+   "romaji": "kotoba",
+   "meanings": [
+    "все, все вместе",
+    "да",
+    "слово, язык",
+    "нет",
+    "ты",
+    "товарищ, господин",
+    "я",
+    "начало",
+    "конец",
+    "быть нужным, требоваться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-要ります-いります",
+   "kanji": "要ります",
+   "kana": "いります",
+   "romaji": "irimasu",
+   "meanings": [
+    "быть нужным, требоваться",
+    "да",
+    "начало",
+    "здесь, сюда",
+    "здесь, там, туда",
+    "кимоно",
+    "конец",
+    "товарищ, господин",
+    "слово, язык",
+    "виза",
+    "все, все вместе",
+    "узнавать, изучать, расследовать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-僕-ぼく",
+   "kanji": "僕",
+   "kana": "ぼく",
+   "romaji": "boku",
+   "meanings": [
+    "узнавать, изучать, расследовать",
+    "какой, который, где, куда",
+    "кимоно",
+    "я",
+    "все, все вместе",
+    "слово, язык",
+    "конец",
+    "ремонтировать, чинить, исправлять",
+    "товарищ, господин",
+    "здесь, сюда",
+    "ты",
+    "быть нужным, требоваться",
+    "если нет возражений",
+    "виза"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-ううん-ううん",
+   "kanji": "ううん",
+   "kana": "ううん",
+   "romaji": "uun",
+   "meanings": [
+    "быть нужным, требоваться",
+    "слово, язык",
+    "все, все вместе",
+    "нет"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-みんなで-みんなで",
+   "kanji": "みんなで",
+   "kana": "みんなで",
+   "romaji": "minnade",
+   "meanings": [
+    "виза",
+    "конец",
+    "все, все вместе",
+    "ремонтировать, чинить, исправлять",
+    "узнавать, изучать, расследовать",
+    "слово, язык",
+    "какой, который, где, куда",
+    "начало",
+    "здесь, сюда",
+    "кимоно",
+    "ты",
+    "нет"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-うん-うん",
+   "kanji": "うん",
+   "kana": "うん",
+   "romaji": "un",
+   "meanings": [
+    "все, все вместе",
+    "я",
+    "да",
+    "здесь, там, туда",
+    "по-всякому, разнообразно",
+    "товарищ, господин"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-こっち-こっち",
+   "kanji": "こっち",
+   "kana": "こっち",
+   "romaji": "kocchi",
+   "meanings": [
+    "слово, язык",
+    "кимоно",
+    "здесь, сюда",
+    "начало"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-終わり-おわり",
+   "kanji": "終わり",
+   "kana": "おわり",
+   "romaji": "owari",
+   "meanings": [
+    "слово, язык",
+    "товарищ, господин",
+    "конец",
+    "узнавать, изучать, расследовать",
+    "здесь, там, туда",
+    "я",
+    "кимоно",
+    "ты",
+    "да"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-調べます-しらべます",
+   "kanji": "調べます",
+   "kana": "しらべます",
+   "romaji": "shirabemasu",
+   "meanings": [
+    "слово, язык",
+    "узнавать, изучать, расследовать",
+    "начало",
+    "ремонтировать, чинить, исправлять",
+    "я",
+    "быть нужным, требоваться",
+    "конец",
+    "товарищ, господин",
+    "здесь, там, туда",
+    "какой, который, где, куда"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-ビザ-びざ",
+   "kanji": "ビザ",
+   "kana": "びざ",
+   "romaji": "biza",
+   "meanings": [
+    "товарищ, господин",
+    "конец",
+    "да",
+    "виза",
+    "нет",
+    "все, все вместе"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-始め-はじめ",
+   "kanji": "始め",
+   "kana": "はじめ",
+   "romaji": "hajime",
+   "meanings": [
+    "кимоно",
+    "если нет возражений",
+    "ремонтировать, чинить, исправлять",
+    "начало",
+    "слово, язык",
+    "там, туда",
+    "по-всякому, разнообразно"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "21"
+  },
+  {
+   "id": "jw-かいしゃをやめます-かいしゃをやめます",
+   "kanji": "かいしゃをやめます",
+   "kana": "かいしゃをやめます",
+   "romaji": "kaishawoyamemasu",
+   "meanings": [
+    "аниме",
+    "дизайн",
+    "Отлично! Ужасно! Вот это да!",
+    "правда",
+    "ложь",
+    "так",
+    "действительно",
+    "на самом деле",
+    "новости",
+    "конечно",
+    "разумеется",
+    "о ~",
+    "про ~",
+    "комиксы",
+    "манга"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-アニメ-あにめ",
+   "kanji": "アニメ",
+   "kana": "あにめ",
+   "romaji": "anime",
+   "meanings": [
+    "аниме",
+    "дизайн",
+    "Отлично! Ужасно! Вот это да!",
+    "правда",
+    "ложь",
+    "так",
+    "действительно",
+    "на самом деле",
+    "новости",
+    "конечно",
+    "разумеется",
+    "о ~",
+    "про ~",
+    "комиксы",
+    "манга"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-おもいます-おもいます",
+   "kanji": "おもいます",
+   "kana": "おもいます",
+   "romaji": "omoimasu",
+   "meanings": [
+    "аниме",
+    "дизайн",
+    "Отлично! Ужасно! Вот это да!",
+    "правда",
+    "ложь",
+    "так",
+    "действительно",
+    "на самом деле",
+    "новости",
+    "конечно",
+    "разумеется",
+    "о ~",
+    "про ~",
+    "комиксы",
+    "манга"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-いけん-いけん",
+   "kanji": "いけん",
+   "kana": "いけん",
+   "romaji": "iken",
+   "meanings": [
+    "аниме",
+    "дизайн",
+    "Отлично! Ужасно! Вот это да!",
+    "правда",
+    "ложь",
+    "так",
+    "действительно",
+    "на самом деле",
+    "новости",
+    "конечно",
+    "разумеется",
+    "о ~",
+    "про ~",
+    "комиксы",
+    "манга"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-てんさい-てんさい",
+   "kanji": "てんさい",
+   "kana": "てんさい",
+   "romaji": "tensai",
+   "meanings": [
+    "аниме",
+    "новости",
+    "о ~",
+    "про ~",
+    "комиксы",
+    "манга",
+    "непременно",
+    "обязательно",
+    "наверняка",
+    "дизайн",
+    "правда",
+    "действительно",
+    "на самом деле",
+    "конечно",
+    "разумеется",
+    "ненужный",
+    "излишний",
+    "ложь",
+    "Отлично! Ужасно! Вот это да!"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-ふべん-ふべん",
+   "kanji": "ふべん",
+   "kana": "ふべん",
+   "romaji": "fuben",
+   "meanings": [
+    "аниме",
+    "новости",
+    "о ~",
+    "про ~",
+    "комиксы",
+    "манга",
+    "непременно",
+    "обязательно",
+    "наверняка",
+    "дизайн",
+    "правда",
+    "действительно",
+    "на самом деле",
+    "конечно",
+    "разумеется",
+    "ненужный",
+    "излишний",
+    "ложь",
+    "Отлично! Ужасно! Вот это да!"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-ちきゅう-ちきゅう",
+   "kanji": "ちきゅう",
+   "kana": "ちきゅう",
+   "romaji": "chikyuu",
+   "meanings": [
+    "аниме",
+    "новости",
+    "о ~",
+    "про ~",
+    "комиксы",
+    "манга",
+    "непременно",
+    "обязательно",
+    "наверняка",
+    "дизайн",
+    "правда",
+    "действительно",
+    "на самом деле",
+    "конечно",
+    "разумеется",
+    "ненужный",
+    "излишний",
+    "ложь",
+    "Отлично! Ужасно! Вот это да!"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-ニュース-にゅーす",
+   "kanji": "ニュース",
+   "kana": "にゅーす",
+   "romaji": "nyuusu",
+   "meanings": [
+    "новости",
+    "о ~",
+    "про ~",
+    "непременно",
+    "обязательно",
+    "наверняка",
+    "правда",
+    "ложь",
+    "так",
+    "действительно",
+    "на самом деле",
+    "аниме",
+    "ненужный",
+    "излишний",
+    "конечно",
+    "разумеется",
+    "дизайн"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-はなし-はなし",
+   "kanji": "はなし",
+   "kana": "はなし",
+   "romaji": "hanashi",
+   "meanings": [
+    "новости",
+    "о ~",
+    "про ~",
+    "непременно",
+    "обязательно",
+    "наверняка",
+    "правда",
+    "ложь",
+    "так",
+    "действительно",
+    "на самом деле",
+    "аниме",
+    "ненужный",
+    "излишний",
+    "конечно",
+    "разумеется",
+    "дизайн"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-きをつけます-きをつけます",
+   "kanji": "きをつけます",
+   "kana": "きをつけます",
+   "romaji": "kiwotsukemasu",
+   "meanings": [
+    "новости",
+    "о ~",
+    "про ~",
+    "непременно",
+    "обязательно",
+    "наверняка",
+    "правда",
+    "ложь",
+    "так",
+    "действительно",
+    "на самом деле",
+    "аниме",
+    "ненужный",
+    "излишний",
+    "конечно",
+    "разумеется",
+    "дизайн"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-留学します-りゅうがくします",
+   "kanji": "留学します",
+   "kana": "りゅうがくします",
+   "romaji": "ryuugakushimasu",
+   "meanings": [
+    "учиться за границей"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-負けます-りゅうがくします",
+   "kanji": "負けます",
+   "kana": "りゅうがくします",
+   "romaji": "ryuugakushimasu",
+   "meanings": [
+    "учиться за границей"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-お祭りがあります-りゅうがくします",
+   "kanji": "お祭りがあります",
+   "kana": "りゅうがくします",
+   "romaji": "ryuugakushimasu",
+   "meanings": [
+    "учиться за границей"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-会社をやめます-りゅうがくします",
+   "kanji": "会社をやめます",
+   "kana": "りゅうがくします",
+   "romaji": "ryuugakushimasu",
+   "meanings": [
+    "учиться за границей"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-さいきん-さいきん",
+   "kanji": "さいきん",
+   "kana": "さいきん",
+   "romaji": "saikin",
+   "meanings": [
+    "о ~",
+    "про ~",
+    "Отлично! Ужасно! Вот это да!",
+    "дизайн",
+    "комиксы",
+    "манга",
+    "так"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-うごきます-うごきます",
+   "kanji": "うごきます",
+   "kana": "うごきます",
+   "romaji": "ugokimasu",
+   "meanings": [
+    "комиксы",
+    "манга",
+    "так",
+    "правда",
+    "о ~",
+    "про ~",
+    "Отлично! Ужасно! Вот это да!",
+    "аниме",
+    "дизайн",
+    "конечно",
+    "разумеется",
+    "новости"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-マンガ-まんが",
+   "kanji": "マンガ",
+   "kana": "まんが",
+   "romaji": "manga",
+   "meanings": [
+    "комиксы",
+    "манга",
+    "так",
+    "правда",
+    "о ~",
+    "про ~",
+    "Отлично! Ужасно! Вот это да!",
+    "аниме",
+    "дизайн",
+    "конечно",
+    "разумеется",
+    "новости"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-ゆめ-ゆめ",
+   "kanji": "ゆめ",
+   "kana": "ゆめ",
+   "romaji": "yume",
+   "meanings": [
+    "комиксы",
+    "манга",
+    "так",
+    "правда",
+    "о ~",
+    "про ~",
+    "Отлично! Ужасно! Вот это да!",
+    "аниме",
+    "дизайн",
+    "конечно",
+    "разумеется",
+    "новости"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-役に立ちます-やくにたちます",
+   "kanji": "役に立ちます",
+   "kana": "やくにたちます",
+   "romaji": "yakunitachimasu",
+   "meanings": [
+    "пригодиться",
+    "быть полезным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-思います-やくにたちます",
+   "kanji": "思います",
+   "kana": "やくにたちます",
+   "romaji": "yakunitachimasu",
+   "meanings": [
+    "пригодиться",
+    "быть полезным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-自動車-やくにたちます",
+   "kanji": "自動車",
+   "kana": "やくにたちます",
+   "romaji": "yakunitachimasu",
+   "meanings": [
+    "пригодиться",
+    "быть полезным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-お祭りがあります-やくにたちます",
+   "kanji": "お祭りがあります",
+   "kana": "やくにたちます",
+   "romaji": "yakunitachimasu",
+   "meanings": [
+    "пригодиться",
+    "быть полезным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-地球-おもいます",
+   "kanji": "地球",
+   "kana": "おもいます",
+   "romaji": "omoimasu",
+   "meanings": [
+    "думать",
+    "полагать",
+    "считать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-思います-おもいます",
+   "kanji": "思います",
+   "kana": "おもいます",
+   "romaji": "omoimasu",
+   "meanings": [
+    "думать",
+    "полагать",
+    "считать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-意見-おもいます",
+   "kanji": "意見",
+   "kana": "おもいます",
+   "romaji": "omoimasu",
+   "meanings": [
+    "думать",
+    "полагать",
+    "считать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-負けます-おもいます",
+   "kanji": "負けます",
+   "kana": "おもいます",
+   "romaji": "omoimasu",
+   "meanings": [
+    "думать",
+    "полагать",
+    "считать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-最近-じどうしゃ",
+   "kanji": "最近",
+   "kana": "じどうしゃ",
+   "romaji": "jidousha",
+   "meanings": [
+    "автомобиль"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-自動車-じどうしゃ",
+   "kanji": "自動車",
+   "kana": "じどうしゃ",
+   "romaji": "jidousha",
+   "meanings": [
+    "автомобиль"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-試合-じどうしゃ",
+   "kanji": "試合",
+   "kana": "じどうしゃ",
+   "romaji": "jidousha",
+   "meanings": [
+    "автомобиль"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-留学します-じどうしゃ",
+   "kanji": "留学します",
+   "kana": "じどうしゃ",
+   "romaji": "jidousha",
+   "meanings": [
+    "автомобиль"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-交通-はなし",
+   "kanji": "交通",
+   "kana": "はなし",
+   "romaji": "hanashi",
+   "meanings": [
+    "разговор",
+    "рассказ"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-話-はなし",
+   "kanji": "話",
+   "kana": "はなし",
+   "romaji": "hanashi",
+   "meanings": [
+    "разговор",
+    "рассказ"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-勝ちます-はなし",
+   "kanji": "勝ちます",
+   "kana": "はなし",
+   "romaji": "hanashi",
+   "meanings": [
+    "разговор",
+    "рассказ"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-最近-はなし",
+   "kanji": "最近",
+   "kana": "はなし",
+   "romaji": "hanashi",
+   "meanings": [
+    "разговор",
+    "рассказ"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "22"
+  },
+  {
+   "id": "jw-わたしたち-わたしたち",
+   "kanji": "わたしたち",
+   "kana": "わたしたち",
+   "romaji": "watashitachi",
+   "meanings": [
+    "надевать",
+    "юмор",
+    "костюм",
+    "пальто",
+    "пирожное",
+    "торт",
+    "мы",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "робот",
+    "часто"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-かぶります-かぶります",
+   "kanji": "かぶります",
+   "kana": "かぶります",
+   "romaji": "kaburimasu",
+   "meanings": [
+    "надевать",
+    "юмор",
+    "костюм",
+    "пальто",
+    "пирожное",
+    "торт",
+    "мы",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "робот",
+    "часто"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-ユーモア-ゆーもあ",
+   "kanji": "ユーモア",
+   "kana": "ゆーもあ",
+   "romaji": "yuumoa",
+   "meanings": [
+    "надевать",
+    "юмор",
+    "костюм",
+    "пальто",
+    "пирожное",
+    "торт",
+    "мы",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "робот",
+    "часто"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-つごう-つごう",
+   "kanji": "つごう",
+   "kana": "つごう",
+   "romaji": "tsugou",
+   "meanings": [
+    "надевать",
+    "юмор",
+    "костюм",
+    "пальто",
+    "пирожное",
+    "торт",
+    "мы",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "робот",
+    "часто"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-セーター-せーたー",
+   "kanji": "セーター",
+   "kana": "せーたー",
+   "romaji": "seetaa",
+   "meanings": [
+    "костюм",
+    "надевать",
+    "юмор",
+    "пальто",
+    "пирожное",
+    "торт",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "мы",
+    "часто",
+    "свитер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-スーツ-すーつ",
+   "kanji": "スーツ",
+   "kana": "すーつ",
+   "romaji": "suutsu",
+   "meanings": [
+    "костюм",
+    "надевать",
+    "юмор",
+    "пальто",
+    "пирожное",
+    "торт",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "мы",
+    "часто",
+    "свитер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-べんとう-べんとう",
+   "kanji": "べんとう",
+   "kana": "べんとう",
+   "romaji": "bentou",
+   "meanings": [
+    "костюм",
+    "надевать",
+    "юмор",
+    "пальто",
+    "пирожное",
+    "торт",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "мы",
+    "часто",
+    "свитер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-はきます-はきます",
+   "kanji": "はきます",
+   "kana": "はきます",
+   "romaji": "hakimasu",
+   "meanings": [
+    "надевать",
+    "юмор",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "мы",
+    "пальто",
+    "часто",
+    "костюм",
+    "пирожное",
+    "торт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-ぼうし-ぼうし",
+   "kanji": "ぼうし",
+   "kana": "ぼうし",
+   "romaji": "boushi",
+   "meanings": [
+    "надевать",
+    "юмор",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "мы",
+    "пальто",
+    "часто",
+    "костюм",
+    "пирожное",
+    "торт"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-コート-こーと",
+   "kanji": "コート",
+   "kana": "こーと",
+   "romaji": "kooto",
+   "meanings": [
+    "юмор",
+    "пальто",
+    "надевать",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "костюм",
+    "мы"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-ロボット-ろぼっと",
+   "kanji": "ロボット",
+   "kana": "ろぼっと",
+   "romaji": "robotto",
+   "meanings": [
+    "костюм",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "надевать",
+    "часто",
+    "свитер",
+    "робот",
+    "юмор",
+    "пальто"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-ケーキ-けーき",
+   "kanji": "ケーキ",
+   "kana": "けーき",
+   "romaji": "keeki",
+   "meanings": [
+    "пирожное",
+    "торт",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "мы",
+    "свитер",
+    "робот",
+    "надевать",
+    "костюм",
+    "юмор",
+    "часто"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-めがね-めがね",
+   "kanji": "めがね",
+   "kana": "めがね",
+   "romaji": "megane",
+   "meanings": [
+    "мы",
+    "пирожное",
+    "торт",
+    "пальто",
+    "свитер",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-うまれます-うまれます",
+   "kanji": "うまれます",
+   "kana": "うまれます",
+   "romaji": "umaremasu",
+   "meanings": [
+    "пальто",
+    "часто",
+    "юмор",
+    "надевать",
+    "робот",
+    "мы"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-めがねをかけます-めがねをかけます",
+   "kanji": "めがねをかけます",
+   "kana": "めがねをかけます",
+   "romaji": "meganewokakemasu",
+   "meanings": [
+    "юмор",
+    "надевать (одежду на нижнюю часть тела",
+    "обувь)",
+    "надевать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "23"
+  },
+  {
+   "id": "jw-故障-かど",
+   "kanji": "故障",
+   "kana": "かど",
+   "romaji": "kado",
+   "meanings": [
+    "угол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-触ります-かど",
+   "kanji": "触ります",
+   "kana": "かど",
+   "romaji": "kado",
+   "meanings": [
+    "угол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-道-かど",
+   "kanji": "道",
+   "kana": "かど",
+   "romaji": "kado",
+   "meanings": [
+    "угол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-角-かど",
+   "kanji": "角",
+   "kana": "かど",
+   "romaji": "kado",
+   "meanings": [
+    "угол"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-たてもの-たてもの",
+   "kanji": "たてもの",
+   "kana": "たてもの",
+   "romaji": "tatemono",
+   "meanings": [
+    "размер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-ちゅうしゃじょう-ちゅうしゃじょう",
+   "kanji": "ちゅうしゃじょう",
+   "kana": "ちゅうしゃじょう",
+   "romaji": "chuushajou",
+   "meanings": [
+    "размер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-サイズ-さいず",
+   "kanji": "サイズ",
+   "kana": "さいず",
+   "romaji": "saizu",
+   "meanings": [
+    "размер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-おと-おと",
+   "kanji": "おと",
+   "kana": "おと",
+   "romaji": "oto",
+   "meanings": [
+    "размер"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-建物-さびしい",
+   "kanji": "建物",
+   "kana": "さびしい",
+   "romaji": "sabishii",
+   "meanings": [
+    "грустный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-交差点-さびしい",
+   "kanji": "交差点",
+   "kana": "さびしい",
+   "romaji": "sabishii",
+   "meanings": [
+    "грустный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-寂しい-さびしい",
+   "kanji": "寂しい",
+   "kana": "さびしい",
+   "romaji": "sabishii",
+   "meanings": [
+    "грустный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-故障-さびしい",
+   "kanji": "故障",
+   "kana": "さびしい",
+   "romaji": "sabishii",
+   "meanings": [
+    "грустный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-目-みち",
+   "kanji": "目",
+   "kana": "みち",
+   "romaji": "michi",
+   "meanings": [
+    "дорога",
+    "путь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-寂しい-みち",
+   "kanji": "寂しい",
+   "kana": "みち",
+   "romaji": "michi",
+   "meanings": [
+    "дорога",
+    "путь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-渡ります-みち",
+   "kanji": "渡ります",
+   "kana": "みち",
+   "romaji": "michi",
+   "meanings": [
+    "дорога",
+    "путь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-道-みち",
+   "kanji": "道",
+   "kana": "みち",
+   "romaji": "michi",
+   "meanings": [
+    "дорога",
+    "путь"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-交差点-こうさてん",
+   "kanji": "交差点",
+   "kana": "こうさてん",
+   "romaji": "kousaten",
+   "meanings": [
+    "перекрёсток"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-聞きます-こうさてん",
+   "kanji": "聞きます",
+   "kana": "こうさてん",
+   "romaji": "kousaten",
+   "meanings": [
+    "перекрёсток"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-寂しい-こうさてん",
+   "kanji": "寂しい",
+   "kana": "こうさてん",
+   "romaji": "kousaten",
+   "meanings": [
+    "перекрёсток"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-角-こうさてん",
+   "kanji": "角",
+   "kana": "こうさてん",
+   "romaji": "kousaten",
+   "meanings": [
+    "перекрёсток"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-音-ききます",
+   "kanji": "音",
+   "kana": "ききます",
+   "romaji": "kikimasu",
+   "meanings": [
+    "спрашивать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "24"
+  },
+  {
+   "id": "jw-おじいさん-おじいさん",
+   "kanji": "おじいさん",
+   "kana": "おじいさん",
+   "romaji": "ojiisan",
+   "meanings": [
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "давать",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-つれてきます-つれてきます",
+   "kanji": "つれてきます",
+   "kana": "つれてきます",
+   "romaji": "tsuretekimasu",
+   "meanings": [
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "давать",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-おかし-おかし",
+   "kanji": "おかし",
+   "kana": "おかし",
+   "romaji": "okashi",
+   "meanings": [
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "давать",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-くれます-くれます",
+   "kanji": "くれます",
+   "kana": "くれます",
+   "romaji": "kuremasu",
+   "meanings": [
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "давать",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-しょうかいします-しょうかいします",
+   "kanji": "しょうかいします",
+   "kana": "しょうかいします",
+   "romaji": "shoukaishimasu",
+   "meanings": [
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "давать",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-おばあさん-おばあさん",
+   "kanji": "おばあさん",
+   "kana": "おばあさん",
+   "romaji": "obaasan",
+   "meanings": [
+    "дедушка",
+    "пожилой мужчина",
+    "жить на пансионе в семье",
+    "кроме того",
+    "давать",
+    "бабушка",
+    "пожилая женщина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-ホームステイ-ほーむすてい",
+   "kanji": "ホームステイ",
+   "kana": "ほーむすてい",
+   "romaji": "hoomusutei",
+   "meanings": [
+    "жить на пансионе в семье",
+    "кроме того",
+    "давать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-ひっこし-ひっこし",
+   "kanji": "ひっこし",
+   "kana": "ひっこし",
+   "romaji": "hikkoshi",
+   "meanings": [
+    "бабушка",
+    "пожилая женщина",
+    "кроме того",
+    "жить на пансионе в семье",
+    "давать",
+    "дедушка",
+    "пожилой мужчина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-おじいちゃん-おじいちゃん",
+   "kanji": "おじいちゃん",
+   "kana": "おじいちゃん",
+   "romaji": "ojiichan",
+   "meanings": [
+    "бабушка",
+    "пожилая женщина",
+    "кроме того",
+    "жить на пансионе в семье",
+    "давать",
+    "дедушка",
+    "пожилой мужчина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-なおします-なおします",
+   "kanji": "なおします",
+   "kana": "なおします",
+   "romaji": "naoshimasu",
+   "meanings": [
+    "бабушка",
+    "пожилая женщина",
+    "кроме того",
+    "жить на пансионе в семье",
+    "давать",
+    "дедушка",
+    "пожилой мужчина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-おばあちゃん-おばあちゃん",
+   "kanji": "おばあちゃん",
+   "kana": "おばあちゃん",
+   "romaji": "obaachan",
+   "meanings": [
+    "бабушка",
+    "пожилая женщина",
+    "кроме того",
+    "жить на пансионе в семье",
+    "давать",
+    "дедушка",
+    "пожилой мужчина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-つれていきます-つれていきます",
+   "kanji": "つれていきます",
+   "kana": "つれていきます",
+   "romaji": "tsureteikimasu",
+   "meanings": [
+    "кроме того",
+    "давать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-ほかに-ほかに",
+   "kanji": "ほかに",
+   "kana": "ほかに",
+   "romaji": "hokani",
+   "meanings": [
+    "кроме того",
+    "давать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-せつめいします-せつめいします",
+   "kanji": "せつめいします",
+   "kana": "せつめいします",
+   "romaji": "setsumeishimasu",
+   "meanings": [
+    "жить на пансионе в семье",
+    "кроме того"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-じゅんび-じゅんび",
+   "kanji": "じゅんび",
+   "kana": "じゅんび",
+   "romaji": "junbi",
+   "meanings": [
+    "дедушка",
+    "пожилой мужчина",
+    "давать",
+    "кроме того"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-ぜんぶ-ぜんぶ",
+   "kanji": "ぜんぶ",
+   "kana": "ぜんぶ",
+   "romaji": "zenbu",
+   "meanings": [
+    "бабушка",
+    "пожилая женщина",
+    "дедушка",
+    "пожилой мужчина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-じぶんで-じぶんで",
+   "kanji": "じぶんで",
+   "kana": "じぶんで",
+   "romaji": "jibunde",
+   "meanings": [
+    "бабушка",
+    "пожилая женщина",
+    "дедушка",
+    "пожилой мужчина"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-直します-なおします",
+   "kanji": "直します",
+   "kana": "なおします",
+   "romaji": "naoshimasu",
+   "meanings": [
+    "приводить с собой, приходить с кем-то",
+    "дедушка, пожилой мужчина",
+    "объяснять",
+    "исправлять, чинить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "25"
+  },
+  {
+   "id": "jw-足ります-たります",
+   "kanji": "足ります",
+   "kana": "たります",
+   "romaji": "tarimasu",
+   "meanings": [
+    "хватать",
+    "быть достаточным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-意味-たります",
+   "kanji": "意味",
+   "kana": "たります",
+   "romaji": "tarimasu",
+   "meanings": [
+    "хватать",
+    "быть достаточным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-年を取ります-たります",
+   "kanji": "年を取ります",
+   "kana": "たります",
+   "romaji": "tarimasu",
+   "meanings": [
+    "хватать",
+    "быть достаточным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-着きます-たります",
+   "kanji": "着きます",
+   "kana": "たります",
+   "romaji": "tarimasu",
+   "meanings": [
+    "хватать",
+    "быть достаточным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-田舎-としをとります",
+   "kanji": "田舎",
+   "kana": "としをとります",
+   "romaji": "toshiwotorimasu",
+   "meanings": [
+    "становиться старше"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-億-としをとります",
+   "kanji": "億",
+   "kana": "としをとります",
+   "romaji": "toshiwotorimasu",
+   "meanings": [
+    "становиться старше"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-年を取ります-としをとります",
+   "kanji": "年を取ります",
+   "kana": "としをとります",
+   "romaji": "toshiwotorimasu",
+   "meanings": [
+    "становиться старше"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-考えます-としをとります",
+   "kanji": "考えます",
+   "kana": "としをとります",
+   "romaji": "toshiwotorimasu",
+   "meanings": [
+    "становиться старше"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-田舎-かんがえます",
+   "kanji": "田舎",
+   "kana": "かんがえます",
+   "romaji": "kangaemasu",
+   "meanings": [
+    "думать",
+    "полагать",
+    "считать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-考えます-かんがえます",
+   "kanji": "考えます",
+   "kana": "かんがえます",
+   "romaji": "kangaemasu",
+   "meanings": [
+    "думать",
+    "полагать",
+    "считать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "26"
+  },
+  {
+   "id": "jw-財布-さいふ",
+   "kanji": "財布",
+   "kana": "さいふ",
+   "romaji": "saifu",
+   "meanings": [
+    "бутылка",
+    "всё",
+    "искать",
+    "подбирать",
+    "находить",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "космический корабль",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "кошелёк",
+    "танец о-Бон",
+    "космическая станция",
+    "страшный",
+    "банка",
+    "космонавт",
+    "спортивные соревнования",
+    "космос",
+    "сжигаемый мусор",
+    "бок",
+    "боковая сторона",
+    "следующий раз",
+    "быть в порядке",
+    "быть прибранным",
+    "успевать",
+    "господин",
+    "госпожа"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-見る-みる",
+   "kanji": "見る",
+   "kana": "みる",
+   "romaji": "miru",
+   "meanings": [
+    "бутылка",
+    "всё",
+    "искать",
+    "подбирать",
+    "находить",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "космический корабль",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "кошелёк",
+    "танец о-Бон",
+    "космическая станция",
+    "страшный",
+    "банка",
+    "космонавт",
+    "спортивные соревнования",
+    "космос",
+    "сжигаемый мусор",
+    "бок",
+    "боковая сторона",
+    "следующий раз",
+    "быть в порядке",
+    "быть прибранным",
+    "успевать",
+    "господин",
+    "госпожа"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-瓶-びん",
+   "kanji": "瓶",
+   "kana": "びん",
+   "romaji": "bin",
+   "meanings": [
+    "бутылка",
+    "всё",
+    "искать",
+    "подбирать",
+    "находить",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "космический корабль",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "кошелёк",
+    "танец о-Бон",
+    "космическая станция",
+    "страшный",
+    "банка",
+    "космонавт",
+    "спортивные соревнования",
+    "космос",
+    "сжигаемый мусор",
+    "бок",
+    "боковая сторона",
+    "следующий раз",
+    "быть в порядке",
+    "быть прибранным",
+    "успевать",
+    "господин",
+    "госпожа"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-探す-さがす",
+   "kanji": "探す",
+   "kana": "さがす",
+   "romaji": "sagasu",
+   "meanings": [
+    "бутылка",
+    "всё",
+    "искать",
+    "подбирать",
+    "находить",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "космический корабль",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "кошелёк",
+    "танец о-Бон",
+    "космическая станция",
+    "страшный",
+    "банка",
+    "космонавт",
+    "спортивные соревнования",
+    "космос",
+    "сжигаемый мусор",
+    "бок",
+    "боковая сторона",
+    "следующий раз",
+    "быть в порядке",
+    "быть прибранным",
+    "успевать",
+    "господин",
+    "госпожа"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-平日-へいじつ",
+   "kanji": "平日",
+   "kana": "へいじつ",
+   "romaji": "heijitsu",
+   "meanings": [
+    "банка",
+    "подбирать",
+    "находить",
+    "космический корабль",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "всё",
+    "космическая станция",
+    "космонавт",
+    "бутылка",
+    "прямо",
+    "непосредственно",
+    "будний день",
+    "бок",
+    "боковая сторона",
+    "страшный",
+    "господин",
+    "госпожа",
+    "космос",
+    "сжигаемый мусор",
+    "танец о-Бон",
+    "опаздывать",
+    "искать",
+    "кошелёк",
+    "место складирования",
+    "склад",
+    "быть в порядке",
+    "быть прибранным",
+    "успевать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-気分がいい-きぶんがいい",
+   "kanji": "気分がいい",
+   "kana": "きぶんがいい",
+   "romaji": "kibungaii",
+   "meanings": [
+    "банка",
+    "подбирать",
+    "находить",
+    "космический корабль",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "всё",
+    "космическая станция",
+    "космонавт",
+    "бутылка",
+    "прямо",
+    "непосредственно",
+    "будний день",
+    "бок",
+    "боковая сторона",
+    "страшный",
+    "господин",
+    "госпожа",
+    "космос",
+    "сжигаемый мусор",
+    "танец о-Бон",
+    "опаздывать",
+    "искать",
+    "кошелёк",
+    "место складирования",
+    "склад",
+    "быть в порядке",
+    "быть прибранным",
+    "успевать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-缶-かん",
+   "kanji": "缶",
+   "kana": "かん",
+   "romaji": "kan",
+   "meanings": [
+    "банка",
+    "подбирать",
+    "находить",
+    "космический корабль",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "всё",
+    "космическая станция",
+    "космонавт",
+    "бутылка",
+    "прямо",
+    "непосредственно",
+    "будний день",
+    "бок",
+    "боковая сторона",
+    "страшный",
+    "господин",
+    "госпожа",
+    "космос",
+    "сжигаемый мусор",
+    "танец о-Бон",
+    "опаздывать",
+    "искать",
+    "кошелёк",
+    "место складирования",
+    "склад",
+    "быть в порядке",
+    "быть прибранным",
+    "успевать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-宇宙-うちゅう",
+   "kanji": "宇宙",
+   "kana": "うちゅう",
+   "romaji": "uchuu",
+   "meanings": [
+    "банка",
+    "подбирать",
+    "находить",
+    "космический корабль",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "всё",
+    "космическая станция",
+    "космонавт",
+    "бутылка",
+    "прямо",
+    "непосредственно",
+    "будний день",
+    "бок",
+    "боковая сторона",
+    "страшный",
+    "господин",
+    "госпожа",
+    "космос",
+    "сжигаемый мусор",
+    "танец о-Бон",
+    "опаздывать",
+    "искать",
+    "кошелёк",
+    "место складирования",
+    "склад",
+    "быть в порядке",
+    "быть прибранным",
+    "успевать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-遅れる-おくれる",
+   "kanji": "遅れる",
+   "kana": "おくれる",
+   "romaji": "okureru",
+   "meanings": [
+    "всё",
+    "искать",
+    "плохое самочувствие",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "господин",
+    "госпожа",
+    "танец о-Бон",
+    "прямо",
+    "непосредственно",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "будний день",
+    "быть в порядке",
+    "быть прибранным",
+    "кошелёк",
+    "космос",
+    "космическая станция",
+    "бутылка",
+    "здание Парламента",
+    "~ диалект",
+    "опаздывать",
+    "подбирать",
+    "находить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-国会議事堂-こっかいぎじどう",
+   "kanji": "国会議事堂",
+   "kana": "こっかいぎじどう",
+   "romaji": "kokkaigijidou",
+   "meanings": [
+    "всё",
+    "искать",
+    "плохое самочувствие",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "господин",
+    "госпожа",
+    "танец о-Бон",
+    "прямо",
+    "непосредственно",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "будний день",
+    "быть в порядке",
+    "быть прибранным",
+    "кошелёк",
+    "космос",
+    "космическая станция",
+    "бутылка",
+    "здание Парламента",
+    "~ диалект",
+    "опаздывать",
+    "подбирать",
+    "находить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-何でも-なんでも",
+   "kanji": "何でも",
+   "kana": "なんでも",
+   "romaji": "nandemo",
+   "meanings": [
+    "всё",
+    "искать",
+    "плохое самочувствие",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место",
+    "хорошее самочувствие",
+    "господин",
+    "госпожа",
+    "танец о-Бон",
+    "прямо",
+    "непосредственно",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "будний день",
+    "быть в порядке",
+    "быть прибранным",
+    "кошелёк",
+    "космос",
+    "космическая станция",
+    "бутылка",
+    "здание Парламента",
+    "~ диалект",
+    "опаздывать",
+    "подбирать",
+    "находить"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-うちゅう-うちゅう",
+   "kanji": "うちゅう",
+   "kana": "うちゅう",
+   "romaji": "uchuu",
+   "meanings": [
+    "все",
+    "волонтер",
+    "везде",
+    "такой",
+    "газ"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-だれでも-だれでも",
+   "kanji": "だれでも",
+   "kana": "だれでも",
+   "romaji": "daredemo",
+   "meanings": [
+    "все",
+    "волонтер",
+    "везде",
+    "такой",
+    "газ"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-そんな-そんな",
+   "kanji": "そんな",
+   "kana": "そんな",
+   "romaji": "sonna",
+   "meanings": [
+    "все",
+    "волонтер",
+    "везде",
+    "такой",
+    "газ"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-様-さま",
+   "kanji": "様",
+   "kana": "さま",
+   "romaji": "sama",
+   "meanings": [
+    "искать",
+    "бок",
+    "боковая сторона",
+    "хорошее самочувствие",
+    "~ диалект",
+    "господин",
+    "госпожа",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "космическая станция",
+    "кошелёк",
+    "космонавт",
+    "страшный",
+    "подбирать",
+    "находить",
+    "всё",
+    "бутылка",
+    "быть в порядке",
+    "быть прибранным",
+    "сжигаемый мусор",
+    "опаздывать",
+    "место складирования",
+    "склад",
     "место"
    ],
-   "en": "chair",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/isu-17210624.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "ishiyo-50b753e4",
-   "kanji": "一緒",
-   "kana": "いっしょ",
-   "romaji": "issho",
+   "id": "jw-宇宙ステーション-うちゅうすてーしょん",
+   "kanji": "宇宙ステーション",
+   "kana": "うちゅうすてーしょん",
+   "romaji": "uchuusuteeshon",
    "meanings": [
-    "вместе"
+    "искать",
+    "бок",
+    "боковая сторона",
+    "хорошее самочувствие",
+    "~ диалект",
+    "господин",
+    "госпожа",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "космическая станция",
+    "кошелёк",
+    "космонавт",
+    "страшный",
+    "подбирать",
+    "находить",
+    "всё",
+    "бутылка",
+    "быть в порядке",
+    "быть прибранным",
+    "сжигаемый мусор",
+    "опаздывать",
+    "место складирования",
+    "склад",
+    "место"
    ],
-   "en": "together",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/ishiyo-50b753e4.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "ku-hiku-de627343",
-   "kanji": "引く",
-   "kana": "ひく",
-   "romaji": "hiku",
+   "id": "jw-宇宙飛行士-うちゅうひこうし",
+   "kanji": "宇宙飛行士",
+   "kana": "うちゅうひこうし",
+   "romaji": "uchuuhikoushi",
    "meanings": [
-    "тянуть",
-    "тащить",
-    "вычитать"
+    "плохое самочувствие",
+    "подбирать",
+    "находить",
+    "бок",
+    "боковая сторона",
+    "следующий раз",
+    "страшный",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "кошелёк",
+    "танец о-Бон",
+    "бутылка",
+    "космонавт",
+    "космическая станция",
+    "спортивные соревнования",
+    "~ диалект",
+    "господин",
+    "госпожа",
+    "искать",
+    "космос",
+    "банка",
+    "быть в порядке",
+    "быть прибранным",
+    "хорошее самочувствие",
+    "здание Парламента",
+    "место",
+    "будний день"
    ],
-   "en": "to pull, to draw; subtract",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/ku-hiku-de627343.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "mu-nomu-a27155b9",
-   "kanji": "飲む",
-   "kana": "のむ",
-   "romaji": "nomu",
+   "id": "jw-気分が悪い-きぶんがわるい",
+   "kanji": "気分が悪い",
+   "kana": "きぶんがわるい",
+   "romaji": "kibungawarui",
    "meanings": [
-    "пить"
+    "плохое самочувствие",
+    "подбирать",
+    "находить",
+    "бок",
+    "боковая сторона",
+    "следующий раз",
+    "страшный",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "кошелёк",
+    "танец о-Бон",
+    "бутылка",
+    "космонавт",
+    "космическая станция",
+    "спортивные соревнования",
+    "~ диалект",
+    "господин",
+    "госпожа",
+    "искать",
+    "космос",
+    "банка",
+    "быть в порядке",
+    "быть прибранным",
+    "хорошее самочувствие",
+    "здание Парламента",
+    "место",
+    "будний день"
    ],
-   "en": "to drink",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/mu-nomu-a27155b9.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "migi-7798e420",
-   "kanji": "右",
-   "kana": "みぎ",
-   "romaji": "migi",
+   "id": "jw-運動会-うんどうかい",
+   "kanji": "運動会",
+   "kana": "うんどうかい",
+   "romaji": "undoukai",
    "meanings": [
-    "правый",
-    "направо",
-    "справа"
+    "плохое самочувствие",
+    "подбирать",
+    "находить",
+    "бок",
+    "боковая сторона",
+    "следующий раз",
+    "страшный",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "кошелёк",
+    "танец о-Бон",
+    "бутылка",
+    "космонавт",
+    "космическая станция",
+    "спортивные соревнования",
+    "~ диалект",
+    "господин",
+    "госпожа",
+    "искать",
+    "космос",
+    "банка",
+    "быть в порядке",
+    "быть прибранным",
+    "хорошее самочувствие",
+    "здание Парламента",
+    "место",
+    "будний день"
    ],
-   "en": "right hand side",
-   "pos": [
-    "сущ.",
-    "の-прил."
-   ],
-   "audio": "/audio/n5-words/migi-7798e420.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "yoko-90696982",
+   "id": "jw-拾う-ひろう",
+   "kanji": "拾う",
+   "kana": "ひろう",
+   "romaji": "hirou",
+   "meanings": [
+    "подбирать",
+    "находить",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "бок",
+    "боковая сторона",
+    "следующий раз",
+    "всё",
+    "господин",
+    "госпожа",
+    "страшный",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "космонавт",
+    "банка",
+    "кошелёк",
+    "прямо",
+    "непосредственно",
+    "космос",
+    "бутылка",
+    "хорошее самочувствие",
+    "быть в порядке",
+    "быть прибранным",
+    "искать",
+    "место складирования",
+    "склад",
+    "будний день",
+    "успевать",
+    "~ диалект",
+    "сжигаемый мусор"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-今度-こんど",
+   "kanji": "今度",
+   "kana": "こんど",
+   "romaji": "kondo",
+   "meanings": [
+    "подбирать",
+    "находить",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "бок",
+    "боковая сторона",
+    "следующий раз",
+    "всё",
+    "господин",
+    "госпожа",
+    "страшный",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "космонавт",
+    "банка",
+    "кошелёк",
+    "прямо",
+    "непосредственно",
+    "космос",
+    "бутылка",
+    "хорошее самочувствие",
+    "быть в порядке",
+    "быть прибранным",
+    "искать",
+    "место складирования",
+    "склад",
+    "будний день",
+    "успевать",
+    "~ диалект",
+    "сжигаемый мусор"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-横-よこ",
    "kanji": "横",
    "kana": "よこ",
    "romaji": "yoko",
    "meanings": [
+    "подбирать",
+    "находить",
+    "смотреть",
+    "осматривать",
+    "проверять",
     "бок",
     "боковая сторона",
-    "поперечник",
-    "ширина",
-    "поперёк",
-    "в ширину",
-    "горизонтально",
-    "сбоку",
-    "со стороны"
+    "следующий раз",
+    "всё",
+    "господин",
+    "госпожа",
+    "страшный",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "космонавт",
+    "банка",
+    "кошелёк",
+    "прямо",
+    "непосредственно",
+    "космос",
+    "бутылка",
+    "хорошее самочувствие",
+    "быть в порядке",
+    "быть прибранным",
+    "искать",
+    "место складирования",
+    "склад",
+    "будний день",
+    "успевать",
+    "~ диалект",
+    "сжигаемый мусор"
    ],
-   "en": "beside; side; width",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/yoko-90696982.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "shita-7b45beb2",
-   "kanji": "下",
-   "kana": "した",
-   "romaji": "shita",
+   "id": "jw-燃えるごみ-もえるごみ",
+   "kanji": "燃えるごみ",
+   "kana": "もえるごみ",
+   "romaji": "moerugomi",
    "meanings": [
-    "низ",
-    "внизу",
-    "под"
+    "подбирать",
+    "находить",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "следующий раз",
+    "~ диалект",
+    "космическая станция",
+    "сжигаемый мусор",
+    "плохое самочувствие",
+    "банка",
+    "страшный",
+    "хорошее самочувствие"
    ],
-   "en": "under, below, beneath",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/shita-7b45beb2.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "heta-d767c434",
-   "kanji": "下手",
-   "kana": "へた",
-   "romaji": "heta",
+   "id": "jw-宇宙船-うちゅうせん",
+   "kanji": "宇宙船",
+   "kana": "うちゅうせん",
+   "romaji": "uchuusen",
    "meanings": [
-    "неумелый",
-    "плохой",
-    "неловкий"
+    "космический корабль",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "страшный",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "спортивные соревнования",
+    "~ диалект",
+    "господин",
+    "госпожа",
+    "прямо",
+    "непосредственно",
+    "космос",
+    "плохое самочувствие",
+    "космическая станция",
+    "танец о-Бон",
+    "следующий раз",
+    "бутылка",
+    "кошелёк",
+    "место",
+    "будний день",
+    "успевать",
+    "подбирать",
+    "находить",
+    "сжигаемый мусор",
+    "искать"
    ],
-   "en": "unskillful, poor",
-   "pos": [
-    "な-прил.",
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/heta-d767c434.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "katei-0237c889",
-   "kanji": "家庭",
-   "kana": "かてい",
-   "romaji": "katei",
+   "id": "jw-連絡する-れんらくする",
+   "kanji": "連絡する",
+   "kana": "れんらくする",
+   "romaji": "renrakusuru",
    "meanings": [
-    "семья",
-    "дом",
-    "домашний очаг",
-    "домашний",
-    "семейный"
+    "космический корабль",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "страшный",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "спортивные соревнования",
+    "~ диалект",
+    "господин",
+    "госпожа",
+    "прямо",
+    "непосредственно",
+    "космос",
+    "плохое самочувствие",
+    "космическая станция",
+    "танец о-Бон",
+    "следующий раз",
+    "бутылка",
+    "кошелёк",
+    "место",
+    "будний день",
+    "успевать",
+    "подбирать",
+    "находить",
+    "сжигаемый мусор",
+    "искать"
    ],
-   "en": "home; family",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/katei-0237c889.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "kudamono-921429fb",
-   "kanji": "果物",
-   "kana": "くだもの",
-   "romaji": "kudamono",
+   "id": "jw-間に合う-まにあう",
+   "kanji": "間に合う",
+   "kana": "まにあう",
+   "romaji": "maniau",
    "meanings": [
-    "фрукт",
-    "фрукты",
-    "плоды"
+    "космический корабль",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "страшный",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "спортивные соревнования",
+    "~ диалект",
+    "господин",
+    "госпожа",
+    "прямо",
+    "непосредственно",
+    "космос",
+    "плохое самочувствие",
+    "космическая станция",
+    "танец о-Бон",
+    "следующий раз",
+    "бутылка",
+    "кошелёк",
+    "место",
+    "будний день",
+    "успевать",
+    "подбирать",
+    "находить",
+    "сжигаемый мусор",
+    "искать"
    ],
-   "en": "fruit",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kudamono-921429fb.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "hana-a4e98bbb",
-   "kanji": "花",
-   "kana": "はな",
-   "romaji": "hana",
+   "id": "jw-直接-ちょくせつ",
+   "kanji": "直接",
+   "kana": "ちょくせつ",
+   "romaji": "chokusetsu",
    "meanings": [
-    "цветок",
-    "цветы",
-    "цветы вишни",
-    "цвет",
-    "гордость",
-    "лучшая пора"
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "бок",
+    "боковая сторона",
+    "страшный",
+    "прямо",
+    "непосредственно",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "будний день",
+    "~ диалект",
+    "быть в порядке",
+    "быть прибранным",
+    "космический корабль",
+    "успевать"
    ],
-   "en": "flower",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/hana-a4e98bbb.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "kabin-6630a7a7",
-   "kanji": "花瓶",
-   "kana": "かびん",
-   "romaji": "kabin",
+   "id": "jw-場所-ばしょ",
+   "kanji": "場所",
+   "kana": "ばしょ",
+   "romaji": "basho",
    "meanings": [
-    "ваза"
+    "следующий раз",
+    "место",
+    "страшный",
+    "кошелёк",
+    "быть в порядке",
+    "быть прибранным",
+    "космонавт",
+    "подбирать",
+    "находить"
    ],
-   "en": "(flower) vase",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kabin-6630a7a7.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "u-au-08787053",
-   "kanji": "会う",
-   "kana": "あう",
-   "romaji": "au",
+   "id": "jw-どこでも-どこでも",
+   "kanji": "どこでも",
+   "kana": "どこでも",
+   "romaji": "dokodemo",
    "meanings": [
-    "встречать",
-    "встречаться",
-    "видеться"
+    "везде",
+    "волонтер",
+    "всегда",
+    "все",
+    "очень",
+    "изрядно",
+    "мусор",
+    "блошиный рынок"
    ],
-   "en": "to meet, to see",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/u-au-08787053.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "haizara-6f2cb84f",
-   "kanji": "灰皿",
-   "kana": "はいざら",
-   "romaji": "haizara",
+   "id": "jw-もえるごみ-もえるごみ",
+   "kanji": "もえるごみ",
+   "kana": "もえるごみ",
+   "romaji": "moerugomi",
    "meanings": [
-    "пепельница"
+    "везде",
+    "волонтер",
+    "всегда",
+    "все",
+    "очень",
+    "изрядно",
+    "мусор",
+    "блошиный рынок"
    ],
-   "en": "ashtray",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/haizara-6f2cb84f.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "san-minasan-df964b0a",
-   "kanji": "皆さん",
-   "kana": "みなさん",
-   "romaji": "minasan",
+   "id": "jw-まにあう-まにあう",
+   "kanji": "まにあう",
+   "kana": "まにあう",
+   "romaji": "maniau",
    "meanings": [
-    "господа"
+    "везде",
+    "волонтер",
+    "всегда",
+    "все",
+    "очень",
+    "изрядно",
+    "мусор",
+    "блошиный рынок"
    ],
-   "en": "all of you, everyone",
-   "pos": [
-    "сущ.",
-    "вежл."
-   ],
-   "audio": "/audio/n5-words/san-minasan-df964b0a.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "keru-akeru-e20de900",
-   "kanji": "開ける",
-   "kana": "あける",
-   "romaji": "akeru",
+   "id": "jw-うちゅうせん-うちゅうせん",
+   "kanji": "うちゅうせん",
+   "kana": "うちゅうせん",
+   "romaji": "uchuusen",
    "meanings": [
-    "открывать",
-    "освобождать"
+    "везде",
+    "волонтер",
+    "всегда",
+    "все",
+    "очень",
+    "изрядно",
+    "мусор",
+    "блошиный рынок"
    ],
-   "en": "to open (v.t.)",
-   "pos": [
-    "глагол (ру)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/keru-akeru-e20de900.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "kaidan-2a56664b",
-   "kanji": "階段",
-   "kana": "かいだん",
-   "romaji": "kaidan",
+   "id": "jw-さがす-さがす",
+   "kanji": "さがす",
+   "kana": "さがす",
+   "romaji": "sagasu",
    "meanings": [
-    "лестница",
-    "лестничный марш",
-    "уступ"
+    "волонтер",
+    "очень",
+    "изрядно",
+    "газ",
+    "мусор",
+    "сделать",
+    "выполнить",
+    "все",
+    "такой",
+    "всегда"
    ],
-   "en": "stairs",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/kaidan-2a56664b.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "eru-oboeru-bc2f0c66",
-   "kanji": "覚える",
-   "kana": "おぼえる",
-   "romaji": "oboeru",
+   "id": "jw-おくれる-おくれる",
+   "kanji": "おくれる",
+   "kana": "おくれる",
+   "romaji": "okureru",
    "meanings": [
-    "запоминать",
-    "помнить",
-    "усваивать",
-    "понимать",
-    "изучать",
-    "ощущать",
-    "чувствовать",
-    "сознавать"
+    "волонтер",
+    "очень",
+    "изрядно",
+    "газ",
+    "мусор",
+    "сделать",
+    "выполнить",
+    "все",
+    "такой",
+    "всегда"
    ],
-   "en": "to learn, to commit to memory, to remember, to memorize",
-   "pos": [
-    "глагол (ру)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/eru-oboeru-bc2f0c66.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "keru-kakeru-a330bbab",
-   "kanji": "掛ける",
-   "kana": "かける",
-   "romaji": "kakeru",
+   "id": "jw-さま-さま",
+   "kanji": "さま",
+   "kana": "さま",
+   "romaji": "sama",
    "meanings": [
-    "как 2-й",
-    "вешать",
-    "приставлять",
-    "прислонять",
-    "прилагать",
-    "накладывать"
+    "волонтер",
+    "очень",
+    "изрядно",
+    "газ",
+    "мусор",
+    "сделать",
+    "выполнить",
+    "все",
+    "такой",
+    "всегда"
    ],
-   "en": "to put on (e.g., glasses); to hang (e.g., on a wall)",
-   "pos": [
-    "глагол (ру)",
-    "перех.",
-    "обычно каной"
-   ],
-   "audio": "/audio/n5-words/keru-kakeru-a330bbab.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "nai-abunai-974e9d7c",
-   "kanji": "危ない",
-   "kana": "あぶない",
-   "romaji": "abunai",
+   "id": "jw-ずいぶん-ずいぶん",
+   "kanji": "ずいぶん",
+   "kana": "ずいぶん",
+   "romaji": "zuibun",
    "meanings": [
-    "опасный",
-    "рискованный",
-    "осторожно!",
-    "берегись!",
-    "сомнительный",
-    "ненадёжный"
+    "очень",
+    "изрядно",
+    "всё",
+    "бутылка",
+    "такой",
+    "газ",
+    "сделать",
+    "выполнить",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "все",
+    "следующий раз",
+    "место",
+    "всегда",
+    "везде",
+    "господин",
+    "госпожа",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "сжигаемый мусор",
+    "искать"
    ],
-   "en": "dangerous, critical",
-   "pos": [
-    "い-прил."
-   ],
-   "audio": "/audio/n5-words/nai-abunai-974e9d7c.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "ru-kaeru-77b5e85f",
-   "kanji": "帰る",
-   "kana": "かえる",
-   "romaji": "kaeru",
+   "id": "jw-やる-やる",
+   "kanji": "やる",
+   "kana": "やる",
+   "romaji": "yaru",
    "meanings": [
-    "возвращаться",
-    "уходить",
-    "уезжать"
+    "очень",
+    "изрядно",
+    "всё",
+    "бутылка",
+    "такой",
+    "газ",
+    "сделать",
+    "выполнить",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "все",
+    "следующий раз",
+    "место",
+    "всегда",
+    "везде",
+    "господин",
+    "госпожа",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "сжигаемый мусор",
+    "искать"
    ],
-   "en": "to go back, to go home, to return",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/ru-kaeru-77b5e85f.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "mu-yasumu-9647f91a",
-   "kanji": "休む",
-   "kana": "やすむ",
-   "romaji": "yasumu",
+   "id": "jw-こわい-こわい",
+   "kanji": "こわい",
+   "kana": "こわい",
+   "romaji": "kowai",
    "meanings": [
-    "отдыхать",
-    "устраивать перерыв",
-    "не работать",
-    "быть закрытым",
-    "ложиться спать"
+    "очень",
+    "изрядно",
+    "всё",
+    "бутылка",
+    "такой",
+    "газ",
+    "сделать",
+    "выполнить",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "все",
+    "следующий раз",
+    "место",
+    "всегда",
+    "везде",
+    "господин",
+    "госпожа",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "сжигаемый мусор",
+    "искать"
    ],
-   "en": "to rest, to have a break, to get time off",
-   "pos": [
-    "глагол (у)",
-    "неперех."
-   ],
-   "audio": "/audio/n5-words/mu-yasumu-9647f91a.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "u-suu-d2f98831",
-   "kanji": "吸う",
-   "kana": "すう",
-   "romaji": "suu",
+   "id": "jw-怖い-こわい",
+   "kanji": "怖い",
+   "kana": "こわい",
+   "romaji": "kowai",
    "meanings": [
-    "вдыхать",
-    "втягивать",
-    "сосать",
-    "высасывать",
-    "хлебать"
+    "страшный",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "бутылка",
+    "космонавт",
+    "всё",
+    "спортивные соревнования",
+    "быть в порядке",
+    "быть прибранным",
+    "плохое самочувствие",
+    "хорошее самочувствие",
+    "здание Парламента",
+    "~ диалект",
+    "прямо",
+    "непосредственно",
+    "место",
+    "следующий раз",
+    "космическая станция",
+    "будний день"
    ],
-   "en": "to breathe in, to suck",
-   "pos": [
-    "глагол (у)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/u-suu-d2f98831.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "giyuuniku-3b6e5c0b",
-   "kanji": "牛肉",
-   "kana": "ぎゅうにく",
-   "romaji": "gyuuniku",
+   "id": "jw-片づく-かたづく",
+   "kanji": "片づく",
+   "kana": "かたづく",
+   "romaji": "katazuku",
    "meanings": [
-    "говядина",
-    "мясо"
+    "страшный",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "бутылка",
+    "космонавт",
+    "всё",
+    "спортивные соревнования",
+    "быть в порядке",
+    "быть прибранным",
+    "плохое самочувствие",
+    "хорошее самочувствие",
+    "здание Парламента",
+    "~ диалект",
+    "прямо",
+    "непосредственно",
+    "место",
+    "следующий раз",
+    "космическая станция",
+    "будний день"
    ],
-   "en": "beef",
-   "pos": [
-    "сущ."
-   ],
-   "audio": "/audio/n5-words/giyuuniku-3b6e5c0b.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "eru-oshieru-5132cc99",
-   "kanji": "教える",
-   "kana": "おしえる",
-   "romaji": "oshieru",
+   "id": "jw-盆踊り-ぼんおどり",
+   "kanji": "盆踊り",
+   "kana": "ぼんおどり",
+   "romaji": "bonodori",
    "meanings": [
-    "преподавать",
-    "учить",
-    "обучать",
-    "наставлять",
-    "объяснять",
-    "показывать"
+    "космический корабль",
+    "танец о-Бон",
+    "быть на связи",
+    "связываться",
+    "звонить",
+    "бутылка",
+    "бок",
+    "боковая сторона",
+    "искать",
+    "подбирать",
+    "находить",
+    "хорошее самочувствие",
+    "место",
+    "смотреть",
+    "осматривать",
+    "проверять",
+    "место складирования",
+    "склад"
    ],
-   "en": "to teach, to inform, to instruct",
-   "pos": [
-    "глагол (ру)",
-    "перех."
-   ],
-   "audio": "/audio/n5-words/eru-oshieru-5132cc99.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
   },
   {
-   "id": "kiyoushitsu-93eaf598",
-   "kanji": "教室",
-   "kana": "きょうしつ",
-   "romaji": "kyoushitsu",
+   "id": "jw-うんどうかい-うんどうかい",
+   "kanji": "うんどうかい",
+   "kana": "うんどうかい",
+   "romaji": "undoukai",
    "meanings": [
-    "класс",
-    "аудитория"
+    "все",
+    "везде",
+    "очень",
+    "изрядно",
+    "блошиный рынок",
+    "мусор",
+    "такой"
    ],
-   "en": "classroom",
-   "pos": [
-    "сущ."
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "27"
+  },
+  {
+   "id": "jw-主人公-しゅじんこう",
+   "kanji": "主人公",
+   "kana": "しゅじんこう",
+   "romaji": "shujinkou",
+   "meanings": [
+    "герой",
+    "главный персонаж"
    ],
-   "audio": "/audio/n5-words/kiyoushitsu-93eaf598.mp3"
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-飼う-しゅじんこう",
+   "kanji": "飼う",
+   "kana": "しゅじんこう",
+   "romaji": "shujinkou",
+   "meanings": [
+    "герой",
+    "главный персонаж"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-子どもたち-しゅじんこう",
+   "kanji": "子どもたち",
+   "kana": "しゅじんこう",
+   "romaji": "shujinkou",
+   "meanings": [
+    "герой",
+    "главный персонаж"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-教室-しゅじんこう",
+   "kanji": "〜教室",
+   "kana": "しゅじんこう",
+   "romaji": "shujinkou",
+   "meanings": [
+    "герой",
+    "главный персонаж"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-家具-かた",
+   "kanji": "家具",
+   "kana": "かた",
+   "romaji": "kata",
+   "meanings": [
+    "господин",
+    "госпожа"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-家-かた",
+   "kanji": "家",
+   "kana": "かた",
+   "romaji": "kata",
+   "meanings": [
+    "господин",
+    "госпожа"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-本棚-かた",
+   "kanji": "本棚",
+   "kana": "かた",
+   "romaji": "kata",
+   "meanings": [
+    "господин",
+    "госпожа"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-じぶん-じぶん",
+   "kanji": "じぶん",
+   "kana": "じぶん",
+   "romaji": "jibun",
+   "meanings": [
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "химчистка",
+    "только",
+    "лишь",
+    "когда-нибудь",
+    "другой",
+    "иной",
+    "замечательный",
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "жевательная резинка",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-だいどころ-だいどころ",
+   "kanji": "だいどころ",
+   "kana": "だいどころ",
+   "romaji": "daidokoro",
+   "meanings": [
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "химчистка",
+    "только",
+    "лишь",
+    "когда-нибудь",
+    "другой",
+    "иной",
+    "замечательный",
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "жевательная резинка",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-どうぐ-どうぐ",
+   "kanji": "どうぐ",
+   "kana": "どうぐ",
+   "romaji": "dougu",
+   "meanings": [
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "химчистка",
+    "только",
+    "лишь",
+    "когда-нибудь",
+    "другой",
+    "иной",
+    "замечательный",
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "жевательная резинка",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-付ける-とり",
+   "kanji": "付ける",
+   "kana": "とり",
+   "romaji": "tori",
+   "meanings": [
+    "птица"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-鳥-とり",
+   "kanji": "鳥",
+   "kana": "とり",
+   "romaji": "tori",
+   "meanings": [
+    "птица"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-例えば-とり",
+   "kanji": "例えば",
+   "kana": "とり",
+   "romaji": "tori",
+   "meanings": [
+    "птица"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-道具-とり",
+   "kanji": "道具",
+   "kana": "とり",
+   "romaji": "tori",
+   "meanings": [
+    "птица"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-ほかの-ほかの",
+   "kanji": "ほかの",
+   "kana": "ほかの",
+   "romaji": "hokano",
+   "meanings": [
+    "другой",
+    "иной",
+    "быть сделанным",
+    "многоквартирный дом",
+    "только",
+    "лишь",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "карман"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-ふしぎ-ふしぎ",
+   "kanji": "ふしぎ",
+   "kana": "ふしぎ",
+   "romaji": "fushigi",
+   "meanings": [
+    "другой",
+    "иной",
+    "быть сделанным",
+    "многоквартирный дом",
+    "только",
+    "лишь",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "карман"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-みえる-みえる",
+   "kanji": "みえる",
+   "kana": "みえる",
+   "romaji": "mieru",
+   "meanings": [
+    "другой",
+    "иной",
+    "быть сделанным",
+    "многоквартирный дом",
+    "только",
+    "лишь",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "карман"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-じゆうに-じゆうに",
+   "kanji": "じゆうに",
+   "kana": "じゆうに",
+   "romaji": "jiyuuni",
+   "meanings": [
+    "другой",
+    "иной",
+    "быть сделанным",
+    "многоквартирный дом",
+    "только",
+    "лишь",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "карман"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-だいすき-だいすき",
+   "kanji": "だいすき",
+   "kana": "だいすき",
+   "romaji": "daisuki",
+   "meanings": [
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "только",
+    "лишь",
+    "кухня",
+    "другой",
+    "иной",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "когда-нибудь",
+    "быть сделанным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-きこえる-きこえる",
+   "kanji": "きこえる",
+   "kana": "きこえる",
+   "romaji": "kikoeru",
+   "meanings": [
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "только",
+    "лишь",
+    "кухня",
+    "другой",
+    "иной",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "когда-нибудь",
+    "быть сделанным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-そら-そら",
+   "kanji": "そら",
+   "kana": "そら",
+   "romaji": "sora",
+   "meanings": [
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "только",
+    "лишь",
+    "кухня",
+    "другой",
+    "иной",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "когда-нибудь",
+    "быть сделанным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-はっきり-はっきり",
+   "kanji": "はっきり",
+   "kana": "はっきり",
+   "romaji": "hakkiri",
+   "meanings": [
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "только",
+    "лишь",
+    "кухня",
+    "другой",
+    "иной",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "когда-нибудь",
+    "быть сделанным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-心配-かぐ",
+   "kanji": "心配",
+   "kana": "かぐ",
+   "romaji": "kagu",
+   "meanings": [
+    "мебель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-家具-かぐ",
+   "kanji": "家具",
+   "kana": "かぐ",
+   "romaji": "kagu",
+   "meanings": [
+    "мебель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-家-かぐ",
+   "kanji": "家",
+   "kana": "かぐ",
+   "romaji": "kagu",
+   "meanings": [
+    "мебель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-走る-かぐ",
+   "kanji": "走る",
+   "kana": "かぐ",
+   "romaji": "kagu",
+   "meanings": [
+    "мебель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-なみ-なみ",
+   "kanji": "なみ",
+   "kana": "なみ",
+   "romaji": "nami",
+   "meanings": [
+    "когда-нибудь",
+    "замечательный",
+    "химчистка",
+    "другой",
+    "иной",
+    "домашнее животное",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "карман",
+    "быть сделанным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-いつか-いつか",
+   "kanji": "いつか",
+   "kana": "いつか",
+   "romaji": "itsuka",
+   "meanings": [
+    "когда-нибудь",
+    "замечательный",
+    "химчистка",
+    "другой",
+    "иной",
+    "домашнее животное",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "карман",
+    "быть сделанным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-かぐ-かぐ",
+   "kanji": "かぐ",
+   "kana": "かぐ",
+   "romaji": "kagu",
+   "meanings": [
+    "когда-нибудь",
+    "замечательный",
+    "химчистка",
+    "другой",
+    "иной",
+    "домашнее животное",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "карман",
+    "быть сделанным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-ほんだな-ほんだな",
+   "kanji": "ほんだな",
+   "kana": "ほんだな",
+   "romaji": "hondana",
+   "meanings": [
+    "когда-нибудь",
+    "замечательный",
+    "химчистка",
+    "другой",
+    "иной",
+    "домашнее животное",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "карман",
+    "быть сделанным"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-付ける-かぐ",
+   "kanji": "付ける",
+   "kana": "かぐ",
+   "romaji": "kagu",
+   "meanings": [
+    "мебель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-空-かぐ",
+   "kanji": "空",
+   "kana": "かぐ",
+   "romaji": "kagu",
+   "meanings": [
+    "мебель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-花火-かぐ",
+   "kanji": "花火",
+   "kana": "かぐ",
+   "romaji": "kagu",
+   "meanings": [
+    "мебель"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-しんぱい-しんぱい",
+   "kanji": "しんぱい",
+   "kana": "しんぱい",
+   "romaji": "shinpai",
+   "meanings": [
+    "замечательный",
+    "когда-нибудь",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "химчистка",
+    "домашнее животное"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-いえ-いえ",
+   "kanji": "いえ",
+   "kana": "いえ",
+   "romaji": "ie",
+   "meanings": [
+    "замечательный",
+    "когда-нибудь",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "химчистка",
+    "домашнее животное"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-すばらしい-すばらしい",
+   "kanji": "すばらしい",
+   "kana": "すばらしい",
+   "romaji": "subarashii",
+   "meanings": [
+    "замечательный",
+    "когда-нибудь",
+    "помещение для проведения вечеринок",
+    "мероприятий",
+    "химчистка",
+    "домашнее животное"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-かた-かた",
+   "kanji": "かた",
+   "kana": "かた",
+   "romaji": "kata",
+   "meanings": [
+    "химчистка",
+    "другой",
+    "иной",
+    "когда-нибудь",
+    "замечательный",
+    "быть сделанным",
+    "кухня",
+    "домашнее животное",
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "премия",
+    "жевательная резинка",
+    "некоторое время",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "жевать",
+    "кусать",
+    "итак",
+    "поэтому",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-ひらく-ひらく",
+   "kanji": "ひらく",
+   "kana": "ひらく",
+   "romaji": "hiraku",
+   "meanings": [
+    "химчистка",
+    "другой",
+    "иной",
+    "когда-нибудь",
+    "замечательный",
+    "быть сделанным",
+    "кухня",
+    "домашнее животное",
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "премия",
+    "жевательная резинка",
+    "некоторое время",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "жевать",
+    "кусать",
+    "итак",
+    "поэтому",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-クリーニング-くりーにんぐ",
+   "kanji": "クリーニング",
+   "kana": "くりーにんぐ",
+   "romaji": "kuriiningu",
+   "meanings": [
+    "химчистка",
+    "другой",
+    "иной",
+    "когда-нибудь",
+    "замечательный",
+    "быть сделанным",
+    "кухня",
+    "домашнее животное",
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "премия",
+    "жевательная резинка",
+    "некоторое время",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "жевать",
+    "кусать",
+    "итак",
+    "поэтому",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-かたち-かたち",
+   "kanji": "かたち",
+   "kana": "かたち",
+   "romaji": "katachi",
+   "meanings": [
+    "химчистка",
+    "другой",
+    "иной",
+    "когда-нибудь",
+    "замечательный",
+    "быть сделанным",
+    "кухня",
+    "домашнее животное",
+    "ясно",
+    "чётко",
+    "отчётливо",
+    "премия",
+    "жевательная резинка",
+    "некоторое время",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "жевать",
+    "кусать",
+    "итак",
+    "поэтому",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-家-ふしぎ",
+   "kanji": "家",
+   "kana": "ふしぎ",
+   "romaji": "fushigi",
+   "meanings": [
+    "странный",
+    "таинственный",
+    "чудесный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-不思議-ふしぎ",
+   "kanji": "不思議",
+   "kana": "ふしぎ",
+   "romaji": "fushigi",
+   "meanings": [
+    "странный",
+    "таинственный",
+    "чудесный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-建てる-ふしぎ",
+   "kanji": "建てる",
+   "kana": "ふしぎ",
+   "romaji": "fushigi",
+   "meanings": [
+    "странный",
+    "таинственный",
+    "чудесный"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-しょうらい-しょうらい",
+   "kanji": "しょうらい",
+   "kana": "しょうらい",
+   "romaji": "shourai",
+   "meanings": [
+    "кухня",
+    "когда-нибудь",
+    "многоквартирный дом",
+    "быть сделанным",
+    "драма",
+    "сериал",
+    "к тому же",
+    "более того",
+    "обычно",
+    "в основном",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "28"
+  },
+  {
+   "id": "jw-ガム-がむ",
+   "kanji": "ガム",
+   "kana": "がむ",
+   "romaji": "gamu",
+   "meanings": [
+    "точно соответствующий",
+    "подходящий",
+    "некоторое время",
+    "драма",
+    "сериал",
+    "жевательная резинка",
+    "премия",
+    "итак",
+    "поэтому",
+    "делать записи",
+    "записывать",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "серьёзный",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "к тому же",
+    "более того"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-ちょうどいい-ちょうどいい",
+   "kanji": "ちょうどいい",
+   "kana": "ちょうどいい",
+   "romaji": "choudoii",
+   "meanings": [
+    "точно соответствующий",
+    "подходящий",
+    "некоторое время",
+    "драма",
+    "сериал",
+    "жевательная резинка",
+    "премия",
+    "итак",
+    "поэтому",
+    "делать записи",
+    "записывать",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "серьёзный",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "к тому же",
+    "более того"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-むすめ-むすめ",
+   "kanji": "むすめ",
+   "kana": "むすめ",
+   "romaji": "musume",
+   "meanings": [
+    "точно соответствующий",
+    "подходящий",
+    "некоторое время",
+    "драма",
+    "сериал",
+    "жевательная резинка",
+    "премия",
+    "итак",
+    "поэтому",
+    "делать записи",
+    "записывать",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "серьёзный",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "к тому же",
+    "более того"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-にんき-にんき",
+   "kanji": "にんき",
+   "kana": "にんき",
+   "romaji": "ninki",
+   "meanings": [
+    "точно соответствующий",
+    "подходящий",
+    "некоторое время",
+    "драма",
+    "сериал",
+    "жевательная резинка",
+    "премия",
+    "итак",
+    "поэтому",
+    "делать записи",
+    "записывать",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "серьёзный",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "к тому же",
+    "более того"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-おどる-おどる",
+   "kanji": "おどる",
+   "kana": "おどる",
+   "romaji": "odoru",
+   "meanings": [
+    "некоторое время",
+    "серьёзный",
+    "жевательная резинка",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "игра",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-びよういん-びよういん",
+   "kanji": "びよういん",
+   "kana": "びよういん",
+   "romaji": "biyouin",
+   "meanings": [
+    "некоторое время",
+    "серьёзный",
+    "жевательная резинка",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "игра",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-しばらく-しばらく",
+   "kanji": "しばらく",
+   "kana": "しばらく",
+   "romaji": "shibaraku",
+   "meanings": [
+    "некоторое время",
+    "серьёзный",
+    "жевательная резинка",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "жевать",
+    "кусать",
+    "игра",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-ボーナス-ぼーなす",
+   "kanji": "ボーナス",
+   "kana": "ぼーなす",
+   "romaji": "boonasu",
+   "meanings": [
+    "премия",
+    "жевательная резинка",
+    "некоторое время",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "жевать",
+    "кусать",
+    "итак",
+    "поэтому",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-たいいくかん-たいいくかん",
+   "kanji": "たいいくかん",
+   "kana": "たいいくかん",
+   "romaji": "taiikukan",
+   "meanings": [
+    "премия",
+    "жевательная резинка",
+    "некоторое время",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "жевать",
+    "кусать",
+    "итак",
+    "поэтому",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-けいけん-けいけん",
+   "kanji": "けいけん",
+   "kana": "けいけん",
+   "romaji": "keiken",
+   "meanings": [
+    "премия",
+    "жевательная резинка",
+    "некоторое время",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "жевать",
+    "кусать",
+    "итак",
+    "поэтому",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-まじめ-まじめ",
+   "kanji": "まじめ",
+   "kana": "まじめ",
+   "romaji": "majime",
+   "meanings": [
+    "серьёзный",
+    "драма",
+    "сериал",
+    "премия",
+    "некоторое время",
+    "делать записи",
+    "записывать",
+    "к тому же",
+    "более того",
+    "жевательная резинка",
+    "точно соответствующий",
+    "подходящий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-ばんぐみ-ばんぐみ",
+   "kanji": "ばんぐみ",
+   "kana": "ばんぐみ",
+   "romaji": "bangumi",
+   "meanings": [
+    "серьёзный",
+    "драма",
+    "сериал",
+    "премия",
+    "некоторое время",
+    "делать записи",
+    "записывать",
+    "к тому же",
+    "более того",
+    "жевательная резинка",
+    "точно соответствующий",
+    "подходящий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-むすこさん-むすこさん",
+   "kanji": "むすこさん",
+   "kana": "むすこさん",
+   "romaji": "musukosan",
+   "meanings": [
+    "серьёзный",
+    "драма",
+    "сериал",
+    "премия",
+    "некоторое время",
+    "делать записи",
+    "записывать",
+    "к тому же",
+    "более того",
+    "жевательная резинка",
+    "точно соответствующий",
+    "подходящий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-むりょう-むりょう",
+   "kanji": "むりょう",
+   "kana": "むりょう",
+   "romaji": "muryou",
+   "meanings": [
+    "драма",
+    "сериал",
+    "жевать",
+    "кусать",
+    "жевательная резинка",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "игра",
+    "некоторое время"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-ドラマ-どらま",
+   "kanji": "ドラマ",
+   "kana": "どらま",
+   "romaji": "dorama",
+   "meanings": [
+    "драма",
+    "сериал",
+    "жевать",
+    "кусать",
+    "жевательная резинка",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "игра",
+    "некоторое время"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-ねだん-ねだん",
+   "kanji": "ねだん",
+   "kana": "ねだん",
+   "romaji": "nedan",
+   "meanings": [
+    "итак",
+    "поэтому",
+    "игра",
+    "жевательная резинка",
+    "премия",
+    "некоторое время",
+    "делать записи",
+    "записывать",
+    "серьёзный",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "к тому же",
+    "более того",
+    "жевать",
+    "кусать",
+    "точно соответствующий",
+    "подходящий",
+    "обычно",
+    "в основном",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-メモする-めもする",
+   "kanji": "メモする",
+   "kana": "めもする",
+   "romaji": "memosuru",
+   "meanings": [
+    "итак",
+    "поэтому",
+    "игра",
+    "жевательная резинка",
+    "премия",
+    "некоторое время",
+    "делать записи",
+    "записывать",
+    "серьёзный",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "к тому же",
+    "более того",
+    "жевать",
+    "кусать",
+    "точно соответствующий",
+    "подходящий",
+    "обычно",
+    "в основном",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-しょうせつ-しょうせつ",
+   "kanji": "しょうせつ",
+   "kana": "しょうせつ",
+   "romaji": "shousetsu",
+   "meanings": [
+    "итак",
+    "поэтому",
+    "игра",
+    "жевательная резинка",
+    "премия",
+    "некоторое время",
+    "делать записи",
+    "записывать",
+    "серьёзный",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "к тому же",
+    "более того",
+    "жевать",
+    "кусать",
+    "точно соответствующий",
+    "подходящий",
+    "обычно",
+    "в основном",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-それで-それで",
+   "kanji": "それで",
+   "kana": "それで",
+   "romaji": "sorede",
+   "meanings": [
+    "итак",
+    "поэтому",
+    "игра",
+    "жевательная резинка",
+    "премия",
+    "некоторое время",
+    "делать записи",
+    "записывать",
+    "серьёзный",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "к тому же",
+    "более того",
+    "жевать",
+    "кусать",
+    "точно соответствующий",
+    "подходящий",
+    "обычно",
+    "в основном",
+    "драма",
+    "сериал"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-しょうせつか-しょうせつか",
+   "kanji": "しょうせつか",
+   "kana": "しょうせつか",
+   "romaji": "shousetsuka",
+   "meanings": [
+    "точно соответствующий",
+    "подходящий",
+    "игра",
+    "некоторое время",
+    "жевательная резинка",
+    "серьёзный",
+    "драма",
+    "сериал",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-けしき-けしき",
+   "kanji": "けしき",
+   "kana": "けしき",
+   "romaji": "keshiki",
+   "meanings": [
+    "точно соответствующий",
+    "подходящий",
+    "игра",
+    "некоторое время",
+    "жевательная резинка",
+    "серьёзный",
+    "драма",
+    "сериал",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-むすこ-むすこ",
+   "kanji": "むすこ",
+   "kana": "むすこ",
+   "romaji": "musuko",
+   "meanings": [
+    "точно соответствующий",
+    "подходящий",
+    "игра",
+    "некоторое время",
+    "жевательная резинка",
+    "серьёзный",
+    "драма",
+    "сериал",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-さんかする-さんかする",
+   "kanji": "さんかする",
+   "kana": "さんかする",
+   "romaji": "sankasuru",
+   "meanings": [
+    "игра",
+    "премия",
+    "жевательная резинка",
+    "итак",
+    "поэтому",
+    "междометие",
+    "выражающее недоумение или затруднение"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-ゲーム-げーむ",
+   "kanji": "ゲーム",
+   "kana": "げーむ",
+   "romaji": "geemu",
+   "meanings": [
+    "игра",
+    "премия",
+    "жевательная резинка",
+    "итак",
+    "поэтому",
+    "междометие",
+    "выражающее недоумение или затруднение"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-きゅうりょう-きゅうりょう",
+   "kanji": "きゅうりょう",
+   "kana": "きゅうりょう",
+   "romaji": "kyuuryou",
+   "meanings": [
+    "итак",
+    "поэтому",
+    "жевать",
+    "кусать",
+    "делать записи",
+    "записывать",
+    "некоторое время",
+    "драма",
+    "сериал",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "игра",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-うーん-うーん",
+   "kanji": "うーん",
+   "kana": "うーん",
+   "romaji": "uun",
+   "meanings": [
+    "итак",
+    "поэтому",
+    "жевать",
+    "кусать",
+    "делать записи",
+    "записывать",
+    "некоторое время",
+    "драма",
+    "сериал",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "игра",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-ちから-ちから",
+   "kanji": "ちから",
+   "kana": "ちから",
+   "romaji": "chikara",
+   "meanings": [
+    "итак",
+    "поэтому",
+    "жевать",
+    "кусать",
+    "делать записи",
+    "записывать",
+    "некоторое время",
+    "драма",
+    "сериал",
+    "серьёзный",
+    "обычно",
+    "в основном",
+    "мероприятие",
+    "событие",
+    "ивент",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "игра",
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-あじ-あじ",
+   "kanji": "あじ",
+   "kana": "あじ",
+   "romaji": "aji",
+   "meanings": [
+    "жевательная резинка",
+    "жевать",
+    "кусать",
+    "некоторое время",
+    "драма",
+    "сериал",
+    "делать записи",
+    "записывать",
+    "точно соответствующий",
+    "подходящий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-いろ-いろ",
+   "kanji": "いろ",
+   "kana": "いろ",
+   "romaji": "iro",
+   "meanings": [
+    "жевательная резинка",
+    "жевать",
+    "кусать",
+    "некоторое время",
+    "драма",
+    "сериал",
+    "делать записи",
+    "записывать",
+    "точно соответствующий",
+    "подходящий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-むすめさん-むすめさん",
+   "kanji": "むすめさん",
+   "kana": "むすめさん",
+   "romaji": "musumesan",
+   "meanings": [
+    "драма",
+    "сериал",
+    "делать записи",
+    "записывать",
+    "итак",
+    "поэтому",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-かよう-かよう",
+   "kanji": "かよう",
+   "kana": "かよう",
+   "romaji": "kayou",
+   "meanings": [
+    "драма",
+    "сериал",
+    "делать записи",
+    "записывать",
+    "итак",
+    "поэтому",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-たいてい-たいてい",
+   "kanji": "たいてい",
+   "kana": "たいてい",
+   "romaji": "taitei",
+   "meanings": [
+    "драма",
+    "сериал",
+    "делать записи",
+    "записывать",
+    "итак",
+    "поэтому",
+    "обычно",
+    "в основном",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "точно соответствующий",
+    "подходящий"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-かむ-かむ",
+   "kanji": "かむ",
+   "kana": "かむ",
+   "romaji": "kamu",
+   "meanings": [
+    "жевать",
+    "кусать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-しなもの-しなもの",
+   "kanji": "しなもの",
+   "kana": "しなもの",
+   "romaji": "shinamono",
+   "meanings": [
+    "премия"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-じつは-じつは",
+   "kanji": "じつは",
+   "kana": "じつは",
+   "romaji": "jitsuha",
+   "meanings": [
+    "итак",
+    "поэтому",
+    "делать записи",
+    "записывать",
+    "жевательная резинка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-それに-それに",
+   "kanji": "それに",
+   "kana": "それに",
+   "romaji": "soreni",
+   "meanings": [
+    "жевательная резинка",
+    "обычно",
+    "в основном",
+    "игра",
+    "к тому же",
+    "более того",
+    "некоторое время"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-イベント-いべんと",
+   "kanji": "イベント",
+   "kana": "いべんと",
+   "romaji": "ibento",
+   "meanings": [
+    "мероприятие",
+    "событие",
+    "ивент"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-えらぶ-えらぶ",
+   "kanji": "えらぶ",
+   "kana": "えらぶ",
+   "romaji": "erabu",
+   "meanings": [
+    "некоторое время",
+    "итак",
+    "поэтому"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-かしゅ-かしゅ",
+   "kanji": "かしゅ",
+   "kana": "かしゅ",
+   "romaji": "kashu",
+   "meanings": [
+    "драма",
+    "сериал",
+    "жевать",
+    "кусать",
+    "игра"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-ねっしん-ねっしん",
+   "kanji": "ねっしん",
+   "kana": "ねっしん",
+   "romaji": "nesshin",
+   "meanings": [
+    "жевать",
+    "кусать",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "обычно",
+    "в основном",
+    "некоторое время"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-おしらせ-おしらせ",
+   "kanji": "おしらせ",
+   "kana": "おしらせ",
+   "romaji": "oshirase",
+   "meanings": [
+    "жевать",
+    "кусать",
+    "междометие",
+    "выражающее недоумение или затруднение",
+    "обычно",
+    "в основном",
+    "некоторое время"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-えらい-えらい",
+   "kanji": "えらい",
+   "kana": "えらい",
+   "romaji": "erai",
+   "meanings": [
+    "делать записи",
+    "записывать",
+    "междометие",
+    "выражающее недоумение или затруднение"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-さそう-さそう",
+   "kanji": "さそう",
+   "kana": "さそう",
+   "romaji": "sasou",
+   "meanings": [
+    "точно соответствующий",
+    "подходящий",
+    "делать записи",
+    "записывать"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-うる-うる",
+   "kanji": "うる",
+   "kana": "うる",
+   "romaji": "uru",
+   "meanings": [
+    "к тому же",
+    "более того"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-かいわ-かいわ",
+   "kanji": "かいわ",
+   "kana": "かいわ",
+   "romaji": "kaiwa",
+   "meanings": [
+    "жевать",
+    "кусать",
+    "к тому же",
+    "более того",
+    "жевательная резинка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-経験-けいけん",
+   "kanji": "経験",
+   "kana": "けいけん",
+   "romaji": "keiken",
+   "meanings": [
+    "роман; рассказ",
+    "опыт",
+    "мероприятие, событие, ивент",
+    "форма"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "29"
+  },
+  {
+   "id": "jw-おちゃわん-おちゃわん",
+   "kanji": "おちゃわん",
+   "kana": "おちゃわん",
+   "romaji": "ochawan",
+   "meanings": [
+    "миска для риса",
+    "чашка для чайной церемонии",
+    "карман",
+    "стекло",
+    "речь",
+    "доклад",
+    "выступление"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-やぶれる-やぶれる",
+   "kanji": "やぶれる",
+   "kana": "やぶれる",
+   "romaji": "yabureru",
+   "meanings": [
+    "миска для риса",
+    "чашка для чайной церемонии",
+    "карман",
+    "стекло",
+    "речь",
+    "доклад",
+    "выступление"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-まちがえる-まちがえる",
+   "kanji": "まちがえる",
+   "kana": "まちがえる",
+   "romaji": "machigaeru",
+   "meanings": [
+    "миска для риса",
+    "чашка для чайной церемонии",
+    "карман",
+    "стекло",
+    "речь",
+    "доклад",
+    "выступление"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-かべ-かべ",
+   "kanji": "かべ",
+   "kana": "かべ",
+   "romaji": "kabe",
+   "meanings": [
+    "миска для риса",
+    "чашка для чайной церемонии",
+    "карман",
+    "стекло",
+    "речь",
+    "доклад",
+    "выступление"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-駅員-じしん",
+   "kanji": "駅員",
+   "kana": "じしん",
+   "romaji": "jishin",
+   "meanings": [
+    "землетрясение"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-片付ける-じしん",
+   "kanji": "片付ける",
+   "kana": "じしん",
+   "romaji": "jishin",
+   "meanings": [
+    "землетрясение"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-地震-じしん",
+   "kanji": "地震",
+   "kana": "じしん",
+   "romaji": "jishin",
+   "meanings": [
+    "землетрясение"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-倒れる-じしん",
+   "kanji": "倒れる",
+   "kana": "じしん",
+   "romaji": "jishin",
+   "meanings": [
+    "землетрясение"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-書類-つく",
+   "kanji": "書類",
+   "kana": "つく",
+   "romaji": "tsuku",
+   "meanings": [
+    "быть прикреплённым (присоединённым",
+    "приделанным)",
+    "быть прицепленным",
+    "быть приложенным (к"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-外れる-つく",
+   "kanji": "外れる",
+   "kana": "つく",
+   "romaji": "tsuku",
+   "meanings": [
+    "быть прикреплённым (присоединённым",
+    "приделанным)",
+    "быть прицепленным",
+    "быть приложенным (к"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-枝-つく",
+   "kanji": "枝",
+   "kana": "つく",
+   "romaji": "tsuku",
+   "meanings": [
+    "быть прикреплённым (присоединённым",
+    "приделанным)",
+    "быть прицепленным",
+    "быть приложенным (к"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-付く-つく",
+   "kanji": "付く",
+   "kana": "つく",
+   "romaji": "tsuku",
+   "meanings": [
+    "быть прикреплённым (присоединённым",
+    "приделанным)",
+    "быть прицепленным",
+    "быть приложенным (к"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-汚れる-とりかえる",
+   "kanji": "汚れる",
+   "kana": "とりかえる",
+   "romaji": "torikaeru",
+   "meanings": [
+    "менять",
+    "обмениваться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-書類-とりかえる",
+   "kanji": "書類",
+   "kana": "とりかえる",
+   "romaji": "torikaeru",
+   "meanings": [
+    "менять",
+    "обмениваться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-取り替える-とりかえる",
+   "kanji": "取り替える",
+   "kana": "とりかえる",
+   "romaji": "torikaeru",
+   "meanings": [
+    "менять",
+    "обмениваться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-片付ける-とりかえる",
+   "kanji": "片付ける",
+   "kana": "とりかえる",
+   "romaji": "torikaeru",
+   "meanings": [
+    "менять",
+    "обмениваться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-消える-とまる",
+   "kanji": "消える",
+   "kana": "とまる",
+   "romaji": "tomaru",
+   "meanings": [
+    "останавливаться",
+    "стоять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-破れる-とまる",
+   "kanji": "破れる",
+   "kana": "とまる",
+   "romaji": "tomaru",
+   "meanings": [
+    "останавливаться",
+    "стоять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-止まる-とまる",
+   "kanji": "止まる",
+   "kana": "とまる",
+   "romaji": "tomaru",
+   "meanings": [
+    "останавливаться",
+    "стоять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-交番-とまる",
+   "kanji": "交番",
+   "kana": "とまる",
+   "romaji": "tomaru",
+   "meanings": [
+    "останавливаться",
+    "стоять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-折れる-とりかえる",
+   "kanji": "折れる",
+   "kana": "とりかえる",
+   "romaji": "torikaeru",
+   "meanings": [
+    "менять",
+    "обмениваться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-付く-とりかえる",
+   "kanji": "付く",
+   "kana": "とりかえる",
+   "romaji": "torikaeru",
+   "meanings": [
+    "менять",
+    "обмениваться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-西-とりかえる",
+   "kanji": "西",
+   "kana": "とりかえる",
+   "romaji": "torikaeru",
+   "meanings": [
+    "менять",
+    "обмениваться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-外れる-はずれる",
+   "kanji": "外れる",
+   "kana": "はずれる",
+   "romaji": "hazureru",
+   "meanings": [
+    "открепиться",
+    "отстегнуться",
+    "расстегнуться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-駅員-はずれる",
+   "kanji": "駅員",
+   "kana": "はずれる",
+   "romaji": "hazureru",
+   "meanings": [
+    "открепиться",
+    "отстегнуться",
+    "расстегнуться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-壊れる-はずれる",
+   "kanji": "壊れる",
+   "kana": "はずれる",
+   "romaji": "hazureru",
+   "meanings": [
+    "открепиться",
+    "отстегнуться",
+    "расстегнуться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-消える-はずれる",
+   "kanji": "消える",
+   "kana": "はずれる",
+   "romaji": "hazureru",
+   "meanings": [
+    "открепиться",
+    "отстегнуться",
+    "расстегнуться"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-駅員-おとす",
+   "kanji": "駅員",
+   "kana": "おとす",
+   "romaji": "otosu",
+   "meanings": [
+    "ронять",
+    "терять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-落とす-おとす",
+   "kanji": "落とす",
+   "kana": "おとす",
+   "romaji": "otosu",
+   "meanings": [
+    "ронять",
+    "терять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-消える-おとす",
+   "kanji": "消える",
+   "kana": "おとす",
+   "romaji": "otosu",
+   "meanings": [
+    "ронять",
+    "терять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-お皿-おとす",
+   "kanji": "お皿",
+   "kana": "おとす",
+   "romaji": "otosu",
+   "meanings": [
+    "ронять",
+    "терять"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-お皿-おさら",
+   "kanji": "お皿",
+   "kana": "おさら",
+   "romaji": "osara",
+   "meanings": [
+    "тарелка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-間違える-おさら",
+   "kanji": "間違える",
+   "kana": "おさら",
+   "romaji": "osara",
+   "meanings": [
+    "тарелка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-倒れる-おさら",
+   "kanji": "倒れる",
+   "kana": "おさら",
+   "romaji": "osara",
+   "meanings": [
+    "тарелка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-割れる-おさら",
+   "kanji": "割れる",
+   "kana": "おさら",
+   "romaji": "osara",
+   "meanings": [
+    "тарелка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-針-おさら",
+   "kanji": "針",
+   "kana": "おさら",
+   "romaji": "osara",
+   "meanings": [
+    "тарелка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-交番-おさら",
+   "kanji": "交番",
+   "kana": "おさら",
+   "romaji": "osara",
+   "meanings": [
+    "тарелка"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
+  },
+  {
+   "id": "jw-えきいん-えきいん",
+   "kanji": "えきいん",
+   "kana": "えきいん",
+   "romaji": "ekiin",
+   "meanings": [
+    "карман",
+    "стакан",
+    "стекло",
+    "речь",
+    "доклад",
+    "выступление"
+   ],
+   "en": "",
+   "pos": [],
+   "audio": "",
+   "lessonId": "31"
   }
  ]
 }

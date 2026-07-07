@@ -62,6 +62,20 @@ test('hint button reveals the answer', async ({ page }, testInfo) => {
   await page.getByTestId('hint-button').click()
   await expect(page.getByText('Подсказка: n / nn')).toBeVisible()
   await expect(page.getByTestId('current-symbol')).toHaveText('ん')
+  await expect(page.getByTestId('card-script-label')).toHaveCount(0)
+})
+
+test('both script mode shows alphabet label on cards', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Detailed training flow is covered on desktop.')
+  await openFreshApp(page)
+
+  await page.getByTestId('script-both').click()
+  await page.getByTestId('clear-selection').click()
+  await page.getByTestId('group-toggle-nn').click()
+  await page.getByTestId('start-practice').click()
+
+  await expect(page.getByTestId('current-symbol')).toHaveText(/[んン]/)
+  await expect(page.getByTestId('card-script-label')).toHaveText(/Хирагана|Катакана/)
 })
 
 test('submit mode requires Enter and reveals answer on mistake', async ({ page }, testInfo) => {
@@ -240,39 +254,68 @@ test('words: translation mode hides meaning and requires Enter', async ({ page }
   await expect(page.locator('.practice-stage')).toHaveClass(/is-success/)
 })
 
-test('words: favorites toggle and favorites-only pool', async ({ page }, testInfo) => {
+test('words: dictionary toggle and dictionary mode pool', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Detailed flow is covered on desktop.')
   await openFreshApp(page)
 
   await page.getByTestId('tab-words').click()
   await page.getByTestId('toggle-word-list').click()
-  await page.getByTestId('word-search').fill('окане')
 
-  // Поиск по переводу «деньги» надежнее: найдем おかね по русскому значению.
-  await page.getByTestId('word-search').fill('деньги')
-  const star = page.getByTestId('fav-o-okane-9859876a')
+  const wordMeta = await page.evaluate(async () => {
+    const { WORDS } = await import('/src/data/words.js')
+    const word = WORDS.find((entry) => entry.meanings[0]?.length >= 3) ?? WORDS[0]
+    return { id: word.id, kanji: word.kanji, meaning: word.meanings[0] }
+  })
+
+  await page.getByTestId('word-search').fill(wordMeta.meaning.slice(0, 6))
+  const star = page.getByTestId(`dict-${wordMeta.id}`)
   await star.click()
   await expect(star).toHaveClass(/is-active/)
-  await expect(page.getByText('Только избранные (1)')).toBeVisible()
 
-  await page.getByTestId('only-favorites').check()
+  await page.getByTestId('word-source-dictionary').click()
+  await expect(page.getByText(`Мой словарь (1)`)).toBeVisible()
   await page.getByTestId('start-words').click()
-  await expect(page.getByTestId('current-word')).toHaveText('お金')
+  await expect(page.getByTestId('current-word')).toHaveText(wordMeta.kanji)
 
-  // Избранное переживает перезагрузку.
   await page.reload()
   await page.getByTestId('tab-words').click()
-  await expect(page.getByText('Только избранные (1)')).toBeVisible()
+  await page.getByTestId('word-source-dictionary').click()
+  await expect(page.getByText(`Мой словарь (1)`)).toBeVisible()
 })
 
-test('words: favorites-only start without favorites shows error', async ({ page }, testInfo) => {
+test('words: dictionary mode start without words shows error', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Detailed flow is covered on desktop.')
   await openFreshApp(page)
 
   await page.getByTestId('tab-words').click()
-  await page.getByTestId('only-favorites').check()
+  await page.getByTestId('word-source-dictionary').click()
   await page.getByTestId('start-words').click()
-  await expect(page.getByText(/В избранном пока нет слов/)).toBeVisible()
+  await expect(page.getByText(/Словарь пуст/)).toBeVisible()
+})
+
+test('words: empty group selection blocks start', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Detailed flow is covered on desktop.')
+  await openFreshApp(page)
+
+  await page.getByTestId('tab-words').click()
+  await page.getByTestId('word-groups-clear').click()
+  await expect(page.getByTestId('word-pool-count')).toHaveText(/Выбрано 0/)
+  await page.getByTestId('start-words').click()
+  await expect(page.getByText(/Выберите тему/)).toBeVisible()
+})
+
+test('words: single lesson limits practice pool', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Detailed flow is covered on desktop.')
+  await openFreshApp(page)
+
+  await page.getByTestId('tab-words').click()
+  await page.getByTestId('word-groups-clear').click()
+  await page.locator('[data-testid^="word-group-"]').first().click()
+  const poolText = await page.getByTestId('word-pool-count').textContent()
+  const selected = Number((poolText.match(/Выбрано (\d+)/) || [])[1] || 0)
+  expect(selected).toBeGreaterThan(0)
+  await page.getByTestId('start-words').click()
+  await expect(page.getByTestId('current-word')).toBeVisible()
 })
 
 test('words mobile smoke: reading flow works', async ({ page }, testInfo) => {
@@ -284,7 +327,7 @@ test('words mobile smoke: reading flow works', async ({ page }, testInfo) => {
   await expect(page.getByTestId('current-word')).toBeVisible()
 
   await page.getByTestId('word-hint-button').click()
-  await expect(page.getByText(/Чтение:/)).toBeVisible()
+  await expect(page.locator('.feedback.is-hint')).toContainText('·')
 
   const answer = await getWordAnswer(page, 'reading')
   await page.getByTestId('word-input').fill(answer)

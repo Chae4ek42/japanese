@@ -1,14 +1,11 @@
-// Преобразует public/data/jlpt-n5-words-300.json в src/data/words.data.js:
-// чистит русские переводы, добавляет ручные переводы для «грязных» записей,
-// раскладывает части речи в русские ярлыки. Запуск: node scripts/build-words.mjs
-import { readFileSync, writeFileSync } from 'node:fs'
+// Преобразует public/data/jwords-vocabulary.json (или jlpt fallback) в src/data/words.data.js
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { kanaToRomaji } from '../src/lib/romaji.js'
 
-const SOURCE = 'public/data/jlpt-n5-words-300.json'
+const JWORDS_SOURCE = 'public/data/jwords-vocabulary.json'
+const JLPT_SOURCE = 'public/data/jlpt-n5-words-300.json'
 const TARGET = 'src/data/words.data.js'
 
-// Ручные переводы для записей, где источник содержит ссылки на словарь
-// вместо перевода. Первое значение — основное.
 const RU_OVERRIDES = {
   'o-okane-9859876a': ['деньги'],
   'i-yasui-ad63c41b': ['дешёвый', 'недорогой'],
@@ -92,7 +89,7 @@ function extractMeanings(word) {
   }
 
   const chunks = [word.translation_ru, ...(word.notes_ru ?? [])]
-    .flatMap((chunk) => chunk.split(';'))
+    .flatMap((chunk) => String(chunk || '').split(';'))
     .map(cleanRuText)
     .filter((chunk) => chunk && !JP_CHARS.test(chunk))
 
@@ -122,41 +119,94 @@ function extractPosLabels(pos) {
   return labels
 }
 
-const source = JSON.parse(readFileSync(SOURCE, 'utf8'))
-const problems = []
-
-const words = source.words.map((word) => {
-  const meanings = extractMeanings(word)
-  if (!meanings.length) {
-    problems.push(`${word.id}: нет чистого русского перевода`)
+function cleanImportedMeanings(meanings) {
+  const result = []
+  for (const raw of meanings ?? []) {
+    let meaning = String(raw).trim()
+    if (!meaning) continue
+    if (meaning.includes('(')) {
+      meaning = meaning.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim()
+    }
+    if (meaning.length > 40) {
+      meaning = meaning.slice(0, 40).trim()
+    }
+    if (meaning && !result.includes(meaning)) {
+      result.push(meaning)
+    }
   }
-
-  // Валидация каны: kanaToRomaji бросит ошибку на неизвестном символе.
-  const romaji = kanaToRomaji(word.kana)
-
-  return {
-    id: word.id,
-    kanji: word.kanji,
-    kana: word.kana,
-    romaji,
-    meanings,
-    en: word.translation_en,
-    pos: extractPosLabels(word.pos),
-    audio: word.audio,
-  }
-})
-
-if (problems.length) {
-  console.error('Проблемные записи:')
-  for (const problem of problems) {
-    console.error('  ' + problem)
-  }
-  process.exit(1)
+  return result
 }
 
+function buildFromJwords(source) {
+  const problems = []
+  const words = source.words.map((word) => {
+    const meanings = cleanImportedMeanings(word.meanings)
+    if (!meanings.length) {
+      problems.push(`${word.id}: нет перевода`)
+    }
+    let romaji = word.romaji
+    if (!romaji) {
+      romaji = kanaToRomaji(word.kana)
+    }
+    return {
+      id: word.id,
+      kanji: word.kanji,
+      kana: word.kana,
+      romaji,
+      meanings,
+      en: word.en || '',
+      pos: word.pos ?? [],
+      audio: word.audio || '',
+      lessonId: word.lessonId ?? null,
+    }
+  })
+
+  if (problems.length) {
+    console.error('Проблемные записи:')
+    for (const problem of problems) {
+      console.error('  ' + problem)
+    }
+    process.exit(1)
+  }
+
+  return { version: source.version, source: source.source, words }
+}
+
+function buildFromJlpt(source) {
+  const problems = []
+  const words = source.words.map((word) => {
+    const meanings = extractMeanings(word)
+    if (!meanings.length) {
+      problems.push(`${word.id}: нет чистого русского перевода`)
+    }
+    const romaji = kanaToRomaji(word.kana)
+    return {
+      id: word.id,
+      kanji: word.kanji,
+      kana: word.kana,
+      romaji,
+      meanings,
+      en: word.translation_en,
+      pos: extractPosLabels(word.pos),
+      audio: word.audio,
+    }
+  })
+
+  if (problems.length) {
+    console.error('Проблемные записи:')
+    for (const problem of problems) {
+      console.error('  ' + problem)
+    }
+    process.exit(1)
+  }
+
+  return { version: source.version, source: 'jlpt-n5-words-300.json', words }
+}
+
+const useJwords = existsSync(JWORDS_SOURCE)
+const source = JSON.parse(readFileSync(useJwords ? JWORDS_SOURCE : JLPT_SOURCE, 'utf8'))
+const payload = useJwords ? buildFromJwords(source) : buildFromJlpt(source)
+
 const banner = '// Сгенерировано scripts/build-words.mjs — не редактировать вручную.\n'
-writeFileSync(
-  TARGET,
-  `${banner}export default ${JSON.stringify({ version: source.version, words }, null, 1)}\n`,
-)
-console.log(`OK: ${words.length} слов -> ${TARGET}`)
+writeFileSync(TARGET, `${banner}export default ${JSON.stringify(payload, null, 1)}\n`)
+console.log(`OK: ${payload.words.length} слов (${payload.source}) -> ${TARGET}`)

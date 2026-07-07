@@ -95,6 +95,34 @@ describe('getAdaptiveWeight', () => {
     const retired = { ...normal, streak: H.retireStreak }
     assert.ok(getAdaptiveWeight(retired, H, NOW) < getAdaptiveWeight(normal, H, NOW))
   })
+
+  it('никогда не показанные карточки весят больше отработанных', () => {
+    const unseen = createStatsRecord()
+    const mastered = {
+      ...createStatsRecord(),
+      exposures: 40,
+      clears: 35,
+      mastery: 0.92,
+      streak: H.retireStreak,
+      lastSeenAt: NOW - 60_000,
+      avgLatencyMs: 900,
+      eventAccuracy: 98,
+    }
+    assert.ok(getAdaptiveWeight(unseen, H, NOW) > getAdaptiveWeight(mastered, H, NOW) * 2)
+  })
+
+  it('давно не виденные карточки поднимаются выше недавних', () => {
+    const stale = {
+      ...createStatsRecord(),
+      exposures: 10,
+      clears: 8,
+      mastery: 0.7,
+      lastSeenAt: NOW - 48 * 3_600_000,
+      eventAccuracy: 90,
+    }
+    const recent = { ...stale, lastSeenAt: NOW - 30 * 60_000 }
+    assert.ok(getAdaptiveWeight(stale, H, NOW) > getAdaptiveWeight(recent, H, NOW))
+  })
 })
 
 describe('getConfusionMultiplier', () => {

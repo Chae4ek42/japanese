@@ -1,5 +1,6 @@
 import { GROUP_PRESETS, KANA_GROUPS } from '../data/kana'
 import { DEFAULT_HYPERPARAMS } from '../lib/trainer'
+import { InfoTip } from './InfoTip'
 
 const scriptOptions = [
   { id: 'hiragana', label: 'Хирагана' },
@@ -26,11 +27,155 @@ const modeOptions = [
   { id: 'problem', label: 'Проблемные', hint: 'Только то, что западает' },
 ]
 
-const settingsFields = [
-  { id: 'retireStreak', label: 'Серия до выученного', min: 3, max: 12, step: 1, hint: 'Сколько чистых ответов подряд, чтобы знак считался выученным и выпадал реже.' },
-  { id: 'recentMistakeBoost', label: 'Приоритет ошибок', min: 1, max: 5, step: 0.1, hint: 'Насколько чаще показывать знаки с недавними ошибками.' },
-  { id: 'targetLatencySec', label: 'Целевое время, сек', min: 1, max: 10, step: 0.5, hint: 'Ответы медленнее этого времени поднимают знак в очереди.' },
-  { id: 'confusionBoost', label: 'Тренировка двойников', min: 1, max: 4, step: 0.1, hint: 'После ошибки чаще показывать визуально похожие знаки.' },
+const settingsSections = [
+  {
+    title: 'Новые и забытые',
+    fields: [
+      {
+        id: 'unseenBoost',
+        label: 'Новые знаки',
+        min: 0,
+        max: 6,
+        step: 0.1,
+        hint: 'Насколько чаще показывать знаки, которые ещё ни разу не встречались в тренировке.',
+      },
+      {
+        id: 'seenOnlyBoostRatio',
+        label: 'Показ без ответа',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        hint: 'Доля приоритета «новых знаков» для карточек, которые уже показывали, но на которые ещё не отвечали.',
+      },
+      {
+        id: 'staleBoost',
+        label: 'Забытые знаки',
+        min: 0,
+        max: 4,
+        step: 0.1,
+        hint: 'Максимальный буст для знаков, которые давно не показывались.',
+      },
+      {
+        id: 'staleAfterHours',
+        label: 'Пауза до «забытых», ч',
+        min: 1,
+        max: 72,
+        step: 1,
+        hint: 'Через сколько часов без показа знак начинает считаться «забытым» и получать дополнительный приоритет.',
+      },
+      {
+        id: 'staleRampHours',
+        label: 'Набор «забытых», ч',
+        min: 6,
+        max: 168,
+        step: 1,
+        hint: 'За сколько часов после паузы «забытый» знак набирает полный буст (до значения «Забытые знаки»).',
+      },
+    ],
+  },
+  {
+    title: 'Ошибки и слабые места',
+    fields: [
+      {
+        id: 'recentMistakeBoost',
+        label: 'Приоритет ошибок',
+        min: 0,
+        max: 6,
+        step: 0.1,
+        hint: 'Насколько чаще показывать знаки с недавними ошибками или подсказками.',
+      },
+      {
+        id: 'recentMistakeHours',
+        label: 'Окно ошибок, ч',
+        min: 1,
+        max: 48,
+        step: 1,
+        hint: 'Сколько часов после ошибки или подсказки знак считается «недавно проблемным».',
+      },
+      {
+        id: 'confusionBoost',
+        label: 'Тренировка двойников',
+        min: 1,
+        max: 4,
+        step: 0.1,
+        hint: 'После ошибки на похожем знаке (シ/ツ, ぬ/め…) чаще показывать его «двойника».',
+      },
+      {
+        id: 'problemThreshold',
+        label: 'Порог «проблемных»',
+        min: 0.1,
+        max: 1.2,
+        step: 0.05,
+        hint: 'Минимальный «балл проблемности» для режима «Проблемные» и статуса «Нужно добить» в статистике.',
+      },
+    ],
+  },
+  {
+    title: 'Выученные и мастерство',
+    fields: [
+      {
+        id: 'retireStreak',
+        label: 'Серия до выученного',
+        min: 3,
+        max: 12,
+        step: 1,
+        hint: 'Сколько чистых ответов подряд нужно, чтобы знак считался выученным.',
+      },
+      {
+        id: 'masteredWeight',
+        label: 'Вес выученных',
+        min: 0.05,
+        max: 1,
+        step: 0.05,
+        hint: 'Во сколько раз реже выпадают знаки с длинной серией без ошибок (меньше — реже).',
+      },
+      {
+        id: 'masteryGain',
+        label: 'Рост мастерства',
+        min: 0.05,
+        max: 0.5,
+        step: 0.01,
+        hint: 'Насколько быстро растёт уверенность по знаку после верных ответов.',
+      },
+      {
+        id: 'mistakePenalty',
+        label: 'Штраф за ошибку',
+        min: 0.05,
+        max: 0.5,
+        step: 0.01,
+        hint: 'Насколько сильно падает мастерство при ошибке.',
+      },
+      {
+        id: 'hintPenalty',
+        label: 'Штраф за подсказку',
+        min: 0.05,
+        max: 0.4,
+        step: 0.01,
+        hint: 'Насколько сильно падает мастерство при использовании подсказки.',
+      },
+    ],
+  },
+  {
+    title: 'Скорость и очередь',
+    fields: [
+      {
+        id: 'targetLatencySec',
+        label: 'Целевое время, сек',
+        min: 1,
+        max: 10,
+        step: 0.5,
+        hint: 'Ответы медленнее этого времени поднимают знак в очереди; быстрые ответы дают больший прирост мастерства.',
+      },
+      {
+        id: 'queueSize',
+        label: 'Очередь ошибок',
+        min: 1,
+        max: 8,
+        step: 1,
+        hint: 'Сколько карточек с ошибками держать в очереди на повтор через пару шагов.',
+      },
+    ],
+  },
 ]
 
 export function SetupPanel({
@@ -201,23 +346,31 @@ export function SetupPanel({
 
       {showFineTuning ? (
         <div className="settings-grid">
-          {settingsFields.map((field) => (
-            <label key={field.id} className="setting-card">
-              <span>{field.label}</span>
-              <input
-                type="number"
-                min={field.min}
-                max={field.max}
-                step={field.step}
-                value={getFieldValue(field.id)}
-                onChange={(event) => setFieldValue(field.id, event.target.value)}
-              />
-              <small>{field.hint}</small>
-            </label>
+          {settingsSections.map((section) => (
+            <div key={section.title} className="settings-section">
+              <h3 className="settings-section-title">{section.title}</h3>
+              <div className="settings-section-grid">
+                {section.fields.map((field) => (
+                  <label key={field.id} className="setting-card">
+                    <span className="setting-label">
+                      {field.label} <InfoTip align="end" text={field.hint} />
+                    </span>
+                    <input
+                      type="number"
+                      min={field.min}
+                      max={field.max}
+                      step={field.step}
+                      value={getFieldValue(field.id)}
+                      onChange={(event) => setFieldValue(field.id, event.target.value)}
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
           ))}
           <button
             type="button"
-            className="ghost-button"
+            className="ghost-button settings-reset"
             onClick={() => onPatchPreferences({ hyperparams: { ...DEFAULT_HYPERPARAMS } })}
           >
             Сбросить настройки

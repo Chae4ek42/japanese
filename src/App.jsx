@@ -13,11 +13,16 @@ import {
   updateCardStats,
 } from './lib/trainer'
 import {
+  bootstrapAppState,
   createDefaultAppState,
-  loadAppState,
+  createCustomWordFromInput,
+  ensureWordStats,
+  isRemoteStorageEnabled,
   resetStoredState,
   saveAppState,
 } from './lib/storage'
+import { isCustomWordId } from './data/custom-words'
+import { WORD_GROUPS } from './data/words'
 import { SetupPanel } from './components/SetupPanel'
 import { PracticePanel } from './components/PracticePanel'
 import { StatsPanel } from './components/StatsPanel'
@@ -27,7 +32,9 @@ import { WORD_HYPERPARAMS } from './data/words'
 const emptySessionStats = { answered: 0, clean: 0, streak: 0 }
 
 function App() {
-  const [appState, setAppState] = useState(() => loadAppState(createDefaultAppState))
+  const [appState, setAppState] = useState(null)
+  const [storageReady, setStorageReady] = useState(false)
+  const [remoteStorage, setRemoteStorage] = useState(false)
   const [currentTab, setCurrentTab] = useState('trainer')
   const [practiceState, setPracticeState] = useState('setup')
   const [currentCardId, setCurrentCardId] = useState(null)
@@ -43,7 +50,29 @@ function App() {
   const practiceStateRef = useRef(practiceState)
   const activeCardRef = useRef(null)
 
-  const { preferences, stats, history } = appState
+  const { preferences, stats, history } = appState ?? createDefaultAppState()
+
+  useEffect(() => {
+    let cancelled = false
+    bootstrapAppState().then((state) => {
+      if (cancelled) {
+        return
+      }
+      setAppState(state)
+      setRemoteStorage(isRemoteStorageEnabled())
+      setStorageReady(true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!storageReady || !appState) {
+      return
+    }
+    saveAppState(appState)
+  }, [appState, storageReady])
 
   const activePool = useMemo(
     () => buildPool(preferences.scriptMode, preferences.selectedGroups),
@@ -58,9 +87,6 @@ function App() {
     () => getGlobalStats(KANA_STATS_CARDS, stats, preferences.hyperparams),
     [preferences.hyperparams, stats],
   )
-  useEffect(() => {
-    saveAppState(appState)
-  }, [appState])
 
   useEffect(() => {
     if (practiceState === 'practice') {
@@ -118,16 +144,101 @@ function App() {
     }))
   }
 
-  function toggleWordFavorite(wordId) {
+  function toggleDictionaryWord(wordId) {
     setAppState((prevState) => {
-      const favorites = prevState.words.favorites.includes(wordId)
-        ? prevState.words.favorites.filter((id) => id !== wordId)
-        : [...prevState.words.favorites, wordId]
+      const inDictionary = prevState.words.dictionary.includes(wordId)
+      const dictionary = inDictionary
+        ? prevState.words.dictionary.filter((id) => id !== wordId)
+        : [...prevState.words.dictionary, wordId]
+      const customWords = inDictionary && isCustomWordId(wordId)
+        ? prevState.words.customWords.filter((word) => word.id !== wordId)
+        : prevState.words.customWords
+
       return {
         ...prevState,
-        words: { ...prevState.words, favorites },
+        words: {
+          ...prevState.words,
+          dictionary,
+          customWords,
+          stats: inDictionary
+            ? prevState.words.stats
+            : {
+                ...prevState.words.stats,
+                [wordId]: ensureWordStats(prevState.words.stats, wordId),
+              },
+        },
       }
     })
+  }
+
+  function addGroupToDictionary(groupId) {
+    const group = WORD_GROUPS.find((item) => item.id === groupId)
+    if (!group) {
+      return
+    }
+
+    setAppState((prevState) => {
+      const nextDictionary = new Set(prevState.words.dictionary)
+      const nextStats = { ...prevState.words.stats }
+      for (const wordId of group.wordIds) {
+        nextDictionary.add(wordId)
+        nextStats[wordId] = ensureWordStats(nextStats, wordId)
+      }
+      return {
+        ...prevState,
+        words: {
+          ...prevState.words,
+          dictionary: [...nextDictionary],
+          stats: nextStats,
+        },
+      }
+    })
+  }
+
+  function addCustomWord(input) {
+    const result = createCustomWordFromInput(input)
+    if (result.error) {
+      return result.error
+    }
+
+    setAppState((prevState) => {
+      const word = result.word
+      if (prevState.words.dictionary.includes(word.id)) {
+        return prevState
+      }
+      return {
+        ...prevState,
+        words: {
+          ...prevState.words,
+          dictionary: [...prevState.words.dictionary, word.id],
+          customWords: [
+            ...prevState.words.customWords,
+            {
+              id: word.id,
+              kanji: String(input.kanji ?? '').trim(),
+              kana: String(input.kana ?? '').trim(),
+              romaji: String(input.romaji ?? '').trim(),
+              meanings: word.meanings,
+              audio: String(input.audio ?? '').trim(),
+              en: String(input.en ?? '').trim(),
+              pos: word.pos,
+            },
+          ],
+          stats: {
+            ...prevState.words.stats,
+            [word.id]: ensureWordStats(prevState.words.stats, word.id),
+          },
+        },
+      }
+    })
+    return null
+  }
+
+  function removeCustomWord(wordId) {
+    if (!isCustomWordId(wordId)) {
+      return
+    }
+    toggleDictionaryWord(wordId)
   }
 
   function updateWordStats(wordId, outcome, context) {
@@ -137,7 +248,12 @@ function App() {
         ...prevState.words,
         stats: {
           ...prevState.words.stats,
-          [wordId]: updateCardStats(prevState.words.stats[wordId], outcome, context, WORD_HYPERPARAMS),
+          [wordId]: updateCardStats(
+            ensureWordStats(prevState.words.stats, wordId),
+            outcome,
+            context,
+            WORD_HYPERPARAMS,
+          ),
         },
       },
     }))
@@ -471,10 +587,11 @@ function App() {
     patchPreferences({ selectedGroups: [...selected] })
   }
 
-  function resetStats() {
-    resetStoredState()
+  async function resetStats() {
+    await resetStoredState()
     const freshState = createDefaultAppState()
     setAppState(freshState)
+    setRemoteStorage(isRemoteStorageEnabled())
     setSession(createInitialSession())
     setSessionStats(emptySessionStats)
     setPracticeState('setup')
@@ -487,14 +604,23 @@ function App() {
     ? Math.round((sessionStats.clean / sessionStats.answered) * 100)
     : 100
 
+  if (!appState) {
+    return (
+      <div className="app-shell app-loading">
+        <p>Загрузка прогресса…</p>
+      </div>
+    )
+  }
+
   return (
     <div className="app-shell">
       <header className="topbar">
         <div>
           <h1>Хирагана и катакана</h1>
           <p className="subtitle">
+            {remoteStorage ? 'Прогресс сохраняется в PostgreSQL. ' : ''}
             {currentTab === 'words'
-              ? 'Слова JLPT N5: чтение ромадзи или перевод на русский. Звездочка сохраняет слово в избранное.'
+              ? 'Слова: тренируйте по темам или по своему словарю. Добавляйте пачки и свои записи без обязательных полей.'
               : preferences.inputMode === 'submit'
                 ? 'Ответ отправляется по Enter. Пробел показывает подсказку — карточка сменится только после верного ввода.'
                 : 'Автозачет без Enter. Пробел показывает подсказку — карточка сменится только после верного ввода.'}
@@ -556,14 +682,18 @@ function App() {
               onStop={stopPractice}
               round={round}
               sessionStats={{ ...sessionStats, accuracy: sessionAccuracy }}
+              showScriptLabel={preferences.scriptMode === 'both'}
             />
           )}
         </main>
       ) : currentTab === 'words' ? (
         <main className="trainer-layout">
           <WordsTrainer
+            onAddCustomWord={addCustomWord}
+            onAddGroupToDictionary={addGroupToDictionary}
             onPatchPreferences={patchWordsPreferences}
-            onToggleFavorite={toggleWordFavorite}
+            onRemoveCustomWord={removeCustomWord}
+            onToggleDictionary={toggleDictionaryWord}
             onUpdateStats={updateWordStats}
             wordsState={appState.words}
           />
