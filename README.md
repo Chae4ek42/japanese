@@ -1,43 +1,21 @@
-# Тренажёр японской каны и слов
+# Тренажёр японских чисел
 
-React + Vite фронтенд, Express API и PostgreSQL для сохранения прогресса, словаря и статистики.
+React + Vite приложение для тренировки чтения чисел и возраста. Прогресс сохраняется в браузере (localStorage) или через опциональный локальный API.
 
-## Быстрый старт (Docker)
-
-```bash
-docker compose up --build
-```
-
-Приложение: [http://localhost:8080](http://localhost:8080)
-
-Сервисы:
-- **web** — nginx + собранный фронтенд, прокси `/api` → API
-- **api** — Node.js API
-- **db** — PostgreSQL 16
-
-Остановка:
-
-```bash
-docker compose down
-```
-
-Данные Postgres сохраняются в volume `pgdata`.
-
-## Локальная разработка
-
-### Только фронт (localStorage fallback)
+## Быстрый старт
 
 ```bash
 npm install
 npm run dev
 ```
 
-Если API недоступен, прогресс сохраняется в браузере как раньше.
+Приложение: [http://localhost:5173](http://localhost:5173)
 
-### Фронт + API + Postgres
+## Локальный API (опционально)
+
+Если нужна синхронизация через PostgreSQL:
 
 ```bash
-docker compose up db -d
 cd server && npm install && cd ..
 set DATABASE_URL=postgres://jp:jp@localhost:5432/jp
 npm run dev:api
@@ -46,11 +24,7 @@ npm run dev
 
 Vite проксирует `/api` на `http://127.0.0.1:3000`.
 
-## Сборка слов
-
-```bash
-npm run build:words
-```
+Без API прогресс сохраняется только в `localStorage`.
 
 ## Тесты
 
@@ -69,6 +43,4 @@ npm run test:e2e
 | PUT | `/api/users/:id/state` | Сохранить состояние (JSON) |
 | DELETE | `/api/users/:id/state` | Сбросить прогресс |
 
-Состояние хранится в PostgreSQL как JSONB: настройки, статистика каны, история, словарь и пользовательские слова.
-
-При первом подключении к API данные из старого `localStorage` автоматически переносятся в базу.
+Состояние хранится как JSON: настройки и статистика тренажёра чисел.

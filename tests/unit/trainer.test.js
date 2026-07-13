@@ -15,7 +15,7 @@ import {
   recordHistoryEvent,
   updateCardStats,
 } from '../../src/lib/trainer.js'
-import { buildPool } from '../../src/data/kana.js'
+import { buildNumberPool } from '../../src/data/numbers.js'
 
 const H = DEFAULT_HYPERPARAMS
 const NOW = Date.parse('2026-07-07T12:00:00Z')
@@ -126,19 +126,8 @@ describe('getAdaptiveWeight', () => {
 })
 
 describe('getConfusionMultiplier', () => {
-  it('буст после недавней ошибки на двойнике', () => {
-    const statsMap = Object.fromEntries(
-      ['katakana:shi', 'katakana:tsu'].map((id) => [id, createStatsRecord()]),
-    )
-    statsMap['katakana:tsu'].lastErrorAt = NOW - 60_000
-    assert.equal(getConfusionMultiplier('katakana:shi', statsMap, H, NOW), H.confusionBoost)
-  })
-
-  it('без недавних ошибок множитель равен 1', () => {
-    const statsMap = Object.fromEntries(
-      ['katakana:shi', 'katakana:tsu'].map((id) => [id, createStatsRecord()]),
-    )
-    assert.equal(getConfusionMultiplier('katakana:shi', statsMap, H, NOW), 1)
+  it('всегда возвращает 1', () => {
+    assert.equal(getConfusionMultiplier(), 1)
   })
 })
 
@@ -148,9 +137,9 @@ describe('pickNextCardId', () => {
   }
 
   it('возвращает карточку из пула и избегает недавних', () => {
-    const pool = buildPool('hiragana', ['vowels'])
+    const pool = buildNumberPool({ mode: 'plain', rangeMin: 1, rangeMax: 5 })
     const statsMap = makeStatsMap(pool)
-    const session = { recentHistory: ['hiragana:a', 'hiragana:i'], mistakeQueue: [], sinceQueuePick: 0 }
+    const session = { recentHistory: ['plain:1', 'plain:2'], mistakeQueue: [], sinceQueuePick: 0 }
     for (let i = 0; i < 20; i += 1) {
       const id = pickNextCardId(pool, statsMap, session, 'adaptive', H)
       assert.ok(pool.some((card) => card.id === id))
@@ -159,37 +148,19 @@ describe('pickNextCardId', () => {
   })
 
   it('очередь ошибок возвращает карточку в любом режиме', () => {
-    const pool = buildPool('hiragana', ['vowels', 'k'])
+    const pool = buildNumberPool({ mode: 'plain', rangeMin: 1, rangeMax: 5 })
     const statsMap = makeStatsMap(pool)
-    const session = { recentHistory: [], mistakeQueue: ['hiragana:ke'], sinceQueuePick: 3 }
+    const session = { recentHistory: [], mistakeQueue: ['plain:4'], sinceQueuePick: 3 }
     const id = pickNextCardId(pool, statsMap, session, 'even', H, () => 0.1)
-    assert.equal(id, 'hiragana:ke')
+    assert.equal(id, 'plain:4')
   })
 
   it('очередь не срабатывает сразу после ошибки', () => {
-    const pool = buildPool('hiragana', ['vowels', 'k'])
+    const pool = buildNumberPool({ mode: 'plain', rangeMin: 1, rangeMax: 5 })
     const statsMap = makeStatsMap(pool)
-    const session = { recentHistory: [], mistakeQueue: ['hiragana:ke'], sinceQueuePick: 0 }
+    const session = { recentHistory: [], mistakeQueue: ['plain:4'], sinceQueuePick: 0 }
     const id = pickNextCardId(pool, statsMap, session, 'even', H, () => 0.1)
-    assert.notEqual(id, 'hiragana:ke')
-  })
-
-  it('в адаптивном режиме двойники недавней ошибки поднимаются в весах', () => {
-    const pool = buildPool('katakana', ['s', 't', 'nn'])
-    const statsMap = makeStatsMap(pool)
-    // Ошибка на シ полминуты назад: ツ (двойник) должен выпадать заметно чаще.
-    statsMap['katakana:shi'].lastErrorAt = Date.now() - 30_000
-    const session = { recentHistory: ['katakana:shi'], mistakeQueue: [], sinceQueuePick: 0 }
-
-    let tsuCount = 0
-    const runs = 400
-    for (let i = 0; i < runs; i += 1) {
-      if (pickNextCardId(pool, statsMap, session, 'adaptive', H) === 'katakana:tsu') {
-        tsuCount += 1
-      }
-    }
-    // Без буста ツ выпадала бы ~1/10 раз (11 кандидатов минус блок).
-    assert.ok(tsuCount > runs * 0.14, `ツ выпала ${tsuCount} из ${runs}`)
+    assert.notEqual(id, 'plain:4')
   })
 
   it('пустой пул дает null', () => {

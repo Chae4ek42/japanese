@@ -1,5 +1,3 @@
-import { getConfusableIds } from '../data/kana.js'
-
 export const DEFAULT_HYPERPARAMS = {
   masteryGain: 0.18,
   mistakePenalty: 0.24,
@@ -222,20 +220,7 @@ export function getAdaptiveWeight(stats, hyperparams, now) {
   )
 }
 
-// Множитель для знаков, чьи «двойники» недавно вызывали ошибки:
-// после промаха на シ стоит показать и ツ, чтобы закрепить контраст.
-export function getConfusionMultiplier(cardId, statsMap, hyperparams, now) {
-  for (const confusableId of getConfusableIds(cardId)) {
-    const stats = statsMap[confusableId]
-    if (!stats) {
-      continue
-    }
-    const recentError = stats.lastErrorAt && now - stats.lastErrorAt < CONFUSION_RECENCY_MS
-    const recentHint = stats.lastHintAt && now - stats.lastHintAt < CONFUSION_RECENCY_MS
-    if (recentError || recentHint) {
-      return hyperparams.confusionBoost
-    }
-  }
+export function getConfusionMultiplier() {
   return 1
 }
 

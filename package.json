@@ -9,13 +9,9 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "import:words": "node scripts/import-jwords-vocabulary.mjs",
-    "build:words": "node scripts/build-words.mjs && node scripts/generate-word-groups.mjs",
     "test:unit": "node --test \"tests/unit/*.test.js\"",
     "test:e2e": "playwright test",
-    "test": "npm run test:unit && npm run test:e2e",
-    "docker:up": "docker compose up --build",
-    "docker:down": "docker compose down"
+    "test": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
     "react": "^19.2.7",

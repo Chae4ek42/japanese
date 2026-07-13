@@ -1,20 +1,10 @@
-import { createCustomWordFromInput } from '../data/custom-words.js'
 import {
   createDefaultAppState,
   CURRENT_VERSION,
-  ensureWordStats,
-  enrichStoredCustomWords,
   normalizeAppState,
 } from '../../shared/app-state.js'
 
-export {
-  createDefaultAppState,
-  createCustomWordFromInput,
-  ensureWordStats,
-  enrichStoredCustomWords,
-  normalizeAppState,
-  CURRENT_VERSION,
-}
+export { createDefaultAppState, normalizeAppState, CURRENT_VERSION }
 
 const LEGACY_STORAGE_KEY = 'kana-trainer-state-v1'
 const USER_ID_KEY = 'kana-trainer-user-id'
@@ -110,15 +100,6 @@ function clearLegacyLocalState() {
   window.localStorage.removeItem(LEGACY_STORAGE_KEY)
 }
 
-function getOrCreateLocalUserId() {
-  let userId = window.localStorage.getItem(USER_ID_KEY)
-  if (!userId) {
-    userId = crypto.randomUUID()
-    window.localStorage.setItem(USER_ID_KEY, userId)
-  }
-  return userId
-}
-
 export async function bootstrapAppState() {
   remoteEnabled = await checkApiHealth()
   if (!remoteEnabled) {
@@ -200,7 +181,7 @@ export async function resetStoredState() {
   currentUserId = null
 }
 
-/** @deprecated Используйте bootstrapAppState в браузере. Оставлено для unit-тестов legacy. */
+/** @deprecated Используйте bootstrapAppState в браузере. Оставлено для unit-тестов. */
 export function loadAppState(factory = createDefaultAppState) {
   try {
     const raw = window.localStorage.getItem(LEGACY_STORAGE_KEY)
