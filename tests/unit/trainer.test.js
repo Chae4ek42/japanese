@@ -16,6 +16,7 @@ import {
   updateCardStats,
 } from '../../src/lib/trainer.js'
 import { buildNumberPool } from '../../src/data/numbers.js'
+import { buildPool } from '../../src/data/kana.js'
 
 const H = DEFAULT_HYPERPARAMS
 const NOW = Date.parse('2026-07-07T12:00:00Z')
@@ -126,8 +127,19 @@ describe('getAdaptiveWeight', () => {
 })
 
 describe('getConfusionMultiplier', () => {
-  it('всегда возвращает 1', () => {
-    assert.equal(getConfusionMultiplier(), 1)
+  it('буст после недавней ошибки на двойнике', () => {
+    const statsMap = Object.fromEntries(
+      ['katakana:shi', 'katakana:tsu'].map((id) => [id, createStatsRecord()]),
+    )
+    statsMap['katakana:tsu'].lastErrorAt = NOW - 60_000
+    assert.equal(getConfusionMultiplier('katakana:shi', statsMap, H, NOW), H.confusionBoost)
+  })
+
+  it('без недавних ошибок множитель равен 1', () => {
+    const statsMap = Object.fromEntries(
+      ['katakana:shi', 'katakana:tsu'].map((id) => [id, createStatsRecord()]),
+    )
+    assert.equal(getConfusionMultiplier('katakana:shi', statsMap, H, NOW), 1)
   })
 })
 
@@ -137,6 +149,17 @@ describe('pickNextCardId', () => {
   }
 
   it('возвращает карточку из пула и избегает недавних', () => {
+    const pool = buildPool('hiragana', ['vowels'])
+    const statsMap = makeStatsMap(pool)
+    const session = { recentHistory: ['hiragana:a', 'hiragana:i'], mistakeQueue: [], sinceQueuePick: 0 }
+    for (let i = 0; i < 20; i += 1) {
+      const id = pickNextCardId(pool, statsMap, session, 'adaptive', H)
+      assert.ok(pool.some((card) => card.id === id))
+      assert.ok(!session.recentHistory.includes(id))
+    }
+  })
+
+  it('числа: возвращает карточку из пула и избегает недавних', () => {
     const pool = buildNumberPool({ mode: 'plain', rangeMin: 1, rangeMax: 5 })
     const statsMap = makeStatsMap(pool)
     const session = { recentHistory: ['plain:1', 'plain:2'], mistakeQueue: [], sinceQueuePick: 0 }

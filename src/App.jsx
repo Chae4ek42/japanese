@@ -1,112 +1,169 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-import { updateCardStats } from './lib/trainer'
+import { useEffect, useState } from "react";
+import "./App.css";
+import { updateCardStats } from "./lib/trainer";
 import {
-  bootstrapAppState,
-  createDefaultAppState,
-  isRemoteStorageEnabled,
-  resetStoredState,
-  saveAppState,
-} from './lib/storage'
-import { NumbersTrainer } from './components/NumbersTrainer'
-import { NUMBER_HYPERPARAMS, ensureNumberStats } from './data/numbers'
+	bootstrapAppState,
+	createDefaultAppState,
+	resetStoredState,
+	saveAppState,
+} from "./lib/storage";
+import { NUMBER_HYPERPARAMS, ensureNumberStats } from "./data/numbers";
+import { AppHeader } from "./components/AppHeader";
+import { HomePage } from "./components/HomePage";
+import { KanaTrainer } from "./components/KanaTrainer";
+import { NumbersTrainer } from "./components/NumbersTrainer";
+import { StatsPage } from "./components/StatsPage";
 
 function App() {
-  const [appState, setAppState] = useState(null)
-  const [storageReady, setStorageReady] = useState(false)
-  const [remoteStorage, setRemoteStorage] = useState(false)
+	const [appState, setAppState] = useState(null);
+	const [storageReady, setStorageReady] = useState(false);
+	const [currentPage, setCurrentPage] = useState("home");
 
-  useEffect(() => {
-    let cancelled = false
-    bootstrapAppState().then((state) => {
-      if (cancelled) {
-        return
-      }
-      setAppState(state)
-      setRemoteStorage(isRemoteStorageEnabled())
-      setStorageReady(true)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+	useEffect(() => {
+		let cancelled = false;
+		bootstrapAppState().then((state) => {
+			if (cancelled) {
+				return;
+			}
+			setAppState(state);
+			setStorageReady(true);
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, []);
 
-  useEffect(() => {
-    if (!storageReady || !appState) {
-      return
-    }
-    saveAppState(appState)
-  }, [appState, storageReady])
+	useEffect(() => {
+		if (!storageReady || !appState) {
+			return;
+		}
+		saveAppState(appState);
+	}, [appState, storageReady]);
 
-  function patchNumbersPreferences(patch) {
-    setAppState((prevState) => ({
-      ...prevState,
-      numbers: {
-        ...prevState.numbers,
-        preferences: {
-          ...prevState.numbers.preferences,
-          ...patch,
-        },
-      },
-    }))
-  }
+	function patchKanaPreferences(patch) {
+		setAppState((prevState) => ({
+			...prevState,
+			preferences: {
+				...prevState.preferences,
+				...patch,
+			},
+		}));
+	}
 
-  function updateNumberStats(cardId, outcome, context) {
-    setAppState((prevState) => ({
-      ...prevState,
-      numbers: {
-        ...prevState.numbers,
-        stats: {
-          ...prevState.numbers.stats,
-          [cardId]: updateCardStats(
-            ensureNumberStats(prevState.numbers.stats, cardId),
-            outcome,
-            context,
-            NUMBER_HYPERPARAMS,
-          ),
-        },
-      },
-    }))
-  }
+	function patchKanaHyperparam(key, value) {
+		setAppState((prevState) => ({
+			...prevState,
+			preferences: {
+				...prevState.preferences,
+				hyperparams: {
+					...prevState.preferences.hyperparams,
+					[key]: value,
+				},
+			},
+		}));
+	}
 
-  async function resetStats() {
-    await resetStoredState()
-    setAppState(createDefaultAppState())
-    setRemoteStorage(isRemoteStorageEnabled())
-  }
+	function updateKanaPractice(recipe) {
+		setAppState((prevState) => {
+			const slice = {
+				preferences: prevState.preferences,
+				stats: prevState.stats,
+				history: prevState.history,
+			};
+			const patch = recipe(slice);
+			return {
+				...prevState,
+				...patch,
+			};
+		});
+	}
 
-  if (!appState) {
-    return (
-      <div className="app-shell app-loading">
-        <p>Загрузка прогресса…</p>
-      </div>
-    )
-  }
+	function patchNumbersPreferences(patch) {
+		setAppState((prevState) => ({
+			...prevState,
+			numbers: {
+				...prevState.numbers,
+				preferences: {
+					...prevState.numbers.preferences,
+					...patch,
+				},
+			},
+		}));
+	}
 
-  return (
-    <div className="app-shell">
-      <header className="topbar">
-        <div>
-          <h1>Японские числа</h1>
-          <p className="subtitle">
-            {remoteStorage ? 'Прогресс сохраняется в PostgreSQL. ' : ''}
-            Вспомните чтение — пробел покажет кандзи и кану, ещё раз — следующее число.
-          </p>
-        </div>
-        <button type="button" className="text-button" data-testid="reset-stats" onClick={resetStats}>
-          Сбросить прогресс
-        </button>
-      </header>
+	function updateNumberStats(cardId, outcome, context) {
+		setAppState((prevState) => ({
+			...prevState,
+			numbers: {
+				...prevState.numbers,
+				stats: {
+					...prevState.numbers.stats,
+					[cardId]: updateCardStats(
+						ensureNumberStats(prevState.numbers.stats, cardId),
+						outcome,
+						context,
+						NUMBER_HYPERPARAMS,
+					),
+				},
+			},
+		}));
+	}
 
-      <main className="trainer-layout">
-        <NumbersTrainer
-          numbersState={appState.numbers}
-          onPatchPreferences={patchNumbersPreferences}
-          onUpdateStats={updateNumberStats}
-        />
-      </main>
-    </div>
-  )
+	async function resetStats() {
+		await resetStoredState();
+		setAppState(createDefaultAppState());
+	}
+
+	if (!appState) {
+		return (
+			<div className="app-shell app-loading">
+				<p>Загрузка прогресса…</p>
+			</div>
+		);
+	}
+
+	return (
+		<div className="app-shell">
+			<AppHeader
+				currentPage={currentPage}
+				onNavigate={setCurrentPage}
+				onResetStats={resetStats}
+			/>
+
+			{currentPage === "home" ? (
+				<HomePage
+					onOpenKana={() => setCurrentPage("kana")}
+					onOpenNumbers={() => setCurrentPage("numbers")}
+				/>
+			) : currentPage === "stats" ? (
+				<StatsPage
+					kanaStats={appState.stats}
+					kanaHistory={appState.history}
+					kanaHyperparams={appState.preferences.hyperparams}
+					numbersStats={appState.numbers.stats}
+				/>
+			) : (
+				<main className="trainer-layout">
+					{currentPage === "kana" ? (
+						<KanaTrainer
+							preferences={appState.preferences}
+							stats={appState.stats}
+							history={appState.history}
+							onPatchPreferences={patchKanaPreferences}
+							onPatchHyperparam={patchKanaHyperparam}
+							onPracticeUpdate={updateKanaPractice}
+						/>
+					) : (
+						<NumbersTrainer
+							numbersState={appState.numbers}
+							onPatchPreferences={patchNumbersPreferences}
+							onUpdateStats={updateNumberStats}
+						/>
+					)}
+				</main>
+			)}
+		</div>
+	);
 }
 
-export default App
+export default App;
