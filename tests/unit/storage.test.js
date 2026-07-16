@@ -25,14 +25,16 @@ describe('storage', () => {
     window.localStorage.clear()
   })
 
-  it('без сохранения возвращает дефолтное состояние версии 9', () => {
+  it('без сохранения возвращает дефолтное состояние версии 10', () => {
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 9)
+    assert.equal(state.version, 10)
     assert.equal(state.preferences.mode, 'adaptive')
     assert.equal(state.numbers.preferences.mode, 'plain')
     assert.equal(state.numbers.preferences.rangeId, '99')
     assert.equal(Object.keys(state.stats).length, ALL_CARD_IDS.length)
     assert.deepEqual(state.numbers.stats, {})
+    assert.deepEqual(state.kanji.learned, [])
+    assert.equal(state.kanji.preferences.complexityFilter, true)
   })
 
   it('сохранение и загрузка проходят круг', () => {
@@ -41,6 +43,8 @@ describe('storage', () => {
     state.numbers.preferences.rangeId = '10'
     state.numbers.stats['age:5'] = { exposures: 3, mastery: 0.4 }
     state.stats['hiragana:a'].clears = 5
+    state.kanji.learned = ['日', '本']
+    state.kanji.preferences.complexityFilter = false
     saveAppState(state)
 
     const loaded = loadAppState(createDefaultAppState)
@@ -48,6 +52,8 @@ describe('storage', () => {
     assert.equal(loaded.numbers.preferences.rangeId, '10')
     assert.equal(loaded.numbers.stats['age:5'].exposures, 3)
     assert.equal(loaded.stats['hiragana:a'].clears, 5)
+    assert.deepEqual(loaded.kanji.learned, ['日', '本'])
+    assert.equal(loaded.kanji.preferences.complexityFilter, false)
   })
 
   it('мигрирует v8, добавляя кана и сохраняя numbers', () => {
@@ -61,12 +67,13 @@ describe('storage', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
 
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 9)
+    assert.equal(state.version, 10)
     assert.equal(state.numbers.preferences.mode, 'age')
     assert.equal(state.numbers.preferences.pickMode, 'even')
     assert.equal(state.numbers.stats['age:20'].hints, 2)
     assert.equal(state.preferences.mode, 'adaptive')
     assert.equal(state.stats['hiragana:a'].exposures, 0)
+    assert.deepEqual(state.kanji.learned, [])
     assert.equal(state.words, undefined)
   })
 
@@ -85,7 +92,7 @@ describe('storage', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
 
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 9)
+    assert.equal(state.version, 10)
     assert.equal(state.preferences.scriptMode, 'katakana')
     assert.equal(state.preferences.mode, 'even')
     assert.equal(state.stats['katakana:shi'].clears, 7)
@@ -96,7 +103,7 @@ describe('storage', () => {
   it('битые данные не роняют приложение', () => {
     window.localStorage.setItem(STORAGE_KEY, '{broken json')
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 9)
+    assert.equal(state.version, 10)
   })
 
   it('reset удаляет сохранение', async () => {

@@ -5,8 +5,8 @@ import {
   createStatsRecord,
 } from '../src/lib/trainer.js'
 
-export const CURRENT_VERSION = 9
-export const KNOWN_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, CURRENT_VERSION]
+export const CURRENT_VERSION = 10
+export const KNOWN_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, CURRENT_VERSION]
 
 const VALID_SCRIPT_MODES = new Set(['hiragana', 'katakana', 'both'])
 const VALID_KANA_MODES = new Set(['adaptive', 'even', 'problem'])
@@ -36,6 +36,12 @@ export function createDefaultAppState() {
         pickMode: 'adaptive',
       },
       stats: {},
+    },
+    kanji: {
+      learned: [],
+      preferences: {
+        complexityFilter: true,
+      },
     },
   }
 }
@@ -104,6 +110,22 @@ function sanitizeNumbersStats(raw) {
   return { ...raw }
 }
 
+function sanitizeKanjiState(raw, fallback) {
+  const learned = Array.isArray(raw?.learned)
+    ? [...new Set(raw.learned.filter((item) => typeof item === 'string' && item.length === 1))]
+    : [...fallback.learned]
+
+  return {
+    learned,
+    preferences: {
+      complexityFilter:
+        typeof raw?.preferences?.complexityFilter === 'boolean'
+          ? raw.preferences.complexityFilter
+          : fallback.preferences.complexityFilter,
+    },
+  }
+}
+
 export function normalizeAppState(parsed) {
   if (!parsed || !KNOWN_VERSIONS.includes(parsed.version)) {
     return null
@@ -121,5 +143,6 @@ export function normalizeAppState(parsed) {
       preferences: sanitizeNumbersPreferences(parsed.numbers?.preferences, fallback.numbers.preferences),
       stats: sanitizeNumbersStats(parsed.numbers?.stats),
     },
+    kanji: sanitizeKanjiState(parsed.kanji, fallback.kanji),
   }
 }

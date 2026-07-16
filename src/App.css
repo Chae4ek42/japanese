@@ -128,6 +128,10 @@
   align-items: stretch;
 }
 
+.home-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .home-card {
   display: flex;
   flex-direction: column;
@@ -175,9 +179,585 @@
   width: 100%;
 }
 
-.stats-page {
+.stats-page,
+.kanji-page {
   width: 100%;
   min-width: 0;
+}
+
+.kanji-page-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.kanji-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.kanji-filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--muted-strong);
+  cursor: pointer;
+  user-select: none;
+}
+
+.kanji-level-block {
+  margin-top: 22px;
+}
+
+.kanji-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px;
+}
+
+.kanji-cell {
+  display: grid;
+  gap: 4px;
+  place-items: center;
+  min-height: 76px;
+  padding: 8px 4px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fafafa;
+  cursor: pointer;
+  font: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.kanji-cell:hover {
+  background: #f0f0f0;
+}
+
+.kanji-cell.is-learned {
+  background: #e8f6ee;
+  border-color: #9dceb0;
+}
+
+.kanji-cell-char {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.kanji-cell-meta {
+  font-size: 0.62rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kanji-trainer {
+  position: relative;
+  display: grid;
+  gap: 16px;
+}
+
+.kanji-trainer-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.kanji-trainer-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.95fr) minmax(320px, 1.15fr);
+  gap: 16px;
+  align-items: stretch;
+  min-height: min(620px, calc(100vh - 180px));
+}
+
+.kanji-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(250, 250, 250, 0.98)),
+    #fff;
+  overflow: hidden;
+}
+
+.kanji-panel-body {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  text-align: center;
+  padding: 28px 24px 18px;
+  flex: 1;
+  align-content: center;
+}
+
+.kanji-panel-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 14px 18px 18px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.kanji-trainer-hero .kanji-panel-body {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(29, 79, 145, 0.08), transparent 42%),
+    transparent;
+}
+
+.kanji-hero-char {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: default;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(4.4rem, 11vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.kanji-hero-meanings-list,
+.kanji-word-meanings,
+.kanji-tip-meanings-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  width: min(100%, 320px);
+}
+
+.kanji-hero-meanings-list li,
+.kanji-tip-meanings-list li {
+  margin: 0;
+  color: var(--muted-strong);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.kanji-word-meanings li {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #f3f5f7;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.gloss-footnotes {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  width: min(100%, 320px);
+  text-align: left;
+}
+
+.gloss-footnotes li {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.gloss-footnote-marker {
+  font-family: 'Noto Sans JP', 'Segoe UI', sans-serif;
+  font-weight: 600;
+  color: var(--muted-strong);
+  white-space: nowrap;
+}
+
+.gloss-footnote-text {
+  min-width: 0;
+}
+
+.kanji-hero-readings,
+.kanji-tip-readings {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 280px);
+}
+
+.kanji-reading {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: baseline;
+  padding: 9px 12px;
+  border-radius: 12px;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.kanji-reading.is-on {
+  background: #eef4ff;
+  color: #1d4f91;
+}
+
+.kanji-reading.is-kun {
+  background: #eef8f1;
+  color: #1f6b45;
+}
+
+.kanji-reading-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.kanji-reading-value {
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+.kanji-words-panel {
+  min-width: 0;
+}
+
+.kanji-words-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 22px 0;
+}
+
+.kanji-words-head h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+}
+
+.kanji-word-stage {
+  width: 100%;
+}
+
+.kanji-word-writing {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+  margin: 0;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 3rem);
+  line-height: 1.15;
+}
+
+.kanji-chip {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0 2px;
+  font: inherit;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  line-height: 1.1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.kanji-chip:hover,
+.kanji-chip:focus-visible {
+  background: #e8eef8;
+  outline: none;
+}
+
+.kanji-chip.is-focus {
+  color: #1d4f91;
+}
+
+.kanji-chip-kana {
+  color: var(--muted-strong);
+}
+
+.kanji-word-details {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  width: min(100%, 360px);
+}
+
+.kanji-word-kana {
+  margin: 0;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.4rem;
+}
+
+.reading-highlight {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+}
+
+.kanji-info-words .reading-highlight {
+  justify-items: start;
+  margin-top: 4px;
+}
+
+.kanji-info-words .kanji-word-kana {
+  font-size: 0.95rem;
+}
+
+.kanji-info-words .kanji-word-romaji {
+  font-size: 0.8rem;
+}
+
+.reading-seg {
+  display: inline;
+}
+
+.reading-seg.is-focus {
+  color: #1d4f91;
+  font-weight: 700;
+  background: rgba(29, 79, 145, 0.1);
+  border-radius: 4px;
+  padding: 0 2px;
+  box-decoration-break: clone;
+}
+
+.reading-seg.is-other {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.reading-seg.is-shared {
+  color: var(--muted-strong);
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  padding: 0 2px;
+  box-decoration-break: clone;
+}
+
+.kanji-word-romaji .reading-seg.is-focus {
+  font-weight: 700;
+}
+
+.kanji-word-romaji,
+.kanji-word-tags,
+.kanji-word-hint,
+.kanji-word-progress {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.kanji-word-progress {
+  padding-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.kanji-word-hint {
+  max-width: 280px;
+  line-height: 1.45;
+}
+
+.kanji-tip {
+  position: fixed;
+  z-index: 40;
+  transform: translateX(-50%);
+  width: min(300px, calc(100vw - 24px));
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.14);
+  display: grid;
+  gap: 10px;
+}
+
+.kanji-tip-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.kanji-tip-char {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.kanji-tip-level {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1d4f91;
+}
+
+.kanji-tip-level.is-muted {
+  color: var(--muted);
+}
+
+.kanji-tip-meanings {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.kanji-tip-readings {
+  width: 100%;
+}
+
+.kanji-info-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(18, 18, 18, 0.42);
+}
+
+.kanji-info-card {
+  width: min(440px, 100%);
+  max-height: min(860px, calc(100vh - 48px));
+  overflow: auto;
+  display: grid;
+  gap: 16px;
+  padding: 22px 22px 18px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(29, 79, 145, 0.08), transparent 46%),
+    #fff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+}
+
+.kanji-info-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.kanji-info-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.kanji-info-learned {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #0f6b3f;
+}
+
+.kanji-info-char {
+  margin: 0;
+  text-align: center;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(4.5rem, 14vw, 6.5rem);
+  line-height: 1;
+}
+
+.kanji-info-section h4 {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kanji-info-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.kanji-info-list li {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #f3f5f7;
+  line-height: 1.4;
+}
+
+.kanji-info-words {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.kanji-info-words li {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f3f5f7;
+}
+
+.kanji-info-word-main {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.kanji-info-word-writing {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.kanji-info-word-speak {
+  margin-left: auto;
+  flex-shrink: 0;
+  min-width: 1.5rem;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.kanji-info-word-meaning {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.kanji-info-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.kanji-info-empty {
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
 }
 
 @media (max-width: 860px) {
@@ -189,7 +769,27 @@
     justify-self: start;
   }
 
-  .home-grid {
+  .home-grid,
+  .home-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .kanji-page-head {
+    flex-direction: column;
+  }
+
+  .kanji-trainer-layout {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .kanji-panel {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .home-grid-3 {
     grid-template-columns: 1fr;
   }
 }

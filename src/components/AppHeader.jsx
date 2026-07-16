@@ -27,6 +27,14 @@ export function AppHeader({ currentPage, onNavigate, onResetStats }) {
         </button>
         <button
           type="button"
+          data-testid="nav-kanji"
+          className={currentPage === 'kanji' ? 'site-nav-link is-active' : 'site-nav-link'}
+          onClick={() => onNavigate('kanji')}
+        >
+          Кандзи
+        </button>
+        <button
+          type="button"
           data-testid="nav-numbers"
           className={currentPage === 'numbers' ? 'site-nav-link is-active' : 'site-nav-link'}
           onClick={() => onNavigate('numbers')}

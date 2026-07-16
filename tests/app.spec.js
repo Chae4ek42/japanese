@@ -14,11 +14,53 @@ test('home screen renders landing page', async ({ page }) => {
   await openFreshApp(page)
   await expect(page.getByTestId('nav-home')).toBeVisible()
   await expect(page.getByTestId('nav-kana')).toBeVisible()
+  await expect(page.getByTestId('nav-kanji')).toBeVisible()
   await expect(page.getByTestId('nav-numbers')).toBeVisible()
   await expect(page.getByTestId('nav-stats')).toBeVisible()
   await expect(page.getByTestId('open-kana')).toBeVisible()
+  await expect(page.getByTestId('open-kanji')).toBeVisible()
   await expect(page.getByTestId('open-numbers')).toBeVisible()
   await expect(page.getByText('Тренажёры для повседневной практики')).toBeVisible()
+})
+
+test('kanji section opens trainer from table', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Kanji flow covered on desktop.')
+  await openFreshApp(page)
+  await page.getByTestId('nav-kanji').click()
+  await expect(page.getByTestId('kanji-page')).toBeVisible()
+  await expect(page.getByTestId('kanji-level-N5')).toBeVisible()
+
+  await page.getByTestId('kanji-cell-日').click()
+  await expect(page.getByTestId('kanji-trainer')).toBeVisible()
+  await expect(page.getByTestId('kanji-focus-char')).toHaveText('日')
+  await expect(page.getByTestId('kanji-word-writing')).toBeVisible()
+
+  await page.getByTestId('kanji-reveal-word').click()
+  await expect(page.getByTestId('kanji-reveal-word')).toHaveText('Убрать')
+  await expect(page.getByTestId('kanji-word-kana')).toBeVisible()
+  await expect(page.getByTestId('kanji-word-kana').locator('.reading-seg.is-focus')).toBeVisible()
+  await expect(page.getByTestId('kanji-word-meanings')).toBeVisible()
+  await expect(page.getByTestId('kanji-word-meanings').locator('li').first()).toBeVisible()
+
+  await page.getByTestId('kanji-reveal-word').click()
+  await expect(page.getByTestId('kanji-reveal-word')).toHaveText('Показать')
+  await expect(page.getByTestId('kanji-word-meanings')).toHaveCount(0)
+
+  await page.getByTestId('kanji-chip-日').click()
+  await expect(page.getByTestId('kanji-tip')).toBeVisible()
+  await expect(page.getByTestId('kanji-tip')).toContainText('N5')
+
+  await page.getByTestId('kanji-toggle-learned').click()
+  await page.getByText('← К таблице').click()
+  await expect(page.getByTestId('kanji-cell-日')).toHaveClass(/is-learned/)
+
+  await page.getByTestId('kanji-cell-日').click({ button: 'middle' })
+  await expect(page.getByTestId('kanji-info-card')).toBeVisible()
+  await expect(page.getByTestId('kanji-info-card')).toContainText('N5')
+  await expect(page.getByTestId('kanji-info-words')).toBeVisible()
+  await expect(page.getByTestId('kanji-info-words')).toContainText('毎日')
+  await page.getByTestId('kanji-info-close').click()
+  await expect(page.getByTestId('kanji-info-card')).toHaveCount(0)
 })
 
 test('header navigates to stats page', async ({ page }) => {
