@@ -26,7 +26,7 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
 const CACHE = path.join(ROOT, '.cache', 'kanji-bank')
-const OUT_DIR = path.join(ROOT, 'src', 'data', 'kanji')
+const OUT_DIR = path.join(ROOT, 'src', 'features', 'kanji', 'data')
 
 const OPENJLPT_BASE =
   'https://raw.githubusercontent.com/evanclan/OpenJLPT/main/data/json'

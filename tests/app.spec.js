@@ -1,9 +1,11 @@
 import { expect, test } from '@playwright/test'
 
 async function openFreshApp(page) {
-  await page.goto('/')
-  await page.evaluate(() => window.localStorage.clear())
-  await page.reload()
+  await page.addInitScript(() => {
+    window.localStorage.clear()
+  })
+  await page.goto('/', { waitUntil: 'domcontentloaded' })
+  await page.getByTestId('nav-home').waitFor({ state: 'visible' })
 }
 
 async function openNumbersTrainer(page) {
@@ -16,13 +18,70 @@ test('home screen renders landing page', async ({ page }) => {
   await expect(page.getByTestId('nav-kana')).toBeVisible()
   await expect(page.getByTestId('nav-kanji')).toBeVisible()
   await expect(page.getByTestId('nav-numbers')).toBeVisible()
+  await expect(page.getByTestId('nav-vocab')).toBeVisible()
   await expect(page.getByTestId('nav-stats')).toBeVisible()
   await expect(page.getByTestId('open-kana')).toBeVisible()
   await expect(page.getByTestId('open-kanji')).toBeVisible()
   await expect(page.getByTestId('open-numbers')).toBeVisible()
-  await expect(page.getByText('Тренажёры для повседневной практики')).toBeVisible()
+  await expect(page.getByTestId('open-vocab')).toBeVisible()
+  await expect(page.getByTestId('open-vocab-train')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'JP тренажёры' })).toBeVisible()
 })
 
+test('dictionary: catalog, groups and my words', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Dictionary flow covered on desktop.')
+  await openFreshApp(page)
+  await page.getByTestId('nav-vocab').click()
+  await expect(page.getByTestId('vocab-page')).toBeVisible()
+  await expect(page.getByTestId('vocab-list')).toBeVisible()
+
+  await page.getByTestId('vocab-mode-group').click()
+  await page.getByTestId('vocab-group-weekdays').click()
+  await expect(page.getByTestId('vocab-word-月曜日')).toBeVisible()
+
+  const toggle = page.locator('[data-testid^="vocab-toggle-"]').first()
+  const toggleId = await toggle.getAttribute('data-testid')
+  await toggle.click()
+  await page.getByTestId('vocab-tab-mine').click()
+  await expect(page.getByTestId('vocab-list').locator('.vocab-word')).toHaveCount(1)
+
+  await page.getByTestId(toggleId).click()
+  await expect(page.getByText('Пока пусто')).toBeVisible()
+})
+
+test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Vocab trainer covered on desktop.')
+  await openFreshApp(page)
+  await page.getByTestId('open-vocab-train').click()
+  await expect(page).toHaveURL(/\/vocab\/train$/)
+  await expect(page.getByTestId('vocab-setup')).toBeVisible()
+  await page.getByTestId('start-vocab').click()
+  await expect(page.getByTestId('vocab-current-writing')).toBeVisible()
+  await expect(page.getByTestId('vocab-answer-input')).toBeVisible()
+
+  await page.getByTestId('vocab-hint-button').click()
+  const hint = await page.locator('.feedback.is-hint').innerText()
+  const answer = hint.replace('Подсказка:', '').trim()
+  await page.getByTestId('vocab-answer-input').fill(answer.replace(/[\s_\-’']/g, '').toLowerCase())
+  await expect(page.locator('.practice-stage')).toHaveClass(/is-success/)
+
+  await page.getByText('← К настройкам').click()
+  await page.getByTestId('vocab-drill-choice').click()
+  await page.getByTestId('start-vocab').click()
+  await expect(page.getByTestId('vocab-choice-grid')).toBeVisible()
+  await expect(page.getByTestId('vocab-choice-0')).toBeVisible()
+})
+
+test('dictionary tabs update URL', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Dictionary URL covered on desktop.')
+  await openFreshApp(page)
+  await page.getByTestId('nav-vocab').click()
+  await expect(page).toHaveURL(/\/vocab$/)
+  await page.getByTestId('vocab-tab-mine').click()
+  await expect(page).toHaveURL(/\/vocab\/mine$/)
+  await page.getByTestId('vocab-tab-train').click()
+  await expect(page).toHaveURL(/\/vocab\/train$/)
+})
 test('kanji section opens trainer from table', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Kanji flow covered on desktop.')
   await openFreshApp(page)
@@ -36,11 +95,14 @@ test('kanji section opens trainer from table', async ({ page }, testInfo) => {
   await expect(page.getByTestId('kanji-word-writing')).toBeVisible()
 
   await page.getByTestId('kanji-reveal-word').click()
-  await expect(page.getByTestId('kanji-reveal-word')).toHaveText('Убрать')
+  await expect(page.getByTestId('kanji-reveal-word')).toHaveText('Скрыть')
   await expect(page.getByTestId('kanji-word-kana')).toBeVisible()
-  await expect(page.getByTestId('kanji-word-kana').locator('.reading-seg.is-focus')).toBeVisible()
+  await expect(page.getByTestId('kanji-word-kana').locator('.kanji-word-kana .reading-seg.is-focus')).toBeVisible()
   await expect(page.getByTestId('kanji-word-meanings')).toBeVisible()
   await expect(page.getByTestId('kanji-word-meanings').locator('li').first()).toBeVisible()
+  await expect(page.getByTestId('kanji-save-word')).toBeVisible()
+  await page.getByTestId('kanji-save-word').click()
+  await expect(page.getByTestId('kanji-save-word')).toHaveText('В моих')
 
   await page.getByTestId('kanji-reveal-word').click()
   await expect(page.getByTestId('kanji-reveal-word')).toHaveText('Показать')
@@ -51,7 +113,7 @@ test('kanji section opens trainer from table', async ({ page }, testInfo) => {
   await expect(page.getByTestId('kanji-tip')).toContainText('N5')
 
   await page.getByTestId('kanji-toggle-learned').click()
-  await page.getByText('← К таблице').click()
+  await page.getByText('← Все кандзи').click()
   await expect(page.getByTestId('kanji-cell-日')).toHaveClass(/is-learned/)
 
   await page.getByTestId('kanji-cell-日').click({ button: 'middle' })
@@ -66,6 +128,7 @@ test('kanji section opens trainer from table', async ({ page }, testInfo) => {
 test('header navigates to stats page', async ({ page }) => {
   await openFreshApp(page)
   await page.getByTestId('nav-stats').click()
+  await expect(page).toHaveURL(/\/stats$/)
   await expect(page.getByTestId('stats-page')).toBeVisible()
   await expect(page.getByTestId('numbers-stats')).toBeVisible()
 })
@@ -73,12 +136,29 @@ test('header navigates to stats page', async ({ page }) => {
 test('header navigates to kana trainer', async ({ page }) => {
   await openFreshApp(page)
   await page.getByTestId('nav-kana').click()
+  await expect(page).toHaveURL(/\/kana$/)
   await expect(page.getByTestId('start-practice')).toBeVisible()
 
   await page.getByTestId('nav-main').click()
+  await expect(page).toHaveURL(/\/$/)
   await expect(page.getByTestId('open-kana')).toBeVisible()
 })
 
+test('deep links open sections from URL', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.clear()
+  })
+  await page.goto('/vocab/train', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByTestId('vocab-setup')).toBeVisible()
+  await expect(page).toHaveURL(/\/vocab\/train$/)
+
+  await page.goto('/numbers', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByTestId('start-numbers')).toBeVisible()
+
+  await page.goto('/unknown-path', { waitUntil: 'domcontentloaded' })
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByTestId('open-kana')).toBeVisible()
+})
 test('kana: instant mode accepts romaji answer', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Kana flow covered on desktop.')
   await openFreshApp(page)

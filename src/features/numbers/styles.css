@@ -1,0 +1,84 @@
+.numbers-setup-shell {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.numbers-controls-panel {
+  position: sticky;
+  top: 12px;
+}
+
+.numbers-cheat-sheet {
+  display: grid;
+  gap: 20px;
+  max-height: calc(100vh - 140px);
+  overflow: auto;
+  padding-left: 18px;
+  border-left: 1px solid var(--border);
+}
+
+.numbers-practice-layout {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.numbers-question .question-symbol {
+  font-size: clamp(4rem, 10vw, 6.5rem);
+}
+
+.numbers-answer-block {
+  display: grid;
+  gap: 12px;
+  min-height: 180px;
+}
+
+.numbers-prompt {
+  margin: 0;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.numbers-reveal {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+  padding: 12px 0 4px;
+}
+
+.numbers-kanji {
+  margin: 0;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  line-height: 1.2;
+}
+
+.numbers-kana {
+  margin: 0;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.35rem;
+  color: var(--muted-strong);
+}
+
+.numbers-romaji {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 720px) {
+  .numbers-question .question-symbol {
+    font-size: clamp(3.2rem, 18vw, 4.8rem);
+  }
+
+  .numbers-answer-block {
+    min-height: 0;
+  }
+
+  .numbers-kanji {
+    font-size: clamp(2rem, 12vw, 2.8rem);
+  }
+}
