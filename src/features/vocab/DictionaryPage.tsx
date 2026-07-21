@@ -1,7 +1,9 @@
 import { useDeferredValue, useEffect, useMemo, useState } from 'react'
-import type { StatsRecord, VocabPreferences } from '../../shared/lib/types'
+import type { KanjiWord, StatsRecord, VocabPreferences } from '../../shared/lib/types'
 import './styles.css'
-import { getJlptWords, getWordsByIds, searchWords } from '../kanji/data/bank'
+import { getJlptWords, searchWords } from '../kanji/data/bank'
+import { CustomWordForm } from './CustomWordForm'
+import { resolveMyWords } from './customWords'
 import { VOCAB_GROUPS, getWordsForGroup } from './groups'
 import { VocabTrainer } from './VocabTrainer'
 import { WordCard } from './WordCard'
@@ -23,11 +25,13 @@ const LEVEL_OPTIONS: Array<{ id: LevelFilter; label: string }> = [
 
 export interface DictionaryPageProps {
   myWords: string[]
+  customWords: Record<string, KanjiWord>
   preferences: VocabPreferences
   stats: Record<string, StatsRecord>
   section: VocabSection
   onSectionChange: (section: VocabSection) => void
   onToggleMyWord: (wordId: string) => void
+  onAddCustomWord: (word: KanjiWord) => void
   onPatchPreferences: (patch: Partial<VocabPreferences>) => void
   onUpdateStats: (
     cardId: string,
@@ -44,11 +48,13 @@ export interface DictionaryPageProps {
 
 export function DictionaryPage({
   myWords,
+  customWords,
   preferences,
   stats,
   section,
   onSectionChange,
   onToggleMyWord,
+  onAddCustomWord,
   onPatchPreferences,
   onUpdateStats,
 }: DictionaryPageProps) {
@@ -57,11 +63,13 @@ export function DictionaryPage({
   const [groupId, setGroupId] = useState(VOCAB_GROUPS[0]?.id ?? 'family')
   const [query, setQuery] = useState('')
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+  const [editingWord, setEditingWord] = useState<KanjiWord | null>(null)
   const deferredQuery = useDeferredValue(query.trim())
   const myWordSet = useMemo(() => new Set(myWords), [myWords])
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE)
+    setEditingWord(null)
   }, [section])
 
   const catalogWords = useMemo(() => {
@@ -74,7 +82,7 @@ export function DictionaryPage({
     return getJlptWords(level)
   }, [catalogMode, deferredQuery, groupId, level])
 
-  const mineWords = useMemo(() => getWordsByIds(myWords), [myWords])
+  const mineWords = useMemo(() => resolveMyWords(myWords, customWords), [myWords, customWords])
   const activeGroup = VOCAB_GROUPS.find((group) => group.id === groupId) ?? null
 
   const list = section === 'mine' ? mineWords : catalogWords
@@ -141,11 +149,12 @@ export function DictionaryPage({
         </div>
       </header>
 
-      {section === 'train' ? (
+          {section === 'train' ? (
         <VocabTrainer
           preferences={preferences}
           stats={stats}
           myWords={myWords}
+          customWords={customWords}
           onPatchPreferences={onPatchPreferences}
           onUpdateStats={onUpdateStats}
         />
@@ -235,9 +244,19 @@ export function DictionaryPage({
               ) : null}
             </section>
           ) : (
-            <p className="vocab-note">
-              Слова, которые вы добавили вручную — из каталога, тренажёра кандзи или карточки знака.
-            </p>
+            <section className="vocab-mine-tools">
+              <p className="vocab-note">
+                Добавьте или измените своё слово — либо сохраните из каталога и тренажёра кандзи.
+              </p>
+              <CustomWordForm
+                editingWord={editingWord}
+                onSave={(word) => {
+                  onAddCustomWord(word)
+                  setEditingWord(null)
+                }}
+                onCancelEdit={() => setEditingWord(null)}
+              />
+            </section>
           )}
 
           <div className="vocab-list-head">
@@ -246,7 +265,7 @@ export function DictionaryPage({
               {list.length
                 ? `${visible.length} из ${list.length}`
                 : section === 'mine'
-                  ? 'Пока пусто — добавьте слова кнопкой «+ В мои».'
+                  ? 'Пока пусто — заполните форму выше или нажмите «+ В мои» в каталоге.'
                   : 'Ничего не найдено.'}
             </p>
           </div>
@@ -258,6 +277,7 @@ export function DictionaryPage({
                 word={word}
                 isSaved={Boolean(word.id && myWordSet.has(word.id))}
                 onToggleSaved={onToggleMyWord}
+                onEdit={section === 'mine' ? setEditingWord : undefined}
               />
             ))}
           </div>

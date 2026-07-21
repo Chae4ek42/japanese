@@ -1,5 +1,6 @@
 import type { KanjiWord, VocabCard, VocabLevelFilter, VocabPreferences } from '../../shared/lib/types'
-import { getJlptWords, getWordsByIds } from '../kanji/data/bank'
+import { getJlptWords } from '../kanji/data/bank'
+import { resolveMyWords } from './customWords'
 import { getWordsForGroup } from './groups'
 
 export function normalizeRomajiAnswer(value: string): string {
@@ -26,10 +27,14 @@ export function wordToVocabCard(word: KanjiWord): VocabCard | null {
   }
 }
 
-export function buildVocabPool(preferences: VocabPreferences, myWords: string[]): VocabCard[] {
+export function buildVocabPool(
+  preferences: VocabPreferences,
+  myWords: string[],
+  customWords: Record<string, KanjiWord> = {},
+): VocabCard[] {
   let words: KanjiWord[] = []
   if (preferences.source === 'mine') {
-    words = getWordsByIds(myWords)
+    words = resolveMyWords(myWords, customWords)
   } else if (preferences.source === 'group') {
     words = getWordsForGroup(preferences.groupId)
   } else {

@@ -341,6 +341,53 @@
   color: #666;
 }
 
+.vocab-word-badge.is-custom {
+  background: #111;
+  color: #fff;
+}
+
+.vocab-mine-tools {
+  display: grid;
+  gap: 14px;
+}
+
+.vocab-skip-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.vocab-skip-row .ghost-button {
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+.vocab-skip-row .ghost-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.vocab-skip-note {
+  margin: 8px 0 0;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .custom-word-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vocab-skip-row {
+    flex-direction: column;
+  }
+
+  .vocab-skip-row .ghost-button {
+    width: 100%;
+  }
+}
+
 .vocab-word-romaji {
   color: #7a6a4f;
   font-size: 0.8rem;

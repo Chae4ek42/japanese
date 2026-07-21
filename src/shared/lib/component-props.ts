@@ -4,11 +4,9 @@ import type {
   Hyperparams,
   InputMode,
   KanaCard,
-  KanaGroup,
   KanaPreferences,
   KanjiPreferences,
   NumbersPreferences,
-  PracticeHistory,
   PracticeSession,
   RoundState,
   SessionStats,
@@ -123,34 +121,6 @@ export interface CheatTableProps {
   headers: string[]
   rows: Array<{ key: string | number; cells: Array<string | number> }>
   testId: string
-}
-
-export interface StatsPageProps {
-  kanaStats: Record<string, StatsRecord>
-  kanaHistory: PracticeHistory
-  kanaHyperparams: Hyperparams
-  numbersStats: Record<string, StatsRecord>
-}
-
-export interface MetricCardProps {
-  label: string
-  value: string | number
-  tip?: string
-}
-
-export interface ActivityChartProps {
-  daily: PracticeHistory['daily']
-  days?: number
-}
-
-export interface LatencySparklineProps {
-  recent: PracticeHistory['recent']
-}
-
-export interface MasteryMapProps {
-  groups: KanaGroup[]
-  script: 'hiragana' | 'katakana'
-  statsMap: Record<string, StatsRecord>
 }
 
 export interface AppHeaderProps {

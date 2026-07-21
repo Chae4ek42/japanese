@@ -121,7 +121,6 @@
   color: var(--muted-strong);
 }
 
-.stats-page,
 .kanji-page {
   width: 100%;
   min-width: 0;
@@ -1272,6 +1271,18 @@ kbd {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: rgba(16, 23, 31, 0.02);
+}
+
+.custom-word-form.is-editing {
+  border-color: #111;
+  background: #fff;
+}
+
+.custom-word-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
 }
 
 .custom-word-grid {

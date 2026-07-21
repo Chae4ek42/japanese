@@ -13,10 +13,13 @@ export interface VocabPracticeProps {
   feedback: FeedbackState
   round: RoundState
   sessionStats: SessionStats & { accuracy?: number }
+  canGoPrev: boolean
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void
   onInputKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
   onRevealHint: () => void
   onChoose: (meaning: string) => void
+  onSkipPrev: () => void
+  onSkipNext: () => void
   onStop: () => void
 }
 
@@ -31,10 +34,13 @@ export function VocabPractice({
   feedback,
   round,
   sessionStats,
+  canGoPrev,
   onInputChange,
   onInputKeyDown,
   onRevealHint,
   onChoose,
+  onSkipPrev,
+  onSkipNext,
   onStop,
 }: VocabPracticeProps) {
   if (!activeCard) {
@@ -106,6 +112,8 @@ export function VocabPractice({
                 ) : (
                   ' · автозачёт'
                 )}
+                {' · '}
+                <kbd>←</kbd>/<kbd>→</kbd> — пропуск
               </p>
             </div>
           </>
@@ -138,6 +146,22 @@ export function VocabPractice({
             </div>
           </>
         )}
+
+        <div className="vocab-skip-row" role="group" aria-label="Переход без ответа">
+          <button
+            type="button"
+            className="ghost-button"
+            data-testid="vocab-skip-prev"
+            disabled={!canGoPrev}
+            onClick={onSkipPrev}
+          >
+            ← Предыдущее
+          </button>
+          <button type="button" className="ghost-button" data-testid="vocab-skip-next" onClick={onSkipNext}>
+            Следующее →
+          </button>
+        </div>
+        <p className="question-note vocab-skip-note">Пропуск не влияет на статистику и очередь.</p>
       </div>
     </PracticeShell>
   )

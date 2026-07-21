@@ -3,7 +3,6 @@ import { HomePage } from '../features/home/HomePage'
 import { KanaTrainer } from '../features/kana/KanaTrainer'
 import { KanjiPage } from '../features/kanji/KanjiPage'
 import { NumbersTrainer } from '../features/numbers/NumbersTrainer'
-import { StatsPage } from '../features/stats/StatsPage'
 import { DictionaryPage } from '../features/vocab/DictionaryPage'
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import {
@@ -49,13 +48,6 @@ function AppRoutes() {
           onOpenVocab={() => goPage('vocab', 'catalog')}
           onOpenVocabTrain={() => goPage('vocab', 'train')}
         />
-      ) : page === 'stats' ? (
-        <StatsPage
-          kanaStats={kana.stats}
-          kanaHistory={kana.history}
-          kanaHyperparams={kana.preferences.hyperparams}
-          numbersStats={numbers.stats}
-        />
       ) : page === 'kanji' ? (
         <KanjiPage
           kanjiState={{ learned: kanji.learned, preferences: kanji.preferences }}
@@ -67,11 +59,13 @@ function AppRoutes() {
       ) : page === 'vocab' ? (
         <DictionaryPage
           myWords={vocab.myWords}
+          customWords={vocab.customWords}
           preferences={vocab.preferences}
           stats={vocab.stats}
           section={vocabSection}
           onSectionChange={(section) => goPage('vocab', section)}
           onToggleMyWord={vocab.toggleMyWord}
+          onAddCustomWord={vocab.addCustomWord}
           onPatchPreferences={vocab.patchPreferences}
           onUpdateStats={vocab.updateStats}
         />

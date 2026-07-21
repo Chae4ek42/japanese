@@ -11,7 +11,6 @@ export const PATHS = {
   kana: '/kana',
   kanji: '/kanji',
   numbers: '/numbers',
-  stats: '/stats',
   vocab: '/vocab',
   vocabTrain: '/vocab/train',
   vocabMine: '/vocab/mine',
@@ -23,7 +22,6 @@ const PAGE_TITLES: Record<AppPage, string> = {
   kanji: 'Кандзи — JP тренажёры',
   numbers: 'Числа — JP тренажёры',
   vocab: 'Словарь — JP тренажёры',
-  stats: 'Прогресс — JP тренажёры',
 }
 
 export function normalizePath(pathname: string): string {
@@ -45,8 +43,6 @@ export function parsePath(pathname: string): AppRoute {
       return { page: 'kanji' }
     case PATHS.numbers:
       return { page: 'numbers' }
-    case PATHS.stats:
-      return { page: 'stats' }
     case PATHS.vocab:
       return { page: 'vocab', section: 'catalog' }
     case PATHS.vocabTrain:
@@ -85,7 +81,6 @@ export function isKnownPath(pathname: string): boolean {
     path === PATHS.kana ||
     path === PATHS.kanji ||
     path === PATHS.numbers ||
-    path === PATHS.stats ||
     path === PATHS.vocab ||
     path === PATHS.vocabTrain ||
     path === PATHS.vocabMine

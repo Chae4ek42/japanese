@@ -2,6 +2,7 @@ import { ALL_CARD_IDS, GROUP_IDS } from '../../data/kana'
 import type {
   AppState,
   KanaPreferences,
+  KanjiWord,
   PracticeHistory,
   StatsRecord,
   VocabPreferences,
@@ -13,8 +14,8 @@ import {
   createStatsRecord,
 } from '../lib/trainer'
 
-export const CURRENT_VERSION = 13 as const
-export const KNOWN_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, CURRENT_VERSION]
+export const CURRENT_VERSION = 14 as const
+export const KNOWN_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, CURRENT_VERSION]
 
 const VALID_SCRIPT_MODES = new Set(['hiragana', 'katakana', 'both'])
 const VALID_KANA_MODES = new Set(['adaptive', 'even', 'problem'])
@@ -67,6 +68,7 @@ export function createDefaultAppState(): AppState {
     },
     vocab: {
       myWords: [],
+      customWords: {},
       preferences: { ...DEFAULT_VOCAB_PREFERENCES },
       stats: {},
     },
@@ -198,17 +200,46 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
   }
 }
 
+function sanitizeCustomWords(raw: unknown): Record<string, KanjiWord> {
+  if (!raw || typeof raw !== 'object') {
+    return {}
+  }
+
+  const result: Record<string, KanjiWord> = {}
+  for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (!key || !value || typeof value !== 'object') continue
+    const word = value as Record<string, unknown>
+    const writing = typeof word.writing === 'string' ? word.writing.trim() : ''
+    const kana = typeof word.kana === 'string' ? word.kana.trim() : ''
+    const romaji = typeof word.romaji === 'string' ? word.romaji.trim() : ''
+    const meanings = Array.isArray(word.meanings)
+      ? word.meanings.filter((item): item is string => typeof item === 'string' && item.trim().length > 0).map((item) => item.trim())
+      : []
+    if (!writing || !kana || !romaji || !meanings.length) continue
+    const id = typeof word.id === 'string' && word.id ? word.id : key
+    const kanji = Array.isArray(word.kanji)
+      ? word.kanji.filter((item): item is string => typeof item === 'string' && item.length > 0)
+      : []
+    result[id] = { id, writing, kana, romaji, meanings, kanji }
+  }
+  return result
+}
+
 function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabState {
   const source = raw && typeof raw === 'object' ? (raw as Partial<VocabState>) : {}
-  const myWords = Array.isArray(source.myWords)
-    ? [...new Set(source.myWords.filter((item): item is string => typeof item === 'string' && item.length > 0))]
+  const customWords = sanitizeCustomWords(source.customWords)
+  const myWordsRaw = Array.isArray(source.myWords)
+    ? source.myWords.filter((item): item is string => typeof item === 'string' && item.length > 0)
     : [...fallback.myWords]
+  // Keep custom ids that have a payload even if myWords omitted them.
+  const myWords = [...new Set([...myWordsRaw, ...Object.keys(customWords)])]
 
   const stats =
     source.stats && typeof source.stats === 'object' ? { ...(source.stats as Record<string, StatsRecord>) } : {}
 
   return {
     myWords,
+    customWords,
     preferences: sanitizeVocabPreferences(source.preferences, fallback.preferences),
     stats,
   }

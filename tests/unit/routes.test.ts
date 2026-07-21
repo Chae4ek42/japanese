@@ -27,7 +27,7 @@ describe('routes', () => {
   it('неизвестный путь отдаёт home при парсинге', () => {
     assert.deepEqual(parsePath('/nope'), { page: 'home' })
     assert.equal(isKnownPath('/nope'), false)
-    assert.equal(isKnownPath('/stats'), true)
+    assert.equal(isKnownPath('/kana'), true)
   })
 
   it('строит пути из маршрута и страницы', () => {

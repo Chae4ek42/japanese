@@ -4,7 +4,7 @@ export type InputMode = 'instant' | 'submit'
 export type NumberMode = 'plain' | 'age'
 export type NumberRangeId = '10' | '99' | '999'
 export type NumbersPickMode = 'adaptive' | 'even'
-export type AppPage = 'home' | 'kana' | 'kanji' | 'numbers' | 'vocab' | 'stats'
+export type AppPage = 'home' | 'kana' | 'kanji' | 'numbers' | 'vocab'
 export type PracticeView = 'setup' | 'practice'
 
 export type TrainerOutcome = 'empty' | 'correct' | 'wrong' | 'pending' | 'seen' | 'hint'
@@ -177,12 +177,14 @@ export interface VocabCard {
 
 export interface VocabState {
   myWords: string[]
+  /** User-created words keyed by id (`custom:…`). */
+  customWords: Record<string, KanjiWord>
   preferences: VocabPreferences
   stats: Record<string, StatsRecord>
 }
 
 export interface AppState {
-  version: 13
+  version: 14
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>

@@ -1,10 +1,12 @@
 import type { KanjiWord } from '../../shared/lib/types'
 import { speakJapanese } from '../../shared/lib/speech'
+import { isCustomWordId } from './customWords'
 
 export interface WordCardProps {
   word: KanjiWord
   isSaved: boolean
   onToggleSaved: (wordId: string) => void
+  onEdit?: (word: KanjiWord) => void
 }
 
 function writingSizeClass(writing: string): string {
@@ -15,9 +17,11 @@ function writingSizeClass(writing: string): string {
   return 'is-xl'
 }
 
-export function WordCard({ word, isSaved, onToggleSaved }: WordCardProps) {
+export function WordCard({ word, isSaved, onToggleSaved, onEdit }: WordCardProps) {
   const wordId = word.id
-  const jlptLabel = word.jlpt ? `N${word.jlpt}` : 'вне JLPT'
+  const custom = isCustomWordId(wordId)
+  const badgeLabel = custom ? 'своё' : word.jlpt ? `N${word.jlpt}` : 'вне JLPT'
+  const badgeClass = custom ? ' is-custom' : word.jlpt ? ` is-n${word.jlpt}` : ' is-other'
 
   return (
     <article className="vocab-word" data-testid={`vocab-word-${word.writing}`}>
@@ -27,7 +31,7 @@ export function WordCard({ word, isSaved, onToggleSaved }: WordCardProps) {
 
       <div className="vocab-word-main">
         <div className="vocab-word-meta">
-          <span className={`vocab-word-badge${word.jlpt ? ` is-n${word.jlpt}` : ' is-other'}`}>{jlptLabel}</span>
+          <span className={`vocab-word-badge${badgeClass}`}>{badgeLabel}</span>
           {word.romaji ? <span className="vocab-word-romaji">{word.romaji}</span> : null}
         </div>
         <p className="vocab-word-kana">
@@ -52,6 +56,16 @@ export function WordCard({ word, isSaved, onToggleSaved }: WordCardProps) {
         >
           ▶︎
         </button>
+        {custom && wordId && onEdit ? (
+          <button
+            type="button"
+            className="vocab-save-button"
+            data-testid={`vocab-edit-${wordId}`}
+            onClick={() => onEdit(word)}
+          >
+            Изменить
+          </button>
+        ) : null}
         {wordId ? (
           <button
             type="button"
@@ -59,7 +73,7 @@ export function WordCard({ word, isSaved, onToggleSaved }: WordCardProps) {
             data-testid={`vocab-toggle-${wordId}`}
             onClick={() => onToggleSaved(wordId)}
           >
-            {isSaved ? 'В моих' : '+ В мои'}
+            {custom ? 'Удалить' : isSaved ? 'В моих' : '+ В мои'}
           </button>
         ) : null}
       </div>

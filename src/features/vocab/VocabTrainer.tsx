@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { PracticeSession, StatsRecord, VocabCard, VocabPreferences } from '../../shared/lib/types'
+import type { KanjiWord, PracticeSession, StatsRecord, VocabCard, VocabPreferences } from '../../shared/lib/types'
 import {
   DEFAULT_HYPERPARAMS,
   createStatsRecord,
@@ -16,6 +16,7 @@ export interface VocabTrainerProps {
   preferences: VocabPreferences
   stats: Record<string, StatsRecord>
   myWords: string[]
+  customWords?: Record<string, KanjiWord>
   onPatchPreferences: (patch: Partial<VocabPreferences>) => void
   onUpdateStats: (
     cardId: string,
@@ -34,6 +35,7 @@ export function VocabTrainer({
   preferences,
   stats,
   myWords,
+  customWords = {},
   onPatchPreferences,
   onUpdateStats,
 }: VocabTrainerProps) {
@@ -63,24 +65,37 @@ export function VocabTrainer({
   const [inputValue, setInputValue] = useState('')
   const [choiceOptions, setChoiceOptions] = useState<string[]>([])
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null)
+  const [canGoPrev, setCanGoPrev] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const preferencesRef = useRef(preferences)
   const statsRef = useRef(stats)
   const myWordsRef = useRef(myWords)
+  const customWordsRef = useRef(customWords)
   const activeCardRef = useRef<VocabCard | null>(null)
+  const currentCardIdRef = useRef<string | null>(null)
+  const navHistoryRef = useRef<string[]>([])
+  const navIndexRef = useRef(-1)
 
-  const activePool = useMemo(() => buildVocabPool(preferences, myWords), [preferences, myWords])
+  const activePool = useMemo(
+    () => buildVocabPool(preferences, myWords, customWords),
+    [preferences, myWords, customWords],
+  )
   const activeCard = currentCardId ? (activePool.find((card) => card.id === currentCardId) ?? null) : null
 
   useEffect(() => {
     preferencesRef.current = preferences
     statsRef.current = stats
     myWordsRef.current = myWords
-  }, [preferences, stats, myWords])
+    customWordsRef.current = customWords
+  }, [preferences, stats, myWords, customWords])
 
   useEffect(() => {
     activeCardRef.current = activeCard
   }, [activeCard])
+
+  useEffect(() => {
+    currentCardIdRef.current = currentCardId
+  }, [currentCardId])
 
   useEffect(() => {
     if (view === 'practice' && preferences.drillMode === 'romaji') {
@@ -90,12 +105,24 @@ export function VocabTrainer({
 
   useEffect(() => {
     const handleWindowKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.code === 'Space' &&
-        viewRef.current === 'practice' &&
-        preferencesRef.current.drillMode === 'romaji' &&
-        activeCardRef.current
-      ) {
+      if (viewRef.current !== 'practice' || !activeCardRef.current) return
+      const typingInField =
+        event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement
+
+      if (!typingInField && event.code === 'ArrowLeft' && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        event.preventDefault()
+        skipToAdjacent('prev')
+        return
+      }
+      if (!typingInField && event.code === 'ArrowRight' && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        event.preventDefault()
+        skipToAdjacent('next')
+        return
+      }
+
+      if (event.code === 'Space' && preferencesRef.current.drillMode === 'romaji') {
+        // Input field handles Space via onKeyDown; keep global shortcut for choice mode focus.
+        if (typingInField) return
         event.preventDefault()
         revealHint()
       }
@@ -104,7 +131,12 @@ export function VocabTrainer({
     return () => window.removeEventListener('keydown', handleWindowKeyDown)
   }, [])
 
-  function showCard(cardId: string, nextSession: PracticeSession, pool: VocabCard[]) {
+  function showCard(
+    cardId: string,
+    nextSession: PracticeSession,
+    pool: VocabCard[],
+    { recordSeen = true }: { recordSeen?: boolean } = {},
+  ) {
     const now = Date.now()
     const card = pool.find((item) => item.id === cardId) ?? null
     resetRound(now)
@@ -118,7 +150,9 @@ export function VocabTrainer({
     } else {
       setChoiceOptions([])
     }
-    onUpdateStats(cardId, 'seen', { now })
+    if (recordSeen) {
+      onUpdateStats(cardId, 'seen', { now })
+    }
   }
 
   function statsWithDefaults(pool: VocabCard[]) {
@@ -129,8 +163,16 @@ export function VocabTrainer({
     return map
   }
 
+  function rememberNavCard(cardId: string) {
+    const trimmed = navHistoryRef.current.slice(0, navIndexRef.current + 1)
+    trimmed.push(cardId)
+    navHistoryRef.current = trimmed
+    navIndexRef.current = trimmed.length - 1
+    setCanGoPrev(navIndexRef.current > 0)
+  }
+
   function advanceToNextCard(nextSessionOverride?: PracticeSession) {
-    const pool = buildVocabPool(preferencesRef.current, myWordsRef.current)
+    const pool = buildVocabPool(preferencesRef.current, myWordsRef.current, customWordsRef.current)
     if (!pool.length) {
       setView('setup')
       setCurrentCardId(null)
@@ -152,6 +194,7 @@ export function VocabTrainer({
     }
 
     const pickedFromQueue = nextSession.mistakeQueue.includes(nextId)
+    rememberNavCard(nextId)
     showCard(
       nextId,
       {
@@ -159,7 +202,60 @@ export function VocabTrainer({
         sinceQueuePick: pickedFromQueue ? 0 : (nextSession.sinceQueuePick ?? 0) + 1,
       },
       pool,
+      { recordSeen: true },
     )
+  }
+
+  function skipToAdjacent(direction: 'prev' | 'next') {
+    if (viewRef.current !== 'practice' || pendingAdvanceRef.current) return
+    clearPendingAdvance()
+
+    const pool = buildVocabPool(preferencesRef.current, myWordsRef.current, customWordsRef.current)
+    if (!pool.length) return
+
+    if (direction === 'prev') {
+      if (navIndexRef.current <= 0) return
+      navIndexRef.current -= 1
+      setCanGoPrev(navIndexRef.current > 0)
+      const prevId = navHistoryRef.current[navIndexRef.current]
+      showCard(prevId, sessionRef.current, pool, { recordSeen: false })
+      return
+    }
+
+    if (navIndexRef.current >= 0 && navIndexRef.current < navHistoryRef.current.length - 1) {
+      navIndexRef.current += 1
+      setCanGoPrev(navIndexRef.current > 0)
+      const nextId = navHistoryRef.current[navIndexRef.current]
+      showCard(nextId, sessionRef.current, pool, { recordSeen: false })
+      return
+    }
+
+    const currentId = currentCardIdRef.current
+    const session = sessionRef.current
+    const pickSession: PracticeSession = {
+      ...session,
+      recentHistory: currentId
+        ? [...session.recentHistory, currentId].slice(-3)
+        : session.recentHistory,
+    }
+    const nextId = pickNextCardId(
+      pool,
+      statsWithDefaults(pool),
+      pickSession,
+      preferencesRef.current.pickMode,
+      DEFAULT_HYPERPARAMS,
+    )
+    if (!nextId || nextId === currentId) {
+      if (pool.length < 2) return
+      const fallback = pool.find((card) => card.id !== currentId)
+      if (!fallback) return
+      rememberNavCard(fallback.id)
+      showCard(fallback.id, session, pool, { recordSeen: false })
+      return
+    }
+
+    rememberNavCard(nextId)
+    showCard(nextId, session, pool, { recordSeen: false })
   }
 
   function startPractice() {
@@ -174,6 +270,9 @@ export function VocabTrainer({
       return
     }
 
+    navHistoryRef.current = []
+    navIndexRef.current = -1
+    setCanGoPrev(false)
     const nextSession = beginPractice({
       poolIds: activePool.map((card) => card.id),
       mode: preferences.pickMode,
@@ -188,6 +287,9 @@ export function VocabTrainer({
     setInputValue('')
     setChoiceOptions([])
     setSelectedChoice(null)
+    navHistoryRef.current = []
+    navIndexRef.current = -1
+    setCanGoPrev(false)
   }
 
   function finalizeCorrect(kind: 'correct' | 'hint', delay = 280) {
@@ -374,10 +476,13 @@ export function VocabTrainer({
       feedback={feedback}
       round={round}
       sessionStats={{ ...sessionStats, accuracy: sessionAccuracy }}
+      canGoPrev={canGoPrev}
       onInputChange={handleInputChange}
       onInputKeyDown={handleInputKeyDown}
       onRevealHint={revealHint}
       onChoose={handleChoose}
+      onSkipPrev={() => skipToAdjacent('prev')}
+      onSkipNext={() => skipToAdjacent('next')}
       onStop={stopPractice}
     />
   )

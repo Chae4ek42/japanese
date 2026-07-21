@@ -7,7 +7,6 @@ const NAV_ITEMS = [
   { id: 'kanji', label: 'Кандзи', href: PATHS.kanji, testId: 'nav-kanji' },
   { id: 'numbers', label: 'Числа', href: PATHS.numbers, testId: 'nav-numbers' },
   { id: 'vocab', label: 'Словарь', href: PATHS.vocab, testId: 'nav-vocab' },
-  { id: 'stats', label: 'Прогресс', href: PATHS.stats, testId: 'nav-stats' },
 ] as const
 
 export function AppHeader({ currentPage, onNavigate, onResetStats }: AppHeaderProps) {
