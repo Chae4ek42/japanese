@@ -1,4 +1,5 @@
-import type { VocabPreferences } from '../../shared/lib/types'
+import type { VocabLevelFilter, VocabPreferences } from '../../shared/lib/types'
+import { WordJlptFilter } from '../kanji/WordJlptFilter'
 import { VOCAB_GROUPS } from './groups'
 
 const drillOptions = [
@@ -30,9 +31,12 @@ const inputModeOptions = [
   { id: 'submit' as const, label: 'По Enter', hint: 'Проверка по Enter.' },
 ]
 
+const JLPT_LEVELS: VocabLevelFilter[] = [5, 4, 3, 2, 1]
+
 export interface VocabSetupProps {
   preferences: VocabPreferences
   poolCount: number
+  sourcePoolCount: number
   myWordsCount: number
   errorText?: string
   onPatchPreferences: (patch: Partial<VocabPreferences>) => void
@@ -42,11 +46,14 @@ export interface VocabSetupProps {
 export function VocabSetup({
   preferences,
   poolCount,
+  sourcePoolCount,
   myWordsCount,
   errorText = '',
   onPatchPreferences,
   onStart,
 }: VocabSetupProps) {
+  const newLimit = preferences.newWordLimit ?? 0
+
   return (
     <section className="panel controls-panel setup-surface vocab-setup" data-testid="vocab-setup">
       <div className="control-group">
@@ -89,7 +96,7 @@ export function VocabSetup({
         <div className="control-group">
           <span className="group-label">Уровень JLPT</span>
           <div className="segmented">
-            {([5, 4, 3] as const).map((level) => (
+            {JLPT_LEVELS.map((level) => (
               <button
                 key={level}
                 type="button"
@@ -123,6 +130,40 @@ export function VocabSetup({
           </div>
         </div>
       ) : null}
+
+      {preferences.source === 'group' || preferences.source === 'mine' ? (
+        <div className="control-group">
+          <span className="group-label">Фильтр JLPT</span>
+          <WordJlptFilter
+            selected={preferences.wordJlptLevels ?? []}
+            testIdPrefix="vocab-word-jlpt"
+            onChange={(next) => onPatchPreferences({ wordJlptLevels: next })}
+          />
+          <p className="control-hint">Пусто / все уровни — без фильтра. Иначе только выбранные N-уровни.</p>
+        </div>
+      ) : null}
+
+      <div className="control-group">
+        <span className="group-label">Новых слов за раз</span>
+        <label className="vocab-number-field">
+          <input
+            type="number"
+            min={0}
+            max={50}
+            data-testid="vocab-new-word-limit"
+            value={newLimit}
+            onChange={(event) => {
+              const next = Math.min(50, Math.max(0, Number(event.target.value) || 0))
+              onPatchPreferences({ newWordLimit: next })
+            }}
+          />
+          <span>0 = без лимита</span>
+        </label>
+        <p className="control-hint">
+          Уже начатые слова остаются в наборе; из ещё не тронутых берётся не больше указанного числа (например 5 из
+          30).
+        </p>
+      </div>
 
       <div className="control-group">
         <span className="group-label">Подбор</span>
@@ -163,7 +204,9 @@ export function VocabSetup({
       ) : null}
 
       <p className="control-hint" data-testid="vocab-pool-count">
-        {poolCount} слов в наборе
+        {poolCount === sourcePoolCount
+          ? `${poolCount} слов в наборе`
+          : `${poolCount} в тренировке из ${sourcePoolCount} в наборе`}
       </p>
 
       <div className="primary-actions">

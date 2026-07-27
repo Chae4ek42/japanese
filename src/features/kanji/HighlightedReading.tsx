@@ -1,5 +1,12 @@
-import type { HighlightedReadingProps } from '../../shared/lib/component-props'
 import { getHighlightedReading } from '../../shared/lib/reading-align'
+
+export interface HighlightedReadingProps {
+  writing: string
+  kana: string
+  focusKanji: string
+  fallbackRomaji?: string
+  testId?: string
+}
 
 export function HighlightedReading({ writing, kana, focusKanji, fallbackRomaji, testId }: HighlightedReadingProps) {
   const segments = getHighlightedReading(writing, kana, focusKanji)

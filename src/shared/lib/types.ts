@@ -4,7 +4,7 @@ export type InputMode = 'instant' | 'submit'
 export type NumberMode = 'plain' | 'age'
 export type NumberRangeId = '10' | '99' | '999'
 export type NumbersPickMode = 'adaptive' | 'even'
-export type AppPage = 'home' | 'kana' | 'kanji' | 'numbers' | 'vocab'
+export type AppPage = 'home' | 'kana' | 'kanji' | 'numbers' | 'vocab' | 'context'
 export type PracticeView = 'setup' | 'practice'
 
 export type TrainerOutcome = 'empty' | 'correct' | 'wrong' | 'pending' | 'seen' | 'hint'
@@ -146,13 +146,24 @@ export interface NumbersPreferences {
   pickMode: NumbersPickMode
 }
 
+/** JLPT levels for filtering practice words (5 = N5 … 1 = N1). Empty = all levels. */
+export type KanjiWordJlptLevel = 5 | 4 | 3 | 2 | 1
+
 export interface KanjiPreferences {
   complexityFilter: boolean
+  /** Word ids hidden from the practice set, keyed by kanji character. */
+  hiddenWordsByKanji: Record<string, string[]>
+  /**
+   * Which JLPT levels of *words* to keep in practice.
+   * Empty array = no JLPT filter (all words, including untagged).
+   */
+  wordJlptLevels: KanjiWordJlptLevel[]
 }
+
 
 export type VocabDrillMode = 'romaji' | 'choice'
 export type VocabSource = 'level' | 'group' | 'mine'
-export type VocabLevelFilter = 5 | 4 | 3
+export type VocabLevelFilter = 5 | 4 | 3 | 2 | 1
 export type VocabPickMode = 'adaptive' | 'even'
 
 export interface VocabPreferences {
@@ -162,6 +173,16 @@ export interface VocabPreferences {
   groupId: string
   pickMode: VocabPickMode
   inputMode: InputMode
+  /**
+   * Extra JLPT filter for group/mine sources (and catalog-style narrowing).
+   * Empty = no extra filter. Ignored when source === 'level' (uses `level` alone).
+   */
+  wordJlptLevels: KanjiWordJlptLevel[]
+  /**
+   * Max brand-new words (stats.exposures === 0) in the practice pool.
+   * 0 = no limit. Already-seen words from the set stay available for review.
+   */
+  newWordLimit: number
 }
 
 export interface VocabCard {
@@ -183,8 +204,67 @@ export interface VocabState {
   stats: Record<string, StatsRecord>
 }
 
+export interface ContextPreferences {
+  groupId: string
+  /** Allow one unknown grammar tag when picking a sentence. */
+  allowOneNewGrammar: boolean
+  /** How many new words to keep in the active learning batch (1–5). */
+  batchSize: number
+  /** Max unknown (new) words allowed inside one sentence (1–batchSize). */
+  maxNewPerSentence: number
+}
+
+export interface ContextHistoryPage {
+  sentence: ContextSentence
+  revealed: boolean
+}
+
+export interface ContextSession {
+  groupId: string
+  batchIds: string[]
+  pages: ContextHistoryPage[]
+  pageIndex: number
+  recentSentenceIds: string[]
+  wordsLearnedIds: string[]
+  startedAt: number
+  status: 'active' | 'done'
+}
+
+export interface ContextTrainingLogEntry {
+  id: string
+  groupId: string
+  startedAt: number
+  endedAt?: number
+  wordsLearnedIds: string[]
+  sentencesSeen: number
+  outcome: 'active' | 'completed' | 'abandoned'
+}
+
+export interface ContextState {
+  knownWordIds: string[]
+  knownGrammarIds: string[]
+  preferences: ContextPreferences
+  /** Generated LLM sentences cached by target word id (newest last). */
+  generatedCache: Record<string, ContextSentence[]>
+  /** In-progress drill; survives navigation / remount. */
+  session: ContextSession | null
+  /** Recent finished or abandoned sessions (newest last). */
+  trainingLog: ContextTrainingLogEntry[]
+}
+
+export interface ContextSentence {
+  id: string
+  text: string
+  reading?: string
+  glossRu: string
+  wordIds: string[]
+  grammarIds: string[]
+  themeHints?: string[]
+  source?: 'seed' | 'tatoeba' | 'llm'
+}
+
 export interface AppState {
-  version: 14
+  version: 19
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>
@@ -199,6 +279,7 @@ export interface AppState {
     preferences: KanjiPreferences
   }
   vocab: VocabState
+  context: ContextState
 }
 
 /** @deprecated Use AppState — kept as alias during migration. */
@@ -217,15 +298,43 @@ export interface FeedbackState {
   text: string
 }
 
+export type KanjiComponentRole = 'radical' | 'phonetic' | 'semantic' | 'grapheme' | 'other'
+
+export interface KanjiComponentRef {
+  id: string
+  glyph: string
+  role: KanjiComponentRole
+  meaningRu: string
+  nameRu?: string
+}
+
+export interface KanjiComponent {
+  id: string
+  glyph: string
+  kind: 'kanji' | 'radical' | 'grapheme'
+  meaningsRu: string[]
+  mnemonicRu?: string
+  strokes?: number
+  usedIn: string[]
+}
+
 export interface KanjiInfo {
   id: string
   character: string
+  /** JLPT level 5–1, or 0 when only listed as Jōyō without JLPT tag. */
   level: number
   levelLabel: string
   strokes: number
   meanings: string[]
+  meaningsRu?: string[]
   onyomi: string[]
   kunyomi: string[]
+  joyo?: boolean
+  grade?: number
+  radicalNumber?: number
+  components?: KanjiComponentRef[]
+  mnemonicRu?: string
+  compositionNoteRu?: string
 }
 
 export interface KanjiWord {

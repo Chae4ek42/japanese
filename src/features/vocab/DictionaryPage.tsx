@@ -1,7 +1,10 @@
 import { useDeferredValue, useEffect, useMemo, useState } from 'react'
-import type { KanjiWord, StatsRecord, VocabPreferences } from '../../shared/lib/types'
+import type { KanjiWord } from '../../shared/lib/types'
 import './styles.css'
-import { getJlptWords, searchWords } from '../kanji/data/bank'
+import { getJlptWords, searchWords } from '../../data/words/bank'
+import { useAppRouter } from '../../shared/lib/useAppRouter'
+import { useKanjiState, useVocabState } from '../../shared/state/AppStateContext'
+import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
 import { CustomWordForm } from './CustomWordForm'
 import { resolveMyWords } from './customWords'
 import { VOCAB_GROUPS, getWordsForGroup } from './groups'
@@ -12,7 +15,7 @@ const PAGE_SIZE = 40
 
 type Section = 'catalog' | 'train' | 'mine'
 type CatalogMode = 'level' | 'group'
-type LevelFilter = 5 | 4 | 3 | 'other'
+type LevelFilter = 5 | 4 | 3 | 2 | 1 | 'other'
 
 export type VocabSection = Section
 
@@ -20,56 +23,52 @@ const LEVEL_OPTIONS: Array<{ id: LevelFilter; label: string }> = [
   { id: 5, label: 'N5' },
   { id: 4, label: 'N4' },
   { id: 3, label: 'N3' },
+  { id: 2, label: 'N2' },
+  { id: 1, label: 'N1' },
   { id: 'other', label: 'Вне JLPT' },
 ]
 
-export interface DictionaryPageProps {
-  myWords: string[]
-  customWords: Record<string, KanjiWord>
-  preferences: VocabPreferences
-  stats: Record<string, StatsRecord>
-  section: VocabSection
-  onSectionChange: (section: VocabSection) => void
-  onToggleMyWord: (wordId: string) => void
-  onAddCustomWord: (word: KanjiWord) => void
-  onPatchPreferences: (patch: Partial<VocabPreferences>) => void
-  onUpdateStats: (
-    cardId: string,
-    outcome: 'correct' | 'wrong' | 'hint' | 'seen',
-    context: {
-      now: number
-      latencyMs?: number
-      mistakesOnCard?: number
-      hintUsed?: boolean
-      inputMode?: VocabPreferences['inputMode']
-    },
-  ) => void
-}
-
-export function DictionaryPage({
-  myWords,
-  customWords,
-  preferences,
-  stats,
-  section,
-  onSectionChange,
-  onToggleMyWord,
-  onAddCustomWord,
-  onPatchPreferences,
-  onUpdateStats,
-}: DictionaryPageProps) {
+export function DictionaryPage() {
+  const { vocabSection: section, goPage } = useAppRouter()
+  const vocab = useVocabState()
+  const kanji = useKanjiState()
   const [catalogMode, setCatalogMode] = useState<CatalogMode>('level')
   const [level, setLevel] = useState<LevelFilter>(5)
   const [groupId, setGroupId] = useState(VOCAB_GROUPS[0]?.id ?? 'family')
   const [query, setQuery] = useState('')
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [editingWord, setEditingWord] = useState<KanjiWord | null>(null)
+  const [infoKanji, setInfoKanji] = useState<string | null>(null)
   const deferredQuery = useDeferredValue(query.trim())
+
+  const myWords = vocab?.myWords ?? []
+  const customWords = vocab?.customWords ?? {}
+  const preferences = vocab?.preferences ?? {
+    drillMode: 'romaji' as const,
+    source: 'level' as const,
+    level: 5 as const,
+    groupId: 'family',
+    pickMode: 'adaptive' as const,
+    inputMode: 'instant' as const,
+    wordJlptLevels: [] as const,
+    newWordLimit: 0,
+  }
+  const stats = vocab?.stats ?? {}
+  const kanjiLearned = kanji?.learned ?? []
+  const onSectionChange = (next: Section) => goPage('vocab', next)
+  const onToggleMyWord = vocab?.toggleMyWord ?? (() => {})
+  const onAddCustomWord = vocab?.addCustomWord ?? (() => {})
+  const onPatchPreferences = vocab?.patchPreferences ?? (() => {})
+  const onToggleKanjiLearned = kanji?.toggleLearned
+  const onUpdateStats = vocab?.updateStats ?? (() => {})
+
   const myWordSet = useMemo(() => new Set(myWords), [myWords])
+  const learnedSet = useMemo(() => new Set(kanjiLearned), [kanjiLearned])
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE)
     setEditingWord(null)
+    setInfoKanji(null)
   }, [section])
 
   const catalogWords = useMemo(() => {
@@ -88,6 +87,8 @@ export function DictionaryPage({
   const list = section === 'mine' ? mineWords : catalogWords
   const visible = list.slice(0, visibleCount)
   const hasMore = visible.length < list.length
+
+  if (!vocab || !kanji) return null
 
   function resetPaging() {
     setVisibleCount(PAGE_SIZE)
@@ -150,14 +151,27 @@ export function DictionaryPage({
       </header>
 
           {section === 'train' ? (
-        <VocabTrainer
-          preferences={preferences}
-          stats={stats}
-          myWords={myWords}
-          customWords={customWords}
-          onPatchPreferences={onPatchPreferences}
-          onUpdateStats={onUpdateStats}
-        />
+        <>
+          <VocabTrainer
+            preferences={preferences}
+            stats={stats}
+            myWords={myWords}
+            customWords={customWords}
+            onPatchPreferences={onPatchPreferences}
+            onUpdateStats={onUpdateStats}
+            onOpenKanjiInfo={setInfoKanji}
+          />
+          {infoKanji ? (
+            <KanjiInfoCard
+              character={infoKanji}
+              learned={learnedSet.has(infoKanji)}
+              myWords={myWords}
+              onClose={() => setInfoKanji(null)}
+              onToggleLearned={onToggleKanjiLearned}
+              onToggleMyWord={onToggleMyWord}
+            />
+          ) : null}
+        </>
       ) : (
         <>
           {section === 'catalog' ? (

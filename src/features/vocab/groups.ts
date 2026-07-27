@@ -1,5 +1,5 @@
 import type { KanjiWord } from '../../shared/lib/types'
-import { getWordsByIds } from '../kanji/data/bank'
+import { getWordsByIds } from '../../data/words/bank'
 import groupsData from './groups.json' with { type: 'json' }
 
 export interface VocabGroup {

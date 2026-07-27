@@ -1,4 +1,4 @@
-import { getKanjiInfo } from '../../features/kanji/data/bank'
+import { getKanjiInfo } from '../../data/words/bank'
 import type { KanjiInfo, ReadingSegment, ReadingSegmentRole } from './types'
 import {
   isKanaChar,

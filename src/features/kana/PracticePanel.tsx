@@ -1,5 +1,21 @@
-import type { PracticePanelProps } from '../../shared/lib/component-props'
+import type { ChangeEvent, KeyboardEvent, RefObject } from 'react'
+import type { FeedbackState, InputMode, KanaCard, RoundState, SessionStats } from '../../shared/lib/types'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
+
+export interface PracticePanelProps {
+  activeCard: KanaCard | null
+  feedback: FeedbackState
+  inputMode?: InputMode
+  inputRef: RefObject<HTMLInputElement | null>
+  inputValue: string
+  onInputChange: (event: ChangeEvent<HTMLInputElement>) => void
+  onInputKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
+  onRevealHint: () => void
+  onStop: () => void
+  round: RoundState
+  sessionStats: SessionStats & { accuracy?: number }
+  showScriptLabel?: boolean
+}
 
 export function PracticePanel({
   activeCard,

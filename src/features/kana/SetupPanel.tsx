@@ -1,8 +1,25 @@
-import type { Hyperparams, InputMode, KanaEntry, KanaPickMode, ScriptMode } from '../../shared/lib/types'
-import type { SetupPanelProps, SelectionRowProps } from '../../shared/lib/component-props'
+import type { Hyperparams, InputMode, KanaEntry, KanaPickMode, KanaPreferences, ScriptMode } from '../../shared/lib/types'
 import { GROUP_PRESETS, KANA_GROUPS } from '../../data/kana'
 import { DEFAULT_HYPERPARAMS } from '../../shared/lib/trainer'
 import { InfoTip } from '../../shared/ui/InfoTip'
+
+export interface SetupPanelProps {
+  errorText: string
+  onApplyGroups: (groups: string[]) => void
+  onPatchHyperparam: (key: keyof Hyperparams, value: number) => void
+  onPatchPreferences: (patch: Partial<KanaPreferences>) => void
+  onStart: () => void
+  onToggleFineTuning: () => void
+  onToggleGroup: (groupId: string) => void
+  preferences: KanaPreferences
+  showFineTuning: boolean
+}
+export interface SelectionRowProps {
+  onToggle: (groupId: string) => void
+  scriptMode: KanaPreferences['scriptMode']
+  selectedGroups: string[]
+  slot: string
+}
 
 const scriptOptions = [
   { id: 'hiragana', label: 'Хирагана' },

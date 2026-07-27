@@ -1,5 +1,11 @@
-import type { AppHeaderProps } from '../../shared/lib/component-props'
-import { PATHS, shouldHandleClientNav } from '../../shared/lib/routes'
+import type { AppPage } from '../lib/types'
+import { PATHS, shouldHandleClientNav } from '../lib/routes'
+
+export interface AppHeaderProps {
+  currentPage: AppPage
+  onNavigate: (page: AppPage) => void
+  onResetStats: () => void
+}
 
 const NAV_ITEMS = [
   { id: 'home', label: 'Главная', href: PATHS.home, testId: 'nav-main' },
@@ -7,6 +13,7 @@ const NAV_ITEMS = [
   { id: 'kanji', label: 'Кандзи', href: PATHS.kanji, testId: 'nav-kanji' },
   { id: 'numbers', label: 'Числа', href: PATHS.numbers, testId: 'nav-numbers' },
   { id: 'vocab', label: 'Словарь', href: PATHS.vocab, testId: 'nav-vocab' },
+  { id: 'context', label: 'Контекст', href: PATHS.context, testId: 'nav-context' },
 ] as const
 
 export function AppHeader({ currentPage, onNavigate, onResetStats }: AppHeaderProps) {

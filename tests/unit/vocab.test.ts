@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { getJlptWords, getWordById, searchWords } from '../../src/features/kanji/data/bank'
+import { getJlptWords, getWordById, searchWords } from '../../src/data/words/bank'
 import { VOCAB_GROUPS, getWordsForGroup } from '../../src/features/vocab/groups'
 
 describe('vocab catalog', () => {
@@ -9,6 +9,14 @@ describe('vocab catalog', () => {
     const family = getWordsForGroup('family')
     assert.ok(family.length >= 10)
     assert.ok(family.every((word) => word.writing && word.kana && word.meanings.length))
+  })
+
+  it('группа местоимений доступна для тренировки', () => {
+    const pronouns = getWordsForGroup('pronouns')
+    assert.ok(pronouns.length >= 20)
+    assert.ok(pronouns.some((word) => word.writing === '私'))
+    assert.ok(pronouns.some((word) => word.writing === '誰' || word.kana === 'だれ'))
+    assert.ok(pronouns.every((word) => word.writing && word.kana && word.meanings.length))
   })
 
   it('слова JLPT N5 доступны по уровню', () => {

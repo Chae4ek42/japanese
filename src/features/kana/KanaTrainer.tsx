@@ -1,6 +1,6 @@
-import type { KanaTrainerProps } from '../../shared/lib/component-props'
-import type { KanaCard } from '../../shared/lib/types'
-import type { PracticeSession, StatsOutcome } from '../../shared/lib/types'
+import type { Hyperparams, KanaCard, KanaPreferences, PracticeSession, StatsOutcome, StatsRecord } from '../../shared/lib/types'
+import type { KanaPracticePatch, KanaPracticeSlice } from '../../shared/state/AppStateContext'
+import { useKanaState } from '../../shared/state/AppStateContext'
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react'
 import './styles.css'
 import { KANA_STATS_CARDS, buildPool } from '../../data/kana'
@@ -17,13 +17,35 @@ import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { SetupPanel } from './SetupPanel'
 import { PracticePanel } from './PracticePanel'
 
-export function KanaTrainer({
+export function KanaTrainer() {
+  const kana = useKanaState()
+  if (!kana) return null
+  return (
+    <KanaTrainerView
+      preferences={kana.preferences}
+      stats={kana.stats}
+      onPatchPreferences={kana.patchPreferences}
+      onPatchHyperparam={kana.patchHyperparam}
+      onPracticeUpdate={kana.updatePractice}
+    />
+  )
+}
+
+interface KanaTrainerViewProps {
+  preferences: KanaPreferences
+  stats: Record<string, StatsRecord>
+  onPatchPreferences: (patch: Partial<KanaPreferences>) => void
+  onPatchHyperparam: (key: keyof Hyperparams, value: number) => void
+  onPracticeUpdate: (recipe: (slice: KanaPracticeSlice) => KanaPracticePatch) => void
+}
+
+function KanaTrainerView({
   preferences,
   stats,
   onPatchPreferences,
   onPatchHyperparam,
   onPracticeUpdate,
-}: KanaTrainerProps) {
+}: KanaTrainerViewProps) {
   const {
     view: practiceState,
     setView: setPracticeState,

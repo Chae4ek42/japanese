@@ -493,6 +493,23 @@
   gap: 18px;
 }
 
+.vocab-number-field {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.vocab-number-field input {
+  width: 5.5rem;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font: inherit;
+}
+
 .vocab-setup-groups {
   max-height: 280px;
   overflow: auto;
@@ -500,10 +517,15 @@
 }
 
 .vocab-question-writing {
+  margin: 0;
   font-family: 'Noto Sans JP', sans-serif;
   font-size: clamp(2.4rem, 6vw, 3.4rem);
   font-weight: 700;
   line-height: 1.15;
+}
+
+.vocab-question-writing .kanji-chip {
+  font-weight: 700;
 }
 
 .vocab-question-kana {
@@ -511,6 +533,56 @@
   font-family: 'Noto Sans JP', sans-serif;
   font-size: 1.15rem;
   color: #1d4f91;
+}
+
+.vocab-hint-panel {
+  margin: 12px auto 0;
+  width: min(100%, 360px);
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  text-align: center;
+}
+
+.vocab-hint-kana {
+  margin: 0;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.2rem;
+  color: #1d4f91;
+}
+
+.vocab-hint-romaji {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.vocab-hint-meanings {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  width: 100%;
+}
+
+.vocab-hint-meanings li {
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(17, 17, 17, 0.04);
+  font-size: 0.92rem;
+  line-height: 1.35;
+  color: var(--text, #111);
+}
+
+.vocab-hint-meta {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .vocab-choice-grid {

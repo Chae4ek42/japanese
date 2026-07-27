@@ -1,35 +1,74 @@
-import type { KanjiPageProps } from '../../shared/lib/component-props'
 import { useMemo, useState } from 'react'
 import './styles.css'
 import {
   KANJI_BANK_META,
+  KANJI_LIST,
+  getJoyoKanji,
   getKanjiByLevel,
   getWordsForKanji,
   pickRandomUnlearnedKanji,
-} from './data/bank'
+} from '../../data/words/bank'
+import { useKanjiState, useVocabState } from '../../shared/state/AppStateContext'
 import { KanjiInfoCard } from './KanjiInfoCard'
 import { KanjiTrainer } from './KanjiTrainer'
+import { WordJlptFilter } from './WordJlptFilter'
 
-const LEVELS = [
+type KanjiFilter = 'all' | 'joyo' | 5 | 4 | 3 | 2 | 1
+
+const FILTERS: { id: KanjiFilter; label: string }[] = [
   { id: 5, label: 'N5' },
   { id: 4, label: 'N4' },
   { id: 3, label: 'N3' },
+  { id: 2, label: 'N2' },
+  { id: 1, label: 'N1' },
+  { id: 'joyo', label: 'Jōyō' },
+  { id: 'all', label: 'Все' },
 ]
 
-export function KanjiPage({
-  kanjiState,
-  myWords,
-  onToggleLearned,
-  onPatchPreferences,
-  onToggleMyWord,
-}: KanjiPageProps) {
+function filterKanji(filter: KanjiFilter) {
+  if (filter === 'all') return KANJI_LIST
+  if (filter === 'joyo') return getJoyoKanji()
+  return getKanjiByLevel(filter)
+}
+
+export function KanjiPage() {
+  const kanji = useKanjiState()
+  const vocab = useVocabState()
   const [focusKanji, setFocusKanji] = useState<string | null>(null)
   const [infoKanji, setInfoKanji] = useState<string | null>(null)
+  const [filter, setFilter] = useState<KanjiFilter>(5)
+
+  const learned = kanji?.learned ?? []
+  const preferences = kanji?.preferences ?? {
+    complexityFilter: true,
+    hiddenWordsByKanji: {},
+    wordJlptLevels: [],
+  }
+  const myWords = vocab?.myWords ?? []
+  const onToggleLearned = kanji?.toggleLearned ?? (() => {})
+  const onPatchPreferences = kanji?.patchPreferences ?? (() => {})
+  const onToggleMyWord = vocab?.toggleMyWord ?? (() => {})
+  const kanjiState = { learned, preferences }
+
   const learnedSet = useMemo(() => new Set(kanjiState.learned), [kanjiState.learned])
   const complexityFilter = kanjiState.preferences.complexityFilter
+  const wordJlptLevels = kanjiState.preferences.wordJlptLevels ?? []
+  const hiddenWordsByKanji = kanjiState.preferences.hiddenWordsByKanji ?? {}
+
+  const items = useMemo(() => filterKanji(filter), [filter])
+  const learnedCount = items.filter((item) => learnedSet.has(item.character)).length
+
+  if (!kanji || !vocab) return null
 
   function startRandom() {
-    const next = pickRandomUnlearnedKanji(kanjiState.learned) ?? pickRandomUnlearnedKanji([])
+    const levels =
+      filter === 'all' || filter === 'joyo'
+        ? [5, 4, 3, 2, 1, 0]
+        : [filter]
+    const next =
+      pickRandomUnlearnedKanji(kanjiState.learned, levels) ??
+      pickRandomUnlearnedKanji([], levels) ??
+      pickRandomUnlearnedKanji([])
     if (next) {
       setInfoKanji(null)
       setFocusKanji(next.character)
@@ -41,6 +80,25 @@ export function KanjiPage({
     setInfoKanji(character)
   }
 
+  function hideWordForFocus(wordId: string) {
+    if (!focusKanji || !wordId) return
+    const current = hiddenWordsByKanji[focusKanji] ?? []
+    if (current.includes(wordId)) return
+    onPatchPreferences({
+      hiddenWordsByKanji: {
+        ...hiddenWordsByKanji,
+        [focusKanji]: [...current, wordId],
+      },
+    })
+  }
+
+  function restoreHiddenForFocus() {
+    if (!focusKanji) return
+    const next = { ...hiddenWordsByKanji }
+    delete next[focusKanji]
+    onPatchPreferences({ hiddenWordsByKanji: next })
+  }
+
   if (focusKanji) {
     return (
       <>
@@ -48,8 +106,12 @@ export function KanjiPage({
           character={focusKanji}
           learned={kanjiState.learned}
           complexityFilter={complexityFilter}
+          wordJlptLevels={wordJlptLevels}
+          hiddenWordIds={hiddenWordsByKanji[focusKanji] ?? []}
           myWords={myWords}
           onPatchPreferences={onPatchPreferences}
+          onHideWord={hideWordForFocus}
+          onRestoreHiddenWords={restoreHiddenForFocus}
           onToggleLearned={onToggleLearned}
           onToggleMyWord={onToggleMyWord}
           onBack={() => setFocusKanji(null)}
@@ -76,11 +138,16 @@ export function KanjiPage({
           <div>
             <h2>Кандзи</h2>
             <p className="subsection-note">
-              {KANJI_BANK_META.counts.kanji} знаков JLPT N5–N3 · {KANJI_BANK_META.counts.words} слов.
-              Клик — практика · колёсико — карточка знака.
+              {KANJI_BANK_META.counts.kanji} знаков
+              {KANJI_BANK_META.counts.joyo ? ` · ${KANJI_BANK_META.counts.joyo} Jōyō` : ''} ·{' '}
+              {KANJI_BANK_META.counts.words} слов. Клик — практика · колёсико — карточка знака.
             </p>
           </div>
           <div className="kanji-page-actions">
+            <WordJlptFilter
+              selected={wordJlptLevels}
+              onChange={(next) => onPatchPreferences({ wordJlptLevels: next })}
+            />
             <label className="kanji-filter-toggle">
               <input
                 type="checkbox"
@@ -96,50 +163,62 @@ export function KanjiPage({
           </div>
         </div>
 
-        {LEVELS.map((level) => {
-          const items = getKanjiByLevel(level.id)
-          const learnedCount = items.filter((item) => learnedSet.has(item.character)).length
-          return (
-            <section key={level.id} className="kanji-level-block" data-testid={`kanji-level-${level.label}`}>
-              <div className="kanji-level-heading">
-                <h3>{level.label}</h3>
-                <p className="kanji-level-meta">
-                  {learnedCount} из {items.length} отмечено
-                </p>
-              </div>
-              <div className="kanji-grid">
-                {items.map((item) => {
-                  const learned = learnedSet.has(item.character)
-                  const sampleCount = getWordsForKanji(item.character).length
-                  return (
-                    <button
-                      key={item.character}
-                      type="button"
-                      data-testid={`kanji-cell-${item.character}`}
-                      className={learned ? 'kanji-cell is-learned' : 'kanji-cell'}
-                      title={`${item.meanings.join(', ')} · ${sampleCount} слов · колёсико — карточка`}
-                      onClick={() => setFocusKanji(item.character)}
-                      onAuxClick={(event) => {
-                        if (event.button === 1) {
-                          openInfoCard(item.character, event)
-                        }
-                      }}
-                      onMouseDown={(event) => {
-                        // Prevent autoscroll / default middle-click behavior in some browsers.
-                        if (event.button === 1) {
-                          event.preventDefault()
-                        }
-                      }}
-                    >
-                      <span className="kanji-cell-char">{item.character}</span>
-                      <span className="kanji-cell-meta">{item.meanings[0] ?? '—'}</span>
-                    </button>
-                  )
-                })}
-              </div>
-            </section>
-          )
-        })}
+        <div className="kanji-filter-tabs" data-testid="kanji-filter-tabs" role="tablist" aria-label="Фильтр кандзи">
+          {FILTERS.map((item) => (
+            <button
+              key={String(item.id)}
+              type="button"
+              role="tab"
+              aria-selected={filter === item.id}
+              className={filter === item.id ? 'kanji-filter-tab is-active' : 'kanji-filter-tab'}
+              data-testid={`kanji-filter-${item.label}`}
+              onClick={() => setFilter(item.id)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        <section className="kanji-level-block" data-testid={`kanji-filter-panel-${filter}`}>
+          <div className="kanji-level-heading">
+            <h3>{FILTERS.find((item) => item.id === filter)?.label ?? 'Кандзи'}</h3>
+            <p className="kanji-level-meta">
+              {learnedCount} из {items.length} отмечено
+            </p>
+          </div>
+          <div className="kanji-grid">
+            {items.map((item) => {
+              const learned = learnedSet.has(item.character)
+              const sampleCount = getWordsForKanji(item.character).length
+              return (
+                <button
+                  key={item.character}
+                  type="button"
+                  data-testid={`kanji-cell-${item.character}`}
+                  className={learned ? 'kanji-cell is-learned' : 'kanji-cell'}
+                  title={`${(item.meaningsRu ?? item.meanings).join(', ')} · ${sampleCount} слов · колёсико — карточка`}
+                  onClick={() => setFocusKanji(item.character)}
+                  onAuxClick={(event) => {
+                    if (event.button === 1) {
+                      openInfoCard(item.character, event)
+                    }
+                  }}
+                  onMouseDown={(event) => {
+                    if (event.button === 1) {
+                      event.preventDefault()
+                    }
+                  }}
+                >
+                  <span className="kanji-cell-char">{item.character}</span>
+                  <span className="kanji-cell-meta">
+                    {(item.meaningsRu ?? item.meanings)[0] ?? item.levelLabel}
+                  </span>
+                  {item.levelLabel ? <span className="kanji-cell-badge">{item.levelLabel}</span> : null}
+                </button>
+              )
+            })}
+          </div>
+        </section>
       </section>
 
       {infoKanji ? (

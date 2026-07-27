@@ -1,5 +1,9 @@
-import type { GlossFootnotesProps } from '../../shared/lib/component-props'
 import { collectGlossFootnotes } from '../../shared/lib/jmdict-gloss'
+
+export interface GlossFootnotesProps {
+  meanings: string[]
+  testId?: string
+}
 
 export function GlossFootnotes({ meanings, testId = 'gloss-footnotes' }: GlossFootnotesProps) {
   const notes = collectGlossFootnotes(meanings)

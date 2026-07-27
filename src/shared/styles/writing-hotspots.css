@@ -1,0 +1,27 @@
+.kanji-chip {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0 2px;
+  font: inherit;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  line-height: 1.1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.kanji-chip:hover,
+.kanji-chip:focus-visible {
+  background: #e8eef8;
+  outline: none;
+}
+
+.kanji-chip.is-focus {
+  color: #1d4f91;
+}
+
+.kanji-chip-kana {
+  color: var(--muted-strong);
+}

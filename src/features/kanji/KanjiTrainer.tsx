@@ -1,32 +1,42 @@
-import type { KanjiInfo } from '../../shared/lib/types'
-import type { KanjiTrainerProps } from '../../shared/lib/component-props'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { getKanjiInfo, getPracticeWords, getWordsForKanji } from './data/bank'
+import type { KanjiPreferences, KanjiWordJlptLevel } from '../../shared/lib/types'
+import { useEffect, useMemo, useState } from 'react'
+import { getKanjiInfo, getPracticeWords, getWordsForKanji } from '../../data/words/bank'
 import { formatKanjiReadings } from '../../shared/lib/format'
 import { speakJapanese, speakKanjiReadings } from '../../shared/lib/speech'
 import { useWordCarousel } from '../../shared/lib/useWordCarousel'
 import { GlossFootnotes } from './GlossFootnotes'
 import { HighlightedReading } from './HighlightedReading'
+import { KanjiComposition } from './KanjiComposition'
+import { KanjiGlyph } from './KanjiGlyph'
+import { KanjiWritingHotspots, isKanjiChar } from './KanjiWritingHotspots'
+import { WordJlptFilter } from './WordJlptFilter'
 
-const KANJI_CHAR_RE = /[\u4e00-\u9fff\u3400-\u4dbf]/
-
-function splitWriting(writing: string): string[] {
-  return Array.from(String(writing))
-}
-
-interface KanjiTipState {
+export interface KanjiTrainerProps {
   character: string
-  details: KanjiInfo | null
-  x: number
-  y: number
+  learned: string[]
+  complexityFilter: boolean
+  wordJlptLevels?: KanjiWordJlptLevel[]
+  hiddenWordIds?: string[]
+  myWords: string[]
+  onPatchPreferences: (patch: Partial<KanjiPreferences>) => void
+  onHideWord?: (wordId: string) => void
+  onRestoreHiddenWords?: () => void
+  onToggleLearned: (character: string) => void
+  onToggleMyWord: (wordId: string) => void
+  onBack: () => void
+  onOpenInfo?: (character: string) => void
 }
 
 export function KanjiTrainer({
   character,
   learned,
   complexityFilter,
+  wordJlptLevels = [],
+  hiddenWordIds = [],
   myWords,
   onPatchPreferences,
+  onHideWord,
+  onRestoreHiddenWords,
   onToggleLearned,
   onToggleMyWord,
   onBack,
@@ -34,19 +44,25 @@ export function KanjiTrainer({
 }: KanjiTrainerProps) {
   const info = getKanjiInfo(character)
   const isLearned = learned.includes(character)
-  const [tip, setTip] = useState<KanjiTipState | null>(null)
-  const tipRef = useRef<HTMLDivElement>(null)
+  const [highlightElement, setHighlightElement] = useState<string | null>(null)
+
+  useEffect(() => {
+    setHighlightElement(null)
+  }, [character])
 
   const words = useMemo(
     () =>
       getPracticeWords(character, {
         learned,
         complexityFilter,
+        excludedIds: hiddenWordIds,
+        wordJlptLevels,
         limit: 24,
       }),
-    [character, learned, complexityFilter],
+    [character, learned, complexityFilter, hiddenWordIds, wordJlptLevels],
   )
   const totalAvailable = getWordsForKanji(character).length
+  const hiddenCount = hiddenWordIds.length
   const {
     index: wordIndex,
     setIndex: setWordIndex,
@@ -62,13 +78,11 @@ export function KanjiTrainer({
     function onKeyDown(event: KeyboardEvent) {
       if (event.code === 'ArrowRight') {
         event.preventDefault()
-        setTip(null)
         next()
         return
       }
       if (event.code === 'ArrowLeft') {
         event.preventDefault()
-        setTip(null)
         prev()
         return
       }
@@ -85,62 +99,9 @@ export function KanjiTrainer({
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [activeWord, next, prev, toggleReveal])
 
-  useEffect(() => {
-    if (!tip) {
-      return undefined
-    }
-    function onPointerDown(event: PointerEvent) {
-      if (tipRef.current?.contains(event.target as Node)) {
-        return
-      }
-      if ((event.target as Element | null)?.closest?.('[data-kanji-chip]')) {
-        return
-      }
-      setTip(null)
-    }
-    function onEscape(event: KeyboardEvent) {
-      if (event.code === 'Escape') {
-        setTip(null)
-      }
-    }
-    window.addEventListener('pointerdown', onPointerDown)
-    window.addEventListener('keydown', onEscape)
-    return () => {
-      window.removeEventListener('pointerdown', onPointerDown)
-      window.removeEventListener('keydown', onEscape)
-    }
-  }, [tip])
-
-  function goNext() {
-    setTip(null)
-    next()
-  }
-
-  function goPrev() {
-    setTip(null)
-    prev()
-  }
-
-  function openKanjiTip(ch: string, event: React.MouseEvent<HTMLElement>) {
-    if (!KANJI_CHAR_RE.test(ch)) {
-      return
-    }
-    const rect = event.currentTarget.getBoundingClientRect()
-    const details = getKanjiInfo(ch)
-    setTip({
-      character: ch,
-      details,
-      x: rect.left + rect.width / 2,
-      y: rect.bottom + 8,
-    })
-  }
-
-  function handleKanjiChipAuxClick(ch: string, event: React.MouseEvent<HTMLElement>) {
-    if (event.button !== 1 || !KANJI_CHAR_RE.test(ch)) {
-      return
-    }
+  function handleKanjiAuxClick(ch: string, event: React.MouseEvent<HTMLElement>) {
+    if (event.button !== 1 || !isKanjiChar(ch)) return
     event.preventDefault()
-    setTip(null)
     onOpenInfo?.(ch)
   }
 
@@ -150,39 +111,46 @@ export function KanjiTrainer({
         <button type="button" className="text-button" onClick={onBack}>
           ← Все кандзи
         </button>
-        <label className="kanji-filter-toggle">
-          <input
-            type="checkbox"
-            data-testid="kanji-complexity-filter-trainer"
-            checked={complexityFilter}
-            onChange={(event) => {
+        <div className="kanji-trainer-filters">
+          <WordJlptFilter
+            selected={wordJlptLevels}
+            testIdPrefix="kanji-word-jlpt-trainer"
+            onChange={(next) => {
               setWordIndex(0)
               setRevealed(false)
-              setTip(null)
-              onPatchPreferences({ complexityFilter: event.target.checked })
+              onPatchPreferences({ wordJlptLevels: next })
             }}
           />
-          Только посильные слова
-        </label>
+          <label className="kanji-filter-toggle">
+            <input
+              type="checkbox"
+              data-testid="kanji-complexity-filter-trainer"
+              checked={complexityFilter}
+              onChange={(event) => {
+                setWordIndex(0)
+                setRevealed(false)
+                onPatchPreferences({ complexityFilter: event.target.checked })
+              }}
+            />
+            Только посильные слова
+          </label>
+        </div>
       </div>
 
       <div className="kanji-trainer-layout">
         <article className="kanji-panel kanji-trainer-hero">
           <div className="kanji-panel-body">
-            <button
-              type="button"
-              className="kanji-hero-char"
-              data-testid="kanji-focus-char"
-              title="Колёсико — открыть карточку"
-              onAuxClick={(event) => handleKanjiChipAuxClick(character, event)}
-              onMouseDown={(event) => {
-                if (event.button === 1) {
-                  event.preventDefault()
-                }
+            <KanjiGlyph
+              character={character}
+              size="hero"
+              testId="kanji-focus-char"
+              highlightElement={highlightElement}
+              onHoverElement={(element) => setHighlightElement(element)}
+              onActivateElement={(nextChar) => {
+                onOpenInfo?.(nextChar)
               }}
-            >
-              {character}
-            </button>
+              onAuxClickCharacter={(event) => handleKanjiAuxClick(character, event)}
+            />
             <ul className="kanji-hero-meanings-list">
               {(info?.meanings?.length ? info.meanings : ['—']).map((meaning) => (
                 <li key={meaning}>{meaning}</li>
@@ -200,6 +168,13 @@ export function KanjiTrainer({
                 </span>
               </div>
             </div>
+            <KanjiComposition
+              character={character}
+              compact
+              highlightElement={highlightElement}
+              onHoverElement={setHighlightElement}
+              onOpenCharacter={(nextChar) => onOpenInfo?.(nextChar)}
+            />
           </div>
           <div className="kanji-panel-footer kanji-trainer-actions">
             <button
@@ -227,19 +202,37 @@ export function KanjiTrainer({
               <h3>Слова</h3>
               <p className="subsection-note">
                 {words.length} из {totalAvailable}
+                {wordJlptLevels.length
+                  ? ` · ${wordJlptLevels.map((level) => `N${level}`).join('+')}`
+                  : ''}
                 {complexityFilter ? ' · посильные' : ''}
+                {hiddenCount ? ` · скрыто ${hiddenCount}` : ''}
               </p>
             </div>
-            {activeWord ? (
-              <p className="kanji-word-progress">
-                {wordIndex + 1} / {words.length}
-              </p>
-            ) : null}
+            <div className="kanji-words-head-actions">
+              {hiddenCount && onRestoreHiddenWords ? (
+                <button
+                  type="button"
+                  className="text-button"
+                  data-testid="kanji-restore-hidden-words"
+                  onClick={onRestoreHiddenWords}
+                >
+                  Вернуть скрытые
+                </button>
+              ) : null}
+              {activeWord ? (
+                <p className="kanji-word-progress">
+                  {wordIndex + 1} / {words.length}
+                </p>
+              ) : null}
+            </div>
           </div>
 
           {!activeWord ? (
             <div className="kanji-panel-body chart-empty" data-testid="kanji-no-words">
-              Подходящих слов нет. Отключите фильтр или отметьте больше соседних знаков.
+              {hiddenCount
+                ? 'Все слова скрыты. Нажмите «Вернуть скрытые» или отключите фильтр.'
+                : 'Подходящих слов нет. Ослабьте фильтр JLPT / сложности или отметьте больше соседних знаков.'}
             </div>
           ) : (
             <>
@@ -247,33 +240,13 @@ export function KanjiTrainer({
                 className={`kanji-panel-body kanji-word-stage ${revealed ? 'is-revealed' : ''}`}
                 data-testid="kanji-word-card"
               >
-                <p className="kanji-word-writing" data-testid="kanji-word-writing">
-                  {splitWriting(activeWord.writing).map((ch, index) =>
-                    KANJI_CHAR_RE.test(ch) ? (
-                      <button
-                        key={`${ch}-${index}`}
-                        type="button"
-                        data-kanji-chip
-                        data-testid={`kanji-chip-${ch}`}
-                        className={ch === character ? 'kanji-chip is-focus' : 'kanji-chip'}
-                        title="Клик — кратко · колёсико — карточка"
-                        onClick={(event) => openKanjiTip(ch, event)}
-                        onAuxClick={(event) => handleKanjiChipAuxClick(ch, event)}
-                        onMouseDown={(event) => {
-                          if (event.button === 1) {
-                            event.preventDefault()
-                          }
-                        }}
-                      >
-                        {ch}
-                      </button>
-                    ) : (
-                      <span key={`${ch}-${index}`} className="kanji-chip-kana">
-                        {ch}
-                      </span>
-                    ),
-                  )}
-                </p>
+                <KanjiWritingHotspots
+                  writing={activeWord.writing}
+                  focusKanji={character}
+                  className="kanji-word-writing"
+                  writingTestId="kanji-word-writing"
+                  onOpenInfo={onOpenInfo}
+                />
 
                 {revealed ? (
                   <div className="kanji-word-details">
@@ -301,7 +274,7 @@ export function KanjiTrainer({
               </div>
 
               <div className="kanji-panel-footer kanji-word-actions">
-                <button type="button" className="ghost-button" data-testid="kanji-prev-word" onClick={goPrev}>
+                <button type="button" className="ghost-button" data-testid="kanji-prev-word" onClick={prev}>
                   ←
                 </button>
                 <button
@@ -312,7 +285,7 @@ export function KanjiTrainer({
                 >
                   {revealed ? 'Скрыть' : 'Показать'}
                 </button>
-                <button type="button" className="ghost-button" data-testid="kanji-next-word" onClick={goNext}>
+                <button type="button" className="ghost-button" data-testid="kanji-next-word" onClick={next}>
                   →
                 </button>
                 <button
@@ -333,61 +306,22 @@ export function KanjiTrainer({
                     {myWords.includes(activeWord.id) ? 'В моих' : '+ В мои'}
                   </button>
                 ) : null}
+                {activeWord.id && onHideWord ? (
+                  <button
+                    type="button"
+                    className="ghost-button"
+                    data-testid="kanji-hide-word"
+                    title="Убрать это слово из набора для текущего кандзи"
+                    onClick={() => onHideWord(activeWord.id!)}
+                  >
+                    Убрать
+                  </button>
+                ) : null}
               </div>
             </>
           )}
         </article>
       </div>
-
-      {tip ? (
-        <div
-          ref={tipRef}
-          className="kanji-tip"
-          data-testid="kanji-tip"
-          style={{ left: `${tip.x}px`, top: `${tip.y}px` }}
-          role="dialog"
-          aria-label={`Информация о кандзи ${tip.character}`}
-        >
-          <div className="kanji-tip-head">
-            <strong className="kanji-tip-char">{tip.character}</strong>
-            {tip.details ? (
-              <span className="kanji-tip-level">{tip.details.levelLabel}</span>
-            ) : (
-              <span className="kanji-tip-level is-muted">вне набора</span>
-            )}
-          </div>
-          {tip.details ? (
-            <>
-              <ul className="kanji-tip-meanings-list">
-                {tip.details.meanings.map((meaning) => (
-                  <li key={meaning}>{meaning}</li>
-                ))}
-              </ul>
-              <div className="kanji-tip-readings">
-                <div className="kanji-reading is-on">
-                  <span className="kanji-reading-label">он</span>
-                  <span>{formatKanjiReadings(tip.details.onyomi)}</span>
-                </div>
-                <div className="kanji-reading is-kun">
-                  <span className="kanji-reading-label">кун</span>
-                  <span title="· отделяет чтение знака от окуриганы">
-                    {formatKanjiReadings(tip.details.kunyomi)}
-                  </span>
-                </div>
-              </div>
-            </>
-          ) : (
-            <p className="kanji-tip-meanings">Знака нет в наборе N5–N3.</p>
-          )}
-          <button
-            type="button"
-            className="text-button"
-            onClick={() => speakKanjiReadings(tip.details ?? { character: tip.character })}
-          >
-            Прослушать
-          </button>
-        </div>
-      ) : null}
     </section>
   )
 }

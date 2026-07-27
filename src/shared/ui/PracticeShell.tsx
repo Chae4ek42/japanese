@@ -1,5 +1,15 @@
-import type { PracticeShellProps } from '../../shared/lib/component-props'
+import type { ReactNode } from 'react'
+import type { FeedbackState, SessionStats } from '../lib/types'
 import { SessionChips } from './SessionChips'
+
+export interface PracticeShellProps {
+  onStop: () => void
+  sessionStats: SessionStats & { accuracy?: number }
+  feedbackType?: FeedbackState['type']
+  className?: string
+  stageClassName?: string
+  children?: ReactNode
+}
 
 export function PracticeShell({
   onStop,

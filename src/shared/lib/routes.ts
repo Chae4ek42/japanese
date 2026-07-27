@@ -14,6 +14,7 @@ export const PATHS = {
   vocab: '/vocab',
   vocabTrain: '/vocab/train',
   vocabMine: '/vocab/mine',
+  context: '/context',
 } as const
 
 const PAGE_TITLES: Record<AppPage, string> = {
@@ -22,6 +23,7 @@ const PAGE_TITLES: Record<AppPage, string> = {
   kanji: 'Кандзи — JP тренажёры',
   numbers: 'Числа — JP тренажёры',
   vocab: 'Словарь — JP тренажёры',
+  context: 'Контекст — JP тренажёры',
 }
 
 export function normalizePath(pathname: string): string {
@@ -49,6 +51,8 @@ export function parsePath(pathname: string): AppRoute {
       return { page: 'vocab', section: 'train' }
     case PATHS.vocabMine:
       return { page: 'vocab', section: 'mine' }
+    case PATHS.context:
+      return { page: 'context' }
     default:
       return { page: 'home' }
   }
@@ -83,7 +87,8 @@ export function isKnownPath(pathname: string): boolean {
     path === PATHS.numbers ||
     path === PATHS.vocab ||
     path === PATHS.vocabTrain ||
-    path === PATHS.vocabMine
+    path === PATHS.vocabMine ||
+    path === PATHS.context
   )
 }
 
@@ -92,7 +97,13 @@ export function titleForRoute(route: AppRoute): string {
 }
 
 /** Left-click without modifier keys → client-side navigation. */
-export function shouldHandleClientNav(event: { button?: number; metaKey: boolean; ctrlKey: boolean; shiftKey: boolean; altKey: boolean }): boolean {
+export function shouldHandleClientNav(event: {
+  button?: number
+  metaKey: boolean
+  ctrlKey: boolean
+  shiftKey: boolean
+  altKey: boolean
+}): boolean {
   return (
     (event.button === undefined || event.button === 0) &&
     !event.metaKey &&

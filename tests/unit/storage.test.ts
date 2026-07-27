@@ -37,9 +37,9 @@ describe('storage', () => {
     window.localStorage.clear()
   })
 
-  it('без сохранения возвращает дефолтное состояние версии 14', () => {
+  it('без сохранения возвращает дефолтное состояние версии 19', () => {
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 14)
+    assert.equal(state.version, 19)
     assert.equal(state.kana.preferences.mode, 'adaptive')
     assert.equal(state.numbers.preferences.mode, 'plain')
     assert.equal(state.numbers.preferences.rangeId, '99')
@@ -47,6 +47,14 @@ describe('storage', () => {
     assert.deepEqual(state.numbers.stats, {})
     assert.deepEqual(state.kanji.learned, [])
     assert.equal(state.kanji.preferences.complexityFilter, true)
+    assert.deepEqual(state.kanji.preferences.hiddenWordsByKanji, {})
+    assert.deepEqual(state.context.knownWordIds, [])
+    assert.ok(state.context.knownGrammarIds.includes('copula_desu'))
+    assert.equal(state.context.preferences.groupId, 'family')
+    assert.equal(state.context.preferences.batchSize, 3)
+    assert.equal(state.context.preferences.maxNewPerSentence, 1)
+    assert.equal(state.context.session, null)
+    assert.deepEqual(state.context.trainingLog, [])
     assert.deepEqual(state.vocab.myWords, [])
     assert.deepEqual(state.vocab.customWords, {})
     assert.equal(state.vocab.preferences.drillMode, 'romaji')
@@ -73,6 +81,29 @@ describe('storage', () => {
       },
     }
     state.vocab.preferences.drillMode = 'choice'
+    state.context.knownWordIds = ['1524720']
+    state.context.session = {
+      groupId: 'family',
+      batchIds: ['1000390'],
+      pages: [
+        {
+          sentence: {
+            id: 's1',
+            text: '父です。',
+            glossRu: 'Это отец.',
+            wordIds: ['1000390'],
+            grammarIds: ['copula_desu'],
+            source: 'seed',
+          },
+          revealed: true,
+        },
+      ],
+      pageIndex: 0,
+      recentSentenceIds: ['s1'],
+      wordsLearnedIds: [],
+      startedAt: 1,
+      status: 'active',
+    }
     saveAppState(state)
 
     const loaded = loadAppState(createDefaultAppState)
@@ -85,6 +116,8 @@ describe('storage', () => {
     assert.deepEqual(loaded.vocab.myWords, ['1524720', 'custom:test-1'])
     assert.equal(loaded.vocab.customWords['custom:test-1'].writing, '猫')
     assert.equal(loaded.vocab.preferences.drillMode, 'choice')
+    assert.deepEqual(loaded.context.knownWordIds, ['1524720'])
+    assert.equal(loaded.context.session?.pages[0]?.revealed, true)
     assert.equal(window.localStorage.getItem(STORAGE_KEY) != null, true)
   })
 
@@ -114,7 +147,7 @@ describe('storage', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
 
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 14)
+    assert.equal(state.version, 19)
     assert.equal(state.kana.preferences.scriptMode, 'katakana')
     assert.equal(state.kana.preferences.mode, 'even')
     assert.equal(state.kana.stats['katakana:shi'].clears, 7)
@@ -142,7 +175,7 @@ describe('storage', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
 
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 14)
+    assert.equal(state.version, 19)
     assert.deepEqual(state.kanji.learned, ['日'])
     assert.deepEqual(state.vocab.myWords, [])
     assert.equal(state.vocab.preferences.drillMode, 'romaji')
@@ -159,7 +192,7 @@ describe('storage', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
 
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 14)
+    assert.equal(state.version, 19)
     assert.equal(state.numbers.preferences.mode, 'age')
     assert.equal(state.numbers.preferences.pickMode, 'even')
     assert.equal(state.numbers.stats['age:20'].hints, 2)
@@ -184,7 +217,7 @@ describe('storage', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
 
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 14)
+    assert.equal(state.version, 19)
     assert.equal(state.kana.preferences.scriptMode, 'katakana')
     assert.equal(state.kana.preferences.mode, 'even')
     assert.equal(state.kana.stats['katakana:shi'].clears, 7)
@@ -200,7 +233,7 @@ describe('storage', () => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nested))
 
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 14)
+    assert.equal(state.version, 19)
     assert.equal(state.kana.preferences.mode, 'problem')
     assert.equal(state.kana.stats['hiragana:a'].clears, 3)
     assert.deepEqual(state.vocab.myWords, ['1000390'])
@@ -210,7 +243,7 @@ describe('storage', () => {
   it('битые данные не роняют приложение', () => {
     window.localStorage.setItem(STORAGE_KEY, '{broken json')
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 14)
+    assert.equal(state.version, 19)
   })
 
   it('reset удаляет сохранение', async () => {

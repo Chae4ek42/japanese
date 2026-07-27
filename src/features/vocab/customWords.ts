@@ -1,5 +1,5 @@
 import type { KanjiWord } from '../../shared/lib/types'
-import { getWordById } from '../kanji/data/bank'
+import { getWordById } from '../../data/words/bank'
 
 const HAN_RE = /\p{Script=Han}/u
 

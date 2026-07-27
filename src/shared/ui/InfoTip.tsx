@@ -1,6 +1,10 @@
-import type { InfoTipProps } from '../../shared/lib/component-props'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+
+export interface InfoTipProps {
+  text: string
+  align?: 'center' | 'start' | 'end'
+}
 
 // Подсказка рендерится в document.body, чтобы не обрезалась overflow у карточек и таблиц.
 export function InfoTip({ text, align = 'center' }: InfoTipProps) {

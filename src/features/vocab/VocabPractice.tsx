@@ -1,6 +1,7 @@
 import type { ChangeEvent, KeyboardEvent, RefObject } from 'react'
 import type { FeedbackState, RoundState, SessionStats, VocabCard, VocabDrillMode, InputMode } from '../../shared/lib/types'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
+import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
 
 export interface VocabPracticeProps {
   activeCard: VocabCard | null
@@ -21,6 +22,7 @@ export interface VocabPracticeProps {
   onSkipPrev: () => void
   onSkipNext: () => void
   onStop: () => void
+  onOpenKanjiInfo?: (character: string) => void
 }
 
 export function VocabPractice({
@@ -42,6 +44,7 @@ export function VocabPractice({
   onSkipPrev,
   onSkipNext,
   onStop,
+  onOpenKanjiInfo,
 }: VocabPracticeProps) {
   if (!activeCard) {
     return <PracticeShell onStop={onStop} sessionStats={sessionStats} feedbackType={feedback.type} />
@@ -56,14 +59,34 @@ export function VocabPractice({
     >
       <div className="question-block">
         <p className="script-badge">{drillMode === 'romaji' ? 'Ромадзи' : 'Перевод'}</p>
-        <div className="question-symbol vocab-question-writing" aria-live="polite">
-          <span data-testid="vocab-current-writing">{activeCard.writing}</span>
+        <div className="question-symbol" aria-live="polite">
+          <KanjiWritingHotspots
+            writing={activeCard.writing}
+            className="vocab-question-writing"
+            writingTestId="vocab-current-writing"
+            onOpenInfo={onOpenKanjiInfo}
+          />
         </div>
         {drillMode === 'romaji' ? (
-          round.hintUsed ? (
-            <p className="vocab-question-kana" data-testid="vocab-current-kana">
-              {activeCard.kana}
-            </p>
+          round.hintUsed && activeCard ? (
+            <div className="vocab-hint-panel" data-testid="vocab-hint-panel">
+              <p className="vocab-hint-kana" data-testid="vocab-current-kana">
+                {activeCard.kana}
+              </p>
+              <p className="vocab-hint-romaji" data-testid="vocab-hint-romaji">
+                {activeCard.romaji}
+              </p>
+              <ul className="vocab-hint-meanings" data-testid="vocab-hint-meanings">
+                {(activeCard.meanings.length ? activeCard.meanings : [activeCard.meaning]).map((meaning) => (
+                  <li key={meaning}>{meaning}</li>
+                ))}
+              </ul>
+              {activeCard.jlpt ? (
+                <p className="vocab-hint-meta" data-testid="vocab-hint-meta">
+                  JLPT N{activeCard.jlpt}
+                </p>
+              ) : null}
+            </div>
           ) : (
             <p className="question-note">Введите ромадзи чтения</p>
           )

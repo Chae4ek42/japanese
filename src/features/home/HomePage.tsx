@@ -1,6 +1,14 @@
-import type { HomePageProps } from '../../shared/lib/component-props'
 import { PATHS, shouldHandleClientNav } from '../../shared/lib/routes'
 import './styles.css'
+
+export interface HomePageProps {
+  onOpenKana: () => void
+  onOpenKanji: () => void
+  onOpenNumbers: () => void
+  onOpenVocab: () => void
+  onOpenVocabTrain: () => void
+  onOpenContext: () => void
+}
 
 const ENTRIES = [
   {
@@ -17,7 +25,7 @@ const ENTRIES = [
     href: PATHS.kanji,
     symbol: '字',
     title: 'Кандзи',
-    text: 'Знаки JLPT N5–N3, слова из словаря и прогресс по выученным.',
+    text: 'Знаки JLPT N5–N1 и Jōyō, разбор на составляющие, слова из словаря.',
     action: 'Открыть',
     testId: 'open-kanji',
   },
@@ -48,6 +56,15 @@ const ENTRIES = [
     action: 'Открыть',
     testId: 'open-vocab',
   },
+  {
+    id: 'context',
+    href: PATHS.context,
+    symbol: '文',
+    title: 'Контекст',
+    text: 'Слова темы через предложения i+1: одно новое слово за раз.',
+    action: 'Открыть',
+    testId: 'open-context',
+  },
 ] as const
 
 export function HomePage({
@@ -56,6 +73,7 @@ export function HomePage({
   onOpenNumbers,
   onOpenVocab,
   onOpenVocabTrain,
+  onOpenContext,
 }: HomePageProps) {
   const openers = {
     kana: onOpenKana,
@@ -63,13 +81,14 @@ export function HomePage({
     numbers: onOpenNumbers,
     'vocab-train': onOpenVocabTrain,
     vocab: onOpenVocab,
+    context: onOpenContext,
   } as const
 
   return (
     <main className="home-page">
       <section className="home-hero">
         <h1 className="home-title">JP тренажёры</h1>
-        <p className="home-lead">Практика японского: кана, кандзи, числа и словарь — в одном месте.</p>
+        <p className="home-lead">Практика японского: кана, кандзи, числа, словарь и контекст — в одном месте.</p>
       </section>
 
       <section className="home-entries" aria-label="Разделы">

@@ -1,11 +1,27 @@
-import type { KanjiInfoCardProps } from '../../shared/lib/component-props'
-import { useEffect } from 'react'
-import { getKanjiInfo, getTopWordsForKanji } from './data/bank'
+import { useEffect, useState } from 'react'
+import { getKanjiInfo, getTopWordsForKanji } from '../../data/words/bank'
 import { formatKanjiReadings } from '../../shared/lib/format'
 import { speakJapanese, speakKanjiReadings } from '../../shared/lib/speech'
 import { HighlightedReading } from './HighlightedReading'
+import { KanjiComposition } from './KanjiComposition'
+import { KanjiGlyph } from './KanjiGlyph'
+
+export interface KanjiInfoCardProps {
+  character: string
+  learned?: boolean
+  myWords?: string[]
+  onClose: () => void
+  onToggleLearned?: (character: string) => void
+  onToggleMyWord?: (wordId: string) => void
+  onStartPractice?: (character: string) => void
+}
 
 const TOP_WORDS = 5
+
+function pushKanjiStack(stack: string[], next: string): string[] {
+  if (!next || stack[stack.length - 1] === next) return stack
+  return [...stack, next]
+}
 
 export function KanjiInfoCard({
   character,
@@ -16,24 +32,51 @@ export function KanjiInfoCard({
   onToggleMyWord,
   onStartPractice,
 }: KanjiInfoCardProps) {
-  const info = getKanjiInfo(character)
-  const topWords = getTopWordsForKanji(character, TOP_WORDS)
+  const [stack, setStack] = useState<string[]>([character])
+  const [highlightElement, setHighlightElement] = useState<string | null>(null)
+  const current = stack[stack.length - 1] ?? character
+  const info = getKanjiInfo(current)
+  const topWords = getTopWordsForKanji(current, TOP_WORDS)
   const myWordSet = new Set(myWords)
+
+  useEffect(() => {
+    setStack([character])
+    setHighlightElement(null)
+  }, [character])
+
+  useEffect(() => {
+    setHighlightElement(null)
+  }, [current])
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.code === 'Escape') {
         event.preventDefault()
-        onClose()
+        if (stack.length > 1) {
+          setStack((prev) => prev.slice(0, -1))
+        } else {
+          onClose()
+        }
       }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [onClose])
+  }, [onClose, stack.length])
 
   if (!character) {
     return null
   }
+
+  function openComponent(next: string) {
+    setHighlightElement(null)
+    setStack((prev) => pushKanjiStack(prev, next))
+  }
+
+  function goBack() {
+    setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev))
+  }
+
+  const meanings = info?.meaningsRu?.length ? info.meaningsRu : info?.meanings ?? []
 
   return (
     <div
@@ -47,27 +90,49 @@ export function KanjiInfoCard({
         data-testid="kanji-info-card"
         role="dialog"
         aria-modal="true"
-        aria-label={`Карточка кандзи ${character}`}
+        aria-label={`Карточка кандзи ${current}`}
         onClick={(event) => event.stopPropagation()}
       >
         <header className="kanji-info-head">
           <div className="kanji-info-badges">
             <span className="script-badge">{info?.levelLabel ?? '—'}</span>
-            {learned ? <span className="kanji-info-learned">выучено</span> : null}
+            {info?.joyo ? <span className="script-badge is-joyo">Jōyō</span> : null}
+            {learned && current === character ? <span className="kanji-info-learned">выучено</span> : null}
           </div>
-          <button type="button" className="text-button" data-testid="kanji-info-close" onClick={onClose}>
-            Закрыть
-          </button>
+          <div className="kanji-info-head-actions">
+            {stack.length > 1 ? (
+              <button type="button" className="text-button" data-testid="kanji-info-stack-back" onClick={goBack}>
+                ← Назад
+              </button>
+            ) : null}
+            <button type="button" className="text-button" data-testid="kanji-info-close" onClick={onClose}>
+              Закрыть
+            </button>
+          </div>
         </header>
 
-        <p className="kanji-info-char">{character}</p>
+        {stack.length > 1 ? (
+          <p className="kanji-stack-path" data-testid="kanji-stack-path">
+            {stack.join(' → ')}
+          </p>
+        ) : null}
+
+        <KanjiGlyph
+          character={current}
+          size="card"
+          testId="kanji-info-char"
+          highlightElement={highlightElement}
+          onHoverElement={(element) => setHighlightElement(element)}
+          className="kanji-info-char"
+          onActivateElement={openComponent}
+        />
 
         {info ? (
           <>
             <section className="kanji-info-section">
               <h4>Значение</h4>
               <ul className="kanji-info-list">
-                {info.meanings.map((meaning) => (
+                {meanings.map((meaning) => (
                   <li key={meaning}>{meaning}</li>
                 ))}
               </ul>
@@ -88,6 +153,13 @@ export function KanjiInfoCard({
                 </div>
               </div>
             </section>
+
+            <KanjiComposition
+              character={current}
+              highlightElement={highlightElement}
+              onHoverElement={setHighlightElement}
+              onOpenCharacter={openComponent}
+            />
 
             {topWords.length ? (
               <section className="kanji-info-section" data-testid="kanji-info-words">
@@ -120,7 +192,7 @@ export function KanjiInfoCard({
                       <HighlightedReading
                         writing={word.writing}
                         kana={word.kana}
-                        focusKanji={character}
+                        focusKanji={current}
                         fallbackRomaji={word.romaji}
                       />
                       <p className="kanji-info-word-meaning">{word.meanings[0] ?? '—'}</p>
@@ -131,11 +203,11 @@ export function KanjiInfoCard({
             ) : null}
           </>
         ) : (
-          <p className="kanji-info-empty">Знака нет в наборе N5–N3.</p>
+          <p className="kanji-info-empty">Знака нет в банке кандзи.</p>
         )}
 
         <footer className="kanji-info-actions">
-          {info && onToggleLearned ? (
+          {info && onToggleLearned && current === character ? (
             <button
               type="button"
               className={learned ? 'primary-button' : 'ghost-button'}
@@ -149,7 +221,7 @@ export function KanjiInfoCard({
             type="button"
             className="ghost-button"
             data-testid="kanji-info-speak"
-            onClick={() => speakKanjiReadings(info ?? { character })}
+            onClick={() => speakKanjiReadings(info ?? { character: current })}
           >
             Прослушать чтения
           </button>
@@ -158,7 +230,7 @@ export function KanjiInfoCard({
               type="button"
               className="primary-button"
               data-testid="kanji-info-practice"
-              onClick={() => onStartPractice(character)}
+              onClick={() => onStartPractice(current)}
             >
               К словам
             </button>

@@ -4,27 +4,16 @@ import { KanaTrainer } from '../features/kana/KanaTrainer'
 import { KanjiPage } from '../features/kanji/KanjiPage'
 import { NumbersTrainer } from '../features/numbers/NumbersTrainer'
 import { DictionaryPage } from '../features/vocab/DictionaryPage'
+import { ContextPage } from '../features/context/ContextPage'
 import { useAppRouter } from '../shared/lib/useAppRouter'
-import {
-  AppStateProvider,
-  useAppState,
-  useKanaState,
-  useKanjiState,
-  useNumbersState,
-  useResetApp,
-  useVocabState,
-} from '../shared/state/AppStateContext'
+import { AppStateProvider, useAppState, useResetApp } from '../shared/state/AppStateContext'
 
 function AppRoutes() {
   const appState = useAppState()
-  const { page, vocabSection, goPage } = useAppRouter()
-  const kana = useKanaState()
-  const numbers = useNumbersState()
-  const kanji = useKanjiState()
-  const vocab = useVocabState()
+  const { page, goPage } = useAppRouter()
   const resetStats = useResetApp()
 
-  if (!appState || !kana || !numbers || !kanji || !vocab) {
+  if (!appState) {
     return (
       <div className="app-shell app-loading">
         <p>Загрузка…</p>
@@ -47,45 +36,17 @@ function AppRoutes() {
           onOpenNumbers={() => goPage('numbers')}
           onOpenVocab={() => goPage('vocab', 'catalog')}
           onOpenVocabTrain={() => goPage('vocab', 'train')}
+          onOpenContext={() => goPage('context')}
         />
       ) : page === 'kanji' ? (
-        <KanjiPage
-          kanjiState={{ learned: kanji.learned, preferences: kanji.preferences }}
-          myWords={vocab.myWords}
-          onToggleLearned={kanji.toggleLearned}
-          onPatchPreferences={kanji.patchPreferences}
-          onToggleMyWord={vocab.toggleMyWord}
-        />
+        <KanjiPage />
       ) : page === 'vocab' ? (
-        <DictionaryPage
-          myWords={vocab.myWords}
-          customWords={vocab.customWords}
-          preferences={vocab.preferences}
-          stats={vocab.stats}
-          section={vocabSection}
-          onSectionChange={(section) => goPage('vocab', section)}
-          onToggleMyWord={vocab.toggleMyWord}
-          onAddCustomWord={vocab.addCustomWord}
-          onPatchPreferences={vocab.patchPreferences}
-          onUpdateStats={vocab.updateStats}
-        />
+        <DictionaryPage />
+      ) : page === 'context' ? (
+        <ContextPage />
       ) : (
         <main className="trainer-layout">
-          {page === 'kana' ? (
-            <KanaTrainer
-              preferences={kana.preferences}
-              stats={kana.stats}
-              onPatchPreferences={kana.patchPreferences}
-              onPatchHyperparam={kana.patchHyperparam}
-              onPracticeUpdate={kana.updatePractice}
-            />
-          ) : (
-            <NumbersTrainer
-              numbersState={{ preferences: numbers.preferences, stats: numbers.stats }}
-              onPatchPreferences={numbers.patchPreferences}
-              onUpdateStats={numbers.updateStats}
-            />
-          )}
+          {page === 'kana' ? <KanaTrainer /> : <NumbersTrainer />}
         </main>
       )}
     </div>

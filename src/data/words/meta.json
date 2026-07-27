@@ -1,0 +1,23 @@
+{
+  "builtAt": "2026-07-22T15:16:09.677Z",
+  "sources": {
+    "kanji": "OpenJLPT N5–N1 + joyo2010",
+    "vocabTags": "OpenJLPT",
+    "dictionary": "jmdict-simplified 3.6.2+20260720135044 (rus)",
+    "components": "Kanshudo scrape (local) + KRADFILE fallback",
+    "radicals": "EDRDG KRADFILE"
+  },
+  "counts": {
+    "kanji": 2383,
+    "words": 61421,
+    "components": 566,
+    "joyo": 2136,
+    "n5": 79,
+    "n4": 166,
+    "n3": 367,
+    "n2": 367,
+    "n1": 1232,
+    "joyoOnly": 172,
+    "withComponents": 2319
+  }
+}

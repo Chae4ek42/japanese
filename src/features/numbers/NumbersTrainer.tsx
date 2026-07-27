@@ -1,5 +1,13 @@
-import type { NumbersTrainerProps } from '../../shared/lib/component-props'
-import type { NumberCard, NumberMode, NumbersPickMode, PracticeSession, PracticeView } from '../../shared/lib/types'
+import type {
+  InputMode,
+  NumberCard,
+  NumberMode,
+  NumbersPickMode,
+  NumbersPreferences,
+  PracticeSession,
+  PracticeView,
+  StatsRecord,
+} from '../../shared/lib/types'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './styles.css'
 import {
@@ -11,15 +19,42 @@ import {
 } from '../../data/numbers'
 import { pickNextCardId } from '../../shared/lib/trainer'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
+import { useNumbersState } from '../../shared/state/AppStateContext'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { NumbersCheatSheet } from './NumbersCheatSheet'
 
-const pickModeOptions = [
-  { id: 'adaptive', label: 'Адаптивный', hint: 'Чаще слабые и ещё не встречавшиеся числа.' },
-  { id: 'even', label: 'Равномерный', hint: 'Все числа из диапазона с равной частотой.' },
-]
+export function NumbersTrainer() {
+  const numbers = useNumbersState()
+  if (!numbers) return null
+  return (
+    <NumbersTrainerView
+      numbersState={{ preferences: numbers.preferences, stats: numbers.stats }}
+      onPatchPreferences={numbers.patchPreferences}
+      onUpdateStats={numbers.updateStats}
+    />
+  )
+}
 
-export function NumbersTrainer({ numbersState, onPatchPreferences, onUpdateStats }: NumbersTrainerProps) {
+interface NumbersTrainerViewProps {
+  numbersState: { preferences: NumbersPreferences; stats: Record<string, StatsRecord> }
+  onPatchPreferences: (patch: Partial<NumbersPreferences>) => void
+  onUpdateStats: (
+    cardId: string,
+    outcome: 'correct' | 'wrong' | 'hint' | 'seen',
+    context: { now: number; latencyMs?: number; mistakesOnCard?: number; hintUsed?: boolean; inputMode?: InputMode },
+  ) => void
+}
+
+function NumbersTrainerView({
+  numbersState,
+  onPatchPreferences,
+  onUpdateStats,
+}: NumbersTrainerViewProps) {
+  const pickModeOptions = [
+    { id: 'adaptive', label: 'Адаптивный', hint: 'Чаще слабые и ещё не встречавшиеся числа.' },
+    { id: 'even', label: 'Равномерный', hint: 'Все числа из диапазона с равной частотой.' },
+  ]
+
   const { preferences, stats } = numbersState
   const {
     view,

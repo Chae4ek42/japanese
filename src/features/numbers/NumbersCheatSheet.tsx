@@ -1,10 +1,16 @@
-import type { CheatTableProps } from '../../shared/lib/component-props'
 import {
+
   AGE_SPECIAL_CASES,
   CHEAT_SHEET_DIGITS,
   CHEAT_SHEET_EXAMPLES,
   CHEAT_SHEET_HUNDREDS,
 } from '../../data/numbers'
+
+interface CheatTableProps {
+  headers: string[]
+  rows: Array<{ key: string | number; cells: Array<string | number> }>
+  testId: string
+}
 
 function CheatTable({ headers, rows, testId }: CheatTableProps) {
   return (

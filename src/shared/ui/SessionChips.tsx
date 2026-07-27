@@ -1,5 +1,9 @@
-import type { SessionChipsProps } from '../../shared/lib/component-props'
+import type { SessionStats } from '../lib/types'
 import { InfoTip } from './InfoTip'
+
+export interface SessionChipsProps {
+  sessionStats: SessionStats & { accuracy?: number }
+}
 
 export function SessionChips({ sessionStats }: SessionChipsProps) {
   return (

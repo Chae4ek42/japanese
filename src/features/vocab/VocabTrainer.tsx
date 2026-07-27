@@ -29,6 +29,7 @@ export interface VocabTrainerProps {
       inputMode?: VocabPreferences['inputMode']
     },
   ) => void
+  onOpenKanjiInfo?: (character: string) => void
 }
 
 export function VocabTrainer({
@@ -38,6 +39,7 @@ export function VocabTrainer({
   customWords = {},
   onPatchPreferences,
   onUpdateStats,
+  onOpenKanjiInfo,
 }: VocabTrainerProps) {
   const {
     view,
@@ -77,7 +79,11 @@ export function VocabTrainer({
   const navIndexRef = useRef(-1)
 
   const activePool = useMemo(
-    () => buildVocabPool(preferences, myWords, customWords),
+    () => buildVocabPool(preferences, myWords, customWords, { stats, applyNewWordLimit: true }),
+    [preferences, myWords, customWords, stats],
+  )
+  const sourcePool = useMemo(
+    () => buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: false }),
     [preferences, myWords, customWords],
   )
   const activeCard = currentCardId ? (activePool.find((card) => card.id === currentCardId) ?? null) : null
@@ -109,12 +115,12 @@ export function VocabTrainer({
       const typingInField =
         event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement
 
-      if (!typingInField && event.code === 'ArrowLeft' && !event.metaKey && !event.ctrlKey && !event.altKey) {
+      if (event.code === 'ArrowLeft' && !event.metaKey && !event.ctrlKey && !event.altKey) {
         event.preventDefault()
         skipToAdjacent('prev')
         return
       }
-      if (!typingInField && event.code === 'ArrowRight' && !event.metaKey && !event.ctrlKey && !event.altKey) {
+      if (event.code === 'ArrowRight' && !event.metaKey && !event.ctrlKey && !event.altKey) {
         event.preventDefault()
         skipToAdjacent('next')
         return
@@ -171,13 +177,38 @@ export function VocabTrainer({
     setCanGoPrev(navIndexRef.current > 0)
   }
 
+  function getPracticePool() {
+    const prefs = preferencesRef.current
+    const full = buildVocabPool(prefs, myWordsRef.current, customWordsRef.current, {
+      applyNewWordLimit: false,
+    })
+    if (viewRef.current === 'practice' && sessionRef.current.poolIds.length) {
+      const allow = new Set(sessionRef.current.poolIds)
+      const frozen = full.filter((card) => allow.has(card.id))
+      if (frozen.length) return frozen
+    }
+    return buildVocabPool(prefs, myWordsRef.current, customWordsRef.current, {
+      stats: statsRef.current,
+      applyNewWordLimit: true,
+    })
+  }
+
+  function getDistractorPool() {
+    return buildVocabPool(preferencesRef.current, myWordsRef.current, customWordsRef.current, {
+      applyNewWordLimit: false,
+    })
+  }
+
   function advanceToNextCard(nextSessionOverride?: PracticeSession) {
-    const pool = buildVocabPool(preferencesRef.current, myWordsRef.current, customWordsRef.current)
+    const pool = getPracticePool()
     if (!pool.length) {
       setView('setup')
       setCurrentCardId(null)
       return
     }
+
+    const distractorPool = getDistractorPool()
+    const optionsPool = distractorPool.length >= 6 ? distractorPool : pool
 
     const nextSession = nextSessionOverride ?? sessionRef.current
     const nextId = pickNextCardId(
@@ -201,7 +232,7 @@ export function VocabTrainer({
         ...nextSession,
         sinceQueuePick: pickedFromQueue ? 0 : (nextSession.sinceQueuePick ?? 0) + 1,
       },
-      pool,
+      optionsPool,
       { recordSeen: true },
     )
   }
@@ -210,15 +241,18 @@ export function VocabTrainer({
     if (viewRef.current !== 'practice' || pendingAdvanceRef.current) return
     clearPendingAdvance()
 
-    const pool = buildVocabPool(preferencesRef.current, myWordsRef.current, customWordsRef.current)
+    const pool = getPracticePool()
     if (!pool.length) return
+
+    const distractorPool = getDistractorPool()
+    const optionsPool = distractorPool.length >= 6 ? distractorPool : pool
 
     if (direction === 'prev') {
       if (navIndexRef.current <= 0) return
       navIndexRef.current -= 1
       setCanGoPrev(navIndexRef.current > 0)
       const prevId = navHistoryRef.current[navIndexRef.current]
-      showCard(prevId, sessionRef.current, pool, { recordSeen: false })
+      showCard(prevId, sessionRef.current, optionsPool, { recordSeen: false })
       return
     }
 
@@ -226,7 +260,7 @@ export function VocabTrainer({
       navIndexRef.current += 1
       setCanGoPrev(navIndexRef.current > 0)
       const nextId = navHistoryRef.current[navIndexRef.current]
-      showCard(nextId, sessionRef.current, pool, { recordSeen: false })
+      showCard(nextId, sessionRef.current, optionsPool, { recordSeen: false })
       return
     }
 
@@ -250,12 +284,12 @@ export function VocabTrainer({
       const fallback = pool.find((card) => card.id !== currentId)
       if (!fallback) return
       rememberNavCard(fallback.id)
-      showCard(fallback.id, session, pool, { recordSeen: false })
+      showCard(fallback.id, session, optionsPool, { recordSeen: false })
       return
     }
 
     rememberNavCard(nextId)
-    showCard(nextId, session, pool, { recordSeen: false })
+    showCard(nextId, session, optionsPool, { recordSeen: false })
   }
 
   function startPractice() {
@@ -368,7 +402,7 @@ export function VocabTrainer({
     if (feedback.type === 'wrong') {
       setFeedback(
         round.hintUsed
-          ? { type: 'hint', text: `Подсказка: ${activeCard.romaji}` }
+          ? { type: 'hint', text: 'Подсказка открыта — введите ромадзи' }
           : { type: 'idle', text: '' },
       )
     }
@@ -393,11 +427,21 @@ export function VocabTrainer({
     setInputValue('')
     setFeedback({
       type: 'wrong',
-      text: `Правильно: ${activeCard.romaji}. Введите верный ответ.`,
+      text: 'Неверно. Смотрите подсказку и введите ромадзи.',
     })
   }
 
   function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.code === 'ArrowLeft' && !event.metaKey && !event.ctrlKey && !event.altKey) {
+      event.preventDefault()
+      skipToAdjacent('prev')
+      return
+    }
+    if (event.code === 'ArrowRight' && !event.metaKey && !event.ctrlKey && !event.altKey) {
+      event.preventDefault()
+      skipToAdjacent('next')
+      return
+    }
     if (event.code === 'Space') {
       event.preventDefault()
       revealHint()
@@ -415,7 +459,7 @@ export function VocabTrainer({
     patchRound({ hintUsed: true })
     setFeedback({
       type: 'hint',
-      text: `Подсказка: ${activeCardRef.current.romaji}`,
+      text: 'Подсказка открыта — введите ромадзи',
     })
     inputRef.current?.focus()
   }
@@ -456,6 +500,7 @@ export function VocabTrainer({
       <VocabSetup
         preferences={preferences}
         poolCount={activePool.length}
+        sourcePoolCount={sourcePool.length}
         myWordsCount={myWords.length}
         errorText={feedback.type === 'error' ? feedback.text : ''}
         onPatchPreferences={onPatchPreferences}
@@ -484,6 +529,7 @@ export function VocabTrainer({
       onSkipPrev={() => skipToAdjacent('prev')}
       onSkipNext={() => skipToAdjacent('next')}
       onStop={stopPractice}
+      onOpenKanjiInfo={onOpenKanjiInfo}
     />
   )
 }
