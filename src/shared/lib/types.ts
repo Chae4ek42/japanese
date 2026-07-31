@@ -27,6 +27,21 @@ export interface Hyperparams {
   staleBoost: number
   staleAfterHours: number
   staleRampHours: number
+  /**
+   * Soft-retire cards above this mastery even without a long streak.
+   */
+  knownMasteryThreshold: number
+  /** Extra weight for cards not yet shown in the current session. */
+  sessionFreshBoost: number
+  /**
+   * Weight sharpening for adaptive picks (< 1 concentrates on highest weights).
+   * 1 = linear weights; ~0.55 strongly prefers weak/new cards.
+   */
+  weightTemperature: number
+  /** Min cards between mistake-queue reintroductions. */
+  mistakeQueueGap: number
+  /** Probability of taking a due mistake-queue card when eligible. */
+  mistakeQueueChance: number
 }
 
 export interface StatsRecord {
@@ -72,6 +87,13 @@ export interface PracticeSession {
   mistakeQueue: string[]
   sinceQueuePick: number
   mode: KanaPickMode | NumbersPickMode
+  /** How many times each card was shown in this practice session. */
+  showCounts?: Record<string, number>
+  /**
+   * Remaining “skip turns” after a clean success — card stays out until the counter hits 0.
+   * Decremented on each subsequent card show.
+   */
+  cooldowns?: Record<string, number>
 }
 
 export interface RoundState {
@@ -161,10 +183,12 @@ export interface KanjiPreferences {
 }
 
 
-export type VocabDrillMode = 'romaji' | 'choice'
+export type VocabDrillMode = 'romaji' | 'choice' | 'mixed'
 export type VocabSource = 'level' | 'group' | 'mine'
 export type VocabLevelFilter = 5 | 4 | 3 | 2 | 1
 export type VocabPickMode = 'adaptive' | 'even'
+/** Prompt shapes for mixed multiple-choice drills (renshuu-style). */
+export type VocabPromptKind = 'meaning' | 'reading' | 'writing'
 
 export interface VocabPreferences {
   drillMode: VocabDrillMode
@@ -179,10 +203,29 @@ export interface VocabPreferences {
    */
   wordJlptLevels: KanjiWordJlptLevel[]
   /**
-   * Max brand-new words (stats.exposures === 0) in the practice pool.
-   * 0 = no limit. Already-seen words from the set stay available for review.
+   * Max brand-new words (no clears/errors/hints yet) in the practice pool.
+   * -1 = no limit; 0 = only already-started words (no new ones).
    */
   newWordLimit: number
+  /**
+   * When source === 'group': if true, practice the whole group including words
+   * already in «Мои слова». If false, those words are excluded.
+   */
+  trainFullGroup: boolean
+  /**
+   * When source === 'mine': if true, include words marked as learned.
+   * If false, only unlearned my-words are in the pool.
+   */
+  mineIncludeLearned: boolean
+}
+
+export interface KanjiWordReading {
+  id?: string
+  kana: string
+  romaji: string
+  meanings: string[]
+  jlpt?: number
+  common?: boolean
 }
 
 export interface VocabCard {
@@ -194,12 +237,23 @@ export interface VocabCard {
   meaning: string
   meanings: string[]
   jlpt?: number
+  /** Reading variants when several JMDict entries share the writing. */
+  readings?: KanjiWordReading[]
+  /** All bank ids covered by this card. */
+  variantIds?: string[]
 }
 
 export interface VocabState {
   myWords: string[]
-  /** User-created words keyed by id (`custom:…`). */
+  /**
+   * User-created words (`custom:…`) and local field overrides for bank ids.
+   * Bank overrides shadow `getWordById` when resolving pools.
+   */
   customWords: Record<string, KanjiWord>
+  /** Word ids permanently removed from vocab pools / catalog training. */
+  hiddenWordIds: string[]
+  /** My-word ids marked as learned («Выученные»). */
+  learnedWordIds: string[]
   preferences: VocabPreferences
   stats: Record<string, StatsRecord>
 }
@@ -264,7 +318,7 @@ export interface ContextSentence {
 }
 
 export interface AppState {
-  version: 19
+  version: 20
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>
@@ -346,6 +400,13 @@ export interface KanjiWord {
   kanji: string[]
   jlpt?: number
   common?: boolean
+  /**
+   * All reading/meaning variants for this writing.
+   * Present after merge; single-entry words may omit it (treat kana/romaji/meanings as the only reading).
+   */
+  readings?: KanjiWordReading[]
+  /** All JMDict / custom ids covered by a merged word. */
+  variantIds?: string[]
 }
 
 export interface KanjiBankMeta {

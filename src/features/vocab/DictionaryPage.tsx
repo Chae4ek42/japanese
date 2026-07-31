@@ -8,6 +8,7 @@ import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
 import { CustomWordForm } from './CustomWordForm'
 import { resolveMyWords } from './customWords'
 import { VOCAB_GROUPS, getWordsForGroup } from './groups'
+import { isWordSaved, mergeWordsByWriting, wordVariantIds } from './mergeHomographs'
 import { VocabTrainer } from './VocabTrainer'
 import { WordCard } from './WordCard'
 
@@ -43,6 +44,8 @@ export function DictionaryPage() {
 
   const myWords = vocab?.myWords ?? []
   const customWords = vocab?.customWords ?? {}
+  const hiddenWordIds = vocab?.hiddenWordIds ?? []
+  const learnedWordIds = vocab?.learnedWordIds ?? []
   const preferences = vocab?.preferences ?? {
     drillMode: 'romaji' as const,
     source: 'level' as const,
@@ -51,18 +54,27 @@ export function DictionaryPage() {
     pickMode: 'adaptive' as const,
     inputMode: 'instant' as const,
     wordJlptLevels: [] as const,
-    newWordLimit: 0,
+    newWordLimit: -1,
+    trainFullGroup: false,
+    mineIncludeLearned: true,
   }
   const stats = vocab?.stats ?? {}
   const kanjiLearned = kanji?.learned ?? []
   const onSectionChange = (next: Section) => goPage('vocab', next)
   const onToggleMyWord = vocab?.toggleMyWord ?? (() => {})
+  const onAddMyWords = vocab?.addMyWords ?? (() => {})
+  const onRemoveMyWords = vocab?.removeMyWords ?? (() => {})
   const onAddCustomWord = vocab?.addCustomWord ?? (() => {})
+  const onSaveWordEdit = vocab?.saveWordEdit ?? (() => {})
+  const onHideWords = vocab?.hideWords ?? (() => {})
+  const onToggleLearnedWords = vocab?.toggleLearnedWords ?? (() => {})
   const onPatchPreferences = vocab?.patchPreferences ?? (() => {})
   const onToggleKanjiLearned = kanji?.toggleLearned
   const onUpdateStats = vocab?.updateStats ?? (() => {})
 
   const myWordSet = useMemo(() => new Set(myWords), [myWords])
+  const learnedWordSet = useMemo(() => new Set(learnedWordIds), [learnedWordIds])
+  const hiddenSet = useMemo(() => new Set(hiddenWordIds), [hiddenWordIds])
   const learnedSet = useMemo(() => new Set(kanjiLearned), [kanjiLearned])
 
   useEffect(() => {
@@ -72,16 +84,20 @@ export function DictionaryPage() {
   }, [section])
 
   const catalogWords = useMemo(() => {
-    if (deferredQuery) {
-      return searchWords(deferredQuery, { limit: 120 })
-    }
-    if (catalogMode === 'group') {
-      return getWordsForGroup(groupId)
-    }
-    return getJlptWords(level)
-  }, [catalogMode, deferredQuery, groupId, level])
+    const raw = deferredQuery
+      ? searchWords(deferredQuery, { limit: 120 })
+      : catalogMode === 'group'
+        ? getWordsForGroup(groupId)
+        : getJlptWords(level)
+    return mergeWordsByWriting(raw).filter(
+      (word) => !wordVariantIds(word).some((id) => hiddenSet.has(id)),
+    )
+  }, [catalogMode, deferredQuery, groupId, level, hiddenSet])
 
-  const mineWords = useMemo(() => resolveMyWords(myWords, customWords), [myWords, customWords])
+  const mineWords = useMemo(
+    () => resolveMyWords(myWords, customWords, hiddenWordIds),
+    [myWords, customWords, hiddenWordIds],
+  )
   const activeGroup = VOCAB_GROUPS.find((group) => group.id === groupId) ?? null
 
   const list = section === 'mine' ? mineWords : catalogWords
@@ -92,6 +108,22 @@ export function DictionaryPage() {
 
   function resetPaging() {
     setVisibleCount(PAGE_SIZE)
+  }
+
+  function handleToggleSaved(word: KanjiWord) {
+    const ids = wordVariantIds(word)
+    if (!ids.length) return
+    if (isWordSaved(word, myWordSet)) {
+      onRemoveMyWords(ids)
+      return
+    }
+    onAddMyWords(ids)
+  }
+
+  function handleToggleLearned(word: KanjiWord) {
+    const ids = wordVariantIds(word)
+    if (!ids.length) return
+    onToggleLearnedWords(ids)
   }
 
   const listCaption = deferredQuery
@@ -157,8 +189,14 @@ export function DictionaryPage() {
             stats={stats}
             myWords={myWords}
             customWords={customWords}
+            hiddenWordIds={hiddenWordIds}
+            learnedWordIds={learnedWordIds}
             onPatchPreferences={onPatchPreferences}
             onUpdateStats={onUpdateStats}
+            onAddMyWords={onAddMyWords}
+            onSaveWordEdit={onSaveWordEdit}
+            onHideWords={onHideWords}
+            onToggleLearnedWords={onToggleLearnedWords}
             onOpenKanjiInfo={setInfoKanji}
           />
           {infoKanji ? (
@@ -289,9 +327,11 @@ export function DictionaryPage() {
               <WordCard
                 key={word.id ?? `${word.writing}-${word.kana}`}
                 word={word}
-                isSaved={Boolean(word.id && myWordSet.has(word.id))}
-                onToggleSaved={onToggleMyWord}
+                isSaved={isWordSaved(word, myWordSet)}
+                onToggleSaved={handleToggleSaved}
                 onEdit={section === 'mine' ? setEditingWord : undefined}
+                isLearned={section === 'mine' ? isWordSaved(word, learnedWordSet) : false}
+                onToggleLearned={section === 'mine' ? handleToggleLearned : undefined}
               />
             ))}
           </div>

@@ -1,42 +1,81 @@
-import type { ChangeEvent, KeyboardEvent, RefObject } from 'react'
-import type { FeedbackState, RoundState, SessionStats, VocabCard, VocabDrillMode, InputMode } from '../../shared/lib/types'
+import { useEffect, useState, type ChangeEvent, type FormEvent, type KeyboardEvent, type RefObject } from 'react'
+import type {
+  FeedbackState,
+  RoundState,
+  SessionStats,
+  VocabCard,
+  VocabDrillMode,
+  InputMode,
+  KanjiWord,
+} from '../../shared/lib/types'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
+import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
+import {
+  buildWordFromReadings,
+  cardToReadingDrafts,
+  createReadingDraft,
+  type ReadingDraft,
+} from './customWords'
+import type { VocabMixedPrompt } from './mixed'
 
 export interface VocabPracticeProps {
   activeCard: VocabCard | null
   drillMode: VocabDrillMode
+  prompt: VocabMixedPrompt | null
   inputMode: InputMode
   inputRef: RefObject<HTMLInputElement | null>
   inputValue: string
-  choiceOptions: string[]
   selectedChoice: string | null
   feedback: FeedbackState
   round: RoundState
   sessionStats: SessionStats & { accuracy?: number }
   canGoPrev: boolean
+  currentInMyWords?: boolean
+  showAddSessionToMyWords?: boolean
+  sessionWordCount?: number
+  canAddSourceWord?: boolean
+  currentLearned?: boolean
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void
   onInputKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
   onRevealHint: () => void
-  onChoose: (meaning: string) => void
+  onChoose: (answer: string) => void
   onSkipPrev: () => void
   onSkipNext: () => void
   onStop: () => void
+  onSubmitAnswer?: () => void
+  onAddCurrentToMyWords?: () => void
+  onAddSessionToMyWords?: () => void
+  onAddSourceWord?: () => void
+  onToggleLearned?: () => void
+  onSaveWordEdit?: (word: KanjiWord) => void
+  onDeleteWord?: () => void
   onOpenKanjiInfo?: (character: string) => void
+}
+
+function drillBadge(drillMode: VocabDrillMode, prompt: VocabMixedPrompt | null): string {
+  if (drillMode === 'romaji') return 'Ромадзи'
+  if (drillMode === 'choice') return 'Перевод'
+  return prompt?.badge ?? 'Смешанный'
 }
 
 export function VocabPractice({
   activeCard,
   drillMode,
+  prompt,
   inputMode,
   inputRef,
   inputValue,
-  choiceOptions,
   selectedChoice,
   feedback,
   round,
   sessionStats,
   canGoPrev,
+  currentInMyWords = false,
+  showAddSessionToMyWords = false,
+  sessionWordCount = 0,
+  canAddSourceWord = false,
+  currentLearned = false,
   onInputChange,
   onInputKeyDown,
   onRevealHint,
@@ -44,10 +83,74 @@ export function VocabPractice({
   onSkipPrev,
   onSkipNext,
   onStop,
+  onSubmitAnswer,
+  onAddCurrentToMyWords,
+  onAddSessionToMyWords,
+  onAddSourceWord,
+  onToggleLearned,
+  onSaveWordEdit,
+  onDeleteWord,
   onOpenKanjiInfo,
 }: VocabPracticeProps) {
+  const [editing, setEditing] = useState(false)
+  const [editWriting, setEditWriting] = useState('')
+  const [editReadings, setEditReadings] = useState<ReadingDraft[]>([])
+  const [editError, setEditError] = useState('')
+
+  useEffect(() => {
+    setEditing(false)
+    setEditError('')
+  }, [activeCard?.id])
+
   if (!activeCard) {
     return <PracticeShell onStop={onStop} sessionStats={sessionStats} feedbackType={feedback.type} />
+  }
+
+  const card = activeCard
+  const isChoiceDrill = drillMode === 'choice' || drillMode === 'mixed'
+  const choiceOptions = prompt?.options ?? []
+  const correctAnswer = prompt?.correctAnswer ?? ''
+  const swipeHandlers = {
+    onSwipeLeft: onSkipPrev,
+    onSwipeRight: onSkipNext,
+    onSwipeDown: drillMode === 'romaji' ? onRevealHint : undefined,
+    onSwipeUp:
+      drillMode === 'romaji' && inputMode === 'submit' && onSubmitAnswer ? onSubmitAnswer : undefined,
+  }
+
+  function openEditor() {
+    setEditWriting(card.writing)
+    setEditReadings(cardToReadingDrafts(card))
+    setEditError('')
+    setEditing(true)
+  }
+
+  function closeEditor() {
+    setEditing(false)
+    setEditError('')
+  }
+
+  function updateReading(key: string, patch: Partial<ReadingDraft>) {
+    setEditReadings((prev) => prev.map((reading) => (reading.key === key ? { ...reading, ...patch } : reading)))
+    if (editError) setEditError('')
+  }
+
+  function handleSaveEdit(event: FormEvent) {
+    event.preventDefault()
+    if (!onSaveWordEdit) return
+    const word = buildWordFromReadings({
+      writing: editWriting,
+      readings: editReadings,
+      id: card.id,
+      jlpt: card.jlpt,
+      variantIds: card.variantIds,
+    })
+    if (!word) {
+      setEditError('Нужны написание и хотя бы одно полное чтение: кана, ромадзи и значение.')
+      return
+    }
+    onSaveWordEdit(word)
+    closeEditor()
   }
 
   return (
@@ -56,31 +159,58 @@ export function VocabPractice({
       onStop={onStop}
       sessionStats={sessionStats}
       feedbackType={feedback.type}
+      swipes={swipeHandlers}
     >
       <div className="question-block">
-        <p className="script-badge">{drillMode === 'romaji' ? 'Ромадзи' : 'Перевод'}</p>
+        <p className="script-badge" data-testid="vocab-prompt-badge">
+          {editing ? 'Правка слова' : drillBadge(drillMode, prompt)}
+        </p>
         <div className="question-symbol" aria-live="polite">
-          <KanjiWritingHotspots
-            writing={activeCard.writing}
-            className="vocab-question-writing"
-            writingTestId="vocab-current-writing"
-            onOpenInfo={onOpenKanjiInfo}
-          />
+          {isChoiceDrill && prompt?.stemMode === 'text' && !editing ? (
+            <p className="vocab-question-stem" data-testid="vocab-current-stem">
+              {prompt.stemText}
+            </p>
+          ) : (
+            <KanjiWritingHotspots
+              writing={editing ? editWriting || card.writing : isChoiceDrill && prompt ? prompt.stemText : card.writing}
+              className="vocab-question-writing"
+              writingTestId="vocab-current-writing"
+              onOpenInfo={onOpenKanjiInfo}
+            />
+          )}
         </div>
-        {drillMode === 'romaji' ? (
+        {editing ? null : drillMode === 'romaji' ? (
           round.hintUsed && activeCard ? (
             <div className="vocab-hint-panel" data-testid="vocab-hint-panel">
-              <p className="vocab-hint-kana" data-testid="vocab-current-kana">
-                {activeCard.kana}
-              </p>
-              <p className="vocab-hint-romaji" data-testid="vocab-hint-romaji">
-                {activeCard.romaji}
-              </p>
-              <ul className="vocab-hint-meanings" data-testid="vocab-hint-meanings">
-                {(activeCard.meanings.length ? activeCard.meanings : [activeCard.meaning]).map((meaning) => (
-                  <li key={meaning}>{meaning}</li>
-                ))}
-              </ul>
+              {activeCard.readings && activeCard.readings.length > 1 ? (
+                <ul className="vocab-hint-readings" data-testid="vocab-hint-readings">
+                  {activeCard.readings.map((reading) => (
+                    <li key={`${reading.kana}-${reading.romaji}`} className="vocab-hint-reading">
+                      <p className="vocab-hint-kana">{reading.kana}</p>
+                      <p className="vocab-hint-romaji">{reading.romaji}</p>
+                      <ul className="vocab-hint-meanings">
+                        {(reading.meanings.length ? reading.meanings : [activeCard.meaning]).map((meaning) => (
+                          <li key={meaning}>{meaning}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <>
+                  <p className="vocab-hint-kana" data-testid="vocab-current-kana">
+                    {activeCard.kana}
+                  </p>
+                  <p className="vocab-hint-romaji" data-testid="vocab-hint-romaji">
+                    {activeCard.romaji}
+                  </p>
+                  <ul className="vocab-hint-meanings" data-testid="vocab-hint-meanings">
+                    {(activeCard.meanings.length ? activeCard.meanings : [activeCard.meaning]).map((meaning) => (
+                      <li key={meaning}>{meaning}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
               {activeCard.jlpt ? (
                 <p className="vocab-hint-meta" data-testid="vocab-hint-meta">
                   JLPT N{activeCard.jlpt}
@@ -88,103 +218,293 @@ export function VocabPractice({
               ) : null}
             </div>
           ) : (
-            <p className="question-note">Введите ромадзи чтения</p>
+            <p className="question-note">Введите ромадзи чтения (любой вариант)</p>
           )
         ) : (
-          <p className="question-note">Выберите верный перевод</p>
+          <p className="question-note">{prompt?.note ?? 'Выберите верный ответ'}</p>
         )}
       </div>
 
       <div className="answer-block">
-        {drillMode === 'romaji' ? (
-          <>
-            <input
-              ref={inputRef}
-              type="text"
-              className="answer-input"
-              data-testid="vocab-answer-input"
-              autoCapitalize="none"
-              autoCorrect="off"
-              spellCheck="false"
-              enterKeyHint={inputMode === 'submit' ? 'go' : 'done'}
-              value={inputValue}
-              onChange={onInputChange}
-              onKeyDown={onInputKeyDown}
-              placeholder={round.hintUsed ? activeCard.romaji : 'ромадзи'}
-            />
-            <div className="feedback-row">
-              <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
+        {editing && onSaveWordEdit ? (
+          <form
+            className="vocab-card-editor"
+            data-testid="vocab-card-editor"
+            onSubmit={handleSaveEdit}
+          >
+            <p className="control-hint">
+              Каждое чтение — отдельный блок. Несколько значений в одном чтении — через запятую.
+            </p>
+            <label className="vocab-edit-writing">
+              Написание
+              <input
+                data-testid="vocab-edit-writing"
+                value={editWriting}
+                onChange={(event) => {
+                  setEditWriting(event.target.value)
+                  if (editError) setEditError('')
+                }}
+                autoComplete="off"
+              />
+            </label>
+
+            <div className="vocab-edit-readings" data-testid="vocab-edit-readings">
+              {editReadings.map((reading, index) => (
+                <fieldset
+                  key={reading.key}
+                  className="vocab-edit-reading"
+                  data-testid={`vocab-edit-reading-${index}`}
+                >
+                  <legend>Чтение {index + 1}</legend>
+                  <div className="custom-word-grid">
+                    <label>
+                      Кана
+                      <input
+                        data-testid={`vocab-edit-kana-${index}`}
+                        value={reading.kana}
+                        onChange={(event) => updateReading(reading.key, { kana: event.target.value })}
+                        autoComplete="off"
+                      />
+                    </label>
+                    <label>
+                      Ромадзи
+                      <input
+                        data-testid={`vocab-edit-romaji-${index}`}
+                        value={reading.romaji}
+                        onChange={(event) => updateReading(reading.key, { romaji: event.target.value })}
+                        autoComplete="off"
+                        spellCheck={false}
+                      />
+                    </label>
+                    <label className="custom-word-wide">
+                      Значения
+                      <textarea
+                        data-testid={`vocab-edit-meanings-${index}`}
+                        value={reading.meanings}
+                        onChange={(event) => updateReading(reading.key, { meanings: event.target.value })}
+                        rows={2}
+                        autoComplete="off"
+                      />
+                    </label>
+                  </div>
+                  {editReadings.length > 1 ? (
+                    <button
+                      type="button"
+                      className="text-button"
+                      data-testid={`vocab-edit-remove-reading-${index}`}
+                      onClick={() =>
+                        setEditReadings((prev) => prev.filter((item) => item.key !== reading.key))
+                      }
+                    >
+                      Убрать это чтение
+                    </button>
+                  ) : null}
+                </fieldset>
+              ))}
             </div>
-            <div className="answer-actions">
-              <button
-                type="button"
-                className="hint-button"
-                data-testid="vocab-hint-button"
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={onRevealHint}
-              >
-                Подсказка
-              </button>
-              <p className="question-note">
-                <kbd>Space</kbd> — подсказка
-                {inputMode === 'submit' ? (
-                  <>
-                    {' · '}
-                    <kbd>Enter</kbd> — проверить
-                  </>
-                ) : (
-                  ' · автозачёт'
-                )}
-                {' · '}
-                <kbd>←</kbd>/<kbd>→</kbd> — пропуск
+
+            <button
+              type="button"
+              className="ghost-button"
+              data-testid="vocab-edit-add-reading"
+              onClick={() => setEditReadings((prev) => [...prev, createReadingDraft()])}
+            >
+              + Ещё чтение
+            </button>
+
+            {editError ? (
+              <p className="feedback is-error" role="alert">
+                {editError}
               </p>
+            ) : null}
+
+            <div className="vocab-card-editor-actions">
+              <button type="submit" className="secondary-button" data-testid="vocab-edit-save">
+                Сохранить
+              </button>
+              <button type="button" className="ghost-button" data-testid="vocab-edit-cancel" onClick={closeEditor}>
+                Отмена
+              </button>
+              {onDeleteWord ? (
+                <button
+                  type="button"
+                  className="ghost-button"
+                  data-testid="vocab-edit-delete"
+                  onClick={() => {
+                    if (window.confirm(`Удалить «${card.writing}» из словаря тренировок?`)) {
+                      onDeleteWord()
+                      closeEditor()
+                    }
+                  }}
+                >
+                  Удалить слово
+                </button>
+              ) : null}
             </div>
-          </>
+          </form>
         ) : (
           <>
-            <div className="vocab-choice-grid" data-testid="vocab-choice-grid">
-              {choiceOptions.map((option, index) => {
-                const isSelected = selectedChoice === option
-                const isCorrect = option === activeCard.meaning
-                const showResult = Boolean(selectedChoice)
-                let className = 'vocab-choice-button'
-                if (showResult && isCorrect) className += ' is-correct'
-                if (showResult && isSelected && !isCorrect) className += ' is-wrong'
-                return (
+            {drillMode === 'romaji' ? (
+              <>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className="answer-input"
+                  data-testid="vocab-answer-input"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  enterKeyHint={inputMode === 'submit' ? 'go' : 'done'}
+                  value={inputValue}
+                  onChange={onInputChange}
+                  onKeyDown={onInputKeyDown}
+                  placeholder={round.hintUsed ? activeCard.romaji : 'ромадзи'}
+                />
+                <div className="feedback-row">
+                  <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
+                </div>
+                <div className="answer-actions">
                   <button
-                    key={`${option}-${index}`}
                     type="button"
-                    className={className}
-                    data-testid={`vocab-choice-${index}`}
-                    disabled={Boolean(selectedChoice)}
-                    onClick={() => onChoose(option)}
+                    className="hint-button"
+                    data-testid="vocab-hint-button"
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={onRevealHint}
                   >
-                    {option}
+                    Подсказка
                   </button>
-                )
-              })}
+                  <ShortcutNote
+                    keyboard={
+                      <>
+                        <kbd>Space</kbd> — подсказка
+                        {inputMode === 'submit' ? (
+                          <>
+                            {' · '}
+                            <kbd>Enter</kbd> — проверить
+                          </>
+                        ) : (
+                          ' · автозачёт'
+                        )}
+                        {' · '}
+                        <kbd>←</kbd>/<kbd>→</kbd> — пропуск
+                      </>
+                    }
+                    swipe={
+                      <>
+                        Свайп вниз — подсказка
+                        {inputMode === 'submit' ? ' · вверх — проверить' : ' · автозачёт'}
+                        {' · '}
+                        влево/вправо — пропуск
+                      </>
+                    }
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="vocab-choice-grid" data-testid="vocab-choice-grid">
+                  {choiceOptions.map((option, index) => {
+                    const isSelected = selectedChoice === option
+                    const isCorrect = option === correctAnswer
+                    const showResult = Boolean(selectedChoice)
+                    let className = 'vocab-choice-button'
+                    if (showResult && isCorrect) className += ' is-correct'
+                    if (showResult && isSelected && !isCorrect) className += ' is-wrong'
+                    if (prompt?.kind === 'writing') className += ' is-writing'
+                    return (
+                      <button
+                        key={`${option}-${index}`}
+                        type="button"
+                        className={className}
+                        data-testid={`vocab-choice-${index}`}
+                        disabled={Boolean(selectedChoice)}
+                        onClick={() => onChoose(option)}
+                      >
+                        {option}
+                      </button>
+                    )
+                  })}
+                </div>
+                <div className="feedback-row">
+                  <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
+                </div>
+              </>
+            )}
+
+            <div className="vocab-skip-row" role="group" aria-label="Переход без ответа">
+              <button
+                type="button"
+                className="ghost-button"
+                data-testid="vocab-skip-prev"
+                disabled={!canGoPrev}
+                onClick={onSkipPrev}
+              >
+                ← Предыдущее
+              </button>
+              <button type="button" className="ghost-button" data-testid="vocab-skip-next" onClick={onSkipNext}>
+                Следующее →
+              </button>
             </div>
-            <div className="feedback-row">
-              <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
+
+            <div className="vocab-mine-row" role="group" aria-label="Карточка и набор">
+              {onSaveWordEdit ? (
+                <button
+                  type="button"
+                  className="ghost-button"
+                  data-testid="vocab-edit-card"
+                  onClick={openEditor}
+                >
+                  Изменить слово
+                </button>
+              ) : null}
+              {canAddSourceWord && onAddSourceWord ? (
+                <button
+                  type="button"
+                  className="ghost-button"
+                  data-testid="vocab-add-source-word"
+                  onClick={onAddSourceWord}
+                >
+                  + Слово из набора
+                </button>
+              ) : null}
+              {onAddCurrentToMyWords ? (
+                <button
+                  type="button"
+                  className="ghost-button"
+                  data-testid="vocab-add-current-to-mine"
+                  disabled={currentInMyWords}
+                  onClick={onAddCurrentToMyWords}
+                >
+                  {currentInMyWords ? 'Уже в моих словах' : 'Это слово в мои'}
+                </button>
+              ) : null}
+              {onToggleLearned ? (
+                <button
+                  type="button"
+                  className={currentLearned ? 'ghost-button is-learned-on' : 'ghost-button'}
+                  data-testid="vocab-toggle-learned"
+                  onClick={onToggleLearned}
+                >
+                  {currentLearned ? 'Выучено ✓' : 'Выучено'}
+                </button>
+              ) : null}
+              {showAddSessionToMyWords && onAddSessionToMyWords ? (
+                <button
+                  type="button"
+                  className="ghost-button"
+                  data-testid="vocab-add-session-to-mine"
+                  onClick={onAddSessionToMyWords}
+                >
+                  Набор в мои слова ({sessionWordCount})
+                </button>
+              ) : null}
             </div>
+
+            <p className="question-note vocab-skip-note hint-kbd">
+              Пропуск не влияет на статистику и очередь.
+            </p>
           </>
         )}
-
-        <div className="vocab-skip-row" role="group" aria-label="Переход без ответа">
-          <button
-            type="button"
-            className="ghost-button"
-            data-testid="vocab-skip-prev"
-            disabled={!canGoPrev}
-            onClick={onSkipPrev}
-          >
-            ← Предыдущее
-          </button>
-          <button type="button" className="ghost-button" data-testid="vocab-skip-next" onClick={onSkipNext}>
-            Следующее →
-          </button>
-        </div>
-        <p className="question-note vocab-skip-note">Пропуск не влияет на статистику и очередь.</p>
       </div>
     </PracticeShell>
   )

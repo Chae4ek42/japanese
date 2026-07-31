@@ -51,6 +51,11 @@ describe('cleanQuizGloss', () => {
     assert.equal(cleanQuizGloss(': {～に} (уст.) там'), 'там')
   })
 
+  it('отбрасывает голые конструкции и остаточный ～', () => {
+    assert.equal(cleanQuizGloss('{～に}'), null)
+    assert.equal(cleanQuizGloss('делать ～ вместе'), null)
+  })
+
   it('укорачивает длинные пояснения в скобках', () => {
     const long =
       'вы (обращение между посторонними, женщинами-подругами и жены к мужу)'

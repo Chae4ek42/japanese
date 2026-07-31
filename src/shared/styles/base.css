@@ -235,6 +235,72 @@
   .control-row .ghost-button {
     width: 100%;
   }
+
+  .practice-panel {
+    min-height: auto;
+  }
+
+  .practice-stage {
+    gap: 22px;
+    padding: 4px 0 max(20px, env(safe-area-inset-bottom));
+  }
+
+  .question-symbol {
+    font-size: clamp(3.4rem, 22vw, 5rem);
+    line-height: 1.05;
+  }
+
+  .selection-board {
+    grid-template-columns: 28px repeat(16, minmax(34px, 1fr));
+    min-width: 620px;
+    gap: 3px;
+  }
+
+  .selection-board-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    margin-inline: -4px;
+    padding-inline: 4px;
+  }
+}
+
+.hint-swipe {
+  display: none;
+}
+
+.hint-kbd {
+  display: inline;
+}
+
+@media (hover: none) and (pointer: coarse), (max-width: 820px) {
+  .hint-kbd {
+    display: none !important;
+  }
+
+  .hint-swipe {
+    display: inline !important;
+  }
+
+  .shortcut-note.question-note,
+  .shortcut-note.context-keys-hint,
+  .shortcut-note.kanji-word-hint {
+    line-height: 1.45;
+  }
+
+  .practice-panel.has-mobile-swipes .practice-stage,
+  .context-drill.has-mobile-swipes,
+  .kanji-trainer.has-mobile-swipes {
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .practice-panel.has-mobile-swipes .answer-input,
+  .practice-panel.has-mobile-swipes textarea {
+    user-select: text;
+    -webkit-user-select: text;
+  }
 }
 
 .topbar {
@@ -1560,13 +1626,15 @@ kbd {
   }
 
   .selection-board {
-    grid-template-columns: 40px repeat(16, minmax(48px, 1fr));
-    min-width: 860px;
+    grid-template-columns: 32px repeat(16, minmax(40px, 1fr));
+    min-width: 680px;
   }
 
   .selection-board-wrap {
     max-width: 100%;
     margin-inline: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .word-row {

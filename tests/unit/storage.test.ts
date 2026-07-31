@@ -21,25 +21,53 @@ function createLocalStorageMock(): Storage {
   }
 }
 
-globalThis.window = { localStorage: createLocalStorageMock() } as Window & typeof globalThis
+let sharedRaw: string | null = null
 
-const { createDefaultAppState, loadAppState, resetStoredState, saveAppState } = await import(
-  '../../src/shared/lib/storage'
-)
+globalThis.window = { localStorage: createLocalStorageMock() } as Window & typeof globalThis
+globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+  const url = String(input)
+  if (!url.includes('/api/app-state')) {
+    return new Response('not found', { status: 404 })
+  }
+  const method = (init?.method ?? 'GET').toUpperCase()
+  if (method === 'GET') {
+    if (!sharedRaw) return new Response(null, { status: 204 })
+    return new Response(sharedRaw, {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+  if (method === 'PUT' || method === 'POST') {
+    sharedRaw = String(init?.body ?? '')
+    return new Response(JSON.stringify({ ok: true }), { status: 200 })
+  }
+  if (method === 'DELETE') {
+    sharedRaw = null
+    return new Response(JSON.stringify({ ok: true }), { status: 200 })
+  }
+  return new Response('no', { status: 405 })
+}) as typeof fetch
+
+const {
+  bootstrapAppState,
+  createDefaultAppState,
+  loadAppState,
+  parseStoredState,
+  resetStoredState,
+  saveAppState,
+} = await import('../../src/shared/lib/storage')
 const { createStatsRecord } = await import('../../src/shared/lib/trainer')
 const { ALL_CARD_IDS } = await import('../../src/data/kana')
 
-const STORAGE_KEY = 'jp-app-state-v1'
-const LEGACY_STORAGE_KEY = 'kana-trainer-state-v1'
-
 describe('storage', () => {
   beforeEach(() => {
+    sharedRaw = null
     window.localStorage.clear()
   })
 
-  it('без сохранения возвращает дефолтное состояние версии 19', () => {
+  it('без сохранения возвращает дефолтное состояние', () => {
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 19)
+    assert.equal(state.version, 20)
     assert.equal(state.kana.preferences.mode, 'adaptive')
     assert.equal(state.numbers.preferences.mode, 'plain')
     assert.equal(state.numbers.preferences.rangeId, '99')
@@ -61,7 +89,7 @@ describe('storage', () => {
     assert.deepEqual(state.vocab.stats, {})
   })
 
-  it('сохранение и загрузка проходят круг', () => {
+  it('сохранение и загрузка через shared API проходят круг', async () => {
     const state = createDefaultAppState()
     state.numbers.preferences.mode = 'age'
     state.numbers.preferences.rangeId = '10'
@@ -104,9 +132,9 @@ describe('storage', () => {
       startedAt: 1,
       status: 'active',
     }
-    saveAppState(state)
+    await saveAppState(state)
 
-    const loaded = loadAppState(createDefaultAppState)
+    const loaded = await bootstrapAppState()
     assert.equal(loaded.numbers.preferences.mode, 'age')
     assert.equal(loaded.numbers.preferences.rangeId, '10')
     assert.equal(loaded.numbers.stats['age:5'].exposures, 3)
@@ -118,18 +146,19 @@ describe('storage', () => {
     assert.equal(loaded.vocab.preferences.drillMode, 'choice')
     assert.deepEqual(loaded.context.knownWordIds, ['1524720'])
     assert.equal(loaded.context.session?.pages[0]?.revealed, true)
-    assert.equal(window.localStorage.getItem(STORAGE_KEY) != null, true)
+    assert.ok(sharedRaw)
   })
 
-  it('мигрирует legacy storage key', () => {
+  it('мигрирует legacy localStorage в shared store', async () => {
     const legacy = createDefaultAppState()
     legacy.kana.preferences.mode = 'even'
-    window.localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify(legacy))
+    window.localStorage.setItem('kana-trainer-state-v1', JSON.stringify(legacy))
 
-    const state = loadAppState(createDefaultAppState)
+    const state = await bootstrapAppState()
     assert.equal(state.kana.preferences.mode, 'even')
-    assert.equal(window.localStorage.getItem(STORAGE_KEY) != null, true)
-    assert.equal(window.localStorage.getItem(LEGACY_STORAGE_KEY), null)
+    assert.ok(sharedRaw)
+    assert.equal(window.localStorage.getItem('kana-trainer-state-v1'), null)
+    assert.equal(window.localStorage.getItem('jp-app-state-v1'), null)
   })
 
   it('мигрирует v10, вкладывая kana', () => {
@@ -144,10 +173,8 @@ describe('storage', () => {
       },
       kanji: { learned: ['日'], preferences: { complexityFilter: false } },
     }
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
-
-    const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 19)
+    const state = parseStoredState(JSON.stringify(legacy))
+    assert.equal(state.version, 20)
     assert.equal(state.kana.preferences.scriptMode, 'katakana')
     assert.equal(state.kana.preferences.mode, 'even')
     assert.equal(state.kana.stats['katakana:shi'].clears, 7)
@@ -172,10 +199,8 @@ describe('storage', () => {
       },
       kanji: { learned: ['日'], preferences: { complexityFilter: true } },
     }
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
-
-    const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 19)
+    const state = parseStoredState(JSON.stringify(legacy))
+    assert.equal(state.version, 20)
     assert.deepEqual(state.kanji.learned, ['日'])
     assert.deepEqual(state.vocab.myWords, [])
     assert.equal(state.vocab.preferences.drillMode, 'romaji')
@@ -189,10 +214,8 @@ describe('storage', () => {
         stats: { 'age:20': { hints: 2 } },
       },
     }
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
-
-    const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 19)
+    const state = parseStoredState(JSON.stringify(legacy))
+    assert.equal(state.version, 20)
     assert.equal(state.numbers.preferences.mode, 'age')
     assert.equal(state.numbers.preferences.pickMode, 'even')
     assert.equal(state.numbers.stats['age:20'].hints, 2)
@@ -214,10 +237,8 @@ describe('storage', () => {
         stats: {},
       },
     }
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(legacy))
-
-    const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 19)
+    const state = parseStoredState(JSON.stringify(legacy))
+    assert.equal(state.version, 20)
     assert.equal(state.kana.preferences.scriptMode, 'katakana')
     assert.equal(state.kana.preferences.mode, 'even')
     assert.equal(state.kana.stats['katakana:shi'].clears, 7)
@@ -230,26 +251,39 @@ describe('storage', () => {
     nested.kana.preferences.mode = 'problem'
     nested.kana.stats['hiragana:a'].clears = 3
     nested.vocab.myWords = ['1000390']
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nested))
-
-    const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 19)
+    const state = parseStoredState(JSON.stringify(nested))
+    assert.equal(state.version, 20)
     assert.equal(state.kana.preferences.mode, 'problem')
     assert.equal(state.kana.stats['hiragana:a'].clears, 3)
     assert.deepEqual(state.vocab.myWords, ['1000390'])
     assert.deepEqual(state.vocab.customWords, {})
   })
 
-  it('битые данные не роняют приложение', () => {
-    window.localStorage.setItem(STORAGE_KEY, '{broken json')
-    const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 19)
+  it('v20: старый newWordLimit 0 (без лимита) становится −1', () => {
+    const legacy = createDefaultAppState()
+    legacy.version = 19
+    legacy.vocab.preferences.newWordLimit = 0
+    const state = parseStoredState(JSON.stringify(legacy))
+    assert.equal(state.version, 20)
+    assert.equal(state.vocab.preferences.newWordLimit, -1)
   })
 
-  it('reset удаляет сохранение', async () => {
-    saveAppState(createDefaultAppState())
+  it('v20: явный newWordLimit 0 сохраняется как 0 новых', async () => {
+    const state = createDefaultAppState()
+    state.vocab.preferences.newWordLimit = 0
+    await saveAppState(state)
+    const loaded = await bootstrapAppState()
+    assert.equal(loaded.vocab.preferences.newWordLimit, 0)
+  })
+
+  it('битые данные не роняют приложение', () => {
+    const state = parseStoredState('{broken json')
+    assert.equal(state.version, 20)
+  })
+
+  it('reset удаляет shared сохранение', async () => {
+    await saveAppState(createDefaultAppState())
     await resetStoredState()
-    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
-    assert.equal(window.localStorage.getItem(LEGACY_STORAGE_KEY), null)
+    assert.equal(sharedRaw, null)
   })
 })

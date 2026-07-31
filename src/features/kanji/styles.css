@@ -3,58 +3,6 @@
   min-width: 0;
 }
 
-@media (max-width: 860px) {
-  .kanji-page-head {
-    flex-direction: column;
-  }
-
-  .kanji-trainer-layout {
-    grid-template-columns: 1fr;
-    min-height: 0;
-  }
-
-  .kanji-panel {
-    min-height: 360px;
-  }
-}
-
-@media (max-width: 720px) {
-  .kanji-grid {
-    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-    gap: 6px;
-  }
-
-  .kanji-cell {
-    min-height: 72px;
-    padding: 8px 4px;
-  }
-
-  .kanji-cell-char {
-    font-size: 1.45rem;
-  }
-
-  .kanji-info-card {
-    width: min(100%, 420px);
-    max-height: min(88vh, 720px);
-    margin: 12px;
-    padding: 16px;
-    overflow: auto;
-  }
-
-  .kanji-word-actions,
-  .kanji-info-actions,
-  .kanji-trainer-actions {
-    flex-wrap: wrap;
-  }
-
-  .kanji-word-actions .primary-button,
-  .kanji-word-actions .ghost-button,
-  .kanji-trainer-actions .primary-button,
-  .kanji-trainer-actions .ghost-button {
-    flex: 1 1 calc(50% - 6px);
-  }
-}
-
 .kanji-page-head {
   display: flex;
   justify-content: space-between;
@@ -473,6 +421,9 @@
   cursor: pointer;
   font: inherit;
   transition: background 0.15s ease, border-color 0.15s ease;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .kanji-cell:hover {
@@ -979,6 +930,21 @@
   color: var(--muted);
 }
 
+@media (max-width: 860px) {
+  .kanji-page-head {
+    flex-direction: column;
+  }
+
+  .kanji-trainer-layout {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .kanji-panel {
+    min-height: 0;
+  }
+}
+
 @media (max-width: 720px) {
   .kanji-page {
     gap: 16px;
@@ -986,6 +952,20 @@
 
   .kanji-page-head {
     gap: 12px;
+  }
+
+  .kanji-grid {
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 6px;
+  }
+
+  .kanji-cell {
+    min-height: 72px;
+    padding: 8px 4px;
+  }
+
+  .kanji-cell-char {
+    font-size: 1.45rem;
   }
 
   .kanji-hero-char {
@@ -998,6 +978,32 @@
 
   .kanji-panel-footer {
     padding: 12px 14px 14px;
+  }
+
+  .kanji-word-actions,
+  .kanji-info-actions,
+  .kanji-trainer-actions {
+    flex-wrap: wrap;
+  }
+
+  .kanji-word-actions .primary-button,
+  .kanji-word-actions .ghost-button,
+  .kanji-trainer-actions .primary-button,
+  .kanji-trainer-actions .ghost-button {
+    flex: 1 1 calc(50% - 6px);
+  }
+
+  .kanji-word-nav .ghost-button,
+  .kanji-word-actions .ghost-button {
+    min-height: 44px;
+  }
+
+  .kanji-trainer-toolbar {
+    gap: 10px;
+  }
+
+  .kanji-trainer-filters {
+    width: 100%;
   }
 
   .kanji-info-overlay {

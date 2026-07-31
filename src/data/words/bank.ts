@@ -15,10 +15,14 @@ const levelByKanji: Record<string, number> = Object.fromEntries(KANJI_LIST.map((
 const componentById = new Map<string, KanjiComponent>(KANJI_COMPONENTS.map((item) => [item.id, item]))
 const wordsByKanjiMap = wordsByKanji as Record<string, number[]>
 const wordById = new Map<string, KanjiWord>()
+const wordsByWriting = new Map<string, KanjiWord[]>()
 for (const word of KANJI_WORDS) {
   if (word.id) {
     wordById.set(word.id, word)
   }
+  const writingList = wordsByWriting.get(word.writing)
+  if (writingList) writingList.push(word)
+  else wordsByWriting.set(word.writing, [word])
 }
 
 const jlptWordsCache = new Map<number | 'other', KanjiWord[]>()
@@ -83,6 +87,11 @@ export function getWordsForKanji(character: string): KanjiWord[] {
 export function getWordById(id: string | null | undefined): KanjiWord | null {
   if (!id) return null
   return wordById.get(id) ?? null
+}
+
+export function getWordsByWriting(writing: string | null | undefined): KanjiWord[] {
+  if (!writing) return []
+  return wordsByWriting.get(writing) ?? []
 }
 
 export function getWordsByIds(ids: string[]): KanjiWord[] {

@@ -17,6 +17,7 @@
   overflow: auto;
   padding-left: 18px;
   border-left: 1px solid var(--border);
+  min-width: 0;
 }
 
 .numbers-practice-layout {
@@ -67,6 +68,24 @@
   color: var(--muted);
   font-size: 0.9rem;
   letter-spacing: 0.02em;
+}
+
+@media (max-width: 960px) {
+  .numbers-setup-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .numbers-controls-panel {
+    position: static;
+  }
+
+  .numbers-cheat-sheet {
+    max-height: none;
+    padding-left: 0;
+    border-left: 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
 }
 
 @media (max-width: 720px) {

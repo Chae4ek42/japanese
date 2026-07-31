@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import type { FeedbackState, SessionStats } from '../lib/types'
+import { useSwipeGestures, type SwipeGestureHandlers } from '../lib/useSwipeGestures'
 import { SessionChips } from './SessionChips'
 
 export interface PracticeShellProps {
@@ -9,6 +10,9 @@ export interface PracticeShellProps {
   className?: string
   stageClassName?: string
   children?: ReactNode
+  /** Mobile swipe shortcuts (←→ Space Enter). Ignored on desktop. */
+  swipes?: SwipeGestureHandlers
+  swipesEnabled?: boolean
 }
 
 export function PracticeShell({
@@ -18,9 +22,16 @@ export function PracticeShell({
   className = '',
   stageClassName = '',
   children,
+  swipes,
+  swipesEnabled = true,
 }: PracticeShellProps) {
+  const stageRef = useRef<HTMLDivElement>(null)
+  const swipesActive = useSwipeGestures(stageRef, swipes ?? {}, Boolean(swipes) && swipesEnabled)
+
   return (
-    <section className={`practice-panel ${className}`.trim()}>
+    <section
+      className={`practice-panel ${swipesActive ? 'has-mobile-swipes' : ''} ${className}`.trim()}
+    >
       <div className="practice-topline">
         <button type="button" className="text-button" onClick={onStop}>
           ← К настройкам
@@ -29,7 +40,10 @@ export function PracticeShell({
       </div>
 
       <div className={`practice-layout ${stageClassName}`.trim()}>
-        <div className={`practice-stage ${feedbackType ? `is-${feedbackType}` : ''}`.trim()}>
+        <div
+          ref={stageRef}
+          className={`practice-stage ${feedbackType ? `is-${feedbackType}` : ''}`.trim()}
+        >
           {children}
         </div>
       </div>

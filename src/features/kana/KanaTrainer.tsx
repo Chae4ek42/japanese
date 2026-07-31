@@ -5,12 +5,16 @@ import { startTransition, useEffect, useMemo, useRef, useState } from 'react'
 import './styles.css'
 import { KANA_STATS_CARDS, buildPool } from '../../data/kana'
 import {
+  bumpSessionShow,
   createStatsRecord,
   evaluateInput,
   evaluateSubmission,
   pickNextCardId,
+  pushRecentCard,
   recordConfusion,
   recordHistoryEvent,
+  setCardCooldown,
+  successCooldownTurns,
   updateCardStats,
 } from '../../shared/lib/trainer'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
@@ -121,12 +125,14 @@ function KanaTrainerView({
 
   function revealNextCard(nextId: string, nextSession: PracticeSession) {
     const now = Date.now()
+    const shownSession = bumpSessionShow(nextSession, nextId)
+    sessionRef.current = shownSession
     startTransition(() => {
       resetRound(now)
       setCurrentCardId(nextId)
       setInputValue('')
       setFeedback({ type: 'idle', text: '' })
-      setSession(nextSession)
+      setSession(shownSession)
       onPracticeUpdate((prev) => ({
         stats: {
           ...prev.stats,
@@ -186,10 +192,11 @@ function KanaTrainerView({
     const now = Date.now()
     const activeRound = roundRef.current
     const currentSession = sessionRef.current
-    const nextSession = {
-      ...currentSession,
-      recentHistory: [...currentSession.recentHistory, activeCard.id].slice(-3),
-      lastCardId: activeCard.id,
+    const poolSize = activePool.length || currentSession.poolIds.length || 1
+    const clean = kind === 'correct' && activeRound.mistakes === 0
+
+    let nextSession: PracticeSession = {
+      ...pushRecentCard(currentSession, activeCard.id),
       mistakeQueue: currentSession.mistakeQueue.filter((id) => id !== activeCard.id),
     }
 
@@ -198,11 +205,17 @@ function KanaTrainerView({
         0,
         preferencesRef.current.hyperparams.queueSize,
       )
+    } else if (kind === 'correct') {
+      nextSession = setCardCooldown(
+        nextSession,
+        activeCard.id,
+        successCooldownTurns(poolSize, clean),
+      )
     }
 
-    const clean = kind === 'correct' && activeRound.mistakes === 0
     recordCleanAnswer(clean)
 
+    sessionRef.current = nextSession
     setSession(nextSession)
     onPracticeUpdate((prev) => ({
       stats: {
@@ -422,6 +435,7 @@ function KanaTrainerView({
       onInputChange={handleInputChange}
       onInputKeyDown={handleInputKeyDown}
       onRevealHint={revealHint}
+      onSubmitAnswer={handleSubmitAnswer}
       onStop={stopPractice}
       round={round}
       sessionStats={{ ...sessionStats, accuracy: sessionAccuracy }}

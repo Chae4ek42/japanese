@@ -1,9 +1,11 @@
 import type { KanjiPreferences, KanjiWordJlptLevel } from '../../shared/lib/types'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { getKanjiInfo, getPracticeWords, getWordsForKanji } from '../../data/words/bank'
 import { formatKanjiReadings } from '../../shared/lib/format'
 import { speakJapanese, speakKanjiReadings } from '../../shared/lib/speech'
+import { useSwipeGestures } from '../../shared/lib/useSwipeGestures'
 import { useWordCarousel } from '../../shared/lib/useWordCarousel'
+import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 import { GlossFootnotes } from './GlossFootnotes'
 import { HighlightedReading } from './HighlightedReading'
 import { KanjiComposition } from './KanjiComposition'
@@ -99,6 +101,15 @@ export function KanjiTrainer({
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [activeWord, next, prev, toggleReveal])
 
+  const swipeStageRef = useRef<HTMLElement>(null)
+  useSwipeGestures(swipeStageRef, {
+    onSwipeLeft: prev,
+    onSwipeRight: next,
+    onSwipeDown: () => {
+      if (activeWord) toggleReveal()
+    },
+  })
+
   function handleKanjiAuxClick(ch: string, event: React.MouseEvent<HTMLElement>) {
     if (event.button !== 1 || !isKanjiChar(ch)) return
     event.preventDefault()
@@ -106,7 +117,7 @@ export function KanjiTrainer({
   }
 
   return (
-    <section className="kanji-trainer" data-testid="kanji-trainer">
+    <section ref={swipeStageRef} className="kanji-trainer has-mobile-swipes" data-testid="kanji-trainer">
       <div className="kanji-trainer-toolbar">
         <button type="button" className="text-button" onClick={onBack}>
           ← Все кандзи
@@ -150,6 +161,7 @@ export function KanjiTrainer({
                 onOpenInfo?.(nextChar)
               }}
               onAuxClickCharacter={(event) => handleKanjiAuxClick(character, event)}
+              onLongPressCharacter={() => onOpenInfo?.(character)}
             />
             <ul className="kanji-hero-meanings-list">
               {(info?.meanings?.length ? info.meanings : ['—']).map((meaning) => (
@@ -269,7 +281,11 @@ export function KanjiTrainer({
                     </p>
                   </div>
                 ) : (
-                  <p className="kanji-word-hint">Пробел — показать или скрыть чтение и перевод</p>
+                  <ShortcutNote
+                    className="kanji-word-hint"
+                    keyboard={<>Пробел — показать или скрыть чтение и перевод · ←/→ слова</>}
+                    swipe={<>Свайп вниз — показать/скрыть · влево/вправо — слова</>}
+                  />
                 )}
               </div>
 

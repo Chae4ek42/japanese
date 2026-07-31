@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
-import '../../shared/styles/writing-hotspots.css'
+import { KanjiChip } from '../kanji/KanjiChip'
 import { isKanjiChar, splitWriting } from '../kanji/KanjiWritingHotspots'
+import '../../shared/styles/writing-hotspots.css'
 
 export interface ContextSentenceTextProps {
   text: string
@@ -59,24 +60,11 @@ function renderChars(
       )
     }
     return (
-      <button
+      <KanjiChip
         key={`${keyPrefix}-c-${index}`}
-        type="button"
-        data-kanji-chip
-        data-testid={`kanji-chip-${ch}`}
-        className="kanji-chip"
-        title={onOpenKanji ? 'Колёсико — карточка знака' : undefined}
-        onAuxClick={(event) => {
-          if (event.button !== 1 || !onOpenKanji) return
-          event.preventDefault()
-          onOpenKanji(ch)
-        }}
-        onMouseDown={(event) => {
-          if (event.button === 1) event.preventDefault()
-        }}
-      >
-        {ch}
-      </button>
+        character={ch}
+        onOpenInfo={onOpenKanji}
+      />
     )
   })
 }

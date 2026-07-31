@@ -17,10 +17,11 @@ import {
   buildNumberPool,
   ensureNumberStats,
 } from '../../data/numbers'
-import { pickNextCardId } from '../../shared/lib/trainer'
+import { bumpSessionShow, pickNextCardId, pushRecentCard, setCardCooldown, successCooldownTurns } from '../../shared/lib/trainer'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { useNumbersState } from '../../shared/state/AppStateContext'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
+import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 import { NumbersCheatSheet } from './NumbersCheatSheet'
 
 export function NumbersTrainer() {
@@ -121,8 +122,11 @@ function NumbersTrainerView({
 
   const modeLabel = NUMBER_MODES.find((mode) => mode.id === preferences.mode)?.label ?? 'Числа'
 
-  function showCard(cardId: string) {
+  function showCard(cardId: string, baseSession?: PracticeSession) {
     const now = Date.now()
+    const shownSession = bumpSessionShow(baseSession ?? sessionRef.current, cardId)
+    sessionRef.current = shownSession
+    setSession(shownSession)
     resetRound(now)
     setCurrentCardId(cardId)
     setRevealed(false)
@@ -144,8 +148,7 @@ function NumbersTrainerView({
     }
 
     const pickedFromQueue = nextSession.mistakeQueue.includes(nextId)
-    showCard(nextId)
-    setSession({
+    showCard(nextId, {
       ...nextSession,
       sinceQueuePick: pickedFromQueue ? 0 : (nextSession.sinceQueuePick ?? 0) + 1,
     })
@@ -191,18 +194,20 @@ function NumbersTrainerView({
 
     const now = Date.now()
     const activeRound = roundRef.current
-    const nextSession = {
-      ...session,
-      recentHistory: [...session.recentHistory, activeCard.id].slice(-3),
-      lastCardId: activeCard.id,
+    const poolSize = activePool.length || session.poolIds.length || 1
+    let nextSession = {
+      ...pushRecentCard(session, activeCard.id),
       mistakeQueue: session.mistakeQueue.filter((id) => id !== activeCard.id),
     }
 
     if (activeRound.hintUsed) {
       nextSession.mistakeQueue = [activeCard.id, ...nextSession.mistakeQueue].slice(0, NUMBER_HYPERPARAMS.queueSize)
+    } else {
+      nextSession = setCardCooldown(nextSession, activeCard.id, successCooldownTurns(poolSize, true))
     }
 
     recordAnswered(0)
+    sessionRef.current = nextSession
     setSession(nextSession)
     setFeedback({ type: 'success', text: '' })
     onUpdateStats(activeCard.id, 'hint', {
@@ -339,6 +344,10 @@ function NumbersTrainerView({
       onStop={stopPractice}
       sessionStats={{ ...sessionStats, accuracy: sessionAccuracy }}
       feedbackType={feedback.type}
+      swipes={{
+        onSwipeDown: handleSpace,
+        onSwipeUp: handleSpace,
+      }}
     >
       {activeCard ? (
         <>
@@ -361,7 +370,7 @@ function NumbersTrainerView({
                 <p className="numbers-romaji">{activeCard.romaji}</p>
               </div>
             ) : (
-              <p className="numbers-prompt">Вспомните чтение и нажмите пробел</p>
+              <p className="numbers-prompt">Вспомните чтение и свайпните вниз или нажмите «Показать»</p>
             )}
 
             <div className="feedback-row">
@@ -379,9 +388,14 @@ function NumbersTrainerView({
               >
                 {revealed ? 'Дальше' : 'Показать'}
               </button>
-              <p className="question-note">
-                <kbd>Space</kbd> — {revealed ? 'следующее' : 'показать'}
-              </p>
+              <ShortcutNote
+                keyboard={
+                  <>
+                    <kbd>Space</kbd> — {revealed ? 'следующее' : 'показать'}
+                  </>
+                }
+                swipe={<>Свайп вниз или вверх — {revealed ? 'следующее' : 'показать'}</>}
+              />
             </div>
           </div>
         </>

@@ -1,7 +1,10 @@
+import { useRef } from 'react'
 import type { ContextSentence, KanjiWord } from '../../shared/lib/types'
 import { kanaToRomaji } from '../../shared/lib/kana'
 import { pickQuizMeaning } from '../../shared/lib/jmdict-gloss'
 import { speakJapanese } from '../../shared/lib/speech'
+import { useSwipeGestures } from '../../shared/lib/useSwipeGestures'
+import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 import { ContextSentenceText } from './ContextSentenceText'
 
 export interface ContextPracticeProps {
@@ -53,6 +56,13 @@ export function ContextPractice({
   onToggleMyWord,
   onOpenKanji,
 }: ContextPracticeProps) {
+  const stageRef = useRef<HTMLElement>(null)
+  useSwipeGestures(stageRef, {
+    onSwipeLeft: onPrevSentence,
+    onSwipeRight: onNextSentence,
+    onSwipeDown: onReveal,
+  })
+
   const highlightWritings = sentenceNewWords
     .map((word) => word.writing || word.kana)
     .filter(Boolean)
@@ -61,7 +71,7 @@ export function ContextPractice({
   const activeNewIds = new Set(sentenceNewWords.map((word) => word.id).filter(Boolean))
 
   return (
-    <section className="context-drill" data-testid="context-drill">
+    <section ref={stageRef} className="context-drill has-mobile-swipes" data-testid="context-drill">
       <header className="context-drill-head">
         <div className="context-drill-head-copy">
           <p className="context-eyebrow">Тренировка</p>
@@ -184,10 +194,16 @@ export function ContextPractice({
               </button>
             </div>
 
-            <p className="context-keys-hint">
-              <kbd>←</kbd>
-              <kbd>→</kbd> предложения · <kbd>Space</kbd> перевод и чтение
-            </p>
+            <ShortcutNote
+              className="context-keys-hint"
+              keyboard={
+                <>
+                  <kbd>←</kbd>
+                  <kbd>→</kbd> предложения · <kbd>Space</kbd> перевод и чтение
+                </>
+              }
+              swipe={<>Свайп влево/вправо — предложения · вниз — перевод и чтение</>}
+            />
 
             {revealed ? (
               <div className="context-reveal-block">

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
   DEFAULT_HYPERPARAMS,
+  bumpSessionShow,
   createEmptyHistory,
   createInitialSession,
   createStatsRecord,
@@ -14,6 +15,8 @@ import {
   pickNextCardId,
   recordConfusion,
   recordHistoryEvent,
+  setCardCooldown,
+  successCooldownTurns,
   updateCardStats,
 } from '../../src/shared/lib/trainer'
 import { buildNumberPool } from '../../src/data/numbers'
@@ -125,6 +128,32 @@ describe('getAdaptiveWeight', () => {
     const recent = { ...stale, lastSeenAt: NOW - 30 * 60_000 }
     assert.ok(getAdaptiveWeight(stale, H, NOW) > getAdaptiveWeight(recent, H, NOW))
   })
+
+  it('хорошо знакомые карточки весят заметно меньше слабых', () => {
+    const known = {
+      ...createStatsRecord(),
+      exposures: 20,
+      clears: 18,
+      errors: 1,
+      mastery: 0.88,
+      streak: 3,
+      lastSeenAt: NOW - 60_000,
+      eventAccuracy: 95,
+      avgLatencyMs: 1100,
+    }
+    const weak = {
+      ...createStatsRecord(),
+      exposures: 6,
+      clears: 2,
+      errors: 4,
+      mastery: 0.28,
+      streak: 0,
+      lastSeenAt: NOW - 60_000,
+      eventAccuracy: 40,
+      avgLatencyMs: 3200,
+    }
+    assert.ok(getAdaptiveWeight(weak, H, NOW) > getAdaptiveWeight(known, H, NOW) * 5)
+  })
 })
 
 describe('getConfusionMultiplier', () => {
@@ -195,6 +224,128 @@ describe('pickNextCardId', () => {
 
   it('пустой пул дает null', () => {
     assert.equal(pickNextCardId([], {}, makeSession(), 'adaptive', H), null)
+  })
+
+  it('в сессии предпочитает ещё не показанные карточки', () => {
+    const pool = Array.from({ length: 8 }, (_, index) => ({ id: `card:${index}` }))
+    const statsMap = makeStatsMap(pool)
+    for (const card of pool) {
+      statsMap[card.id] = {
+        ...createStatsRecord(),
+        exposures: 5,
+        clears: 4,
+        mastery: 0.5,
+        eventAccuracy: 80,
+        lastSeenAt: NOW,
+      }
+    }
+    const session = makeSession({
+      recentHistory: [],
+      mistakeQueue: [],
+      sinceQueuePick: 0,
+      showCounts: {
+        'card:0': 4,
+        'card:1': 4,
+        'card:2': 3,
+        'card:3': 3,
+      },
+    })
+    const picks = new Map<string, number>()
+    for (let i = 0; i < 40; i += 1) {
+      const id = pickNextCardId(pool, statsMap, session, 'adaptive', H)
+      assert.ok(id)
+      picks.set(id!, (picks.get(id!) ?? 0) + 1)
+    }
+    const freshHits =
+      (picks.get('card:4') ?? 0) +
+      (picks.get('card:5') ?? 0) +
+      (picks.get('card:6') ?? 0) +
+      (picks.get('card:7') ?? 0)
+    const wornHits =
+      (picks.get('card:0') ?? 0) +
+      (picks.get('card:1') ?? 0) +
+      (picks.get('card:2') ?? 0) +
+      (picks.get('card:3') ?? 0)
+    assert.equal(wornHits, 0)
+    assert.equal(freshHits, 40)
+  })
+
+  it('после первого круга предпочитает слабые, а не выученные', () => {
+    const pool = Array.from({ length: 6 }, (_, index) => ({ id: `card:${index}` }))
+    const statsMap = makeStatsMap(pool)
+    for (let index = 0; index < 4; index += 1) {
+      statsMap[`card:${index}`] = {
+        ...createStatsRecord(),
+        exposures: 20,
+        clears: 18,
+        errors: 1,
+        mastery: 0.9,
+        streak: 4,
+        eventAccuracy: 95,
+        lastSeenAt: NOW,
+        avgLatencyMs: 1000,
+      }
+    }
+    statsMap['card:4'] = {
+      ...createStatsRecord(),
+      exposures: 8,
+      clears: 2,
+      errors: 5,
+      mastery: 0.25,
+      streak: 0,
+      eventAccuracy: 30,
+      lastSeenAt: NOW,
+      lastErrorAt: NOW - 60_000,
+      avgLatencyMs: 3500,
+    }
+    statsMap['card:5'] = {
+      ...createStatsRecord(),
+      exposures: 6,
+      clears: 1,
+      errors: 4,
+      mastery: 0.22,
+      streak: 0,
+      eventAccuracy: 25,
+      lastSeenAt: NOW,
+      lastErrorAt: NOW - 120_000,
+      avgLatencyMs: 4000,
+    }
+    const showCounts = Object.fromEntries(pool.map((card) => [card.id, 1]))
+    const session = makeSession({
+      recentHistory: [],
+      mistakeQueue: [],
+      sinceQueuePick: 0,
+      showCounts,
+    })
+    const picks = new Map<string, number>()
+    for (let i = 0; i < 60; i += 1) {
+      const id = pickNextCardId(pool, statsMap, session, 'adaptive', H)
+      assert.ok(id)
+      picks.set(id!, (picks.get(id!) ?? 0) + 1)
+    }
+    const weakHits = (picks.get('card:4') ?? 0) + (picks.get('card:5') ?? 0)
+    const knownHits =
+      (picks.get('card:0') ?? 0) +
+      (picks.get('card:1') ?? 0) +
+      (picks.get('card:2') ?? 0) +
+      (picks.get('card:3') ?? 0)
+    assert.ok(weakHits > knownHits * 3)
+  })
+
+  it('кулдаун после успеха убирает карточку из ближайших пиков', () => {
+    const pool = Array.from({ length: 5 }, (_, index) => ({ id: `card:${index}` }))
+    const statsMap = makeStatsMap(pool)
+    let session = makeSession({
+      showCounts: Object.fromEntries(pool.map((card) => [card.id, 1])),
+    })
+    session = setCardCooldown(session, 'card:0', successCooldownTurns(pool.length, true))
+    for (let i = 0; i < 20; i += 1) {
+      const id = pickNextCardId(pool, statsMap, session, 'adaptive', H, () => 0)
+      assert.notEqual(id, 'card:0')
+    }
+    session = bumpSessionShow(session, 'card:1')
+    // After enough ticks, cooldown can expire; just ensure helper decrements.
+    assert.ok((session.cooldowns?.['card:0'] ?? 0) < successCooldownTurns(pool.length, true))
   })
 })
 

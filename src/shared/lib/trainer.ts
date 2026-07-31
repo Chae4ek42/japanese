@@ -20,20 +20,28 @@ export const DEFAULT_HYPERPARAMS: Hyperparams = {
   masteryGain: 0.18,
   mistakePenalty: 0.24,
   hintPenalty: 0.16,
-  retireStreak: 6,
-  masteredWeight: 0.2,
+  retireStreak: 4,
+  masteredWeight: 0.04,
   recentMistakeBoost: 2.4,
-  recentMistakeHours: 12,
+  recentMistakeHours: 8,
   problemThreshold: 0.45,
-  queueSize: 4,
+  queueSize: 5,
   targetLatencyMs: 2500,
-  confusionBoost: 1.8,
-  unseenBoost: 2.8,
-  seenOnlyBoostRatio: 0.55,
-  staleBoost: 1.5,
-  staleAfterHours: 6,
-  staleRampHours: 18,
+  confusionBoost: 1.55,
+  unseenBoost: 4.2,
+  seenOnlyBoostRatio: 0.85,
+  staleBoost: 2.2,
+  staleAfterHours: 3,
+  staleRampHours: 12,
+  knownMasteryThreshold: 0.65,
+  sessionFreshBoost: 2.2,
+  weightTemperature: 0.55,
+  mistakeQueueGap: 2,
+  mistakeQueueChance: 0.62,
 }
+
+/** Keep enough history for anti-repeat across larger pools. */
+export const RECENT_HISTORY_LIMIT = 32
 
 const CONFUSION_RECENCY_MS = 30 * 60_000
 const RECENT_ANSWERS_LIMIT = 60
@@ -76,7 +84,62 @@ export function createInitialSession(
     mistakeQueue: [],
     sinceQueuePick: 0,
     mode: 'adaptive',
+    showCounts: {},
+    cooldowns: {},
     ...overrides,
+  }
+}
+
+/** Record that a card was answered / left — feeds anti-repeat in pickNextCardId. */
+export function pushRecentCard(session: PracticeSession, cardId: string): PracticeSession {
+  return {
+    ...session,
+    recentHistory: [...session.recentHistory, cardId].slice(-RECENT_HISTORY_LIMIT),
+    lastCardId: cardId,
+  }
+}
+
+/** Block a card for the next `turns` picks (after a clean success). */
+export function setCardCooldown(
+  session: PracticeSession,
+  cardId: string,
+  turns: number,
+): PracticeSession {
+  if (turns <= 0) return session
+  const cooldowns = { ...(session.cooldowns ?? {}) }
+  cooldowns[cardId] = Math.max(cooldowns[cardId] ?? 0, Math.floor(turns))
+  return { ...session, cooldowns }
+}
+
+/** Suggested cooldown length after a successful answer. */
+export function successCooldownTurns(poolSize: number, clean: boolean): number {
+  if (poolSize <= 2) return 0
+  if (clean) {
+    return Math.min(poolSize - 1, Math.max(3, Math.floor(poolSize * 0.55)))
+  }
+  return Math.min(poolSize - 1, Math.max(2, Math.floor(poolSize * 0.3)))
+}
+
+/**
+ * Tick cooldowns and bump show count when a card appears.
+ * Call this instead of bare bumpSessionShow when cooldowns are in use.
+ */
+export function bumpSessionShow(session: PracticeSession, cardId: string): PracticeSession {
+  const showCounts = { ...(session.showCounts ?? {}) }
+  showCounts[cardId] = (showCounts[cardId] ?? 0) + 1
+
+  const prevCooldowns = session.cooldowns ?? {}
+  const cooldowns: Record<string, number> = {}
+  for (const [id, remaining] of Object.entries(prevCooldowns)) {
+    if (id === cardId) continue
+    const next = remaining - 1
+    if (next > 0) cooldowns[id] = next
+  }
+
+  return {
+    ...session,
+    showCounts,
+    cooldowns,
   }
 }
 
@@ -199,25 +262,24 @@ export function getAdaptiveWeight(stats: StatsRecord, hyperparams: Hyperparams, 
   const totalEvents = stats.clears + stats.errors + stats.hints
   const recentFailureHours = stats.lastErrorAt ? (now - stats.lastErrorAt) / 3_600_000 : Number.POSITIVE_INFINITY
   const recentHintHours = stats.lastHintAt ? (now - stats.lastHintAt) / 3_600_000 : Number.POSITIVE_INFINITY
-  const recentMistakeBoost =
+  const hadRecentMiss =
     recentFailureHours <= hyperparams.recentMistakeHours ||
     recentHintHours <= hyperparams.recentMistakeHours
-      ? hyperparams.recentMistakeBoost
-      : 0
-  const accuracyPenalty = totalEvents === 0 ? 0.3 : (100 - stats.eventAccuracy) / 100
-  const slownessBoost = stats.avgLatencyMs
-    ? clamp(stats.avgLatencyMs / hyperparams.targetLatencyMs - 1, 0, 1.5) * 0.7
-    : 0
-  const streakReducer =
-    stats.streak >= hyperparams.retireStreak
-      ? hyperparams.masteredWeight
-      : 1 - Math.min(stats.streak, hyperparams.retireStreak - 1) * 0.06
 
+  const errorRate = totalEvents === 0 ? 0.35 : stats.errors / totalEvents
+  const accuracyGap = totalEvents === 0 ? 0.4 : (100 - stats.eventAccuracy) / 100
+  const slownessBoost = stats.avgLatencyMs
+    ? clamp(stats.avgLatencyMs / hyperparams.targetLatencyMs - 1, 0, 1.8) * 0.7
+    : 0
+
+  // Prefer cards never answered (even if briefly shown) over “seen-only”.
   let noveltyBoost = 0
-  if (stats.exposures === 0) {
+  if (totalEvents === 0 && stats.exposures === 0) {
     noveltyBoost = hyperparams.unseenBoost
   } else if (totalEvents === 0) {
     noveltyBoost = hyperparams.unseenBoost * hyperparams.seenOnlyBoostRatio
+  } else if (stats.clears <= 1 && stats.errors + stats.hints >= 1) {
+    noveltyBoost = 1.1
   } else if (stats.lastSeenAt > 0) {
     const hoursUnseen = (now - stats.lastSeenAt) / 3_600_000
     if (hoursUnseen >= hyperparams.staleAfterHours) {
@@ -225,17 +287,52 @@ export function getAdaptiveWeight(stats: StatsRecord, hyperparams: Hyperparams, 
     }
   }
 
-  return clamp(
-    (0.15 +
-      masteryGap ** 1.6 * 2.5 +
-      accuracyPenalty * 1.4 +
+  let knownPenalty = 1
+  const knownThreshold = hyperparams.knownMasteryThreshold ?? 0.65
+  if (stats.streak >= hyperparams.retireStreak && stats.mastery >= knownThreshold) {
+    knownPenalty = hyperparams.masteredWeight
+  } else if (stats.mastery >= knownThreshold && stats.eventAccuracy >= 80 && stats.clears >= 2) {
+    const over = clamp((stats.mastery - knownThreshold) / Math.max(1e-6, 1 - knownThreshold), 0, 1)
+    knownPenalty = 0.06 + (1 - over) * 0.14
+  } else if (stats.mastery >= 0.5 && stats.eventAccuracy >= 85 && stats.clears >= 3 && stats.streak >= 2) {
+    knownPenalty = 0.28
+  }
+
+  const streakReducer =
+    stats.streak >= hyperparams.retireStreak
+      ? hyperparams.masteredWeight
+      : 1 - Math.min(stats.streak, hyperparams.retireStreak - 1) * 0.16
+
+  const recentMissBoost = hadRecentMiss ? hyperparams.recentMistakeBoost : 0
+
+  // Polarized: weak/new cards dominate; comfortable cards nearly drop out.
+  const raw =
+    (0.08 +
+      masteryGap ** 2.4 * 4.2 +
+      errorRate * 2.4 +
+      accuracyGap * 1.35 +
       noveltyBoost +
-      recentMistakeBoost +
+      recentMissBoost +
       slownessBoost) *
-      streakReducer,
-    0.05,
-    9,
-  )
+    streakReducer *
+    knownPenalty
+
+  return clamp(raw, 0.01, 14)
+}
+
+export function getSessionShowCount(session: PracticeSession, cardId: string): number {
+  return session.showCounts?.[cardId] ?? 0
+}
+
+function recentAvoidCount(poolSize: number): number {
+  if (poolSize <= 2) return 0
+  if (poolSize <= 4) return 1
+  if (poolSize <= 8) return Math.min(3, poolSize - 1)
+  return Math.min(Math.max(5, Math.floor(poolSize * 0.4)), 20, poolSize - 1)
+}
+
+function isOnCooldown(session: PracticeSession, cardId: string): boolean {
+  return (session.cooldowns?.[cardId] ?? 0) > 0
 }
 
 export function getConfusionMultiplier(
@@ -291,19 +388,34 @@ export function pickNextCardId(
   }
 
   const now = Date.now()
-  const blocked = new Set(session.recentHistory)
+  const avoidN = recentAvoidCount(pool.length)
+  const blocked = new Set(session.recentHistory.slice(-avoidN))
   let candidates = pool.filter((card) => !blocked.has(card.id))
   if (!candidates.length) {
     candidates = pool
   }
 
-  if (session.mistakeQueue.length && session.sinceQueuePick >= 2) {
+  // Success cooldown: keep comfortable cards out unless nothing else is left.
+  const cooled = candidates.filter((card) => !isOnCooldown(session, card.id))
+  if (cooled.length) {
+    candidates = cooled
+  }
+
+  const queueGap = hyperparams.mistakeQueueGap ?? 2
+  const queueChance = hyperparams.mistakeQueueChance ?? 0.62
+  if (session.mistakeQueue.length && session.sinceQueuePick >= queueGap) {
     const queuedCard = session.mistakeQueue
-      .map((id) => candidates.find((card) => card.id === id))
-      .find(Boolean)
-    if (queuedCard && rng() < 0.5) {
+      .map((id) => candidates.find((card) => card.id === id) ?? pool.find((card) => card.id === id))
+      .find((card) => card && !blocked.has(card.id) && !isOnCooldown(session, card.id))
+    if (queuedCard && rng() < queueChance) {
       return queuedCard.id
     }
+  }
+
+  // Strict coverage: finish first pass of the pool before repeating (unless reviewing a mistake above).
+  const neverShown = candidates.filter((card) => getSessionShowCount(session, card.id) === 0)
+  if (neverShown.length) {
+    candidates = neverShown
   }
 
   if (mode === 'problem') {
@@ -319,19 +431,29 @@ export function pickNextCardId(
     return chooseRandomCard(candidates, rng).id
   }
 
-  return chooseWeightedCard(
-    candidates.map((card) => {
-      const base =
-        mode === 'problem'
-          ? getCardProblemScore(statsMap[card.id], hyperparams, now) + 0.2
-          : getAdaptiveWeight(statsMap[card.id], hyperparams, now)
-      return {
-        card,
-        weight: base * getConfusionMultiplier(card.id, statsMap, hyperparams, now),
-      }
-    }),
-    rng,
-  )?.id ?? null
+  const freshBoost = hyperparams.sessionFreshBoost ?? 2.2
+  const temperature = clamp(hyperparams.weightTemperature ?? 0.55, 0.25, 1.5)
+
+  return (
+    chooseWeightedCard(
+      candidates.map((card) => {
+        const stats = statsMap[card.id] ?? createStatsRecord()
+        const base =
+          mode === 'problem'
+            ? getCardProblemScore(stats, hyperparams, now) + 0.2
+            : getAdaptiveWeight(stats, hyperparams, now)
+        const shows = getSessionShowCount(session, card.id)
+        // After the first pass, heavily penalize cards already drilled this session.
+        const sessionFactor =
+          shows === 0 ? freshBoost : 1 / (1 + shows * 1.65) ** 1.25
+        const linear = Math.max(0.01, base * getConfusionMultiplier(card.id, statsMap, hyperparams, now) * sessionFactor)
+        // Temperature < 1 sharpens the distribution toward the weakest cards.
+        const weight = temperature >= 0.999 ? linear : linear ** (1 / temperature)
+        return { card, weight }
+      }),
+      rng,
+    )?.id ?? null
+  )
 }
 
 function chooseRandomCard<T extends PickableCard>(cards: T[], rng: () => number): T {

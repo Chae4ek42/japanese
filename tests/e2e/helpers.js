@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test'
 
 export async function openFreshApp(page) {
+  await page.request.delete('/api/app-state')
   await page.addInitScript(() => {
     window.localStorage.clear()
   })

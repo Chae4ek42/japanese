@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "build": "tsc --noEmit && vite build",
     "lint": "oxlint",
-    "preview": "vite preview",
+    "preview": "vite preview --host",
     "test:unit": "node --import tsx --test \"tests/unit/**/*.test.ts\"",
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run test:e2e",

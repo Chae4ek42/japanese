@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import { useIsMobileTouch } from '../../shared/lib/media'
+import { useLongPress } from '../../shared/lib/useLongPress'
 import {
   componentMatchKeys,
   extractStrokePathsSvg,
@@ -38,6 +40,8 @@ interface KanjiGlyphProps {
   /** Middle-click a component to open its card. */
   onActivateElement?: (element: string) => void
   onAuxClickCharacter?: (event: React.MouseEvent<HTMLElement>) => void
+  /** Mobile long-press opens the focused character card. */
+  onLongPressCharacter?: () => void
   size?: 'card' | 'hero'
   className?: string
   testId?: string
@@ -153,6 +157,7 @@ export function KanjiGlyph({
   onHoverElement,
   onActivateElement,
   onAuxClickCharacter,
+  onLongPressCharacter,
   size = 'card',
   className = '',
   testId = 'kanji-glyph',
@@ -160,6 +165,10 @@ export function KanjiGlyph({
   const hostRef = useRef<HTMLDivElement>(null)
   const [status, setStatus] = useState<'loading' | 'ready' | 'fallback'>('loading')
   const hoverRef = useRef<GlyphHoverInfo | null>(null)
+  const isMobile = useIsMobileTouch()
+  const longPress = useLongPress(onLongPressCharacter, {
+    enabled: isMobile && Boolean(onLongPressCharacter),
+  })
 
   useEffect(() => {
     const url = kanjivgSvgUrl(character)
@@ -266,9 +275,25 @@ export function KanjiGlyph({
     <div
       className={`kanji-glyph kanji-glyph-${size} ${status === 'ready' ? 'is-ready' : ''} ${className}`.trim()}
       data-testid={testId}
-      title={onActivateElement ? 'Колёсико по части знака — открыть карточку' : undefined}
-      onPointerMove={handlePointerMove}
+      data-character={character}
+      aria-label={character}
+      title={
+        onActivateElement || onLongPressCharacter
+          ? isMobile
+            ? 'Долгое нажатие — карточка знака'
+            : 'Колёсико по части знака — открыть карточку'
+          : undefined
+      }
+      onPointerDown={longPress.onPointerDown}
+      onPointerMove={(event) => {
+        longPress.onPointerMove(event)
+        handlePointerMove(event)
+      }}
+      onPointerUp={longPress.onPointerUp}
+      onPointerCancel={longPress.onPointerCancel}
       onPointerLeave={handlePointerLeave}
+      onContextMenu={longPress.onContextMenu}
+      onClickCapture={longPress.onClickCapture}
       onAuxClick={handleAuxClick}
       onMouseDown={(event) => {
         if (event.button === 1) event.preventDefault()

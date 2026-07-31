@@ -1,6 +1,7 @@
 import type { ChangeEvent, KeyboardEvent, RefObject } from 'react'
 import type { FeedbackState, InputMode, KanaCard, RoundState, SessionStats } from '../../shared/lib/types'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
+import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 
 export interface PracticePanelProps {
   activeCard: KanaCard | null
@@ -11,6 +12,7 @@ export interface PracticePanelProps {
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void
   onInputKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
   onRevealHint: () => void
+  onSubmitAnswer?: () => void
   onStop: () => void
   round: RoundState
   sessionStats: SessionStats & { accuracy?: number }
@@ -26,19 +28,26 @@ export function PracticePanel({
   onInputChange,
   onInputKeyDown,
   onRevealHint,
+  onSubmitAnswer,
   onStop,
   round,
   sessionStats,
   showScriptLabel = false,
 }: PracticePanelProps) {
   if (!activeCard) {
-    return (
-      <PracticeShell onStop={onStop} sessionStats={sessionStats} feedbackType={feedback.type} />
-    )
+    return <PracticeShell onStop={onStop} sessionStats={sessionStats} feedbackType={feedback.type} />
   }
 
   return (
-    <PracticeShell onStop={onStop} sessionStats={sessionStats} feedbackType={feedback.type}>
+    <PracticeShell
+      onStop={onStop}
+      sessionStats={sessionStats}
+      feedbackType={feedback.type}
+      swipes={{
+        onSwipeDown: onRevealHint,
+        onSwipeUp: inputMode === 'submit' ? onSubmitAnswer : undefined,
+      }}
+    >
       <div className="question-block">
         {showScriptLabel ? (
           <p className="script-badge" data-testid="card-script-label">
@@ -80,17 +89,27 @@ export function PracticePanel({
           >
             Подсказка
           </button>
-          <p className="question-note">
-            <kbd>Space</kbd> — подсказка
-            {inputMode === 'submit' ? (
+          <ShortcutNote
+            keyboard={
               <>
-                {' · '}
-                <kbd>Enter</kbd> — проверить
+                <kbd>Space</kbd> — подсказка
+                {inputMode === 'submit' ? (
+                  <>
+                    {' · '}
+                    <kbd>Enter</kbd> — проверить
+                  </>
+                ) : (
+                  ' · автозачёт'
+                )}
               </>
-            ) : (
-              ' · автозачёт'
-            )}
-          </p>
+            }
+            swipe={
+              <>
+                Свайп вниз — подсказка
+                {inputMode === 'submit' ? ' · вверх — проверить' : ' · автозачёт'}
+              </>
+            }
+          />
         </div>
       </div>
     </PracticeShell>

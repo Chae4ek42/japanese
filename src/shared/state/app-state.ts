@@ -12,8 +12,8 @@ import { sanitizeKanjiState } from './slices/kanji'
 import { DEFAULT_VOCAB_PREFERENCES, sanitizeVocabState } from './slices/vocab'
 import { DEFAULT_CONTEXT_PREFERENCES, sanitizeContextState } from './slices/context'
 
-export const CURRENT_VERSION = 19 as const
-export const KNOWN_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, CURRENT_VERSION]
+export const CURRENT_VERSION = 20 as const
+export const KNOWN_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, CURRENT_VERSION]
 
 export { DEFAULT_VOCAB_PREFERENCES, DEFAULT_CONTEXT_PREFERENCES }
 
@@ -51,6 +51,8 @@ export function createDefaultAppState(): AppState {
     vocab: {
       myWords: [],
       customWords: {},
+      hiddenWordIds: [],
+      learnedWordIds: [],
       preferences: { ...DEFAULT_VOCAB_PREFERENCES },
       stats: {},
     },
@@ -76,11 +78,18 @@ export function normalizeAppState(parsed: unknown): AppState | null {
   }
 
   const fallback = createDefaultAppState()
+  const fromVersion = typeof source.version === 'number' ? source.version : 0
   const legacyKana = source.kana && typeof source.kana === 'object' ? (source.kana as Record<string, unknown>) : null
   const kanaPreferences = sanitizeKanaPreferences(
     legacyKana?.preferences ?? source.preferences,
     fallback.kana.preferences,
   )
+
+  const vocab = sanitizeVocabState(source.vocab, fallback.vocab)
+  // v20: 0 used to mean “no limit”; now 0 = zero new words and -1 = no limit.
+  if (fromVersion < 20 && vocab.preferences.newWordLimit === 0) {
+    vocab.preferences = { ...vocab.preferences, newWordLimit: -1 }
+  }
 
   return {
     version: CURRENT_VERSION,
@@ -103,7 +112,7 @@ export function normalizeAppState(parsed: unknown): AppState | null {
       ),
     },
     kanji: sanitizeKanjiState(source.kanji, fallback.kanji),
-    vocab: sanitizeVocabState(source.vocab, fallback.vocab),
+    vocab,
     context: sanitizeContextState(source.context, fallback.context),
   }
 }

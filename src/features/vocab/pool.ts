@@ -7,8 +7,17 @@ import type {
 } from '../../shared/lib/types'
 import { normalizeQuizGlossKey, pickQuizMeaning } from '../../shared/lib/jmdict-gloss'
 import { getJlptWords } from '../../data/words/bank'
-import { resolveMyWords } from './customWords'
+import { applyLocalWordEdits, compareVocabStudyOrder, resolveMyWords } from './customWords'
 import { getWordsForGroup } from './groups'
+import { mergeWordsByWriting, wordReadings, wordVariantIds } from './mergeHomographs'
+
+export function isVocabWordLearned(
+  word: KanjiWord | { id?: string; variantIds?: string[]; readings?: { id?: string }[] },
+  learnedIds: Set<string> | Iterable<string>,
+): boolean {
+  const learned = learnedIds instanceof Set ? learnedIds : new Set(learnedIds)
+  return wordVariantIds(word as KanjiWord).some((id) => learned.has(id))
+}
 
 export function normalizeRomajiAnswer(value: string): string {
   return String(value ?? '')
@@ -19,40 +28,91 @@ export function normalizeRomajiAnswer(value: string): string {
 
 export function wordToVocabCard(word: KanjiWord): VocabCard | null {
   if (!word.id) return null
-  const romaji = normalizeRomajiAnswer(word.romaji)
-  if (!romaji) return null
-  const meaning = pickQuizMeaning(word.meanings)
+  const readings = wordReadings(word)
+  const answers = [
+    ...new Set(readings.map((reading) => normalizeRomajiAnswer(reading.romaji)).filter(Boolean)),
+  ]
+  if (!answers.length) return null
+  const meanings = [
+    ...new Set(readings.flatMap((reading) => reading.meanings).map((item) => item.trim()).filter(Boolean)),
+  ]
+  const meaning = pickQuizMeaning(meanings.length ? meanings : word.meanings)
   if (!meaning) return null
+  const variantIds = wordVariantIds(word)
   return {
     id: word.id,
     writing: word.writing,
-    kana: word.kana,
-    romaji: word.romaji,
-    answers: [romaji],
+    kana: readings.map((reading) => reading.kana).filter(Boolean).join(' / ') || word.kana,
+    romaji: readings.map((reading) => reading.romaji).filter(Boolean).join(' / ') || word.romaji,
+    answers,
     meaning,
-    meanings: word.meanings,
+    meanings,
     jlpt: word.jlpt,
+    readings,
+    variantIds: variantIds.length ? variantIds : [word.id],
   }
 }
 
-function isNewCard(cardId: string, stats: Record<string, StatsRecord>): boolean {
-  return (stats[cardId]?.exposures ?? 0) === 0
+function cardPracticeEvents(stats: StatsRecord | undefined): number {
+  if (!stats) return 0
+  return stats.clears + stats.errors + stats.hints
 }
 
-/** Keep all seen cards; add up to `limit` unseen. `limit <= 0` → no change. */
+/**
+ * A card is "started" only after a real answer (correct / wrong / hint).
+ * Mere `seen` exposures must not fill the review bucket — otherwise the new-word
+ * limit quickly becomes useless after browsing a group once.
+ */
+export function isStartedVocabCard(
+  card: Pick<VocabCard, 'id' | 'variantIds'>,
+  stats: Record<string, StatsRecord>,
+): boolean {
+  const ids = card.variantIds?.length ? card.variantIds : [card.id]
+  return ids.some((id) => cardPracticeEvents(stats[id]) > 0)
+}
+
+/** Keep all started cards; add up to `limit` untouched. `limit < 0` → no change. */
 export function limitNewVocabCards(
   cards: VocabCard[],
   stats: Record<string, StatsRecord>,
   limit: number,
 ): VocabCard[] {
-  if (!limit || limit <= 0) return cards
-  const seen: VocabCard[] = []
-  const unseen: VocabCard[] = []
+  if (limit < 0) return cards
+  const started: VocabCard[] = []
+  const untouched: VocabCard[] = []
   for (const card of cards) {
-    if (isNewCard(card.id, stats)) unseen.push(card)
-    else seen.push(card)
+    if (isStartedVocabCard(card, stats)) started.push(card)
+    else untouched.push(card)
   }
-  return [...seen, ...unseen.slice(0, limit)]
+  return [...started, ...untouched.slice(0, limit)]
+}
+
+function filterWordsByJlpt(words: KanjiWord[], levels: number[]): KanjiWord[] {
+  if (!levels.length) return words
+  const allow = new Set(levels)
+  const filtered: KanjiWord[] = []
+  for (const word of words) {
+    const readings = wordReadings(word).filter(
+      (reading) => typeof reading.jlpt === 'number' && allow.has(reading.jlpt),
+    )
+    if (!readings.length) continue
+    const meanings = [...new Set(readings.flatMap((reading) => reading.meanings))]
+    const variantIds = [
+      ...new Set(readings.map((reading) => reading.id).filter((id): id is string => Boolean(id))),
+    ]
+    const first = readings[0]!
+    filtered.push({
+      ...word,
+      id: word.id ?? first.id,
+      kana: readings.map((reading) => reading.kana).filter(Boolean).join(' / ') || word.kana,
+      romaji: readings.map((reading) => reading.romaji).filter(Boolean).join(' / ') || word.romaji,
+      meanings: meanings.length ? meanings : word.meanings,
+      readings,
+      variantIds: variantIds.length ? variantIds : wordVariantIds(word),
+      jlpt: readings.reduce((best, reading) => Math.max(best, reading.jlpt ?? 0), 0) || undefined,
+    })
+  }
+  return filtered
 }
 
 export function buildVocabPool(
@@ -62,25 +122,46 @@ export function buildVocabPool(
   {
     stats = {},
     applyNewWordLimit = true,
+    hiddenWordIds = [],
+    learnedWordIds = [],
   }: {
     stats?: Record<string, StatsRecord>
     /** When false, ignore `newWordLimit` (e.g. choice distractors). */
     applyNewWordLimit?: boolean
+    hiddenWordIds?: string[]
+    learnedWordIds?: string[]
   } = {},
 ): VocabCard[] {
   let words: KanjiWord[] = []
   if (preferences.source === 'mine') {
-    words = resolveMyWords(myWords, customWords)
+    words = resolveMyWords(myWords, customWords, hiddenWordIds)
+    if (preferences.mineIncludeLearned === false) {
+      const learned = new Set(learnedWordIds)
+      words = words.filter((word) => !isVocabWordLearned(word, learned))
+    }
   } else if (preferences.source === 'group') {
-    words = getWordsForGroup(preferences.groupId)
+    words = applyLocalWordEdits(
+      mergeWordsByWriting(getWordsForGroup(preferences.groupId)),
+      customWords,
+      hiddenWordIds,
+    )
+    if (!preferences.trainFullGroup) {
+      const mine = new Set(myWords)
+      words = words.filter((word) => !wordVariantIds(word).some((id) => mine.has(id)))
+    }
   } else {
-    words = getJlptWords(preferences.level as VocabLevelFilter)
+    words = applyLocalWordEdits(
+      mergeWordsByWriting(getJlptWords(preferences.level as VocabLevelFilter)),
+      customWords,
+      hiddenWordIds,
+    )
   }
 
   if (preferences.source !== 'level' && preferences.wordJlptLevels?.length) {
-    const allow = new Set(preferences.wordJlptLevels)
-    words = words.filter((word) => typeof word.jlpt === 'number' && allow.has(word.jlpt as 1 | 2 | 3 | 4 | 5))
+    words = filterWordsByJlpt(words, preferences.wordJlptLevels)
   }
+
+  words = [...words].sort(compareVocabStudyOrder)
 
   const cards: VocabCard[] = []
   const seen = new Set<string>()
@@ -91,10 +172,25 @@ export function buildVocabPool(
     cards.push(card)
   }
 
-  if (applyNewWordLimit) {
-    return limitNewVocabCards(cards, stats, preferences.newWordLimit ?? 0)
+  const newWordLimit = preferences.newWordLimit ?? -1
+  if (
+    applyNewWordLimit &&
+    preferences.source !== 'mine' &&
+    !(preferences.source === 'group' && preferences.trainFullGroup) &&
+    newWordLimit >= 0
+  ) {
+    return limitNewVocabCards(cards, stats, newWordLimit)
   }
   return cards
+}
+
+/** Next card from the ordered source pool that is not yet in the session. */
+export function pickNextSourceCard(
+  sourcePool: VocabCard[],
+  sessionPoolIds: string[],
+): VocabCard | null {
+  const inSession = new Set(sessionPoolIds)
+  return sourcePool.find((card) => !inSession.has(card.id)) ?? null
 }
 
 export function buildChoiceOptions(

@@ -8,6 +8,8 @@ import {
   getWordsForKanji,
   pickRandomUnlearnedKanji,
 } from '../../data/words/bank'
+import { useIsMobileTouch } from '../../shared/lib/media'
+import { useLongPress } from '../../shared/lib/useLongPress'
 import { useKanjiState, useVocabState } from '../../shared/state/AppStateContext'
 import { KanjiInfoCard } from './KanjiInfoCard'
 import { KanjiTrainer } from './KanjiTrainer'
@@ -29,6 +31,54 @@ function filterKanji(filter: KanjiFilter) {
   if (filter === 'all') return KANJI_LIST
   if (filter === 'joyo') return getJoyoKanji()
   return getKanjiByLevel(filter)
+}
+
+function KanjiGridCell({
+  character,
+  learned,
+  meaningsLabel,
+  levelLabel,
+  sampleCount,
+  onPractice,
+  onOpenInfo,
+}: {
+  character: string
+  learned: boolean
+  meaningsLabel: string
+  levelLabel?: string | null
+  sampleCount: number
+  onPractice: () => void
+  onOpenInfo: () => void
+}) {
+  const isMobile = useIsMobileTouch()
+  const longPress = useLongPress(onOpenInfo, { enabled: isMobile })
+  const title = isMobile
+    ? `${meaningsLabel} · ${sampleCount} слов · долгое нажатие — карточка`
+    : `${meaningsLabel} · ${sampleCount} слов · колёсико — карточка`
+
+  return (
+    <button
+      type="button"
+      data-testid={`kanji-cell-${character}`}
+      className={learned ? 'kanji-cell is-learned' : 'kanji-cell'}
+      title={title}
+      onClick={onPractice}
+      onAuxClick={(event) => {
+        if (event.button === 1) {
+          event.preventDefault()
+          onOpenInfo()
+        }
+      }}
+      onMouseDown={(event) => {
+        if (event.button === 1) event.preventDefault()
+      }}
+      {...longPress}
+    >
+      <span className="kanji-cell-char">{character}</span>
+      <span className="kanji-cell-meta">{meaningsLabel}</span>
+      {levelLabel ? <span className="kanji-cell-badge">{levelLabel}</span> : null}
+    </button>
+  )
 }
 
 export function KanjiPage() {
@@ -73,11 +123,6 @@ export function KanjiPage() {
       setInfoKanji(null)
       setFocusKanji(next.character)
     }
-  }
-
-  function openInfoCard(character: string, event: React.MouseEvent) {
-    event.preventDefault()
-    setInfoKanji(character)
   }
 
   function hideWordForFocus(wordId: string) {
@@ -140,7 +185,9 @@ export function KanjiPage() {
             <p className="subsection-note">
               {KANJI_BANK_META.counts.kanji} знаков
               {KANJI_BANK_META.counts.joyo ? ` · ${KANJI_BANK_META.counts.joyo} Jōyō` : ''} ·{' '}
-              {KANJI_BANK_META.counts.words} слов. Клик — практика · колёсико — карточка знака.
+              {KANJI_BANK_META.counts.words} слов.{' '}
+              <span className="hint-kbd">Клик — практика · колёсико — карточка знака.</span>
+              <span className="hint-swipe">Тап — практика · долгое нажатие — карточка знака.</span>
             </p>
           </div>
           <div className="kanji-page-actions">
@@ -190,31 +237,19 @@ export function KanjiPage() {
             {items.map((item) => {
               const learned = learnedSet.has(item.character)
               const sampleCount = getWordsForKanji(item.character).length
+              const meaningsLabel =
+                (item.meaningsRu ?? item.meanings)[0] ?? item.levelLabel ?? item.character
               return (
-                <button
+                <KanjiGridCell
                   key={item.character}
-                  type="button"
-                  data-testid={`kanji-cell-${item.character}`}
-                  className={learned ? 'kanji-cell is-learned' : 'kanji-cell'}
-                  title={`${(item.meaningsRu ?? item.meanings).join(', ')} · ${sampleCount} слов · колёсико — карточка`}
-                  onClick={() => setFocusKanji(item.character)}
-                  onAuxClick={(event) => {
-                    if (event.button === 1) {
-                      openInfoCard(item.character, event)
-                    }
-                  }}
-                  onMouseDown={(event) => {
-                    if (event.button === 1) {
-                      event.preventDefault()
-                    }
-                  }}
-                >
-                  <span className="kanji-cell-char">{item.character}</span>
-                  <span className="kanji-cell-meta">
-                    {(item.meaningsRu ?? item.meanings)[0] ?? item.levelLabel}
-                  </span>
-                  {item.levelLabel ? <span className="kanji-cell-badge">{item.levelLabel}</span> : null}
-                </button>
+                  character={item.character}
+                  learned={learned}
+                  meaningsLabel={meaningsLabel}
+                  levelLabel={item.levelLabel}
+                  sampleCount={sampleCount}
+                  onPractice={() => setFocusKanji(item.character)}
+                  onOpenInfo={() => setInfoKanji(item.character)}
+                />
               )
             })}
           </div>

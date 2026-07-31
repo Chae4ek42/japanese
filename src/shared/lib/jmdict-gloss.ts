@@ -73,14 +73,21 @@ const MAX_QUIZ_GLOSS_LEN = 52
 
 /**
  * Cleans a JMDict-RU gloss for multiple-choice labels.
- * Returns null when the gloss is unusable as a quiz option (cross-ref, Japanese-only, empty).
+ * Returns null when the gloss is unusable as a quiz option (cross-ref, Japanese-only,
+ * usage example / construction rather than a lexical meaning, empty).
  */
 export function cleanQuizGloss(raw: string): string | null {
-  let text = String(raw ?? '').trim()
-  if (!text) return null
+  const original = String(raw ?? '').trim()
+  if (!original) return null
 
   // Pure cross-references: "(см.) こちら", "(см.) みえる 4"
-  if (/^\(см\.\)/i.test(text)) return null
+  if (/^\(см\.\)/i.test(original)) return null
+  // Bare construction / example slots with no lexical gloss
+  if (/^\s*\{[^}]+\}\s*$/.test(original)) return null
+  // Example-like lines that are mostly Japanese after a label
+  if (/^(пример|употребл|напр\.?)/i.test(original)) return null
+
+  let text = original
 
   // Construction braces like {～へ}, {あのよう(～な)} — strip early so labels after them clean up
   text = text.replace(/\{[^}]*\}/g, ' ')
@@ -100,9 +107,15 @@ export function cleanQuizGloss(raw: string): string | null {
   if (!text) return null
   if (!CYR_CHAR.test(text)) return null
 
+  // Leftover usage placeholders are not meanings
+  if (/[～~]/.test(text)) return null
+
   const jpCount = (text.match(new RegExp(JP_CHAR.source, 'g')) || []).length
   const cyrCount = (text.match(new RegExp(CYR_CHAR.source, 'gi')) || []).length
   if (jpCount > 0 && jpCount >= cyrCount) return null
+
+  // Sentence / example leftovers (punctuation + length)
+  if (/[.!?。！？]/.test(text) && text.length > 18) return null
 
   // Prefer the headword when a long usage note makes the option obvious / noisy
   if (text.length > MAX_QUIZ_GLOSS_LEN) {
@@ -118,8 +131,19 @@ export function cleanQuizGloss(raw: string): string | null {
     }
   }
 
+  // Heavy "кто-л./что-л." frames without a short lexical head → skip for quiz
+  if (/кто-л|что-л|кого-л|чему-л|кем-л|чем-л/i.test(text) && text.length > 36) {
+    const head = text.split(/[,;，；]/)[0]?.trim()
+    if (head && head.length <= 24 && CYR_CHAR.test(head) && !/кто-л|что-л/i.test(head)) {
+      text = head
+    } else {
+      return null
+    }
+  }
+
   text = text.replace(/\s+/g, ' ').trim()
-  return text || null
+  if (!text || text.length < 1) return null
+  return text
 }
 
 /** First gloss that survives cleaning, or null if none are quiz-worthy. */

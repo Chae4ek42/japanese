@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
+  applyLocalWordEdits,
   buildCustomWord,
+  buildWordFromReadings,
+  createReadingDraft,
   extractKanjiChars,
   isCustomWordId,
   parseMeaningsInput,
@@ -55,6 +58,64 @@ describe('custom words', () => {
     assert.ok(word)
     assert.equal(word.id, 'custom:fixed-id')
     assert.equal(word.writing, '犬')
+  })
+
+  it('сохраняет bank id при правке словарного слова', () => {
+    const word = buildCustomWord({
+      id: '1311110',
+      writing: '私',
+      kana: 'わたし',
+      romaji: 'watashi',
+      meanings: 'я',
+    })
+    assert.ok(word)
+    assert.equal(word.id, '1311110')
+  })
+
+  it('собирает слово с несколькими чтениями', () => {
+    const word = buildWordFromReadings({
+      id: '1311110',
+      writing: '私',
+      readings: [
+        createReadingDraft({ id: 'a', kana: 'わたし', romaji: 'watashi', meanings: ['я'] }),
+        createReadingDraft({ id: 'b', kana: 'わたくし', romaji: 'watakushi', meanings: ['я (вежл.)'] }),
+      ],
+    })
+    assert.ok(word)
+    assert.equal(word.readings?.length, 2)
+    assert.equal(word.kana, 'わたし / わたくし')
+    assert.deepEqual(word.meanings, ['я', 'я (вежл.)'])
+  })
+
+  it('применяет правку с несколькими чтениями без схлопывания', () => {
+    const base = {
+      id: '1311110',
+      writing: '私',
+      kana: 'わたし / わたくし',
+      romaji: 'watashi / watakushi',
+      meanings: ['я'],
+      kanji: ['私'],
+      readings: [
+        { id: 'a', kana: 'わたし', romaji: 'watashi', meanings: ['я'] },
+        { id: 'b', kana: 'わたくし', romaji: 'watakushi', meanings: ['я (вежл.)'] },
+      ],
+      variantIds: ['a', 'b'],
+    }
+    const override = buildWordFromReadings({
+      id: '1311110',
+      writing: '私',
+      readings: [
+        createReadingDraft({ id: 'a', kana: 'わたし', romaji: 'watashi', meanings: ['я', 'меня'] }),
+        createReadingDraft({ id: 'b', kana: 'わたくし', romaji: 'watakushi', meanings: ['я (форм.)'] }),
+      ],
+      variantIds: ['a', 'b'],
+    })
+    assert.ok(override)
+    const [edited] = applyLocalWordEdits([base], { '1311110': override })
+    assert.ok(edited)
+    assert.equal(edited.readings?.length, 2)
+    assert.deepEqual(edited.readings?.[0]?.meanings, ['я', 'меня'])
+    assert.deepEqual(edited.readings?.[1]?.meanings, ['я (форм.)'])
   })
 
   it('резолвит свои слова в пуле mine', () => {
