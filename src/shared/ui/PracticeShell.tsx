@@ -9,6 +9,8 @@ export interface PracticeShellProps {
   feedbackType?: FeedbackState['type']
   className?: string
   stageClassName?: string
+  aside?: ReactNode
+  asideClassName?: string
   children?: ReactNode
   /** Mobile swipe shortcuts (←→ Space Enter). Ignored on desktop. */
   swipes?: SwipeGestureHandlers
@@ -21,6 +23,8 @@ export function PracticeShell({
   feedbackType = 'idle',
   className = '',
   stageClassName = '',
+  aside,
+  asideClassName = '',
   children,
   swipes,
   swipesEnabled = true,
@@ -39,13 +43,14 @@ export function PracticeShell({
         <SessionChips sessionStats={sessionStats} />
       </div>
 
-      <div className={`practice-layout ${stageClassName}`.trim()}>
+      <div className={`practice-layout ${aside ? 'has-aside' : ''} ${stageClassName}`.trim()}>
         <div
           ref={stageRef}
           className={`practice-stage ${feedbackType ? `is-${feedbackType}` : ''}`.trim()}
         >
           {children}
         </div>
+        {aside ? <aside className={`practice-aside ${asideClassName}`.trim()}>{aside}</aside> : null}
       </div>
     </section>
   )

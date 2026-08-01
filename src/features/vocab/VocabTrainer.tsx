@@ -13,7 +13,13 @@ import {
 } from '../../shared/lib/trainer'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { getWordById, getWordsByWriting } from '../../data/words/bank'
-import { buildVocabPool, isStartedVocabCard, normalizeRomajiAnswer, pickNextSourceCard, wordToVocabCard } from './pool'
+import {
+  buildVocabPool,
+  normalizeRomajiAnswer,
+  pickNextSourceCard,
+  pickWeightedVocabCardId,
+  wordToVocabCard,
+} from './pool'
 import { mergeWordsByWriting } from './mergeHomographs'
 import { buildMeaningPrompt, buildMixedPrompt, type VocabMixedPrompt } from './mixed'
 import { VocabPractice } from './VocabPractice'
@@ -64,6 +70,7 @@ export function VocabTrainer({
     view,
     setView,
     viewRef,
+    session,
     setSession,
     sessionRef,
     round,
@@ -98,11 +105,13 @@ export function VocabTrainer({
   const currentCardIdRef = useRef<string | null>(null)
   const navHistoryRef = useRef<string[]>([])
   const navIndexRef = useRef(-1)
+  const [sessionWeightMultipliers, setSessionWeightMultipliers] = useState<Record<string, number>>({})
+  const [selectedWeightCardId, setSelectedWeightCardId] = useState<string | null>(null)
 
   const poolOpts = { hiddenWordIds, learnedWordIds }
   const activePool = useMemo(
-    () => buildVocabPool(preferences, myWords, customWords, { stats, applyNewWordLimit: true, ...poolOpts }),
-    [preferences, myWords, customWords, hiddenWordIds, learnedWordIds, stats],
+    () => buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: true, ...poolOpts }),
+    [preferences, myWords, customWords, hiddenWordIds, learnedWordIds],
   )
   const sourcePool = useMemo(
     () => buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: false, ...poolOpts }),
@@ -122,6 +131,15 @@ export function VocabTrainer({
     return wordToVocabCard(merged[0] ?? word)
   }, [currentCardId, activePool, sourcePool, customWords])
 
+  const practicePool = useMemo(() => {
+    if (view !== 'practice' || !session.poolIds.length) {
+      return activePool
+    }
+    const allow = new Set(session.poolIds)
+    const practice = sourcePool.filter((card) => allow.has(card.id))
+    return practice.length ? practice : activePool
+  }, [activePool, sourcePool, session.poolIds, view])
+
   useEffect(() => {
     preferencesRef.current = preferences
     statsRef.current = stats
@@ -138,6 +156,20 @@ export function VocabTrainer({
   useEffect(() => {
     currentCardIdRef.current = currentCardId
   }, [currentCardId])
+
+  useEffect(() => {
+    if (view !== 'practice' || !practicePool.length) {
+      return
+    }
+    setSelectedWeightCardId((prev) => {
+      if (prev && practicePool.some((card) => card.id === prev)) {
+        return prev
+      }
+      return currentCardIdRef.current && practicePool.some((card) => card.id === currentCardIdRef.current)
+        ? currentCardIdRef.current
+        : practicePool[0]?.id ?? null
+    })
+  }, [practicePool, view])
 
   useEffect(() => {
     if (view === 'practice' && preferences.drillMode === 'romaji') {
@@ -248,11 +280,46 @@ export function VocabTrainer({
       if (frozen.length) return frozen
     }
     return buildVocabPool(prefs, myWordsRef.current, customWordsRef.current, {
-      stats: statsRef.current,
       applyNewWordLimit: true,
       hiddenWordIds: hiddenWordIdsRef.current,
       learnedWordIds: learnedWordIdsRef.current,
     })
+  }
+
+  function resetSessionWeights() {
+    setSessionWeightMultipliers({})
+  }
+
+  function setSessionWeight(cardId: string, multiplier: number) {
+    const clamped = Math.min(3, Math.max(0, Math.round(multiplier * 100) / 100))
+    setSessionWeightMultipliers((prev) => {
+      const next = { ...prev }
+      if (Math.abs(clamped - 1) < 0.01) {
+        delete next[cardId]
+      } else {
+        next[cardId] = clamped
+      }
+      return next
+    })
+  }
+
+  function pickNextVocabCardId(pool: VocabCard[], currentCardId: string | null, session: PracticeSession) {
+    if (preferencesRef.current.pickMode === 'even') {
+      return pickWeightedVocabCardId(pool, {
+        excludeIds: currentCardId ? [currentCardId] : [],
+        weightMultipliers: sessionWeightMultipliers,
+      })
+    }
+
+    return pickNextCardId(
+      pool,
+      statsWithDefaults(pool),
+      session,
+      preferencesRef.current.pickMode,
+      DEFAULT_HYPERPARAMS,
+      Math.random,
+      { weightMultipliers: sessionWeightMultipliers },
+    )
   }
 
   function getDistractorPool() {
@@ -275,13 +342,7 @@ export function VocabTrainer({
     const optionsPool = distractorPool.length >= 6 ? distractorPool : pool
 
     const nextSession = nextSessionOverride ?? sessionRef.current
-    const nextId = pickNextCardId(
-      pool,
-      statsWithDefaults(pool),
-      nextSession,
-      preferencesRef.current.pickMode,
-      DEFAULT_HYPERPARAMS,
-    )
+    const nextId = pickNextVocabCardId(pool, currentCardIdRef.current, nextSession)
     if (!nextId) {
       setView('setup')
       setCurrentCardId(null)
@@ -331,13 +392,7 @@ export function VocabTrainer({
     const currentId = currentCardIdRef.current
     const session = sessionRef.current
     const pickSession: PracticeSession = currentId ? pushRecentCard(session, currentId) : session
-    const nextId = pickNextCardId(
-      pool,
-      statsWithDefaults(pool),
-      pickSession,
-      preferencesRef.current.pickMode,
-      DEFAULT_HYPERPARAMS,
-    )
+    const nextId = pickNextVocabCardId(pool, currentId, pickSession)
     if (!nextId || nextId === currentId) {
       if (pool.length < 2) return
       const fallback = pool.find((card) => card.id !== currentId)
@@ -363,6 +418,8 @@ export function VocabTrainer({
       return
     }
 
+    resetSessionWeights()
+    setSelectedWeightCardId(null)
     navHistoryRef.current = []
     navIndexRef.current = -1
     setCanGoPrev(false)
@@ -380,6 +437,8 @@ export function VocabTrainer({
     setInputValue('')
     setCurrentPrompt(null)
     setSelectedChoice(null)
+    resetSessionWeights()
+    setSelectedWeightCardId(null)
     navHistoryRef.current = []
     navIndexRef.current = -1
     setCanGoPrev(false)
@@ -567,6 +626,16 @@ export function VocabTrainer({
     }
     setSession(nextSession)
     sessionRef.current = nextSession
+    setSessionWeightMultipliers((prev) => {
+      if (!(cardId in prev)) return prev
+      const next = { ...prev }
+      delete next[cardId]
+      return next
+    })
+    setSelectedWeightCardId((prev) => {
+      if (prev !== cardId) return prev
+      return nextSession.poolIds[0] ?? null
+    })
 
     navHistoryRef.current = navHistoryRef.current.filter((id) => id !== cardId)
     if (navIndexRef.current >= navHistoryRef.current.length) {
@@ -742,11 +811,134 @@ export function VocabTrainer({
     (preferences.source === 'group' || preferences.source === 'level') &&
     Boolean(pickNextSourceCard(sourcePool, sessionRef.current.poolIds ?? []))
 
-  const startedCount = useMemo(
-    () => activePool.filter((card) => isStartedVocabCard(card, stats)).length,
-    [activePool, stats],
-  )
-  const newInPoolCount = activePool.length - startedCount
+  const pickModeOptions = [
+    {
+      id: 'adaptive' as const,
+      label: 'Адаптивный',
+      hint: 'Сильнее тянет слабые и новые слова, но текущие веса тоже учитываются.',
+    },
+    {
+      id: 'even' as const,
+      label: 'Равномерный',
+      hint: 'Все слова равны, если для них не задано отдельное значение.',
+    },
+  ]
+
+  const selectedWeightCard =
+    practicePool.find((card) => card.id === selectedWeightCardId) ?? practicePool[0] ?? null
+  const selectedWeightValue =
+    selectedWeightCard && sessionWeightMultipliers[selectedWeightCard.id] !== undefined
+      ? sessionWeightMultipliers[selectedWeightCard.id]
+      : 1
+  const selectedWeightPercent = Math.round(selectedWeightValue * 100)
+  const practiceSidebar =
+    view === 'practice' ? (
+      <div className="panel controls-panel setup-surface vocab-session-panel" data-testid="vocab-session-sidebar">
+        <div className="control-group">
+          <span className="group-label">Подбор</span>
+          <div className="segmented">
+            {pickModeOptions.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                className={preferences.pickMode === option.id ? 'segmented-button is-active' : 'segmented-button'}
+                data-testid={`vocab-session-pick-${option.id}`}
+                onClick={() => onPatchPreferences({ pickMode: option.id })}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+          <p className="control-hint">{pickModeOptions.find((item) => item.id === preferences.pickMode)?.hint}</p>
+        </div>
+
+        <div className="control-group">
+          <div className="vocab-session-head">
+            <span className="group-label">Вероятности слов</span>
+            <button
+              type="button"
+              className="text-button"
+              data-testid="vocab-session-reset-weights"
+              onClick={resetSessionWeights}
+            >
+              Сбросить все
+            </button>
+          </div>
+          <p className="control-hint">0% исключает слово из текущей тренировки. 100% - обычный вес.</p>
+
+          {selectedWeightCard ? (
+            <div className="vocab-weight-editor" data-testid="vocab-session-weight-editor">
+              <div className="vocab-weight-editor-head">
+                <div className="vocab-weight-editor-copy">
+                  <p className="vocab-weight-writing">{selectedWeightCard.writing}</p>
+                  <p className="vocab-weight-meaning">{selectedWeightCard.meaning}</p>
+                </div>
+                <span className="vocab-weight-badge" data-testid="vocab-session-weight-value">
+                  {selectedWeightPercent}%
+                </span>
+              </div>
+
+              <input
+                type="range"
+                min="0"
+                max="300"
+                step="10"
+                value={selectedWeightPercent}
+                data-testid="vocab-session-weight-slider"
+                onChange={(event) => {
+                  if (!selectedWeightCard) return
+                  setSessionWeight(selectedWeightCard.id, Number(event.target.value) / 100)
+                }}
+              />
+
+              <div className="vocab-weight-editor-actions">
+                <button type="button" className="ghost-button" onClick={() => setSessionWeight(selectedWeightCard.id, 0)}>
+                  0%
+                </button>
+                <button type="button" className="ghost-button" onClick={() => setSessionWeight(selectedWeightCard.id, 1)}>
+                  100%
+                </button>
+                <button type="button" className="ghost-button" onClick={() => setSessionWeight(selectedWeightCard.id, 2)}>
+                  200%
+                </button>
+              </div>
+            </div>
+          ) : (
+            <p className="control-hint">Сначала запустите тренировку.</p>
+          )}
+
+          <div className="vocab-weight-list" role="list" aria-label="Слова текущей тренировки">
+            {practicePool.map((card) => {
+              const weightValue = sessionWeightMultipliers[card.id] ?? 1
+              const weightPercent = Math.round(weightValue * 100)
+              const selected = selectedWeightCard?.id === card.id
+              return (
+                <button
+                  key={card.id}
+                  type="button"
+                  role="listitem"
+                  className={
+                    selected
+                      ? card.id === currentCardId
+                        ? 'vocab-weight-item is-active is-current'
+                        : 'vocab-weight-item is-active'
+                      : card.id === currentCardId
+                        ? 'vocab-weight-item is-current'
+                        : 'vocab-weight-item'
+                  }
+                  data-testid={`vocab-session-word-${card.id}`}
+                  onClick={() => setSelectedWeightCardId(card.id)}
+                >
+                  <span className="vocab-weight-item-writing">{card.writing}</span>
+                  <span className="vocab-weight-item-weight">{weightPercent}%</span>
+                  <span className="vocab-weight-item-meaning">{card.meaning}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    ) : null
 
   if (view === 'setup') {
     return (
@@ -754,8 +946,6 @@ export function VocabTrainer({
         preferences={preferences}
         poolCount={activePool.length}
         sourcePoolCount={sourcePool.length}
-        startedCount={startedCount}
-        newInPoolCount={newInPoolCount}
         myWordsCount={myWords.length}
         myWordIds={myWords}
         errorText={feedback.type === 'error' ? feedback.text : ''}
@@ -813,6 +1003,7 @@ export function VocabTrainer({
       onSaveWordEdit={onSaveWordEdit ? handleSaveWordEdit : undefined}
       onDeleteWord={onHideWords ? handleDeleteCurrentWord : undefined}
       onOpenKanjiInfo={onOpenKanjiInfo}
+      aside={practiceSidebar}
     />
   )
 }

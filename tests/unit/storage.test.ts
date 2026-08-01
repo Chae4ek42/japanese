@@ -21,32 +21,7 @@ function createLocalStorageMock(): Storage {
   }
 }
 
-let sharedRaw: string | null = null
-
 globalThis.window = { localStorage: createLocalStorageMock() } as Window & typeof globalThis
-globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
-  const url = String(input)
-  if (!url.includes('/api/app-state')) {
-    return new Response('not found', { status: 404 })
-  }
-  const method = (init?.method ?? 'GET').toUpperCase()
-  if (method === 'GET') {
-    if (!sharedRaw) return new Response(null, { status: 204 })
-    return new Response(sharedRaw, {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-  if (method === 'PUT' || method === 'POST') {
-    sharedRaw = String(init?.body ?? '')
-    return new Response(JSON.stringify({ ok: true }), { status: 200 })
-  }
-  if (method === 'DELETE') {
-    sharedRaw = null
-    return new Response(JSON.stringify({ ok: true }), { status: 200 })
-  }
-  return new Response('no', { status: 405 })
-}) as typeof fetch
 
 const {
   bootstrapAppState,
@@ -54,6 +29,7 @@ const {
   loadAppState,
   parseStoredState,
   resetStoredState,
+  STORAGE_KEY,
   saveAppState,
 } = await import('../../src/shared/lib/storage')
 const { createStatsRecord } = await import('../../src/shared/lib/trainer')
@@ -61,7 +37,6 @@ const { ALL_CARD_IDS } = await import('../../src/data/kana')
 
 describe('storage', () => {
   beforeEach(() => {
-    sharedRaw = null
     window.localStorage.clear()
   })
 
@@ -89,7 +64,7 @@ describe('storage', () => {
     assert.deepEqual(state.vocab.stats, {})
   })
 
-  it('сохранение и загрузка через shared API проходят круг', async () => {
+  it('сохранение и загрузка через localStorage проходят круг', async () => {
     const state = createDefaultAppState()
     state.numbers.preferences.mode = 'age'
     state.numbers.preferences.rangeId = '10'
@@ -146,19 +121,18 @@ describe('storage', () => {
     assert.equal(loaded.vocab.preferences.drillMode, 'choice')
     assert.deepEqual(loaded.context.knownWordIds, ['1524720'])
     assert.equal(loaded.context.session?.pages[0]?.revealed, true)
-    assert.ok(sharedRaw)
+    assert.ok(window.localStorage.getItem(STORAGE_KEY))
   })
 
-  it('мигрирует legacy localStorage в shared store', async () => {
+  it('мигрирует legacy localStorage в новый ключ', async () => {
     const legacy = createDefaultAppState()
     legacy.kana.preferences.mode = 'even'
     window.localStorage.setItem('kana-trainer-state-v1', JSON.stringify(legacy))
 
     const state = await bootstrapAppState()
     assert.equal(state.kana.preferences.mode, 'even')
-    assert.ok(sharedRaw)
+    assert.equal(window.localStorage.getItem(STORAGE_KEY), JSON.stringify(state))
     assert.equal(window.localStorage.getItem('kana-trainer-state-v1'), null)
-    assert.equal(window.localStorage.getItem('jp-app-state-v1'), null)
   })
 
   it('мигрирует v10, вкладывая kana', () => {
@@ -260,9 +234,17 @@ describe('storage', () => {
   })
 
   it('v20: старый newWordLimit 0 (без лимита) становится −1', () => {
-    const legacy = createDefaultAppState()
-    legacy.version = 19
-    legacy.vocab.preferences.newWordLimit = 0
+    const legacy = {
+      ...createDefaultAppState(),
+      version: 19,
+      vocab: {
+        ...createDefaultAppState().vocab,
+        preferences: {
+          ...createDefaultAppState().vocab.preferences,
+          newWordLimit: 0,
+        },
+      },
+    }
     const state = parseStoredState(JSON.stringify(legacy))
     assert.equal(state.version, 20)
     assert.equal(state.vocab.preferences.newWordLimit, -1)
@@ -281,9 +263,9 @@ describe('storage', () => {
     assert.equal(state.version, 20)
   })
 
-  it('reset удаляет shared сохранение', async () => {
+  it('reset удаляет localStorage сохранение', async () => {
     await saveAppState(createDefaultAppState())
     await resetStoredState()
-    assert.equal(sharedRaw, null)
+    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
   })
 })

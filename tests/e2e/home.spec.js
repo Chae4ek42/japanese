@@ -30,7 +30,6 @@ test('header navigates to kana trainer', async ({ page }) => {
 })
 
 test('deep links open sections from URL', async ({ page }) => {
-  await page.request.delete('/api/app-state')
   await page.addInitScript(() => {
     window.localStorage.clear()
   })

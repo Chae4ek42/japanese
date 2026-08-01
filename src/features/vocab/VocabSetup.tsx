@@ -43,10 +43,6 @@ export interface VocabSetupProps {
   preferences: VocabPreferences
   poolCount: number
   sourcePoolCount: number
-  /** Cards kept because they already have answers (clears/errors/hints). */
-  startedCount?: number
-  /** Untouched cards included under the new-word limit. */
-  newInPoolCount?: number
   myWordsCount: number
   myWordIds?: string[]
   errorText?: string
@@ -59,8 +55,6 @@ export function VocabSetup({
   preferences,
   poolCount,
   sourcePoolCount,
-  startedCount,
-  newInPoolCount,
   myWordsCount,
   myWordIds = [],
   errorText = '',
@@ -149,7 +143,8 @@ export function VocabSetup({
           <p className="control-hint">
             {trainFullGroup
               ? 'В набор входят все слова группы, в том числе уже добавленные в «Мои слова».'
-              : 'По умолчанию — только слова, которых ещё нет в «Моих словах».'}
+              : 'По умолчанию — только слова, которых ещё нет в «Моих словах».'
+            }
           </p>
           <div className="vocab-group-grid vocab-setup-groups">
             {VOCAB_GROUPS.map((group) => {
@@ -164,9 +159,7 @@ export function VocabSetup({
                 >
                   <span className="vocab-group-label">{group.label}</span>
                   <span className="vocab-group-count">
-                    {trainFullGroup
-                      ? group.wordIds.length
-                      : `${remaining}/${group.wordIds.length}`}
+                    {trainFullGroup ? group.wordIds.length : `${remaining}/${group.wordIds.length}`}
                   </span>
                 </button>
               )
@@ -216,7 +209,7 @@ export function VocabSetup({
 
       {preferences.source === 'mine' || (preferences.source === 'group' && trainFullGroup) ? null : (
         <div className="control-group">
-          <span className="group-label">Новых слов за раз</span>
+          <span className="group-label">Слов за раз</span>
           <label className="vocab-number-field">
             <input
               type="number"
@@ -250,11 +243,10 @@ export function VocabSetup({
                 setNewLimitDraft(null)
               }}
             />
-            <span>−1 = без лимита</span>
+            <span>-1 = без лимита</span>
           </label>
           <p className="control-hint">
-            В тренировку входят все уже отвеченные слова и не больше указанного числа ещё не тронутых (0 — только
-            начатые, −1 — без лимита). Простой показ без ответа не считается «начатым».
+            В тренировке будет не больше указанного количества слов. -1 — без лимита.
           </p>
         </div>
       )}
@@ -300,9 +292,7 @@ export function VocabSetup({
       <p className="control-hint" data-testid="vocab-pool-count">
         {poolCount === sourcePoolCount
           ? `${poolCount} слов в наборе`
-          : typeof startedCount === 'number' && typeof newInPoolCount === 'number'
-            ? `${startedCount} начатых + ${newInPoolCount} новых · ${poolCount} в тренировке из ${sourcePoolCount}`
-            : `${poolCount} в тренировке из ${sourcePoolCount} в наборе`}
+          : `${poolCount} в тренировке из ${sourcePoolCount} в наборе`}
       </p>
 
       <div className="primary-actions">

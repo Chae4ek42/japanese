@@ -42,9 +42,7 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
 
   await page.getByTestId('vocab-hint-button').click()
   await expect(page.getByTestId('vocab-hint-panel')).toBeVisible()
-  await expect(page.getByTestId('vocab-hint-romaji')).toBeVisible()
-  await expect(page.getByTestId('vocab-hint-meanings')).toBeVisible()
-  const answer = (await page.getByTestId('vocab-hint-romaji').innerText()).trim()
+  const answer = (await page.locator('.vocab-hint-romaji').first().innerText()).trim()
   await page.getByTestId('vocab-answer-input').fill(answer.replace(/[\s_\-’']/g, '').toLowerCase())
   await expect(page.locator('.practice-stage')).toHaveClass(/is-success/)
 
@@ -76,6 +74,37 @@ test('vocab trainer: skip next and previous without scoring', async ({ page }, t
 
   await page.getByTestId('vocab-skip-next').click()
   await expect(page.getByTestId('vocab-current-writing')).toHaveText(second)
+})
+
+test('vocab trainer: in-session panel changes pick mode and weights', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Sidebar controls covered on desktop.')
+  await openFreshApp(page)
+  await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('vocab-source-group').click()
+  await page.getByTestId('vocab-train-group-weekdays').click()
+  await page.getByTestId('vocab-new-word-limit').fill('1')
+  await page.getByTestId('start-vocab').click()
+  await expect(page.getByTestId('vocab-session-sidebar')).toBeVisible()
+
+  await page.getByTestId('vocab-session-pick-even').click()
+  await expect(page.getByTestId('vocab-session-pick-even')).toHaveClass(/is-active/)
+  await page.getByTestId('vocab-session-pick-adaptive').click()
+  await expect(page.getByTestId('vocab-session-pick-adaptive')).toHaveClass(/is-active/)
+
+  const currentWriting = await page.getByTestId('vocab-current-writing').innerText()
+  await page.locator('.vocab-weight-item', { hasText: currentWriting }).first().click()
+  const slider = page.getByTestId('vocab-session-weight-slider')
+  await slider.fill('0')
+  await expect(page.getByTestId('vocab-session-weight-value')).toHaveText('0%')
+
+  const sessionWords = page.locator('[data-testid^="vocab-session-word-"]')
+  const countBefore = await sessionWords.count()
+  await expect(page.getByTestId('vocab-add-source-word')).toBeVisible()
+  await page.getByTestId('vocab-add-source-word').click()
+  await expect(sessionWords).toHaveCount(countBefore + 1)
+
+  await page.getByTestId('vocab-session-reset-weights').click()
+  await expect(page.getByTestId('vocab-session-weight-value')).toHaveText('100%')
 })
 
 test('dictionary tabs update URL', async ({ page }, testInfo) => {

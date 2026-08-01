@@ -1,9 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { sharedAppStatePlugin } from './vite-plugin-shared-app-state'
 
 export default defineConfig({
-  plugins: [react(), sharedAppStatePlugin()],
+  plugins: [react()],
   server: {
     host: true,
     port: 5173,

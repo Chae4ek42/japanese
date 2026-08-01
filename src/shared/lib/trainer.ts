@@ -382,6 +382,7 @@ export function pickNextCardId(
   mode: KanaPickMode | NumbersPickMode,
   hyperparams: Hyperparams,
   rng: () => number = Math.random,
+  options?: { weightMultipliers?: Record<string, number> },
 ): string | null {
   if (!pool.length) {
     return null
@@ -446,9 +447,10 @@ export function pickNextCardId(
         // After the first pass, heavily penalize cards already drilled this session.
         const sessionFactor =
           shows === 0 ? freshBoost : 1 / (1 + shows * 1.65) ** 1.25
-        const linear = Math.max(0.01, base * getConfusionMultiplier(card.id, statsMap, hyperparams, now) * sessionFactor)
+        const multiplier = options?.weightMultipliers?.[card.id] ?? 1
+        const linear = base * getConfusionMultiplier(card.id, statsMap, hyperparams, now) * sessionFactor * Math.max(0, multiplier)
         // Temperature < 1 sharpens the distribution toward the weakest cards.
-        const weight = temperature >= 0.999 ? linear : linear ** (1 / temperature)
+        const weight = linear <= 0 || temperature >= 0.999 ? linear : linear ** (1 / temperature)
         return { card, weight }
       }),
       rng,

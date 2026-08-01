@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent, type KeyboardEvent, type RefObject } from 'react'
+import { useEffect, useState, type ChangeEvent, type FormEvent, type KeyboardEvent, type ReactNode, type RefObject } from 'react'
 import type {
   FeedbackState,
   RoundState,
@@ -51,6 +51,7 @@ export interface VocabPracticeProps {
   onSaveWordEdit?: (word: KanjiWord) => void
   onDeleteWord?: () => void
   onOpenKanjiInfo?: (character: string) => void
+  aside?: ReactNode
 }
 
 function drillBadge(drillMode: VocabDrillMode, prompt: VocabMixedPrompt | null): string {
@@ -91,6 +92,7 @@ export function VocabPractice({
   onSaveWordEdit,
   onDeleteWord,
   onOpenKanjiInfo,
+  aside,
 }: VocabPracticeProps) {
   const [editing, setEditing] = useState(false)
   const [editWriting, setEditWriting] = useState('')
@@ -160,6 +162,9 @@ export function VocabPractice({
       sessionStats={sessionStats}
       feedbackType={feedback.type}
       swipes={swipeHandlers}
+      aside={aside}
+      asideClassName="vocab-practice-aside"
+      stageClassName="vocab-practice-layout"
     >
       <div className="question-block">
         <p className="script-badge" data-testid="vocab-prompt-badge">

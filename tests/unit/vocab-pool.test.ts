@@ -1,16 +1,16 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
+import { getJlptWords } from '../../src/data/words/bank'
 import { DEFAULT_VOCAB_PREFERENCES } from '../../src/shared/state/app-state'
-import { createStatsRecord } from '../../src/shared/lib/trainer'
 import {
   buildChoiceOptions,
   buildVocabPool,
-  isStartedVocabCard,
   normalizeRomajiAnswer,
   pickNextSourceCard,
+  pickWeightedVocabCardId,
+  pickUniformVocabCardId,
   wordToVocabCard,
 } from '../../src/features/vocab/pool'
-import { getJlptWords } from '../../src/data/words/bank'
 
 describe('vocab pool', () => {
   it('нормализует ромадзи для ответа', () => {
@@ -95,7 +95,7 @@ describe('vocab pool', () => {
     assert.ok(full.some((card) => card.id === mineId))
   })
 
-  it('trainFullGroup игнорирует лимит новых слов', () => {
+  it('trainFullGroup игнорирует лимит слов', () => {
     const all = buildVocabPool(
       {
         ...DEFAULT_VOCAB_PREFERENCES,
@@ -119,12 +119,12 @@ describe('vocab pool', () => {
       },
       [],
       {},
-      { stats: {}, applyNewWordLimit: true },
+      { applyNewWordLimit: true },
     )
     assert.equal(limited.length, all.length)
   })
 
-  it('ограничивает число новых слов', () => {
+  it('лимит слов режет пул целиком', () => {
     const base = buildVocabPool(
       { ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5, newWordLimit: -1 },
       [],
@@ -132,80 +132,30 @@ describe('vocab pool', () => {
       { applyNewWordLimit: false },
     )
     assert.ok(base.length > 10)
-    const startedId = base[0]!.id
-    const stats = {
-      [startedId]: { ...createStatsRecord(), exposures: 5, clears: 2, eventAccuracy: 100 },
-      [base[1]!.id]: { ...createStatsRecord(), exposures: 4 },
-    }
     const limited = buildVocabPool(
-      { ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5, newWordLimit: 5 },
+      { ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5, newWordLimit: 6 },
       [],
       {},
-      { stats, applyNewWordLimit: true },
+      { applyNewWordLimit: true },
     )
-    const startedInPool = limited.filter((card) => isStartedVocabCard(card, stats))
-    const newInPool = limited.filter((card) => !isStartedVocabCard(card, stats))
-    assert.equal(startedInPool.length, 1)
-    assert.equal(newInPool.length, 5)
-    assert.ok(limited.some((card) => card.id === startedId))
     assert.equal(limited.length, 6)
+    assert.deepEqual(
+      limited.map((card) => card.id),
+      base.slice(0, 6).map((card) => card.id),
+    )
   })
 
-  it('лимит 0 — только уже начатые слова, без новых', () => {
-    const base = buildVocabPool(
-      { ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5, newWordLimit: -1 },
-      [],
-      {},
-      { applyNewWordLimit: false },
-    )
-    const startedId = base[0]!.id
-    const stats = {
-      [startedId]: { ...createStatsRecord(), clears: 1, eventAccuracy: 100 },
-    }
+  it('лимит 0 дает пустой пул', () => {
     const limited = buildVocabPool(
       { ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5, newWordLimit: 0 },
       [],
       {},
-      { stats, applyNewWordLimit: true },
+      { applyNewWordLimit: true },
     )
-    assert.equal(limited.length, 1)
-    assert.equal(limited[0]!.id, startedId)
+    assert.equal(limited.length, 0)
   })
 
-  it('не считает «начатыми» слова только с exposures без ответов', () => {
-    const base = buildVocabPool(
-      {
-        ...DEFAULT_VOCAB_PREFERENCES,
-        source: 'group',
-        groupId: 'family',
-        newWordLimit: -1,
-        trainFullGroup: true,
-      },
-      [],
-      {},
-      { applyNewWordLimit: false },
-    )
-    assert.ok(base.length >= 4)
-    const stats = Object.fromEntries(
-      base.map((card) => [card.id, { ...createStatsRecord(), exposures: 3 }]),
-    )
-    const limited = buildVocabPool(
-      {
-        ...DEFAULT_VOCAB_PREFERENCES,
-        source: 'group',
-        groupId: 'family',
-        newWordLimit: 2,
-        trainFullGroup: false,
-      },
-      [],
-      {},
-      { stats, applyNewWordLimit: true },
-    )
-    assert.equal(limited.length, 2)
-    assert.ok(limited.every((card) => !isStartedVocabCard(card, stats)))
-  })
-
-  it('для группы держит стабильный порядок N5→N1 и одинаковый набор новых', () => {
+  it('для группы держит стабильный порядок N5→N1 и одинаковый набор', () => {
     const prefs = {
       ...DEFAULT_VOCAB_PREFERENCES,
       source: 'group' as const,
@@ -213,8 +163,8 @@ describe('vocab pool', () => {
       newWordLimit: 3,
       trainFullGroup: true,
     }
-    const a = buildVocabPool(prefs, [], {}, { stats: {}, applyNewWordLimit: true })
-    const b = buildVocabPool(prefs, [], {}, { stats: {}, applyNewWordLimit: true })
+    const a = buildVocabPool(prefs, [], {}, { applyNewWordLimit: true })
+    const b = buildVocabPool(prefs, [], {}, { applyNewWordLimit: true })
     assert.deepEqual(
       a.map((card) => card.id),
       b.map((card) => card.id),
@@ -250,6 +200,36 @@ describe('vocab pool', () => {
     assert.equal(next?.id, full[2]!.id)
   })
 
+  it('uniform picker chooses from the full pool without bias to the first card', () => {
+    const pool = [{ id: 'word:1' }, { id: 'word:2' }, { id: 'word:3' }]
+    assert.equal(pickUniformVocabCardId(pool, { rng: () => 0 }), 'word:1')
+    assert.equal(pickUniformVocabCardId(pool, { rng: () => 0.51 }), 'word:2')
+    assert.equal(pickUniformVocabCardId(pool, { rng: () => 0.99 }), 'word:3')
+  })
+
+  it('uniform picker honors the current-card exclusion', () => {
+    const pool = [{ id: 'word:1' }, { id: 'word:2' }, { id: 'word:3' }]
+    assert.equal(pickUniformVocabCardId(pool, { excludeIds: ['word:1'], rng: () => 0 }), 'word:2')
+    assert.equal(pickUniformVocabCardId(pool, { excludeIds: ['word:1', 'word:2'], rng: () => 0 }), 'word:3')
+    assert.equal(pickUniformVocabCardId([{ id: 'word:1' }], { excludeIds: ['word:1'], rng: () => 0 }), 'word:1')
+  })
+
+  it('weighted picker respects per-word multipliers', () => {
+    const pool = [{ id: 'word:1' }, { id: 'word:2' }, { id: 'word:3' }]
+    assert.equal(
+      pickWeightedVocabCardId(pool, { weightMultipliers: { 'word:2': 2 }, rng: () => 0.6 }),
+      'word:2',
+    )
+    assert.equal(
+      pickWeightedVocabCardId(pool, { weightMultipliers: { 'word:1': 0, 'word:2': 0, 'word:3': 0 }, rng: () => 0.1 }),
+      'word:1',
+    )
+    assert.equal(
+      pickWeightedVocabCardId(pool, { excludeIds: ['word:2'], weightMultipliers: { 'word:2': 3 }, rng: () => 0.1 }),
+      'word:1',
+    )
+  })
+
   it('для mine можно исключить выученные', () => {
     const custom = {
       id: 'custom:a',
@@ -277,7 +257,7 @@ describe('vocab pool', () => {
   it('строит 6 вариантов перевода с одним верным', () => {
     const words = getJlptWords(5).slice(0, 20)
     const cards = words.map(wordToVocabCard).filter((card): card is NonNullable<typeof card> => Boolean(card))
-    const target = cards[0]
+    const target = cards[0]!
     const options = buildChoiceOptions(target, cards, { rng: () => 0.1 })
     assert.equal(options.length, 6)
     assert.equal(options.filter((item) => item === target.meaning).length, 1)
@@ -287,7 +267,7 @@ describe('vocab pool', () => {
     const cards = [
       wordToVocabCard({
         id: 'a',
-        writing: '貴方',
+        writing: 'あなた',
         kana: 'あなた',
         romaji: 'anata',
         meanings: ['вы (обращение между посторонними, женщинами-подругами и жены к мужу)'],
@@ -296,7 +276,7 @@ describe('vocab pool', () => {
       }),
       wordToVocabCard({
         id: 'b',
-        writing: '此方',
+        writing: 'こちら',
         kana: 'こちら',
         romaji: 'kochira',
         meanings: ['(см.) こちら'],
@@ -359,5 +339,32 @@ describe('vocab pool', () => {
     const options = buildChoiceOptions(target, cards, { rng: () => 0 })
     assert.ok(options.includes('вы'))
     assert.ok(!options.some((o) => /\(см\.\)/.test(o) || /^\d+\)/.test(o) || /\(прост\.\)/.test(o)))
+  })
+
+  it('создает карточку из слова', () => {
+    const card = wordToVocabCard({
+      id: 'test',
+      writing: '猫',
+      kana: 'ねこ',
+      romaji: 'neko',
+      meanings: ['кошка'],
+      kanji: ['猫'],
+    })
+    assert.equal(card?.id, 'test')
+  })
+
+  it('не меняет порядок при одинаковом лимите', () => {
+    const prefs = {
+      ...DEFAULT_VOCAB_PREFERENCES,
+      source: 'level' as const,
+      level: 5 as const,
+      newWordLimit: 3,
+    }
+    const a = buildVocabPool(prefs, [], {}, { applyNewWordLimit: true })
+    const b = buildVocabPool(prefs, [], {}, { applyNewWordLimit: true })
+    assert.deepEqual(
+      a.map((card) => card.id),
+      b.map((card) => card.id),
+    )
   })
 })

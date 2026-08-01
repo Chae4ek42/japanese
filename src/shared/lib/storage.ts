@@ -7,9 +7,10 @@ import type { AppState } from './types'
 
 export { createDefaultAppState, normalizeAppState, CURRENT_VERSION }
 
-const API_URL = '/api/app-state'
+export const STORAGE_KEY = 'jp-app-state-v1'
+const LEGACY_STORAGE_KEYS = ['kana-trainer-state-v1']
 
-/** Parse raw JSON into AppState (used by API + tests). */
+/** Parse raw JSON into AppState (used by persistence helpers + tests). */
 export function parseStoredState(
   raw: string | null | undefined,
   factory: () => AppState = createDefaultAppState,
@@ -22,88 +23,90 @@ export function parseStoredState(
   }
 }
 
-async function fetchSharedState(): Promise<AppState | null> {
-  const response = await fetch(API_URL, {
-    method: 'GET',
-    headers: { Accept: 'application/json' },
-    cache: 'no-store',
-  })
-  if (response.status === 204) return null
-  if (!response.ok) {
-    throw new Error(`Failed to load shared state: ${response.status}`)
-  }
-  const text = await response.text()
-  if (!text.trim()) return null
-  return parseStoredState(text)
-}
-
-async function putSharedState(state: AppState): Promise<void> {
-  const response = await fetch(API_URL, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(state),
-  })
-  if (!response.ok) {
-    throw new Error(`Failed to save shared state: ${response.status}`)
-  }
-}
-
-/**
- * One-time migration: if shared store is empty but this browser still has
- * localStorage data, push it to the shared file so nothing is lost.
- */
-function readLegacyLocalStorage(): string | null {
+function getLocalStorage(): Storage | null {
   try {
     if (typeof window === 'undefined' || !window.localStorage) return null
-    const current = window.localStorage.getItem('jp-app-state-v1')
-    if (current) return current
-    return window.localStorage.getItem('kana-trainer-state-v1')
+    return window.localStorage
+  } catch {
+    return null
+  }
+}
+
+function readStoredState(): string | null {
+  const storage = getLocalStorage()
+  if (!storage) return null
+  try {
+    return storage.getItem(STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
+
+function writeStoredState(raw: string) {
+  const storage = getLocalStorage()
+  if (!storage) {
+    throw new Error('localStorage is unavailable')
+  }
+  storage.setItem(STORAGE_KEY, raw)
+}
+
+function readLegacyLocalStorage(): string | null {
+  const storage = getLocalStorage()
+  if (!storage) return null
+  try {
+    for (const key of LEGACY_STORAGE_KEYS) {
+      const raw = storage.getItem(key)
+      if (raw) return raw
+    }
+    return null
   } catch {
     return null
   }
 }
 
 function clearLegacyLocalStorage() {
-  try {
-    if (typeof window === 'undefined' || !window.localStorage) return
-    window.localStorage.removeItem('jp-app-state-v1')
-    window.localStorage.removeItem('kana-trainer-state-v1')
-  } catch {
-    // ignore
+  const storage = getLocalStorage()
+  if (!storage) return
+  for (const key of LEGACY_STORAGE_KEYS) {
+    try {
+      storage.removeItem(key)
+    } catch {
+      // ignore
+    }
   }
 }
 
 export async function bootstrapAppState(): Promise<AppState> {
   try {
-    const shared = await fetchSharedState()
-    if (shared) {
-      clearLegacyLocalStorage()
-      return shared
+    const storedRaw = readStoredState()
+    if (storedRaw) {
+      return parseStoredState(storedRaw)
     }
 
     const legacyRaw = readLegacyLocalStorage()
     if (legacyRaw) {
       const migrated = parseStoredState(legacyRaw)
-      await putSharedState(migrated)
+      writeStoredState(JSON.stringify(migrated))
       clearLegacyLocalStorage()
       return migrated
     }
   } catch (error) {
-    console.warn('[storage] shared state unavailable, using defaults', error)
+    console.warn('[storage] localStorage unavailable, using defaults', error)
   }
 
   return createDefaultAppState()
 }
 
 export async function saveAppState(state: AppState): Promise<void> {
-  await putSharedState(state)
+  writeStoredState(JSON.stringify(state))
 }
 
 export async function resetStoredState(): Promise<void> {
-  const response = await fetch(API_URL, { method: 'DELETE' })
-  if (!response.ok) {
-    throw new Error(`Failed to reset shared state: ${response.status}`)
+  const storage = getLocalStorage()
+  if (!storage) {
+    return
   }
+  storage.removeItem(STORAGE_KEY)
   clearLegacyLocalStorage()
 }
 

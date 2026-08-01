@@ -33,7 +33,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     }
     const timer = window.setTimeout(() => {
       void saveAppState(appState).catch((error) => {
-        console.warn('[storage] failed to save shared state', error)
+        console.warn('[storage] failed to save app state', error)
       })
     }, 250)
     return () => window.clearTimeout(timer)

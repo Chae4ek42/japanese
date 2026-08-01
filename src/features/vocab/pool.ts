@@ -1,10 +1,4 @@
-import type {
-  KanjiWord,
-  StatsRecord,
-  VocabCard,
-  VocabLevelFilter,
-  VocabPreferences,
-} from '../../shared/lib/types'
+import type { KanjiWord, VocabCard, VocabLevelFilter, VocabPreferences } from '../../shared/lib/types'
 import { normalizeQuizGlossKey, pickQuizMeaning } from '../../shared/lib/jmdict-gloss'
 import { getJlptWords } from '../../data/words/bank'
 import { applyLocalWordEdits, compareVocabStudyOrder, resolveMyWords } from './customWords'
@@ -22,7 +16,7 @@ export function isVocabWordLearned(
 export function normalizeRomajiAnswer(value: string): string {
   return String(value ?? '')
     .toLowerCase()
-    .replace(/[\s_\-’']/g, '')
+    .replace(/[\s_\-’'"'"']/g, '')
     .trim()
 }
 
@@ -53,38 +47,10 @@ export function wordToVocabCard(word: KanjiWord): VocabCard | null {
   }
 }
 
-function cardPracticeEvents(stats: StatsRecord | undefined): number {
-  if (!stats) return 0
-  return stats.clears + stats.errors + stats.hints
-}
-
-/**
- * A card is "started" only after a real answer (correct / wrong / hint).
- * Mere `seen` exposures must not fill the review bucket — otherwise the new-word
- * limit quickly becomes useless after browsing a group once.
- */
-export function isStartedVocabCard(
-  card: Pick<VocabCard, 'id' | 'variantIds'>,
-  stats: Record<string, StatsRecord>,
-): boolean {
-  const ids = card.variantIds?.length ? card.variantIds : [card.id]
-  return ids.some((id) => cardPracticeEvents(stats[id]) > 0)
-}
-
-/** Keep all started cards; add up to `limit` untouched. `limit < 0` → no change. */
-export function limitNewVocabCards(
-  cards: VocabCard[],
-  stats: Record<string, StatsRecord>,
-  limit: number,
-): VocabCard[] {
+/** Limit the pool to at most `limit` cards. `limit < 0` => no change. */
+export function limitVocabCards(cards: VocabCard[], limit: number): VocabCard[] {
   if (limit < 0) return cards
-  const started: VocabCard[] = []
-  const untouched: VocabCard[] = []
-  for (const card of cards) {
-    if (isStartedVocabCard(card, stats)) started.push(card)
-    else untouched.push(card)
-  }
-  return [...started, ...untouched.slice(0, limit)]
+  return cards.slice(0, limit)
 }
 
 function filterWordsByJlpt(words: KanjiWord[], levels: number[]): KanjiWord[] {
@@ -120,12 +86,10 @@ export function buildVocabPool(
   myWords: string[],
   customWords: Record<string, KanjiWord> = {},
   {
-    stats = {},
     applyNewWordLimit = true,
     hiddenWordIds = [],
     learnedWordIds = [],
   }: {
-    stats?: Record<string, StatsRecord>
     /** When false, ignore `newWordLimit` (e.g. choice distractors). */
     applyNewWordLimit?: boolean
     hiddenWordIds?: string[]
@@ -179,7 +143,7 @@ export function buildVocabPool(
     !(preferences.source === 'group' && preferences.trainFullGroup) &&
     newWordLimit >= 0
   ) {
-    return limitNewVocabCards(cards, stats, newWordLimit)
+    return limitVocabCards(cards, newWordLimit)
   }
   return cards
 }
@@ -191,6 +155,54 @@ export function pickNextSourceCard(
 ): VocabCard | null {
   const inSession = new Set(sessionPoolIds)
   return sourcePool.find((card) => !inSession.has(card.id)) ?? null
+}
+
+export function pickUniformVocabCardId(
+  pool: Array<{ id: string }>,
+  { excludeIds = [], rng = Math.random }: { excludeIds?: string[]; rng?: () => number } = {},
+): string | null {
+  if (!pool.length) return null
+
+  const excluded = new Set(excludeIds)
+  const candidates = excluded.size ? pool.filter((card) => !excluded.has(card.id)) : pool
+  const pickable = candidates.length ? candidates : pool
+  return pickable[Math.floor(rng() * pickable.length)]?.id ?? null
+}
+
+export function pickWeightedVocabCardId(
+  pool: Array<{ id: string }>,
+  {
+    excludeIds = [],
+    weightMultipliers = {},
+    rng = Math.random,
+  }: {
+    excludeIds?: string[]
+    weightMultipliers?: Record<string, number>
+    rng?: () => number
+  } = {},
+): string | null {
+  if (!pool.length) return null
+
+  const excluded = new Set(excludeIds)
+  const candidates = excluded.size ? pool.filter((card) => !excluded.has(card.id)) : pool
+  const pickable = candidates.length ? candidates : pool
+  const weighted = pickable.map((card) => ({
+    card,
+    weight: Math.max(0, weightMultipliers[card.id] ?? 1),
+  }))
+  const total = weighted.reduce((sum, entry) => sum + entry.weight, 0)
+  if (total <= 0) {
+    return pickable[Math.floor(rng() * pickable.length)]?.id ?? null
+  }
+
+  let cursor = rng() * total
+  for (const entry of weighted) {
+    cursor -= entry.weight
+    if (cursor <= 0) {
+      return entry.card.id
+    }
+  }
+  return weighted.at(-1)?.card.id ?? null
 }
 
 export function buildChoiceOptions(

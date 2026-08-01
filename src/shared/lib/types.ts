@@ -203,8 +203,8 @@ export interface VocabPreferences {
    */
   wordJlptLevels: KanjiWordJlptLevel[]
   /**
-   * Max brand-new words (no clears/errors/hints yet) in the practice pool.
-   * -1 = no limit; 0 = only already-started words (no new ones).
+   * Max words in the practice pool.
+   * -1 = no limit.
    */
   newWordLimit: number
   /**
