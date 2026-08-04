@@ -35,7 +35,11 @@ test('deep links open sections from URL', async ({ page }) => {
   })
   await page.goto('/vocab/train', { waitUntil: 'domcontentloaded' })
   await expect(page.getByTestId('vocab-setup')).toBeVisible()
-  await expect(page).toHaveURL(/\/vocab\/train$/)
+  await expect(page).toHaveURL(/\/train$/)
+
+  await page.goto('/train', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByTestId('train-page')).toBeVisible()
+  await expect(page).toHaveURL(/\/train$/)
 
   await page.goto('/numbers', { waitUntil: 'domcontentloaded' })
   await expect(page.getByTestId('start-numbers')).toBeVisible()

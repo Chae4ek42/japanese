@@ -34,7 +34,6 @@ export interface VocabPracticeProps {
   currentInMyWords?: boolean
   showAddSessionToMyWords?: boolean
   sessionWordCount?: number
-  canAddSourceWord?: boolean
   currentLearned?: boolean
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void
   onInputKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
@@ -46,7 +45,6 @@ export interface VocabPracticeProps {
   onSubmitAnswer?: () => void
   onAddCurrentToMyWords?: () => void
   onAddSessionToMyWords?: () => void
-  onAddSourceWord?: () => void
   onToggleLearned?: () => void
   onSaveWordEdit?: (word: KanjiWord) => void
   onDeleteWord?: () => void
@@ -75,7 +73,6 @@ export function VocabPractice({
   currentInMyWords = false,
   showAddSessionToMyWords = false,
   sessionWordCount = 0,
-  canAddSourceWord = false,
   currentLearned = false,
   onInputChange,
   onInputKeyDown,
@@ -87,7 +84,6 @@ export function VocabPractice({
   onSubmitAnswer,
   onAddCurrentToMyWords,
   onAddSessionToMyWords,
-  onAddSourceWord,
   onToggleLearned,
   onSaveWordEdit,
   onDeleteWord,
@@ -462,16 +458,6 @@ export function VocabPractice({
                   Изменить слово
                 </button>
               ) : null}
-              {canAddSourceWord && onAddSourceWord ? (
-                <button
-                  type="button"
-                  className="ghost-button"
-                  data-testid="vocab-add-source-word"
-                  onClick={onAddSourceWord}
-                >
-                  + Слово из набора
-                </button>
-              ) : null}
               {onAddCurrentToMyWords ? (
                 <button
                   type="button"
@@ -504,10 +490,6 @@ export function VocabPractice({
                 </button>
               ) : null}
             </div>
-
-            <p className="question-note vocab-skip-note hint-kbd">
-              Пропуск не влияет на статистику и очередь.
-            </p>
           </>
         )}
       </div>

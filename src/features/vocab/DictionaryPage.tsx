@@ -1,5 +1,6 @@
 import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 import type { KanjiWord } from '../../shared/lib/types'
+import type { VocabRouteSection } from '../../shared/lib/routes'
 import './styles.css'
 import { getJlptWords, searchWords } from '../../data/words/bank'
 import { useAppRouter } from '../../shared/lib/useAppRouter'
@@ -9,16 +10,14 @@ import { CustomWordForm } from './CustomWordForm'
 import { resolveMyWords } from './customWords'
 import { VOCAB_GROUPS, getWordsForGroup } from './groups'
 import { isWordSaved, mergeWordsByWriting, wordVariantIds } from './mergeHomographs'
-import { VocabTrainer } from './VocabTrainer'
 import { WordCard } from './WordCard'
 
 const PAGE_SIZE = 40
 
-type Section = 'catalog' | 'train' | 'mine'
 type CatalogMode = 'level' | 'group'
 type LevelFilter = 5 | 4 | 3 | 2 | 1 | 'other'
 
-export type VocabSection = Section
+export type VocabSection = VocabRouteSection
 
 const LEVEL_OPTIONS: Array<{ id: LevelFilter; label: string }> = [
   { id: 5, label: 'N5' },
@@ -46,34 +45,22 @@ export function DictionaryPage() {
   const customWords = vocab?.customWords ?? {}
   const hiddenWordIds = vocab?.hiddenWordIds ?? []
   const learnedWordIds = vocab?.learnedWordIds ?? []
-  const preferences = vocab?.preferences ?? {
-    drillMode: 'romaji' as const,
-    source: 'level' as const,
-    level: 5 as const,
-    groupId: 'family',
-    pickMode: 'adaptive' as const,
-    inputMode: 'instant' as const,
-    wordJlptLevels: [] as const,
-    newWordLimit: -1,
-    trainFullGroup: false,
-    mineIncludeLearned: true,
-  }
-  const stats = vocab?.stats ?? {}
+  const trainingWordIds = vocab?.trainingWordIds ?? []
   const kanjiLearned = kanji?.learned ?? []
-  const onSectionChange = (next: Section) => goPage('vocab', next)
+  const onSectionChange = (next: VocabRouteSection) => goPage('vocab', next)
   const onToggleMyWord = vocab?.toggleMyWord ?? (() => {})
   const onAddMyWords = vocab?.addMyWords ?? (() => {})
   const onRemoveMyWords = vocab?.removeMyWords ?? (() => {})
   const onAddCustomWord = vocab?.addCustomWord ?? (() => {})
-  const onSaveWordEdit = vocab?.saveWordEdit ?? (() => {})
-  const onHideWords = vocab?.hideWords ?? (() => {})
   const onToggleLearnedWords = vocab?.toggleLearnedWords ?? (() => {})
-  const onPatchPreferences = vocab?.patchPreferences ?? (() => {})
+  const onAddTrainingWords = vocab?.addTrainingWords ?? (() => {})
+  const onRemoveTrainingWords = vocab?.removeTrainingWords ?? (() => {})
+  const onToggleTrainingWord = vocab?.toggleTrainingWord ?? (() => {})
   const onToggleKanjiLearned = kanji?.toggleLearned
-  const onUpdateStats = vocab?.updateStats ?? (() => {})
 
   const myWordSet = useMemo(() => new Set(myWords), [myWords])
   const learnedWordSet = useMemo(() => new Set(learnedWordIds), [learnedWordIds])
+  const trainingWordSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
   const hiddenSet = useMemo(() => new Set(hiddenWordIds), [hiddenWordIds])
   const learnedSet = useMemo(() => new Set(kanjiLearned), [kanjiLearned])
 
@@ -126,6 +113,16 @@ export function DictionaryPage() {
     onToggleLearnedWords(ids)
   }
 
+  function handleToggleTraining(word: KanjiWord) {
+    const ids = wordVariantIds(word)
+    if (!ids.length) return
+    if (ids.some((id) => trainingWordSet.has(id))) {
+      onRemoveTrainingWords(ids)
+      return
+    }
+    onAddTrainingWords(ids)
+  }
+
   const listCaption = deferredQuery
     ? `Поиск «${deferredQuery}»`
     : section === 'mine'
@@ -141,7 +138,9 @@ export function DictionaryPage() {
       <header className="vocab-hero">
         <div className="vocab-hero-copy">
           <h2 className="vocab-title">Словарь</h2>
-          <p className="vocab-lead">Каталог, личный список и тренировка слов — ромадзи или выбор перевода.</p>
+          <p className="vocab-lead">
+            Каталог и личный список. Тренировка слов — в разделе «Слова» в меню.
+          </p>
         </div>
 
         <div className="vocab-section-tabs" role="tablist" aria-label="Разделы словаря">
@@ -160,15 +159,6 @@ export function DictionaryPage() {
           <button
             type="button"
             role="tab"
-            data-testid="vocab-tab-train"
-            className={section === 'train' ? 'vocab-section-tab is-active' : 'vocab-section-tab'}
-            onClick={() => onSectionChange('train')}
-          >
-            Тренировка
-          </button>
-          <button
-            type="button"
-            role="tab"
             data-testid="vocab-tab-mine"
             className={section === 'mine' ? 'vocab-section-tab is-active' : 'vocab-section-tab'}
             onClick={() => {
@@ -182,174 +172,157 @@ export function DictionaryPage() {
         </div>
       </header>
 
-          {section === 'train' ? (
-        <>
-          <VocabTrainer
-            preferences={preferences}
-            stats={stats}
-            myWords={myWords}
-            customWords={customWords}
-            hiddenWordIds={hiddenWordIds}
-            learnedWordIds={learnedWordIds}
-            onPatchPreferences={onPatchPreferences}
-            onUpdateStats={onUpdateStats}
-            onAddMyWords={onAddMyWords}
-            onSaveWordEdit={onSaveWordEdit}
-            onHideWords={onHideWords}
-            onToggleLearnedWords={onToggleLearnedWords}
-            onOpenKanjiInfo={setInfoKanji}
-          />
-          {infoKanji ? (
-            <KanjiInfoCard
-              character={infoKanji}
-              learned={learnedSet.has(infoKanji)}
-              myWords={myWords}
-              onClose={() => setInfoKanji(null)}
-              onToggleLearned={onToggleKanjiLearned}
-              onToggleMyWord={onToggleMyWord}
+      {section === 'catalog' ? (
+        <section className="vocab-controls">
+          <label className="vocab-search">
+            <span className="visually-hidden">Поиск</span>
+            <input
+              type="search"
+              value={query}
+              data-testid="vocab-search"
+              placeholder="Написание, кана, ромадзи или перевод"
+              onChange={(event) => {
+                setQuery(event.target.value)
+                resetPaging()
+              }}
             />
-          ) : null}
-        </>
-      ) : (
-        <>
-          {section === 'catalog' ? (
-            <section className="vocab-controls">
-              <label className="vocab-search">
-                <span className="visually-hidden">Поиск</span>
-                <input
-                  type="search"
-                  value={query}
-                  data-testid="vocab-search"
-                  placeholder="Написание, кана, ромадзи или перевод"
-                  onChange={(event) => {
-                    setQuery(event.target.value)
+          </label>
+
+          {!deferredQuery ? (
+            <>
+              <div className="vocab-mode-row" aria-label="Вид каталога">
+                <button
+                  type="button"
+                  data-testid="vocab-mode-level"
+                  className={catalogMode === 'level' ? 'vocab-mode-link is-active' : 'vocab-mode-link'}
+                  onClick={() => {
+                    setCatalogMode('level')
                     resetPaging()
                   }}
-                />
-              </label>
+                >
+                  По уровню
+                </button>
+                <button
+                  type="button"
+                  data-testid="vocab-mode-group"
+                  className={catalogMode === 'group' ? 'vocab-mode-link is-active' : 'vocab-mode-link'}
+                  onClick={() => {
+                    setCatalogMode('group')
+                    resetPaging()
+                  }}
+                >
+                  По группам
+                </button>
+              </div>
 
-              {!deferredQuery ? (
-                <>
-                  <div className="vocab-mode-row" aria-label="Вид каталога">
+              {catalogMode === 'level' ? (
+                <div className="vocab-level-row" aria-label="Уровень JLPT">
+                  {LEVEL_OPTIONS.map((item) => (
                     <button
+                      key={String(item.id)}
                       type="button"
-                      data-testid="vocab-mode-level"
-                      className={catalogMode === 'level' ? 'vocab-mode-link is-active' : 'vocab-mode-link'}
+                      data-testid={`vocab-level-${item.id}`}
+                      className={level === item.id ? 'vocab-level-chip is-active' : 'vocab-level-chip'}
                       onClick={() => {
-                        setCatalogMode('level')
+                        setLevel(item.id)
                         resetPaging()
                       }}
                     >
-                      По уровню
+                      {item.label}
                     </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="vocab-group-grid" role="list">
+                  {VOCAB_GROUPS.map((group) => (
                     <button
+                      key={group.id}
                       type="button"
-                      data-testid="vocab-mode-group"
-                      className={catalogMode === 'group' ? 'vocab-mode-link is-active' : 'vocab-mode-link'}
+                      role="listitem"
+                      data-testid={`vocab-group-${group.id}`}
+                      className={groupId === group.id ? 'vocab-group-card is-active' : 'vocab-group-card'}
                       onClick={() => {
-                        setCatalogMode('group')
+                        setGroupId(group.id)
                         resetPaging()
                       }}
                     >
-                      По группам
+                      <span className="vocab-group-label">{group.label}</span>
+                      <span className="vocab-group-count">{group.wordIds.length}</span>
                     </button>
-                  </div>
-
-                  {catalogMode === 'level' ? (
-                    <div className="vocab-level-row" aria-label="Уровень JLPT">
-                      {LEVEL_OPTIONS.map((item) => (
-                        <button
-                          key={String(item.id)}
-                          type="button"
-                          data-testid={`vocab-level-${item.id}`}
-                          className={level === item.id ? 'vocab-level-chip is-active' : 'vocab-level-chip'}
-                          onClick={() => {
-                            setLevel(item.id)
-                            resetPaging()
-                          }}
-                        >
-                          {item.label}
-                        </button>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="vocab-group-grid" role="list">
-                      {VOCAB_GROUPS.map((group) => (
-                        <button
-                          key={group.id}
-                          type="button"
-                          role="listitem"
-                          data-testid={`vocab-group-${group.id}`}
-                          className={groupId === group.id ? 'vocab-group-card is-active' : 'vocab-group-card'}
-                          onClick={() => {
-                            setGroupId(group.id)
-                            resetPaging()
-                          }}
-                        >
-                          <span className="vocab-group-label">{group.label}</span>
-                          <span className="vocab-group-count">{group.wordIds.length}</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : null}
-            </section>
-          ) : (
-            <section className="vocab-mine-tools">
-              <p className="vocab-note">
-                Добавьте или измените своё слово — либо сохраните из каталога и тренажёра кандзи.
-              </p>
-              <CustomWordForm
-                editingWord={editingWord}
-                onSave={(word) => {
-                  onAddCustomWord(word)
-                  setEditingWord(null)
-                }}
-                onCancelEdit={() => setEditingWord(null)}
-              />
-            </section>
-          )}
-
-          <div className="vocab-list-head">
-            <h3 className="vocab-list-title">{listCaption}</h3>
-            <p className="vocab-count" data-testid="vocab-count">
-              {list.length
-                ? `${visible.length} из ${list.length}`
-                : section === 'mine'
-                  ? 'Пока пусто — заполните форму выше или нажмите «+ В мои» в каталоге.'
-                  : 'Ничего не найдено.'}
-            </p>
-          </div>
-
-          <div className="vocab-list" data-testid="vocab-list">
-            {visible.map((word) => (
-              <WordCard
-                key={word.id ?? `${word.writing}-${word.kana}`}
-                word={word}
-                isSaved={isWordSaved(word, myWordSet)}
-                onToggleSaved={handleToggleSaved}
-                onEdit={section === 'mine' ? setEditingWord : undefined}
-                isLearned={section === 'mine' ? isWordSaved(word, learnedWordSet) : false}
-                onToggleLearned={section === 'mine' ? handleToggleLearned : undefined}
-              />
-            ))}
-          </div>
-
-          {hasMore ? (
-            <div className="vocab-more">
-              <button
-                type="button"
-                className="vocab-more-button"
-                data-testid="vocab-load-more"
-                onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
-              >
-                Показать ещё
-              </button>
-            </div>
+                  ))}
+                </div>
+              )}
+            </>
           ) : null}
-        </>
+        </section>
+      ) : (
+        <section className="vocab-mine-tools">
+          <p className="vocab-note">
+            Добавьте или измените своё слово — либо сохраните из каталога и карточек кандзи.
+          </p>
+          <CustomWordForm
+            editingWord={editingWord}
+            onSave={(word) => {
+              onAddCustomWord(word)
+              setEditingWord(null)
+            }}
+            onCancelEdit={() => setEditingWord(null)}
+          />
+        </section>
       )}
+
+      <div className="vocab-list-head">
+        <h3 className="vocab-list-title">{listCaption}</h3>
+        <p className="vocab-count" data-testid="vocab-count">
+          {list.length
+            ? `${visible.length} из ${list.length}`
+            : section === 'mine'
+              ? 'Пока пусто — заполните форму выше или нажмите «+ В мои» в каталоге.'
+              : 'Ничего не найдено.'}
+        </p>
+      </div>
+
+      <div className="vocab-list" data-testid="vocab-list">
+        {visible.map((word) => (
+          <WordCard
+            key={word.id ?? `${word.writing}-${word.kana}`}
+            word={word}
+            isSaved={isWordSaved(word, myWordSet)}
+            onToggleSaved={handleToggleSaved}
+            onEdit={section === 'mine' ? setEditingWord : undefined}
+            isLearned={section === 'mine' ? isWordSaved(word, learnedWordSet) : false}
+            onToggleLearned={section === 'mine' ? handleToggleLearned : undefined}
+            inTrainingList={isWordSaved(word, trainingWordSet)}
+            onToggleTraining={handleToggleTraining}
+          />
+        ))}
+      </div>
+
+      {hasMore ? (
+        <div className="vocab-more">
+          <button
+            type="button"
+            className="vocab-more-button"
+            data-testid="vocab-load-more"
+            onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
+          >
+            Показать ещё
+          </button>
+        </div>
+      ) : null}
+
+      {infoKanji ? (
+        <KanjiInfoCard
+          character={infoKanji}
+          learned={learnedSet.has(infoKanji)}
+          myWords={myWords}
+          trainingWordIds={trainingWordIds}
+          onClose={() => setInfoKanji(null)}
+          onToggleLearned={onToggleKanjiLearned}
+          onToggleMyWord={onToggleMyWord}
+          onToggleTrainingWord={onToggleTrainingWord}
+        />
+      ) : null}
     </main>
   )
 }

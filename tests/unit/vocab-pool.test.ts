@@ -2,20 +2,95 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { getJlptWords } from '../../src/data/words/bank'
 import { DEFAULT_VOCAB_PREFERENCES } from '../../src/shared/state/app-state'
+import { getWordsByWriting } from '../../src/data/words/bank'
 import {
   buildChoiceOptions,
+  buildKanjiPracticeVocabPool,
   buildVocabPool,
+  evaluateRomajiReadings,
   normalizeRomajiAnswer,
   pickNextSourceCard,
   pickWeightedVocabCardId,
   pickUniformVocabCardId,
   wordToVocabCard,
 } from '../../src/features/vocab/pool'
+import { mergeWordsByWriting } from '../../src/features/vocab/mergeHomographs'
 
 describe('vocab pool', () => {
   it('нормализует ромадзи для ответа', () => {
     assert.equal(normalizeRomajiAnswer('Mai-nichi'), 'mainichi')
     assert.equal(normalizeRomajiAnswer('  o cha '), 'ocha')
+  })
+
+  it('evaluateRomajiReadings требует все чтения одним ответом', () => {
+    const required = ['watashi', 'watakushi']
+    assert.equal(evaluateRomajiReadings(required, '', 'instant'), 'empty')
+    assert.equal(evaluateRomajiReadings(required, 'wata', 'instant'), 'pending')
+    assert.equal(evaluateRomajiReadings(required, 'watashi', 'instant'), 'pending')
+    assert.equal(evaluateRomajiReadings(required, 'watashi/watakushi', 'instant'), 'correct')
+    assert.equal(evaluateRomajiReadings(required, 'watakushi / watashi', 'instant'), 'correct')
+    assert.equal(evaluateRomajiReadings(required, 'watashi watakushi', 'instant'), 'correct')
+    assert.equal(evaluateRomajiReadings(required, 'watashi/foo', 'instant'), 'wrong')
+    assert.equal(evaluateRomajiReadings(required, 'watashi', 'submit'), 'wrong')
+    assert.equal(evaluateRomajiReadings(required, 'watashi/watakushi', 'submit'), 'correct')
+    assert.equal(evaluateRomajiReadings(['neko'], 'neko', 'instant'), 'correct')
+    assert.equal(evaluateRomajiReadings(['neko'], 'ne', 'instant'), 'pending')
+  })
+
+  it('пул кандзи мержит омографы в одну карточку', () => {
+    const raw = getWordsByWriting('私')
+    assert.ok(raw.length > 1, 'ожидаются несколько словарных статей для 私')
+    const pool = buildKanjiPracticeVocabPool('私', {
+      limit: 1000,
+    })
+    const card = pool.find((item) => item.writing === '私')
+    assert.ok(card)
+    assert.ok((card!.readings?.length ?? 0) > 1)
+    assert.ok(card!.answers.length > 1)
+    assert.equal(pool.filter((item) => item.writing === '私').length, 1)
+
+    const merged = mergeWordsByWriting(raw)
+    assert.equal(merged.length, 1)
+    assert.ok((merged[0]!.readings?.length ?? 0) > 1)
+  })
+
+  it('source=kanji сохраняет порядок выбранных знаков', () => {
+    const pool = buildVocabPool(
+      {
+        ...DEFAULT_VOCAB_PREFERENCES,
+        source: 'kanji',
+        selectedKanji: ['日', '一'],
+        trainFullGroup: true,
+        newWordLimit: -1,
+      },
+      [],
+      {},
+      { applyNewWordLimit: false },
+    )
+    assert.ok(pool.length > 1)
+    const firstWriting = pool[0]!.writing
+    assert.ok(firstWriting.includes('日'), `ожидали слово с 日 первым, получили ${firstWriting}`)
+  })
+
+  it('source=list берёт слова из trainingWordIds', () => {
+    const n5 = buildVocabPool({ ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5 }, [])
+    const ids = n5.slice(0, 3).map((card) => card.id)
+    const pool = buildVocabPool(
+      {
+        ...DEFAULT_VOCAB_PREFERENCES,
+        source: 'list',
+        trainFullGroup: true,
+        newWordLimit: -1,
+      },
+      [],
+      {},
+      { applyNewWordLimit: false, trainingWordIds: ids },
+    )
+    assert.equal(pool.length, 3)
+    assert.deepEqual(
+      pool.map((card) => card.id),
+      ids,
+    )
   })
 
   it('собирает пул N5', () => {

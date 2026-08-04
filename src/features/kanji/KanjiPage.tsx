@@ -5,7 +5,7 @@ import {
   KANJI_LIST,
   getJoyoKanji,
   getKanjiByLevel,
-  getWordsForKanji,
+  getPopularWordsForKanji,
   pickRandomUnlearnedKanji,
 } from '../../data/words/bank'
 import { useIsMobileTouch } from '../../shared/lib/media'
@@ -90,18 +90,20 @@ export function KanjiPage() {
 
   const learned = kanji?.learned ?? []
   const preferences = kanji?.preferences ?? {
-    complexityFilter: true,
     hiddenWordsByKanji: {},
     wordJlptLevels: [],
   }
   const myWords = vocab?.myWords ?? []
+  const trainingWordIds = vocab?.trainingWordIds ?? []
+  const customWords = vocab?.customWords ?? {}
   const onToggleLearned = kanji?.toggleLearned ?? (() => {})
   const onPatchPreferences = kanji?.patchPreferences ?? (() => {})
   const onToggleMyWord = vocab?.toggleMyWord ?? (() => {})
+  const onToggleTrainingWord = vocab?.toggleTrainingWord ?? (() => {})
+  const onSaveWordEdit = vocab?.saveWordEdit ?? (() => {})
   const kanjiState = { learned, preferences }
 
   const learnedSet = useMemo(() => new Set(kanjiState.learned), [kanjiState.learned])
-  const complexityFilter = kanjiState.preferences.complexityFilter
   const wordJlptLevels = kanjiState.preferences.wordJlptLevels ?? []
   const hiddenWordsByKanji = kanjiState.preferences.hiddenWordsByKanji ?? {}
 
@@ -150,15 +152,18 @@ export function KanjiPage() {
         <KanjiTrainer
           character={focusKanji}
           learned={kanjiState.learned}
-          complexityFilter={complexityFilter}
           wordJlptLevels={wordJlptLevels}
           hiddenWordIds={hiddenWordsByKanji[focusKanji] ?? []}
           myWords={myWords}
+          trainingWordIds={trainingWordIds}
+          customWords={customWords}
           onPatchPreferences={onPatchPreferences}
           onHideWord={hideWordForFocus}
           onRestoreHiddenWords={restoreHiddenForFocus}
           onToggleLearned={onToggleLearned}
           onToggleMyWord={onToggleMyWord}
+          onToggleTrainingWord={onToggleTrainingWord}
+          onSaveWordEdit={onSaveWordEdit}
           onBack={() => setFocusKanji(null)}
           onOpenInfo={(character) => setInfoKanji(character)}
         />
@@ -167,9 +172,11 @@ export function KanjiPage() {
             character={infoKanji}
             learned={learnedSet.has(infoKanji)}
             myWords={myWords}
+            trainingWordIds={trainingWordIds}
             onClose={() => setInfoKanji(null)}
             onToggleLearned={onToggleLearned}
             onToggleMyWord={onToggleMyWord}
+            onToggleTrainingWord={onToggleTrainingWord}
           />
         ) : null}
       </>
@@ -195,15 +202,6 @@ export function KanjiPage() {
               selected={wordJlptLevels}
               onChange={(next) => onPatchPreferences({ wordJlptLevels: next })}
             />
-            <label className="kanji-filter-toggle">
-              <input
-                type="checkbox"
-                data-testid="kanji-complexity-filter"
-                checked={complexityFilter}
-                onChange={(event) => onPatchPreferences({ complexityFilter: event.target.checked })}
-              />
-              Только посильные слова
-            </label>
             <button type="button" className="primary-button" data-testid="kanji-random" onClick={startRandom}>
               Случайный знак
             </button>
@@ -236,7 +234,7 @@ export function KanjiPage() {
           <div className="kanji-grid">
             {items.map((item) => {
               const learned = learnedSet.has(item.character)
-              const sampleCount = getWordsForKanji(item.character).length
+              const sampleCount = getPopularWordsForKanji(item.character).length
               const meaningsLabel =
                 (item.meaningsRu ?? item.meanings)[0] ?? item.levelLabel ?? item.character
               return (
@@ -261,9 +259,11 @@ export function KanjiPage() {
           character={infoKanji}
           learned={learnedSet.has(infoKanji)}
           myWords={myWords}
+          trainingWordIds={trainingWordIds}
           onClose={() => setInfoKanji(null)}
           onToggleLearned={onToggleLearned}
           onToggleMyWord={onToggleMyWord}
+          onToggleTrainingWord={onToggleTrainingWord}
           onStartPractice={(character) => {
             setInfoKanji(null)
             setFocusKanji(character)

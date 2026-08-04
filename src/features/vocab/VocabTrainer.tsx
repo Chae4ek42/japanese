@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { KanjiWord, PracticeSession, StatsRecord, VocabCard, VocabPreferences } from '../../shared/lib/types'
+import type {
+  KanjiWord,
+  KanjiWordJlptLevel,
+  PracticeSession,
+  StatsRecord,
+  VocabCard,
+  VocabLevelFilter,
+  VocabPreferences,
+} from '../../shared/lib/types'
 import {
   DEFAULT_HYPERPARAMS,
   bumpSessionShow,
   createStatsRecord,
-  evaluateInput,
-  evaluateSubmission,
   pickNextCardId,
   pushRecentCard,
   setCardCooldown,
@@ -15,7 +21,10 @@ import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { getWordById, getWordsByWriting } from '../../data/words/bank'
 import {
   buildVocabPool,
-  normalizeRomajiAnswer,
+  buildWideVocabDistractorPool,
+  evaluateRomajiReadings,
+  filterTemporaryVocabPool,
+  normalizeRomajiDraft,
   pickNextSourceCard,
   pickWeightedVocabCardId,
   wordToVocabCard,
@@ -23,6 +32,7 @@ import {
 import { mergeWordsByWriting } from './mergeHomographs'
 import { buildMeaningPrompt, buildMixedPrompt, type VocabMixedPrompt } from './mixed'
 import { VocabPractice } from './VocabPractice'
+import { VocabSessionSidebar } from './VocabSessionSidebar'
 import { VocabSetup } from './VocabSetup'
 
 export interface VocabTrainerProps {
@@ -32,6 +42,11 @@ export interface VocabTrainerProps {
   customWords?: Record<string, KanjiWord>
   hiddenWordIds?: string[]
   learnedWordIds?: string[]
+  trainingWordIds?: string[]
+  /** Fixed card pool (e.g. kanji-scoped). Ignores preferences.source for pool building. */
+  poolOverride?: VocabCard[]
+  /** Treat like group: add-to-mine UX, mine exclusion via trainFullGroup. */
+  temporaryPool?: boolean
   onPatchPreferences: (patch: Partial<VocabPreferences>) => void
   onUpdateStats: (
     cardId: string,
@@ -58,6 +73,9 @@ export function VocabTrainer({
   customWords = {},
   hiddenWordIds = [],
   learnedWordIds = [],
+  trainingWordIds = [],
+  poolOverride,
+  temporaryPool = false,
   onPatchPreferences,
   onUpdateStats,
   onAddMyWords,
@@ -101,6 +119,7 @@ export function VocabTrainer({
   const customWordsRef = useRef(customWords)
   const hiddenWordIdsRef = useRef(hiddenWordIds)
   const learnedWordIdsRef = useRef(learnedWordIds)
+  const trainingWordIdsRef = useRef(trainingWordIds)
   const activeCardRef = useRef<VocabCard | null>(null)
   const currentCardIdRef = useRef<string | null>(null)
   const navHistoryRef = useRef<string[]>([])
@@ -108,15 +127,46 @@ export function VocabTrainer({
   const [sessionWeightMultipliers, setSessionWeightMultipliers] = useState<Record<string, number>>({})
   const [selectedWeightCardId, setSelectedWeightCardId] = useState<string | null>(null)
 
-  const poolOpts = { hiddenWordIds, learnedWordIds }
-  const activePool = useMemo(
-    () => buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: true, ...poolOpts }),
-    [preferences, myWords, customWords, hiddenWordIds, learnedWordIds],
-  )
-  const sourcePool = useMemo(
-    () => buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: false, ...poolOpts }),
-    [preferences, myWords, customWords, hiddenWordIds, learnedWordIds],
-  )
+  const poolOpts = { hiddenWordIds, learnedWordIds, trainingWordIds }
+  const usesOverride = Boolean(poolOverride)
+  const isTemporarySet = temporaryPool || usesOverride
+  const isSetSource =
+    isTemporarySet ||
+    preferences.source === 'group' ||
+    preferences.source === 'kanji' ||
+    preferences.source === 'list'
+  const activePool = useMemo(() => {
+    if (poolOverride) {
+      return filterTemporaryVocabPool(poolOverride, {
+        myWords,
+        trainFullGroup: preferences.trainFullGroup === true,
+        newWordLimit: preferences.newWordLimit ?? -1,
+        applyNewWordLimit: true,
+        wordJlptLevels: preferences.wordJlptLevels ?? [],
+      })
+    }
+    return buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: true, ...poolOpts })
+  }, [poolOverride, preferences, myWords, customWords, hiddenWordIds, learnedWordIds, trainingWordIds])
+  const sourcePool = useMemo(() => {
+    if (poolOverride) {
+      return filterTemporaryVocabPool(poolOverride, {
+        myWords,
+        trainFullGroup: preferences.trainFullGroup === true,
+        newWordLimit: preferences.newWordLimit ?? -1,
+        applyNewWordLimit: false,
+        wordJlptLevels: preferences.wordJlptLevels ?? [],
+      })
+    }
+    return buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: false, ...poolOpts })
+  }, [poolOverride, preferences, myWords, customWords, hiddenWordIds, learnedWordIds, trainingWordIds])
+  const poolOverrideRef = useRef(poolOverride)
+  const isTemporarySetRef = useRef(isTemporarySet)
+  const isSetSourceRef = useRef(isSetSource)
+  useEffect(() => {
+    poolOverrideRef.current = poolOverride
+    isTemporarySetRef.current = isTemporarySet
+    isSetSourceRef.current = isSetSource
+  }, [poolOverride, isTemporarySet, isSetSource])
   const activeCard = useMemo(() => {
     if (!currentCardId) return null
     const fromPool =
@@ -147,7 +197,8 @@ export function VocabTrainer({
     customWordsRef.current = customWords
     hiddenWordIdsRef.current = hiddenWordIds
     learnedWordIdsRef.current = learnedWordIds
-  }, [preferences, stats, myWords, customWords, hiddenWordIds, learnedWordIds])
+    trainingWordIdsRef.current = trainingWordIds
+  }, [preferences, stats, myWords, customWords, hiddenWordIds, learnedWordIds, trainingWordIds])
 
   useEffect(() => {
     activeCardRef.current = activeCard
@@ -260,16 +311,32 @@ export function VocabTrainer({
     setCanGoPrev(navIndexRef.current > 0)
   }
 
-  function getPracticePool() {
+  function resolveFullPool(applyNewWordLimit: boolean) {
     const prefs = preferencesRef.current
-    const full = buildVocabPool(prefs, myWordsRef.current, customWordsRef.current, {
-      applyNewWordLimit: false,
+    const override = poolOverrideRef.current
+    if (override) {
+      return filterTemporaryVocabPool(override, {
+        myWords: myWordsRef.current,
+        trainFullGroup: prefs.trainFullGroup === true,
+        newWordLimit: prefs.newWordLimit ?? -1,
+        applyNewWordLimit,
+        wordJlptLevels: prefs.wordJlptLevels ?? [],
+      })
+    }
+    return buildVocabPool(prefs, myWordsRef.current, customWordsRef.current, {
+      applyNewWordLimit,
       hiddenWordIds: hiddenWordIdsRef.current,
       learnedWordIds: learnedWordIdsRef.current,
+      trainingWordIds: trainingWordIdsRef.current,
     })
+  }
+
+  function getPracticePool() {
+    const prefs = preferencesRef.current
+    const full = resolveFullPool(false)
     if (viewRef.current === 'practice' && sessionRef.current.poolIds.length) {
       const allow = new Set(sessionRef.current.poolIds)
-      const excludeMine = prefs.source === 'group' && !prefs.trainFullGroup
+      const excludeMine = isSetSourceRef.current && !prefs.trainFullGroup
       const mine = new Set(myWordsRef.current)
       const frozen = full.filter((card) => {
         if (!allow.has(card.id)) return false
@@ -279,11 +346,7 @@ export function VocabTrainer({
       })
       if (frozen.length) return frozen
     }
-    return buildVocabPool(prefs, myWordsRef.current, customWordsRef.current, {
-      applyNewWordLimit: true,
-      hiddenWordIds: hiddenWordIdsRef.current,
-      learnedWordIds: learnedWordIdsRef.current,
-    })
+    return resolveFullPool(true)
   }
 
   function resetSessionWeights() {
@@ -323,10 +386,21 @@ export function VocabTrainer({
   }
 
   function getDistractorPool() {
-    return buildVocabPool(preferencesRef.current, myWordsRef.current, customWordsRef.current, {
+    const prefs = preferencesRef.current
+    if (
+      poolOverrideRef.current ||
+      prefs.source === 'kanji' ||
+      prefs.source === 'list' ||
+      prefs.source === 'group'
+    ) {
+      const wide = buildWideVocabDistractorPool(customWordsRef.current, hiddenWordIdsRef.current)
+      if (wide.length >= 6) return wide
+    }
+    return buildVocabPool(prefs, myWordsRef.current, customWordsRef.current, {
       applyNewWordLimit: false,
       hiddenWordIds: hiddenWordIdsRef.current,
       learnedWordIds: learnedWordIdsRef.current,
+      trainingWordIds: trainingWordIdsRef.current,
     })
   }
 
@@ -411,9 +485,11 @@ export function VocabTrainer({
       setFeedback({
         type: 'error',
         text:
-          preferences.source === 'mine'
-            ? 'В «Моих словах» пока пусто. Добавьте слова из каталога.'
-            : 'В этом наборе нет слов для тренировки.',
+          isTemporarySet
+            ? 'В этом наборе нет слов для тренировки.'
+            : preferences.source === 'mine'
+              ? 'В «Моих словах» пока пусто. Добавьте слова из каталога.'
+              : 'В этом наборе нет слов для тренировки.',
       })
       return
     }
@@ -481,7 +557,7 @@ export function VocabTrainer({
       hintUsed: activeRound.hintUsed || kind === 'hint',
       inputMode: preferencesRef.current.inputMode,
     })
-    setFeedback({ type: 'success', text: kind === 'hint' ? 'С подсказкой' : '' })
+    setFeedback({ type: 'success', text: '' })
     queueAdvance(() => advanceToNextCard(nextSession), delay)
   }
 
@@ -505,16 +581,16 @@ export function VocabTrainer({
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (!activeCard || view !== 'practice' || preferences.drillMode !== 'romaji') return
 
-    const value = normalizeRomajiAnswer(event.target.value)
+    const value = normalizeRomajiDraft(event.target.value)
 
     if (preferences.inputMode === 'submit') {
       setInputValue(value)
       return
     }
 
-    const previousResult = evaluateInput(activeCard.answers, inputValue)
+    const previousResult = evaluateRomajiReadings(activeCard.answers, inputValue, 'instant')
     setInputValue(value)
-    const result = evaluateInput(activeCard.answers, value)
+    const result = evaluateRomajiReadings(activeCard.answers, value, 'instant')
 
     if (result === 'wrong') {
       if (previousResult !== 'wrong') {
@@ -525,11 +601,7 @@ export function VocabTrainer({
     }
 
     if (feedback.type === 'wrong') {
-      setFeedback(
-        round.hintUsed
-          ? { type: 'hint', text: 'Подсказка открыта — введите ромадзи' }
-          : { type: 'idle', text: '' },
-      )
+      setFeedback({ type: 'idle', text: '' })
     }
 
     if (result === 'correct') {
@@ -539,7 +611,7 @@ export function VocabTrainer({
 
   function handleSubmitAnswer() {
     if (!activeCard || view !== 'practice' || pendingAdvanceRef.current) return
-    const result = evaluateSubmission(activeCard.answers, inputValue)
+    const result = evaluateRomajiReadings(activeCard.answers, inputValue, 'submit')
     if (result === 'empty') return
 
     if (result === 'correct') {
@@ -552,7 +624,10 @@ export function VocabTrainer({
     setInputValue('')
     setFeedback({
       type: 'wrong',
-      text: 'Неверно. Смотрите подсказку и введите ромадзи.',
+      text:
+        activeCard.answers.length > 1
+          ? 'Неверно. Укажите все чтения через /.'
+          : 'Неверно.',
     })
   }
 
@@ -573,10 +648,7 @@ export function VocabTrainer({
     if (viewRef.current !== 'practice' || !activeCardRef.current) return
     if (preferencesRef.current.drillMode !== 'romaji') return
     patchRound({ hintUsed: true })
-    setFeedback({
-      type: 'hint',
-      text: 'Подсказка открыта — введите ромадзи',
-    })
+    setFeedback({ type: 'hint', text: '' })
     inputRef.current?.focus()
   }
 
@@ -673,7 +745,7 @@ export function VocabTrainer({
   }
 
   function handleAddSessionToMyWords() {
-    if (!onAddMyWords || preferences.source !== 'group') return
+    if (!onAddMyWords || !isSetSource) return
     const pool =
       sessionRef.current.poolIds.length > 0
         ? getPracticePool()
@@ -746,13 +818,17 @@ export function VocabTrainer({
   }
 
   function handleAddSourceWord() {
-    if (preferences.source !== 'group' && preferences.source !== 'level') return
+    if (
+      preferences.source !== 'group' &&
+      preferences.source !== 'level' &&
+      preferences.source !== 'kanji' &&
+      preferences.source !== 'list' &&
+      !isTemporarySetRef.current
+    ) {
+      return
+    }
     clearPendingAdvance()
-    const full = buildVocabPool(preferencesRef.current, myWordsRef.current, customWordsRef.current, {
-      applyNewWordLimit: false,
-      hiddenWordIds: hiddenWordIdsRef.current,
-      learnedWordIds: learnedWordIdsRef.current,
-    })
+    const full = resolveFullPool(false)
     const next = pickNextSourceCard(full, sessionRef.current.poolIds)
     if (!next) {
       setFeedback({ type: 'error', text: 'В наборе больше нет слов для добавления.' })
@@ -769,6 +845,62 @@ export function VocabTrainer({
     const optionsPool = distractorPool.length >= 6 ? distractorPool : full
     showCard(next.id, nextSession, optionsPool, { recordSeen: true })
     setFeedback({ type: 'success', text: `Добавлено: ${next.writing}` })
+  }
+
+  function reconcileSessionAfterFilterChange({ rebuild }: { rebuild: boolean }) {
+    if (viewRef.current !== 'practice') return
+    clearPendingAdvance()
+    const full = resolveFullPool(false)
+    const limited = resolveFullPool(true)
+    const allowed = new Set(full.map((card) => card.id))
+    let poolIds = rebuild
+      ? limited.map((card) => card.id)
+      : sessionRef.current.poolIds.filter((id) => allowed.has(id))
+    if (!poolIds.length) {
+      poolIds = limited.map((card) => card.id)
+    }
+    if (!poolIds.length) {
+      stopPractice()
+      setFeedback({
+        type: 'error',
+        text: 'После фильтра не осталось слов для тренировки.',
+      })
+      return
+    }
+
+    const nextSession: PracticeSession = {
+      ...sessionRef.current,
+      poolIds,
+      mistakeQueue: sessionRef.current.mistakeQueue.filter((id) => allowed.has(id)),
+    }
+    sessionRef.current = nextSession
+    setSession(nextSession)
+
+    const currentId = currentCardIdRef.current
+    const currentStillValid = Boolean(currentId && poolIds.includes(currentId) && allowed.has(currentId))
+    if (currentStillValid && !rebuild) {
+      setFeedback({ type: 'idle', text: '' })
+      return
+    }
+
+    const nextId = currentStillValid && currentId ? currentId : poolIds[0]!
+    rememberNavCard(nextId)
+    const distractorPool = getDistractorPool()
+    const optionsPool = distractorPool.length >= 6 ? distractorPool : full
+    showCard(nextId, nextSession, optionsPool, { recordSeen: !currentStillValid || rebuild })
+  }
+
+  function handleSessionLevelChange(level: VocabLevelFilter) {
+    if (preferencesRef.current.level === level) return
+    preferencesRef.current = { ...preferencesRef.current, level }
+    onPatchPreferences({ level })
+    reconcileSessionAfterFilterChange({ rebuild: true })
+  }
+
+  function handleSessionWordJlptChange(wordJlptLevels: KanjiWordJlptLevel[]) {
+    preferencesRef.current = { ...preferencesRef.current, wordJlptLevels }
+    onPatchPreferences({ wordJlptLevels })
+    reconcileSessionAfterFilterChange({ rebuild: false })
   }
 
   function handleToggleLearned() {
@@ -808,136 +940,41 @@ export function VocabTrainer({
   }
 
   const canAddSourceWord =
-    (preferences.source === 'group' || preferences.source === 'level') &&
-    Boolean(pickNextSourceCard(sourcePool, sessionRef.current.poolIds ?? []))
+    (preferences.source === 'group' ||
+      preferences.source === 'level' ||
+      preferences.source === 'kanji' ||
+      preferences.source === 'list' ||
+      isTemporarySet) &&
+    Boolean(pickNextSourceCard(sourcePool, session.poolIds))
 
-  const pickModeOptions = [
-    {
-      id: 'adaptive' as const,
-      label: 'Адаптивный',
-      hint: 'Сильнее тянет слабые и новые слова, но текущие веса тоже учитываются.',
-    },
-    {
-      id: 'even' as const,
-      label: 'Равномерный',
-      hint: 'Все слова равны, если для них не задано отдельное значение.',
-    },
-  ]
+  const showWordJlptFilter =
+    preferences.source === 'group' ||
+    preferences.source === 'mine' ||
+    preferences.source === 'kanji' ||
+    preferences.source === 'list' ||
+    isTemporarySet
 
-  const selectedWeightCard =
-    practicePool.find((card) => card.id === selectedWeightCardId) ?? practicePool[0] ?? null
-  const selectedWeightValue =
-    selectedWeightCard && sessionWeightMultipliers[selectedWeightCard.id] !== undefined
-      ? sessionWeightMultipliers[selectedWeightCard.id]
-      : 1
-  const selectedWeightPercent = Math.round(selectedWeightValue * 100)
   const practiceSidebar =
     view === 'practice' ? (
-      <div className="panel controls-panel setup-surface vocab-session-panel" data-testid="vocab-session-sidebar">
-        <div className="control-group">
-          <span className="group-label">Подбор</span>
-          <div className="segmented">
-            {pickModeOptions.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                className={preferences.pickMode === option.id ? 'segmented-button is-active' : 'segmented-button'}
-                data-testid={`vocab-session-pick-${option.id}`}
-                onClick={() => onPatchPreferences({ pickMode: option.id })}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-          <p className="control-hint">{pickModeOptions.find((item) => item.id === preferences.pickMode)?.hint}</p>
-        </div>
-
-        <div className="control-group">
-          <div className="vocab-session-head">
-            <span className="group-label">Вероятности слов</span>
-            <button
-              type="button"
-              className="text-button"
-              data-testid="vocab-session-reset-weights"
-              onClick={resetSessionWeights}
-            >
-              Сбросить все
-            </button>
-          </div>
-          <p className="control-hint">0% исключает слово из текущей тренировки. 100% - обычный вес.</p>
-
-          {selectedWeightCard ? (
-            <div className="vocab-weight-editor" data-testid="vocab-session-weight-editor">
-              <div className="vocab-weight-editor-head">
-                <div className="vocab-weight-editor-copy">
-                  <p className="vocab-weight-writing">{selectedWeightCard.writing}</p>
-                  <p className="vocab-weight-meaning">{selectedWeightCard.meaning}</p>
-                </div>
-                <span className="vocab-weight-badge" data-testid="vocab-session-weight-value">
-                  {selectedWeightPercent}%
-                </span>
-              </div>
-
-              <input
-                type="range"
-                min="0"
-                max="300"
-                step="10"
-                value={selectedWeightPercent}
-                data-testid="vocab-session-weight-slider"
-                onChange={(event) => {
-                  if (!selectedWeightCard) return
-                  setSessionWeight(selectedWeightCard.id, Number(event.target.value) / 100)
-                }}
-              />
-
-              <div className="vocab-weight-editor-actions">
-                <button type="button" className="ghost-button" onClick={() => setSessionWeight(selectedWeightCard.id, 0)}>
-                  0%
-                </button>
-                <button type="button" className="ghost-button" onClick={() => setSessionWeight(selectedWeightCard.id, 1)}>
-                  100%
-                </button>
-                <button type="button" className="ghost-button" onClick={() => setSessionWeight(selectedWeightCard.id, 2)}>
-                  200%
-                </button>
-              </div>
-            </div>
-          ) : (
-            <p className="control-hint">Сначала запустите тренировку.</p>
-          )}
-
-          <div className="vocab-weight-list" role="list" aria-label="Слова текущей тренировки">
-            {practicePool.map((card) => {
-              const weightValue = sessionWeightMultipliers[card.id] ?? 1
-              const weightPercent = Math.round(weightValue * 100)
-              const selected = selectedWeightCard?.id === card.id
-              return (
-                <button
-                  key={card.id}
-                  type="button"
-                  role="listitem"
-                  className={
-                    selected
-                      ? card.id === currentCardId
-                        ? 'vocab-weight-item is-active is-current'
-                        : 'vocab-weight-item is-active'
-                      : card.id === currentCardId
-                        ? 'vocab-weight-item is-current'
-                        : 'vocab-weight-item'
-                  }
-                  data-testid={`vocab-session-word-${card.id}`}
-                  onClick={() => setSelectedWeightCardId(card.id)}
-                >
-                  <span className="vocab-weight-item-writing">{card.writing}</span>
-                  <span className="vocab-weight-item-weight">{weightPercent}%</span>
-                  <span className="vocab-weight-item-meaning">{card.meaning}</span>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      </div>
+      <VocabSessionSidebar
+        pickMode={preferences.pickMode}
+        source={preferences.source}
+        level={preferences.level}
+        wordJlptLevels={preferences.wordJlptLevels ?? []}
+        cards={practicePool}
+        currentCardId={currentCardId}
+        selectedCardId={selectedWeightCardId}
+        weightMultipliers={sessionWeightMultipliers}
+        canAddSourceWord={canAddSourceWord}
+        showWordJlptFilter={showWordJlptFilter}
+        onPickModeChange={(mode) => onPatchPreferences({ pickMode: mode })}
+        onLevelChange={handleSessionLevelChange}
+        onWordJlptChange={handleSessionWordJlptChange}
+        onSelectCard={setSelectedWeightCardId}
+        onSetWeight={setSessionWeight}
+        onResetWeights={resetSessionWeights}
+        onAddSourceWord={canAddSourceWord ? handleAddSourceWord : undefined}
+      />
     ) : null
 
   if (view === 'setup') {
@@ -950,6 +987,8 @@ export function VocabTrainer({
         myWordIds={myWords}
         errorText={feedback.type === 'error' ? feedback.text : ''}
         infoText={feedback.type === 'success' ? feedback.text : ''}
+        temporaryPool={isTemporarySet}
+        trainingWordCount={trainingWordIds.length}
         onPatchPreferences={onPatchPreferences}
         onStart={startPractice}
       />
@@ -981,11 +1020,10 @@ export function VocabTrainer({
             learnedWordIds.includes(id),
           ),
       )}
-      showAddSessionToMyWords={preferences.source === 'group' && Boolean(onAddMyWords)}
+      showAddSessionToMyWords={isSetSource && Boolean(onAddMyWords)}
       sessionWordCount={
         sessionRef.current.poolIds.length || activePool.length
       }
-      canAddSourceWord={canAddSourceWord}
       onInputChange={handleInputChange}
       onInputKeyDown={handleInputKeyDown}
       onRevealHint={revealHint}
@@ -995,10 +1033,7 @@ export function VocabTrainer({
       onStop={stopPractice}
       onSubmitAnswer={handleSubmitAnswer}
       onAddCurrentToMyWords={onAddMyWords ? handleAddCurrentToMyWords : undefined}
-      onAddSessionToMyWords={
-        preferences.source === 'group' && onAddMyWords ? handleAddSessionToMyWords : undefined
-      }
-      onAddSourceWord={canAddSourceWord ? handleAddSourceWord : undefined}
+      onAddSessionToMyWords={isSetSource && onAddMyWords ? handleAddSessionToMyWords : undefined}
       onToggleLearned={onToggleLearnedWords ? handleToggleLearned : undefined}
       onSaveWordEdit={onSaveWordEdit ? handleSaveWordEdit : undefined}
       onDeleteWord={onHideWords ? handleDeleteCurrentWord : undefined}

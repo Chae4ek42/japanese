@@ -4,6 +4,7 @@ import { KanaTrainer } from '../features/kana/KanaTrainer'
 import { KanjiPage } from '../features/kanji/KanjiPage'
 import { NumbersTrainer } from '../features/numbers/NumbersTrainer'
 import { DictionaryPage } from '../features/vocab/DictionaryPage'
+import { TrainPage } from '../features/vocab/TrainPage'
 import { ContextPage } from '../features/context/ContextPage'
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import { AppStateProvider, useAppState, useResetApp } from '../shared/state/AppStateContext'
@@ -35,11 +36,13 @@ function AppRoutes() {
           onOpenKanji={() => goPage('kanji')}
           onOpenNumbers={() => goPage('numbers')}
           onOpenVocab={() => goPage('vocab', 'catalog')}
-          onOpenVocabTrain={() => goPage('vocab', 'train')}
+          onOpenVocabTrain={() => goPage('train')}
           onOpenContext={() => goPage('context')}
         />
       ) : page === 'kanji' ? (
         <KanjiPage />
+      ) : page === 'train' ? (
+        <TrainPage />
       ) : page === 'vocab' ? (
         <DictionaryPage />
       ) : page === 'context' ? (

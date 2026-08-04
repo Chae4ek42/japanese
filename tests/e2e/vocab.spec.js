@@ -26,8 +26,11 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Vocab trainer covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
-  await expect(page).toHaveURL(/\/vocab\/train$/)
+  await expect(page).toHaveURL(/\/train$/)
+  await expect(page.getByTestId('train-page')).toBeVisible()
   await expect(page.getByTestId('vocab-setup')).toBeVisible()
+  await expect(page.getByTestId('vocab-source-kanji')).toBeVisible()
+  await expect(page.getByTestId('vocab-source-list')).toBeVisible()
   await page.getByTestId('start-vocab').click()
   await expect(page.getByTestId('vocab-current-writing')).toBeVisible()
   await expect(page.getByTestId('vocab-answer-input')).toBeVisible()
@@ -42,8 +45,12 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
 
   await page.getByTestId('vocab-hint-button').click()
   await expect(page.getByTestId('vocab-hint-panel')).toBeVisible()
-  const answer = (await page.locator('.vocab-hint-romaji').first().innerText()).trim()
-  await page.getByTestId('vocab-answer-input').fill(answer.replace(/[\s_\-’']/g, '').toLowerCase())
+  const romajiParts = await page.locator('.vocab-hint-romaji').allInnerTexts()
+  const answer = romajiParts
+    .map((part) => part.trim().replace(/[\s_\-’']/g, '').toLowerCase())
+    .filter(Boolean)
+    .join('/')
+  await page.getByTestId('vocab-answer-input').fill(answer)
   await expect(page.locator('.practice-stage')).toHaveClass(/is-success/)
 
   await page.getByText('← К настройкам').click()
@@ -85,6 +92,9 @@ test('vocab trainer: in-session panel changes pick mode and weights', async ({ p
   await page.getByTestId('vocab-new-word-limit').fill('1')
   await page.getByTestId('start-vocab').click()
   await expect(page.getByTestId('vocab-session-sidebar')).toBeVisible()
+  await expect(page.getByTestId('vocab-session-word-jlpt')).toBeVisible()
+  await page.getByTestId('vocab-session-word-jlpt-5').click()
+  await expect(page.getByTestId('vocab-session-word-jlpt-5')).toHaveAttribute('aria-pressed', 'true')
 
   await page.getByTestId('vocab-session-pick-even').click()
   await expect(page.getByTestId('vocab-session-pick-even')).toHaveClass(/is-active/)
@@ -92,7 +102,7 @@ test('vocab trainer: in-session panel changes pick mode and weights', async ({ p
   await expect(page.getByTestId('vocab-session-pick-adaptive')).toHaveClass(/is-active/)
 
   const currentWriting = await page.getByTestId('vocab-current-writing').innerText()
-  await page.locator('.vocab-weight-item', { hasText: currentWriting }).first().click()
+  await page.locator('.vocab-session-row', { hasText: currentWriting }).first().click()
   const slider = page.getByTestId('vocab-session-weight-slider')
   await slider.fill('0')
   await expect(page.getByTestId('vocab-session-weight-value')).toHaveText('0%')
@@ -114,8 +124,10 @@ test('dictionary tabs update URL', async ({ page }, testInfo) => {
   await expect(page).toHaveURL(/\/vocab$/)
   await page.getByTestId('vocab-tab-mine').click()
   await expect(page).toHaveURL(/\/vocab\/mine$/)
-  await page.getByTestId('vocab-tab-train').click()
-  await expect(page).toHaveURL(/\/vocab\/train$/)
+  await expect(page.getByTestId('vocab-tab-train')).toHaveCount(0)
+  await page.getByTestId('nav-train').click()
+  await expect(page).toHaveURL(/\/train$/)
+  await expect(page.getByTestId('train-page')).toBeVisible()
 })
 
 test('dictionary: add and edit custom word', async ({ page }, testInfo) => {

@@ -153,6 +153,91 @@ export function useVocabState() {
             customWords,
             hiddenWordIds: [...new Set([...(prevState.vocab.hiddenWordIds ?? []), ...ids])],
             learnedWordIds: (prevState.vocab.learnedWordIds ?? []).filter((id) => !hide.has(id)),
+            trainingWordIds: (prevState.vocab.trainingWordIds ?? []).filter((id) => !hide.has(id)),
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const addTrainingWords = useCallback(
+    (wordIds: string[]) => {
+      const ids = [...new Set(wordIds.filter((id) => typeof id === 'string' && id.length > 0))]
+      if (!ids.length) return
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const known = new Set(prevState.vocab.trainingWordIds ?? [])
+        const toAdd = ids.filter((id) => !known.has(id))
+        if (!toAdd.length) return prevState
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            trainingWordIds: [...(prevState.vocab.trainingWordIds ?? []), ...toAdd],
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const removeTrainingWords = useCallback(
+    (wordIds: string[]) => {
+      const ids = new Set(wordIds.filter((id) => typeof id === 'string' && id.length > 0))
+      if (!ids.size) return
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const next = (prevState.vocab.trainingWordIds ?? []).filter((id) => !ids.has(id))
+        if (next.length === (prevState.vocab.trainingWordIds ?? []).length) return prevState
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            trainingWordIds: next,
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const toggleTrainingWord = useCallback(
+    (wordId: string) => {
+      if (!wordId) return
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const list = prevState.vocab.trainingWordIds ?? []
+        const removing = list.includes(wordId)
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            trainingWordIds: removing ? list.filter((id) => id !== wordId) : [...list, wordId],
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const addSelectedKanji = useCallback(
+    (characters: string[]) => {
+      const chars = [...new Set(characters.map((ch) => ch.trim()).filter(Boolean))]
+      if (!chars.length) return
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const known = new Set(prevState.vocab.preferences.selectedKanji ?? [])
+        const toAdd = chars.filter((ch) => !known.has(ch))
+        if (!toAdd.length) return prevState
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            preferences: {
+              ...prevState.vocab.preferences,
+              selectedKanji: [...(prevState.vocab.preferences.selectedKanji ?? []), ...toAdd],
+            },
           },
         }
       })
@@ -241,6 +326,7 @@ export function useVocabState() {
     customWords: appState.vocab.customWords,
     hiddenWordIds: appState.vocab.hiddenWordIds ?? [],
     learnedWordIds: appState.vocab.learnedWordIds ?? [],
+    trainingWordIds: appState.vocab.trainingWordIds ?? [],
     preferences: appState.vocab.preferences,
     stats: appState.vocab.stats,
     toggleMyWord,
@@ -250,6 +336,10 @@ export function useVocabState() {
     saveWordEdit,
     hideWords,
     toggleLearnedWords,
+    addTrainingWords,
+    removeTrainingWords,
+    toggleTrainingWord,
+    addSelectedKanji,
     patchPreferences,
     updateStats,
     isMyWord,

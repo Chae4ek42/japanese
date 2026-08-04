@@ -4,7 +4,7 @@ export type InputMode = 'instant' | 'submit'
 export type NumberMode = 'plain' | 'age'
 export type NumberRangeId = '10' | '99' | '999'
 export type NumbersPickMode = 'adaptive' | 'even'
-export type AppPage = 'home' | 'kana' | 'kanji' | 'numbers' | 'vocab' | 'context'
+export type AppPage = 'home' | 'kana' | 'kanji' | 'numbers' | 'vocab' | 'train' | 'context'
 export type PracticeView = 'setup' | 'practice'
 
 export type TrainerOutcome = 'empty' | 'correct' | 'wrong' | 'pending' | 'seen' | 'hint'
@@ -172,7 +172,6 @@ export interface NumbersPreferences {
 export type KanjiWordJlptLevel = 5 | 4 | 3 | 2 | 1
 
 export interface KanjiPreferences {
-  complexityFilter: boolean
   /** Word ids hidden from the practice set, keyed by kanji character. */
   hiddenWordsByKanji: Record<string, string[]>
   /**
@@ -184,7 +183,7 @@ export interface KanjiPreferences {
 
 
 export type VocabDrillMode = 'romaji' | 'choice' | 'mixed'
-export type VocabSource = 'level' | 'group' | 'mine'
+export type VocabSource = 'level' | 'group' | 'mine' | 'kanji' | 'list'
 export type VocabLevelFilter = 5 | 4 | 3 | 2 | 1
 export type VocabPickMode = 'adaptive' | 'even'
 /** Prompt shapes for mixed multiple-choice drills (renshuu-style). */
@@ -198,7 +197,7 @@ export interface VocabPreferences {
   pickMode: VocabPickMode
   inputMode: InputMode
   /**
-   * Extra JLPT filter for group/mine sources (and catalog-style narrowing).
+   * Extra JLPT filter for group/mine/kanji/list sources (and catalog-style narrowing).
    * Empty = no extra filter. Ignored when source === 'level' (uses `level` alone).
    */
   wordJlptLevels: KanjiWordJlptLevel[]
@@ -208,7 +207,7 @@ export interface VocabPreferences {
    */
   newWordLimit: number
   /**
-   * When source === 'group': if true, practice the whole group including words
+   * When source is group/kanji/list: if true, practice the whole set including words
    * already in «Мои слова». If false, those words are excluded.
    */
   trainFullGroup: boolean
@@ -217,6 +216,8 @@ export interface VocabPreferences {
    * If false, only unlearned my-words are in the pool.
    */
   mineIncludeLearned: boolean
+  /** Kanji characters selected for source === 'kanji' (order = practice order). */
+  selectedKanji: string[]
 }
 
 export interface KanjiWordReading {
@@ -254,6 +255,8 @@ export interface VocabState {
   hiddenWordIds: string[]
   /** My-word ids marked as learned («Выученные»). */
   learnedWordIds: string[]
+  /** Words staged for source === 'list' (from kanji cards / catalog). */
+  trainingWordIds: string[]
   preferences: VocabPreferences
   stats: Record<string, StatsRecord>
 }
@@ -318,7 +321,7 @@ export interface ContextSentence {
 }
 
 export interface AppState {
-  version: 20
+  version: 21
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>

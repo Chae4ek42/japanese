@@ -1,6 +1,6 @@
 import type { AppPage } from './types'
 
-export type VocabRouteSection = 'catalog' | 'train' | 'mine'
+export type VocabRouteSection = 'catalog' | 'mine'
 
 export type AppRoute =
   | { page: Exclude<AppPage, 'vocab'> }
@@ -12,8 +12,10 @@ export const PATHS = {
   kanji: '/kanji',
   numbers: '/numbers',
   vocab: '/vocab',
-  vocabTrain: '/vocab/train',
   vocabMine: '/vocab/mine',
+  /** @deprecated Use PATHS.train — kept for redirects/bookmarks. */
+  vocabTrain: '/vocab/train',
+  train: '/train',
   context: '/context',
 } as const
 
@@ -23,6 +25,7 @@ const PAGE_TITLES: Record<AppPage, string> = {
   kanji: 'Кандзи — JP тренажёры',
   numbers: 'Числа — JP тренажёры',
   vocab: 'Словарь — JP тренажёры',
+  train: 'Слова — JP тренажёры',
   context: 'Контекст — JP тренажёры',
 }
 
@@ -47,10 +50,11 @@ export function parsePath(pathname: string): AppRoute {
       return { page: 'numbers' }
     case PATHS.vocab:
       return { page: 'vocab', section: 'catalog' }
-    case PATHS.vocabTrain:
-      return { page: 'vocab', section: 'train' }
     case PATHS.vocabMine:
       return { page: 'vocab', section: 'mine' }
+    case PATHS.vocabTrain:
+    case PATHS.train:
+      return { page: 'train' }
     case PATHS.context:
       return { page: 'context' }
     default:
@@ -60,9 +64,6 @@ export function parsePath(pathname: string): AppRoute {
 
 export function pathForRoute(route: AppRoute): string {
   if (route.page === 'vocab') {
-    if (route.section === 'train') {
-      return PATHS.vocabTrain
-    }
     if (route.section === 'mine') {
       return PATHS.vocabMine
     }
@@ -86,8 +87,9 @@ export function isKnownPath(pathname: string): boolean {
     path === PATHS.kanji ||
     path === PATHS.numbers ||
     path === PATHS.vocab ||
-    path === PATHS.vocabTrain ||
     path === PATHS.vocabMine ||
+    path === PATHS.vocabTrain ||
+    path === PATHS.train ||
     path === PATHS.context
   )
 }

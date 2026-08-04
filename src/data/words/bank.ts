@@ -11,7 +11,6 @@ export const KANJI_WORDS = words as KanjiWord[]
 export const KANJI_COMPONENTS = components as KanjiComponent[]
 
 const kanjiById: Record<string, KanjiInfo> = Object.fromEntries(KANJI_LIST.map((item) => [item.character, item]))
-const levelByKanji: Record<string, number> = Object.fromEntries(KANJI_LIST.map((item) => [item.character, item.level]))
 const componentById = new Map<string, KanjiComponent>(KANJI_COMPONENTS.map((item) => [item.id, item]))
 const wordsByKanjiMap = wordsByKanji as Record<string, number[]>
 const wordById = new Map<string, KanjiWord>()
@@ -28,12 +27,20 @@ for (const word of KANJI_WORDS) {
 const jlptWordsCache = new Map<number | 'other', KanjiWord[]>()
 const joyoListCache = { value: null as KanjiInfo[] | null }
 
-function sortWords(list: KanjiWord[]): KanjiWord[] {
+/** Cap for “popular” examples per kanji in training / UI lists. */
+export const POPULAR_WORDS_PER_KANJI = 12
+
+function sortWords(list: KanjiWord[], character?: string): KanjiWord[] {
   return [...list].sort((left, right) => {
     const jlptDelta = (right.jlpt ?? 0) - (left.jlpt ?? 0)
     if (jlptDelta) return jlptDelta
     if (Boolean(right.common) !== Boolean(left.common)) {
       return Number(Boolean(right.common)) - Number(Boolean(left.common))
+    }
+    if (character) {
+      const leftSolo = left.writing === character ? 1 : 0
+      const rightSolo = right.writing === character ? 1 : 0
+      if (leftSolo !== rightSolo) return rightSolo - leftSolo
     }
     if (left.writing.length !== right.writing.length) {
       return left.writing.length - right.writing.length
@@ -81,7 +88,8 @@ export function getKanjiUsingComponent(id: string, limit = 24): KanjiInfo[] {
 
 export function getWordsForKanji(character: string): KanjiWord[] {
   const indexes = wordsByKanjiMap[character] ?? []
-  return indexes.map((index) => KANJI_WORDS[index]).filter(Boolean)
+  const list = indexes.map((index) => KANJI_WORDS[index]).filter(Boolean)
+  return sortWords(list, character)
 }
 
 export function getWordById(id: string | null | undefined): KanjiWord | null {
@@ -127,70 +135,50 @@ export function searchWords(query: string, { limit = 80 }: { limit?: number } = 
   return results
 }
 
-export function getTopWordsForKanji(character: string, limit = 5): KanjiWord[] {
-  return getWordsForKanji(character).slice(0, Math.max(0, limit))
+export function getTopWordsForKanji(
+  character: string,
+  limit = POPULAR_WORDS_PER_KANJI,
+): KanjiWord[] {
+  return getPopularWordsForKanji(character, limit)
 }
 
-export function isWordAllowedByComplexity(
-  word: Pick<KanjiWord, 'kanji'>,
-  targetKanji: string,
-  learnedSet: Set<string>,
-): boolean {
-  const targetLevel = levelByKanji[targetKanji]
-  if (targetLevel === undefined) {
-    return false
-  }
-
-  for (const ch of word.kanji ?? []) {
-    if (ch === targetKanji) {
-      continue
-    }
-    if (learnedSet.has(ch)) {
-      continue
-    }
-    const level = levelByKanji[ch]
-    // Unknown neighbor or harder JLPT (lower number) → block when filtering.
-    if (level === undefined) {
-      return false
-    }
-    if (level === 0) {
-      // Jōyō-only without JLPT: allow if target is also advanced/joyo (level ≤ 2 or 0).
-      if (targetLevel !== 0 && targetLevel > 2) {
-        return false
-      }
-      continue
-    }
-    if (level < targetLevel) {
-      return false
-    }
-  }
-  return true
+/**
+ * Most useful study words for a kanji: JLPT-tagged first (N5→N1), then shorter /
+ * single-character writings. Falls back to untagged words when JLPT coverage is thin.
+ */
+export function getPopularWordsForKanji(
+  character: string,
+  limit = POPULAR_WORDS_PER_KANJI,
+): KanjiWord[] {
+  const cap = Math.max(0, limit)
+  if (!cap) return []
+  const sorted = getWordsForKanji(character)
+  const withJlpt = sorted.filter((word) => typeof word.jlpt === 'number' && word.jlpt >= 1 && word.jlpt <= 5)
+  const pool = withJlpt.length >= Math.min(4, cap) ? withJlpt : sorted
+  return pool.slice(0, cap)
 }
 
 export function getPracticeWords(
   character: string,
   {
-    learned = [],
-    complexityFilter = true,
     excludedIds = [],
     wordJlptLevels = [],
-    limit = 12,
+    limit = POPULAR_WORDS_PER_KANJI,
   }: {
-    learned?: string[]
-    complexityFilter?: boolean
     excludedIds?: string[]
     /** Empty = no JLPT filter. Otherwise keep words whose `jlpt` is in the list. */
     wordJlptLevels?: number[]
     limit?: number
   } = {},
 ): KanjiWord[] {
-  const learnedSet = new Set(learned)
   const excluded = new Set(excludedIds)
   const jlptAllow = new Set(wordJlptLevels.filter((level) => level >= 1 && level <= 5))
-  const pool = getWordsForKanji(character).filter((word) => !word.id || !excluded.has(word.id))
-  let filtered = complexityFilter
-    ? pool.filter((word) => isWordAllowedByComplexity(word, character, learnedSet))
-    : pool
+  // Prefer the popular shortlist unless the caller asks for a wide pool.
+  const source =
+    limit > POPULAR_WORDS_PER_KANJI
+      ? getWordsForKanji(character)
+      : getPopularWordsForKanji(character, POPULAR_WORDS_PER_KANJI)
+  let filtered = source.filter((word) => !word.id || !excluded.has(word.id))
   if (jlptAllow.size) {
     filtered = filtered.filter((word) => typeof word.jlpt === 'number' && jlptAllow.has(word.jlpt))
   }

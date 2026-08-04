@@ -57,6 +57,10 @@ export function useAppRouter() {
   }, [syncFromLocation])
 
   useEffect(() => {
+    if (pathname === '/vocab/train') {
+      navigate(pathForRoute({ page: 'train' }), { replace: true })
+      return
+    }
     if (!isKnownPath(pathname)) {
       navigate(pathForRoute({ page: 'home' }), { replace: true })
     }

@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { id: 'kana', label: 'Кана', href: PATHS.kana, testId: 'nav-kana' },
   { id: 'kanji', label: 'Кандзи', href: PATHS.kanji, testId: 'nav-kanji' },
   { id: 'numbers', label: 'Числа', href: PATHS.numbers, testId: 'nav-numbers' },
+  { id: 'train', label: 'Слова', href: PATHS.train, testId: 'nav-train' },
   { id: 'vocab', label: 'Словарь', href: PATHS.vocab, testId: 'nav-vocab' },
   { id: 'context', label: 'Контекст', href: PATHS.context, testId: 'nav-context' },
 ] as const

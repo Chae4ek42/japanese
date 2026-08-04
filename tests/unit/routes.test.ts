@@ -13,6 +13,7 @@ describe('routes', () => {
   it('нормализует слэши', () => {
     assert.equal(normalizePath('/'), '/')
     assert.equal(normalizePath('/kana/'), '/kana')
+    assert.equal(normalizePath('/train/'), '/train')
     assert.equal(normalizePath('/vocab/train/'), '/vocab/train')
   })
 
@@ -20,7 +21,8 @@ describe('routes', () => {
     assert.deepEqual(parsePath('/'), { page: 'home' })
     assert.deepEqual(parsePath('/kana'), { page: 'kana' })
     assert.deepEqual(parsePath('/vocab'), { page: 'vocab', section: 'catalog' })
-    assert.deepEqual(parsePath('/vocab/train'), { page: 'vocab', section: 'train' })
+    assert.deepEqual(parsePath('/train'), { page: 'train' })
+    assert.deepEqual(parsePath('/vocab/train'), { page: 'train' })
     assert.deepEqual(parsePath('/vocab/mine'), { page: 'vocab', section: 'mine' })
   })
 
@@ -28,12 +30,14 @@ describe('routes', () => {
     assert.deepEqual(parsePath('/nope'), { page: 'home' })
     assert.equal(isKnownPath('/nope'), false)
     assert.equal(isKnownPath('/kana'), true)
+    assert.equal(isKnownPath('/train'), true)
   })
 
   it('строит пути из маршрута и страницы', () => {
     assert.equal(pathForRoute({ page: 'numbers' }), '/numbers')
+    assert.equal(pathForRoute({ page: 'train' }), '/train')
     assert.equal(pathForRoute({ page: 'vocab', section: 'mine' }), '/vocab/mine')
-    assert.equal(pathForPage('vocab', 'train'), '/vocab/train')
+    assert.equal(pathForPage('train'), '/train')
     assert.equal(pathForPage('home'), '/')
   })
 

@@ -1,114 +1,116 @@
-import type { KanjiPreferences, KanjiWordJlptLevel } from '../../shared/lib/types'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { getKanjiInfo, getPracticeWords, getWordsForKanji } from '../../data/words/bank'
+import type { FormEvent } from 'react'
+import type { KanjiPreferences, KanjiWord, KanjiWordJlptLevel } from '../../shared/lib/types'
+import { useEffect, useMemo, useState } from 'react'
+import {
+  getKanjiInfo,
+  getPopularWordsForKanji,
+  getPracticeWords,
+  POPULAR_WORDS_PER_KANJI,
+} from '../../data/words/bank'
 import { formatKanjiReadings } from '../../shared/lib/format'
 import { speakJapanese, speakKanjiReadings } from '../../shared/lib/speech'
-import { useSwipeGestures } from '../../shared/lib/useSwipeGestures'
-import { useWordCarousel } from '../../shared/lib/useWordCarousel'
-import { ShortcutNote } from '../../shared/ui/ShortcutNote'
+import {
+  applyLocalWordEdits,
+  buildWordFromReadings,
+  cardToReadingDrafts,
+  createReadingDraft,
+  type ReadingDraft,
+} from '../vocab/customWords'
+import { mergeWordsByWriting, wordVariantIds } from '../vocab/mergeHomographs'
 import { GlossFootnotes } from './GlossFootnotes'
 import { HighlightedReading } from './HighlightedReading'
 import { KanjiComposition } from './KanjiComposition'
 import { KanjiGlyph } from './KanjiGlyph'
-import { KanjiWritingHotspots, isKanjiChar } from './KanjiWritingHotspots'
+import { isKanjiChar } from './KanjiWritingHotspots'
 import { WordJlptFilter } from './WordJlptFilter'
 
 export interface KanjiTrainerProps {
   character: string
   learned: string[]
-  complexityFilter: boolean
   wordJlptLevels?: KanjiWordJlptLevel[]
   hiddenWordIds?: string[]
   myWords: string[]
+  trainingWordIds?: string[]
+  customWords?: Record<string, KanjiWord>
   onPatchPreferences: (patch: Partial<KanjiPreferences>) => void
   onHideWord?: (wordId: string) => void
   onRestoreHiddenWords?: () => void
   onToggleLearned: (character: string) => void
   onToggleMyWord: (wordId: string) => void
+  onToggleTrainingWord?: (wordId: string) => void
+  onSaveWordEdit?: (word: KanjiWord) => void
   onBack: () => void
   onOpenInfo?: (character: string) => void
+}
+
+function wordKey(word: KanjiWord): string {
+  return word.id ?? `${word.writing}:${word.kana}`
 }
 
 export function KanjiTrainer({
   character,
   learned,
-  complexityFilter,
   wordJlptLevels = [],
   hiddenWordIds = [],
   myWords,
+  trainingWordIds = [],
+  customWords = {},
   onPatchPreferences,
   onHideWord,
   onRestoreHiddenWords,
   onToggleLearned,
   onToggleMyWord,
+  onToggleTrainingWord,
+  onSaveWordEdit,
   onBack,
   onOpenInfo,
 }: KanjiTrainerProps) {
   const info = getKanjiInfo(character)
   const isLearned = learned.includes(character)
   const [highlightElement, setHighlightElement] = useState<string | null>(null)
-
-  useEffect(() => {
-    setHighlightElement(null)
-  }, [character])
+  const [expandedKey, setExpandedKey] = useState<string | null>(null)
+  const [editing, setEditing] = useState(false)
+  const [editWriting, setEditWriting] = useState('')
+  const [editReadings, setEditReadings] = useState<ReadingDraft[]>([])
+  const [editError, setEditError] = useState('')
+  const mySet = useMemo(() => new Set(myWords), [myWords])
+  const trainingSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
 
   const words = useMemo(
     () =>
-      getPracticeWords(character, {
-        learned,
-        complexityFilter,
-        excludedIds: hiddenWordIds,
-        wordJlptLevels,
-        limit: 24,
-      }),
-    [character, learned, complexityFilter, hiddenWordIds, wordJlptLevels],
+      applyLocalWordEdits(
+        mergeWordsByWriting(
+          getPracticeWords(character, {
+            excludedIds: hiddenWordIds,
+            wordJlptLevels,
+            limit: POPULAR_WORDS_PER_KANJI,
+          }),
+        ),
+        customWords,
+        [],
+      ),
+    [character, hiddenWordIds, wordJlptLevels, customWords],
   )
-  const totalAvailable = getWordsForKanji(character).length
+  const totalAvailable = getPopularWordsForKanji(character).length
   const hiddenCount = hiddenWordIds.length
-  const {
-    index: wordIndex,
-    setIndex: setWordIndex,
-    revealed,
-    setRevealed,
-    activeItem: activeWord,
-    next,
-    prev,
-    toggleReveal,
-  } = useWordCarousel(words, { resetKey: character })
+  const expandedWord = words.find((word) => wordKey(word) === expandedKey) ?? null
 
   useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.code === 'ArrowRight') {
-        event.preventDefault()
-        next()
-        return
-      }
-      if (event.code === 'ArrowLeft') {
-        event.preventDefault()
-        prev()
-        return
-      }
-      if (event.code !== 'Space') {
-        return
-      }
-      event.preventDefault()
-      if (!activeWord) {
-        return
-      }
-      toggleReveal()
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [activeWord, next, prev, toggleReveal])
+    setExpandedKey(null)
+    setEditing(false)
+    setEditError('')
+  }, [character])
 
-  const swipeStageRef = useRef<HTMLElement>(null)
-  useSwipeGestures(swipeStageRef, {
-    onSwipeLeft: prev,
-    onSwipeRight: next,
-    onSwipeDown: () => {
-      if (activeWord) toggleReveal()
-    },
-  })
+  useEffect(() => {
+    if (!expandedWord) {
+      setEditing(false)
+      return
+    }
+    if (!words.some((word) => wordKey(word) === expandedKey)) {
+      setExpandedKey(null)
+      setEditing(false)
+    }
+  }, [words, expandedKey, expandedWord])
 
   function handleKanjiAuxClick(ch: string, event: React.MouseEvent<HTMLElement>) {
     if (event.button !== 1 || !isKanjiChar(ch)) return
@@ -116,8 +118,61 @@ export function KanjiTrainer({
     onOpenInfo?.(ch)
   }
 
+  function toggleExpanded(word: KanjiWord) {
+    const key = wordKey(word)
+    if (expandedKey === key) {
+      setExpandedKey(null)
+      setEditing(false)
+      setEditError('')
+      return
+    }
+    setExpandedKey(key)
+    setEditing(false)
+    setEditError('')
+  }
+
+  function openEditor(word: KanjiWord) {
+    if (!onSaveWordEdit) return
+    setEditWriting(word.writing)
+    setEditReadings(cardToReadingDrafts(word))
+    setEditError('')
+    setEditing(true)
+  }
+
+  function closeEditor() {
+    setEditing(false)
+    setEditError('')
+  }
+
+  function updateReading(key: string, patch: Partial<ReadingDraft>) {
+    setEditReadings((prev) => prev.map((item) => (item.key === key ? { ...item, ...patch } : item)))
+    if (editError) setEditError('')
+  }
+
+  function handleSaveEdit(event: FormEvent) {
+    event.preventDefault()
+    if (!onSaveWordEdit || !expandedWord) return
+    const ids = wordVariantIds(expandedWord)
+    const word = buildWordFromReadings({
+      writing: editWriting,
+      readings: editReadings,
+      id: expandedWord.id ?? ids[0],
+      jlpt: expandedWord.jlpt,
+      variantIds: ids,
+      kanji: expandedWord.kanji,
+    })
+    if (!word) {
+      setEditError('Заполните написание и хотя бы одно чтение с каной, ромадзи и значением.')
+      return
+    }
+    onSaveWordEdit(word)
+    setExpandedKey(wordKey(word))
+    setEditing(false)
+    setEditError('')
+  }
+
   return (
-    <section ref={swipeStageRef} className="kanji-trainer has-mobile-swipes" data-testid="kanji-trainer">
+    <section className="kanji-trainer" data-testid="kanji-trainer">
       <div className="kanji-trainer-toolbar">
         <button type="button" className="text-button" onClick={onBack}>
           ← Все кандзи
@@ -126,25 +181,18 @@ export function KanjiTrainer({
           <WordJlptFilter
             selected={wordJlptLevels}
             testIdPrefix="kanji-word-jlpt-trainer"
-            onChange={(next) => {
-              setWordIndex(0)
-              setRevealed(false)
-              onPatchPreferences({ wordJlptLevels: next })
-            }}
+            onChange={(next) => onPatchPreferences({ wordJlptLevels: next })}
           />
-          <label className="kanji-filter-toggle">
-            <input
-              type="checkbox"
-              data-testid="kanji-complexity-filter-trainer"
-              checked={complexityFilter}
-              onChange={(event) => {
-                setWordIndex(0)
-                setRevealed(false)
-                onPatchPreferences({ complexityFilter: event.target.checked })
-              }}
-            />
-            Только посильные слова
-          </label>
+          {hiddenCount && onRestoreHiddenWords ? (
+            <button
+              type="button"
+              className="text-button"
+              data-testid="kanji-restore-hidden-words"
+              onClick={onRestoreHiddenWords}
+            >
+              Вернуть скрытые ({hiddenCount})
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -212,129 +260,259 @@ export function KanjiTrainer({
           <div className="kanji-words-head">
             <div>
               <h3>Слова</h3>
-              <p className="subsection-note">
+              <p className="subsection-note" data-testid="kanji-word-pool-meta">
                 {words.length} из {totalAvailable}
                 {wordJlptLevels.length
                   ? ` · ${wordJlptLevels.map((level) => `N${level}`).join('+')}`
                   : ''}
-                {complexityFilter ? ' · посильные' : ''}
                 {hiddenCount ? ` · скрыто ${hiddenCount}` : ''}
               </p>
             </div>
-            <div className="kanji-words-head-actions">
-              {hiddenCount && onRestoreHiddenWords ? (
-                <button
-                  type="button"
-                  className="text-button"
-                  data-testid="kanji-restore-hidden-words"
-                  onClick={onRestoreHiddenWords}
-                >
-                  Вернуть скрытые
-                </button>
-              ) : null}
-              {activeWord ? (
-                <p className="kanji-word-progress">
-                  {wordIndex + 1} / {words.length}
-                </p>
-              ) : null}
-            </div>
           </div>
 
-          {!activeWord ? (
+          {!words.length ? (
             <div className="kanji-panel-body chart-empty" data-testid="kanji-no-words">
               {hiddenCount
-                ? 'Все слова скрыты. Нажмите «Вернуть скрытые» или отключите фильтр.'
-                : 'Подходящих слов нет. Ослабьте фильтр JLPT / сложности или отметьте больше соседних знаков.'}
+                ? 'Все слова скрыты. Нажмите «Вернуть скрытые».'
+                : 'Подходящих слов нет. Ослабьте фильтр JLPT.'}
             </div>
           ) : (
-            <>
-              <div
-                className={`kanji-panel-body kanji-word-stage ${revealed ? 'is-revealed' : ''}`}
-                data-testid="kanji-word-card"
-              >
-                <KanjiWritingHotspots
-                  writing={activeWord.writing}
-                  focusKanji={character}
-                  className="kanji-word-writing"
-                  writingTestId="kanji-word-writing"
-                  onOpenInfo={onOpenInfo}
-                />
-
-                {revealed ? (
-                  <div className="kanji-word-details">
-                    <HighlightedReading
-                      writing={activeWord.writing}
-                      kana={activeWord.kana}
-                      focusKanji={character}
-                      fallbackRomaji={activeWord.romaji}
-                      testId="kanji-word-kana"
-                    />
-                    <ul className="kanji-word-meanings" data-testid="kanji-word-meanings">
-                      {activeWord.meanings.map((meaning) => (
-                        <li key={meaning}>{meaning}</li>
-                      ))}
-                    </ul>
-                    <GlossFootnotes meanings={activeWord.meanings} />
-                    <p className="kanji-word-tags">
-                      {activeWord.jlpt ? `N${activeWord.jlpt}` : 'вне JLPT'}
-                      {activeWord.common ? ' · частое' : ''}
-                    </p>
-                  </div>
-                ) : (
-                  <ShortcutNote
-                    className="kanji-word-hint"
-                    keyboard={<>Пробел — показать или скрыть чтение и перевод · ←/→ слова</>}
-                    swipe={<>Свайп вниз — показать/скрыть · влево/вправо — слова</>}
-                  />
-                )}
-              </div>
-
-              <div className="kanji-panel-footer kanji-word-actions">
-                <button type="button" className="ghost-button" data-testid="kanji-prev-word" onClick={prev}>
-                  ←
-                </button>
-                <button
-                  type="button"
-                  className="primary-button"
-                  data-testid="kanji-reveal-word"
-                  onClick={toggleReveal}
-                >
-                  {revealed ? 'Скрыть' : 'Показать'}
-                </button>
-                <button type="button" className="ghost-button" data-testid="kanji-next-word" onClick={next}>
-                  →
-                </button>
-                <button
-                  type="button"
-                  className="ghost-button"
-                  data-testid="kanji-speak-word"
-                  onClick={() => speakJapanese(activeWord.kana || activeWord.writing)}
-                >
-                  ▶︎ Слушать
-                </button>
-                {activeWord.id ? (
-                  <button
-                    type="button"
-                    className={myWords.includes(activeWord.id) ? 'primary-button' : 'ghost-button'}
-                    data-testid="kanji-save-word"
-                    onClick={() => onToggleMyWord(activeWord.id!)}
+            <ul className="kanji-word-list" data-testid="kanji-word-list">
+              {words.map((word) => {
+                const key = wordKey(word)
+                const ids = wordVariantIds(word)
+                const primaryId = word.id ?? ids[0]
+                const inMine = ids.some((id) => mySet.has(id))
+                const inTraining = ids.some((id) => trainingSet.has(id))
+                const expanded = expandedKey === key
+                const meaningLine =
+                  word.meanings
+                    .slice(0, 2)
+                    .map((meaning) => meaning.replace(/^\d+\)\s*/, ''))
+                    .join(' · ') || '—'
+                return (
+                  <li
+                    key={key}
+                    className={expanded ? 'kanji-word-list-item is-expanded' : 'kanji-word-list-item'}
+                    data-testid={`kanji-word-row-${word.writing}`}
                   >
-                    {myWords.includes(activeWord.id) ? 'В моих' : '+ В мои'}
-                  </button>
-                ) : null}
-                {activeWord.id && onHideWord ? (
-                  <button
-                    type="button"
-                    className="ghost-button"
-                    data-testid="kanji-hide-word"
-                    title="Убрать это слово из набора для текущего кандзи"
-                    onClick={() => onHideWord(activeWord.id!)}
-                  >
-                    Убрать
-                  </button>
-                ) : null}
-              </div>
-            </>
+                    <button
+                      type="button"
+                      className="kanji-word-list-main"
+                      aria-expanded={expanded}
+                      data-testid={`kanji-word-open-${word.writing}`}
+                      onClick={() => toggleExpanded(word)}
+                    >
+                      <span className="kanji-word-list-writing" data-testid="kanji-word-writing">
+                        {word.writing}
+                      </span>
+                      <div className="kanji-word-list-body">
+                        <HighlightedReading
+                          writing={word.writing}
+                          kana={word.kana}
+                          focusKanji={character}
+                          fallbackRomaji={word.romaji}
+                          testId="kanji-word-kana"
+                        />
+                        <p className="kanji-word-list-meaning" data-testid="kanji-word-meanings" title={meaningLine}>
+                          {meaningLine}
+                        </p>
+                      </div>
+                      <span className="kanji-word-list-tag">
+                        {word.jlpt ? `N${word.jlpt}` : '—'}
+                        {word.readings && word.readings.length > 1 ? ` · ${word.readings.length}` : ''}
+                      </span>
+                    </button>
+
+                    {expanded ? (
+                      <div className="kanji-word-detail" data-testid="kanji-word-detail">
+                        {editing && onSaveWordEdit ? (
+                          <form
+                            className="kanji-word-editor"
+                            data-testid="kanji-word-editor"
+                            onSubmit={handleSaveEdit}
+                          >
+                            <label className="kanji-word-edit-writing">
+                              Написание
+                              <input
+                                data-testid="kanji-word-edit-writing"
+                                value={editWriting}
+                                onChange={(event) => {
+                                  setEditWriting(event.target.value)
+                                  if (editError) setEditError('')
+                                }}
+                                autoComplete="off"
+                              />
+                            </label>
+                            <div className="kanji-word-edit-readings">
+                              {editReadings.map((reading, index) => (
+                                <fieldset
+                                  key={reading.key}
+                                  className="kanji-word-edit-reading"
+                                  data-testid={`kanji-word-edit-reading-${index}`}
+                                >
+                                  <legend>Чтение {index + 1}</legend>
+                                  <div className="kanji-word-edit-grid">
+                                    <label>
+                                      Кана
+                                      <input
+                                        data-testid={`kanji-word-edit-kana-${index}`}
+                                        value={reading.kana}
+                                        onChange={(event) =>
+                                          updateReading(reading.key, { kana: event.target.value })
+                                        }
+                                        autoComplete="off"
+                                      />
+                                    </label>
+                                    <label>
+                                      Ромадзи
+                                      <input
+                                        data-testid={`kanji-word-edit-romaji-${index}`}
+                                        value={reading.romaji}
+                                        onChange={(event) =>
+                                          updateReading(reading.key, { romaji: event.target.value })
+                                        }
+                                        autoComplete="off"
+                                        spellCheck={false}
+                                      />
+                                    </label>
+                                    <label className="kanji-word-edit-wide">
+                                      Значения
+                                      <textarea
+                                        data-testid={`kanji-word-edit-meanings-${index}`}
+                                        value={reading.meanings}
+                                        onChange={(event) =>
+                                          updateReading(reading.key, { meanings: event.target.value })
+                                        }
+                                        rows={2}
+                                        autoComplete="off"
+                                      />
+                                    </label>
+                                  </div>
+                                  {editReadings.length > 1 ? (
+                                    <button
+                                      type="button"
+                                      className="text-button"
+                                      onClick={() =>
+                                        setEditReadings((prev) =>
+                                          prev.filter((item) => item.key !== reading.key),
+                                        )
+                                      }
+                                    >
+                                      Убрать чтение
+                                    </button>
+                                  ) : null}
+                                </fieldset>
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              className="ghost-button"
+                              data-testid="kanji-word-edit-add-reading"
+                              onClick={() => setEditReadings((prev) => [...prev, createReadingDraft()])}
+                            >
+                              + Ещё чтение
+                            </button>
+                            {editError ? (
+                              <p className="feedback is-error" role="alert">
+                                {editError}
+                              </p>
+                            ) : null}
+                            <div className="kanji-word-detail-actions">
+                              <button type="submit" className="secondary-button" data-testid="kanji-word-edit-save">
+                                Сохранить
+                              </button>
+                              <button
+                                type="button"
+                                className="ghost-button"
+                                data-testid="kanji-word-edit-cancel"
+                                onClick={closeEditor}
+                              >
+                                Отмена
+                              </button>
+                            </div>
+                          </form>
+                        ) : (
+                          <>
+                            <div className="kanji-word-detail-readings">
+                              <HighlightedReading
+                                writing={word.writing}
+                                kana={word.kana}
+                                focusKanji={character}
+                                fallbackRomaji={word.romaji}
+                              />
+                            </div>
+                            <ul className="kanji-word-detail-meanings" data-testid="kanji-word-detail-meanings">
+                              {word.meanings.map((meaning) => (
+                                <li key={meaning}>{meaning}</li>
+                              ))}
+                            </ul>
+                            <GlossFootnotes meanings={word.meanings} />
+                            <div className="kanji-word-detail-actions">
+                              <button
+                                type="button"
+                                className="ghost-button"
+                                data-testid="kanji-speak-word"
+                                onClick={() => speakJapanese(word.kana || word.writing)}
+                              >
+                                ▶ Прослушать
+                              </button>
+                              {primaryId && onToggleTrainingWord ? (
+                                <button
+                                  type="button"
+                                  className={inTraining ? 'primary-button' : 'ghost-button'}
+                                  data-testid={`kanji-train-word-${primaryId}`}
+                                  onClick={() => {
+                                    for (const id of ids) {
+                                      if (inTraining === trainingSet.has(id)) onToggleTrainingWord(id)
+                                    }
+                                  }}
+                                >
+                                  {inTraining ? 'В наборе' : '+ В набор'}
+                                </button>
+                              ) : null}
+                              {primaryId ? (
+                                <button
+                                  type="button"
+                                  className={inMine ? 'primary-button' : 'ghost-button'}
+                                  data-testid="kanji-save-word"
+                                  onClick={() => onToggleMyWord(primaryId)}
+                                >
+                                  {inMine ? 'В моих' : '+ В мои'}
+                                </button>
+                              ) : null}
+                              {onSaveWordEdit ? (
+                                <button
+                                  type="button"
+                                  className="ghost-button"
+                                  data-testid="kanji-word-edit"
+                                  onClick={() => openEditor(word)}
+                                >
+                                  Изменить
+                                </button>
+                              ) : null}
+                              {primaryId && onHideWord ? (
+                                <button
+                                  type="button"
+                                  className="ghost-button"
+                                  data-testid="kanji-hide-word"
+                                  onClick={() => {
+                                    for (const id of ids) onHideWord(id)
+                                    setExpandedKey(null)
+                                  }}
+                                >
+                                  Убрать
+                                </button>
+                              ) : null}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ) : null}
+                  </li>
+                )
+              })}
+            </ul>
           )}
         </article>
       </div>

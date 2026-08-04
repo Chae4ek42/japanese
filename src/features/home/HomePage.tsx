@@ -40,10 +40,10 @@ const ENTRIES = [
   },
   {
     id: 'vocab-train',
-    href: PATHS.vocabTrain,
+    href: PATHS.train,
     symbol: '練',
     title: 'Слова',
-    text: 'Тренировка слов: ромадзи или выбор перевода из шести вариантов.',
+    text: 'Отдельный тренажёр: уровень, группа, кандзи или ваш набор слов.',
     action: 'Начать',
     testId: 'open-vocab-train',
   },

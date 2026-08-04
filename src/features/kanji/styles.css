@@ -628,12 +628,215 @@
   min-width: 0;
 }
 
+.kanji-word-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: auto;
+  max-height: min(620px, calc(100vh - 220px));
+}
+
+.kanji-word-list-item {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.kanji-word-list-item.is-expanded {
+  background: rgba(17, 17, 17, 0.02);
+}
+
+.kanji-word-list-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: center;
+  width: 100%;
+  padding: 8px 14px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.kanji-word-list-writing {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.kanji-word-list-body {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.kanji-word-list-item .reading-highlight {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  align-items: baseline;
+  justify-items: start;
+}
+
+.kanji-word-list-item .kanji-word-kana {
+  font-size: 0.88rem;
+  line-height: 1.25;
+}
+
+.kanji-word-list-item .kanji-word-romaji {
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+
+.kanji-word-list-meaning {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kanji-word-list-tag {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.kanji-word-detail {
+  display: grid;
+  gap: 10px;
+  padding: 0 14px 12px;
+  animation: kanji-word-detail-in 160ms ease-out;
+}
+
+@keyframes kanji-word-detail-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.kanji-word-detail-readings .reading-highlight {
+  display: grid;
+  gap: 2px;
+  justify-items: start;
+}
+
+.kanji-word-detail-readings .kanji-word-kana {
+  font-size: 1.05rem;
+}
+
+.kanji-word-detail-readings .kanji-word-romaji {
+  font-size: 0.85rem;
+}
+
+.kanji-word-detail-meanings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.kanji-word-detail-meanings li {
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #f3f5f7;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.kanji-word-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.kanji-word-detail-actions .ghost-button,
+.kanji-word-detail-actions .primary-button,
+.kanji-word-detail-actions .secondary-button {
+  padding: 6px 10px;
+  font-size: 0.82rem;
+}
+
+.kanji-word-editor {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.kanji-word-edit-writing,
+.kanji-word-edit-grid label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--muted-strong);
+}
+
+.kanji-word-edit-writing input,
+.kanji-word-edit-grid input,
+.kanji-word-edit-grid textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  padding: 6px 8px;
+  border: 1px solid rgba(17, 17, 17, 0.14);
+  border-radius: 8px;
+}
+
+.kanji-word-edit-readings {
+  display: grid;
+  gap: 8px;
+}
+
+.kanji-word-edit-reading {
+  margin: 0;
+  padding: 8px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 10px;
+}
+
+.kanji-word-edit-reading legend {
+  padding: 0 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.kanji-word-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.kanji-word-edit-wide {
+  grid-column: 1 / -1;
+}
+
 .kanji-words-head {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
-  padding: 18px 22px 0;
+  padding: 14px 16px 0;
 }
 
 .kanji-words-head h3 {
@@ -684,16 +887,20 @@
 }
 
 .kanji-info-words .reading-highlight {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  align-items: baseline;
   justify-items: start;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .kanji-info-words .kanji-word-kana {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 .kanji-info-words .kanji-word-romaji {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
 
 .reading-seg {
@@ -879,25 +1086,33 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 8px;
+  gap: 0;
 }
 
 .kanji-info-words li {
   margin: 0;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: #f3f5f7;
+  padding: 8px 0;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+  border-radius: 0;
+  background: transparent;
+}
+
+.kanji-info-words li:first-child {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .kanji-info-word-main {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .kanji-info-word-writing {
   font-family: 'Noto Sans JP', sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
   line-height: 1.2;
 }
 
@@ -910,10 +1125,13 @@
 }
 
 .kanji-info-word-meaning {
-  margin: 4px 0 0;
+  margin: 2px 0 0;
   color: var(--muted);
-  font-size: 0.84rem;
-  line-height: 1.35;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .kanji-info-actions {
@@ -948,6 +1166,30 @@
 @media (max-width: 720px) {
   .kanji-page {
     gap: 16px;
+  }
+
+  .kanji-word-list-main {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'writing tag'
+      'body body';
+  }
+
+  .kanji-word-list-writing {
+    grid-area: writing;
+  }
+
+  .kanji-word-list-body {
+    grid-area: body;
+  }
+
+  .kanji-word-list-tag {
+    grid-area: tag;
+    justify-self: end;
+  }
+
+  .kanji-word-edit-grid {
+    grid-template-columns: 1fr;
   }
 
   .kanji-page-head {

@@ -12,8 +12,8 @@ import { sanitizeKanjiState } from './slices/kanji'
 import { DEFAULT_VOCAB_PREFERENCES, sanitizeVocabState } from './slices/vocab'
 import { DEFAULT_CONTEXT_PREFERENCES, sanitizeContextState } from './slices/context'
 
-export const CURRENT_VERSION = 20 as const
-export const KNOWN_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, CURRENT_VERSION]
+export const CURRENT_VERSION = 21 as const
+export const KNOWN_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, CURRENT_VERSION]
 
 export { DEFAULT_VOCAB_PREFERENCES, DEFAULT_CONTEXT_PREFERENCES }
 
@@ -43,7 +43,6 @@ export function createDefaultAppState(): AppState {
     kanji: {
       learned: [],
       preferences: {
-        complexityFilter: true,
         hiddenWordsByKanji: {},
         wordJlptLevels: [],
       },
@@ -53,6 +52,7 @@ export function createDefaultAppState(): AppState {
       customWords: {},
       hiddenWordIds: [],
       learnedWordIds: [],
+      trainingWordIds: [],
       preferences: { ...DEFAULT_VOCAB_PREFERENCES },
       stats: {},
     },

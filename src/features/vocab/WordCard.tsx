@@ -11,6 +11,8 @@ export interface WordCardProps {
   /** When set, shows «Выученные» checkbox (my-words list). */
   isLearned?: boolean
   onToggleLearned?: (word: KanjiWord) => void
+  inTrainingList?: boolean
+  onToggleTraining?: (word: KanjiWord) => void
 }
 
 function writingSizeClass(writing: string): string {
@@ -28,6 +30,8 @@ export function WordCard({
   onEdit,
   isLearned = false,
   onToggleLearned,
+  inTrainingList = false,
+  onToggleTraining,
 }: WordCardProps) {
   const readings = wordReadings(word)
   const variantIds = wordVariantIds(word)
@@ -118,6 +122,16 @@ export function WordCard({
             onClick={() => onEdit(word)}
           >
             Изменить
+          </button>
+        ) : null}
+        {wordId && onToggleTraining ? (
+          <button
+            type="button"
+            className={inTrainingList ? 'vocab-save-button is-saved' : 'vocab-save-button'}
+            data-testid={`vocab-training-${wordId}`}
+            onClick={() => onToggleTraining(word)}
+          >
+            {inTrainingList ? 'В наборе' : '+ В набор'}
           </button>
         ) : null}
         {wordId ? (

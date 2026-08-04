@@ -5,7 +5,7 @@ import { VOCAB_GROUPS, getWordsForGroup } from '../../src/features/vocab/groups'
 
 describe('vocab catalog', () => {
   it('группы содержат реальные слова', () => {
-    assert.ok(VOCAB_GROUPS.length >= 20)
+    assert.ok(VOCAB_GROUPS.length >= 30)
     const family = getWordsForGroup('family')
     assert.ok(family.length >= 10)
     assert.ok(family.every((word) => word.writing && word.kana && word.meanings.length))

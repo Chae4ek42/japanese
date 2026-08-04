@@ -1,16 +1,16 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import type { KanjiWord } from '../../src/shared/lib/types'
 import {
   KANJI_LIST,
+  POPULAR_WORDS_PER_KANJI,
   formatCompositionFormula,
   getComponent,
   getJoyoKanji,
   getKanjiComponents,
   getKanjiUsingComponent,
+  getPopularWordsForKanji,
   getPracticeWords,
   getWordsForKanji,
-  isWordAllowedByComplexity,
   pickRandomUnlearnedKanji,
 } from '../../src/data/words/bank'
 
@@ -35,33 +35,21 @@ describe('kanji bank', () => {
     assert.ok(sample.meanings.length)
   })
 
-  it('фильтр сложности отсекает слова с более сложными соседними кандзи', () => {
-    const hardWord = {
-      writing: '試験',
-      kanji: ['試', '験'],
-    } as Pick<KanjiWord, 'writing' | 'kanji'>
-    assert.equal(isWordAllowedByComplexity(hardWord, '日', new Set()), false)
-
-    const easyWord = {
-      writing: '日本',
-      kanji: ['日', '本'],
-    } as Pick<KanjiWord, 'writing' | 'kanji'>
-    assert.equal(isWordAllowedByComplexity(easyWord, '日', new Set()), true)
-    assert.equal(isWordAllowedByComplexity(easyWord, '日', new Set(['本'])), true)
-  })
-
-  it('getPracticeWords уважает флаг фильтра', () => {
-    const all = getPracticeWords('日', { complexityFilter: false, limit: 1000 })
-    const filtered = getPracticeWords('日', { complexityFilter: true, limit: 1000 })
-    assert.ok(all.length >= filtered.length)
+  it('getPopularWordsForKanji отдаёт короткий JLPT-список', () => {
+    const all = getWordsForKanji('日')
+    const popular = getPopularWordsForKanji('日')
+    assert.ok(popular.length > 0)
+    assert.ok(popular.length <= POPULAR_WORDS_PER_KANJI)
+    assert.ok(popular.length < all.length)
+    assert.ok(popular.every((word) => typeof word.jlpt === 'number'))
+    assert.ok(popular[0]!.jlpt === 5)
   })
 
   it('getPracticeWords исключает скрытые id', () => {
-    const all = getPracticeWords('日', { complexityFilter: false, limit: 20 })
+    const all = getPracticeWords('日', { limit: 20 })
     const firstId = all[0]?.id
     assert.ok(firstId)
     const next = getPracticeWords('日', {
-      complexityFilter: false,
       excludedIds: [firstId!],
       limit: 20,
     })
@@ -70,9 +58,8 @@ describe('kanji bank', () => {
   })
 
   it('getPracticeWords фильтрует слова по JLPT', () => {
-    const all = getPracticeWords('日', { complexityFilter: false, limit: 1000 })
+    const all = getPracticeWords('日', { limit: 1000 })
     const onlyN5 = getPracticeWords('日', {
-      complexityFilter: false,
       wordJlptLevels: [5],
       limit: 1000,
     })
@@ -80,7 +67,6 @@ describe('kanji bank', () => {
     assert.ok(onlyN5.length <= all.length)
     assert.ok(onlyN5.every((word) => word.jlpt === 5))
     const n5n4 = getPracticeWords('日', {
-      complexityFilter: false,
       wordJlptLevels: [5, 4],
       limit: 1000,
     })

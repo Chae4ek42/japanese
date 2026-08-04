@@ -35,10 +35,6 @@ export function sanitizeKanjiState(raw: unknown, fallback: AppState['kanji']): A
   return {
     learned,
     preferences: {
-      complexityFilter:
-        typeof source.preferences?.complexityFilter === 'boolean'
-          ? source.preferences.complexityFilter
-          : fallback.preferences.complexityFilter,
       hiddenWordsByKanji: sanitizeHiddenWordsByKanji(
         source.preferences?.hiddenWordsByKanji ?? fallback.preferences.hiddenWordsByKanji,
       ),

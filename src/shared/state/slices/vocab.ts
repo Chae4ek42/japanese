@@ -2,7 +2,7 @@ import type { KanjiWord, KanjiWordReading, StatsRecord, VocabPreferences, VocabS
 import { sanitizeWordJlptLevels } from './kanji'
 
 const VALID_VOCAB_DRILLS = new Set(['romaji', 'choice', 'mixed'])
-const VALID_VOCAB_SOURCES = new Set(['level', 'group', 'mine'])
+const VALID_VOCAB_SOURCES = new Set(['level', 'group', 'mine', 'kanji', 'list'])
 const VALID_VOCAB_LEVELS = new Set([5, 4, 3, 2, 1])
 const VALID_PICK_MODES = new Set(['adaptive', 'even'])
 const VALID_INPUT_MODES = new Set(['instant', 'submit'])
@@ -18,6 +18,21 @@ export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
   newWordLimit: -1,
   trainFullGroup: false,
   mineIncludeLearned: true,
+  selectedKanji: [],
+}
+
+function sanitizeSelectedKanji(raw: unknown, fallback: string[]): string[] {
+  if (!Array.isArray(raw)) return [...fallback]
+  const out: string[] = []
+  const seen = new Set<string>()
+  for (const item of raw) {
+    if (typeof item !== 'string') continue
+    const ch = item.trim()
+    if (!ch || seen.has(ch)) continue
+    seen.add(ch)
+    out.push(ch)
+  }
+  return out
 }
 
 function clampInt(value: unknown, min: number, max: number, fallback: number): number {
@@ -54,6 +69,7 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
       typeof source.mineIncludeLearned === 'boolean'
         ? source.mineIncludeLearned
         : fallback.mineIncludeLearned,
+    selectedKanji: sanitizeSelectedKanji(source.selectedKanji, fallback.selectedKanji ?? []),
   }
 }
 
@@ -158,6 +174,13 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
     ),
   ]
 
+  const trainingWordIds = [
+    ...new Set(
+      (Array.isArray(source.trainingWordIds) ? source.trainingWordIds : fallback.trainingWordIds ?? [])
+        .filter((item): item is string => typeof item === 'string' && item.length > 0),
+    ),
+  ]
+
   const stats =
     source.stats && typeof source.stats === 'object' ? { ...(source.stats as Record<string, StatsRecord>) } : {}
 
@@ -166,6 +189,7 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
     customWords,
     hiddenWordIds,
     learnedWordIds,
+    trainingWordIds,
     preferences: sanitizeVocabPreferences(source.preferences, fallback.preferences),
     stats,
   }

@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import { getKanjiInfo, getTopWordsForKanji } from '../../data/words/bank'
+import { useEffect, useMemo, useState } from 'react'
+import { getKanjiInfo, getPopularWordsForKanji, POPULAR_WORDS_PER_KANJI } from '../../data/words/bank'
 import { formatKanjiReadings } from '../../shared/lib/format'
 import { speakJapanese, speakKanjiReadings } from '../../shared/lib/speech'
+import { mergeWordsByWriting, wordVariantIds } from '../vocab/mergeHomographs'
 import { HighlightedReading } from './HighlightedReading'
 import { KanjiComposition } from './KanjiComposition'
 import { KanjiGlyph } from './KanjiGlyph'
@@ -10,13 +11,13 @@ export interface KanjiInfoCardProps {
   character: string
   learned?: boolean
   myWords?: string[]
+  trainingWordIds?: string[]
   onClose: () => void
   onToggleLearned?: (character: string) => void
   onToggleMyWord?: (wordId: string) => void
+  onToggleTrainingWord?: (wordId: string) => void
   onStartPractice?: (character: string) => void
 }
-
-const TOP_WORDS = 5
 
 function pushKanjiStack(stack: string[], next: string): string[] {
   if (!next || stack[stack.length - 1] === next) return stack
@@ -27,17 +28,23 @@ export function KanjiInfoCard({
   character,
   learned = false,
   myWords = [],
+  trainingWordIds = [],
   onClose,
   onToggleLearned,
   onToggleMyWord,
+  onToggleTrainingWord,
   onStartPractice,
 }: KanjiInfoCardProps) {
   const [stack, setStack] = useState<string[]>([character])
   const [highlightElement, setHighlightElement] = useState<string | null>(null)
   const current = stack[stack.length - 1] ?? character
   const info = getKanjiInfo(current)
-  const topWords = getTopWordsForKanji(current, TOP_WORDS)
-  const myWordSet = new Set(myWords)
+  const words = useMemo(
+    () => mergeWordsByWriting(getPopularWordsForKanji(current, POPULAR_WORDS_PER_KANJI)),
+    [current],
+  )
+  const myWordSet = useMemo(() => new Set(myWords), [myWords])
+  const trainingSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
 
   useEffect(() => {
     setStack([character])
@@ -161,43 +168,68 @@ export function KanjiInfoCard({
               onOpenCharacter={openComponent}
             />
 
-            {topWords.length ? (
+            {words.length ? (
               <section className="kanji-info-section" data-testid="kanji-info-words">
-                <h4>Частые слова</h4>
+                <h4>Слова</h4>
                 <ul className="kanji-info-words">
-                  {topWords.map((word) => (
-                    <li key={word.id ?? `${word.writing}-${word.kana}`}>
-                      <div className="kanji-info-word-main">
-                        <span className="kanji-info-word-writing">{word.writing}</span>
-                        <button
-                          type="button"
-                          className="text-button kanji-info-word-speak"
-                          data-testid={`kanji-info-speak-word-${word.writing}`}
-                          aria-label={`Озвучить ${word.writing}`}
-                          onClick={() => speakJapanese(word.kana || word.writing)}
-                        >
-                          ▶
-                        </button>
-                        {word.id && onToggleMyWord ? (
+                  {words.map((word) => {
+                    const ids = wordVariantIds(word)
+                    const primaryId = word.id ?? ids[0]
+                    const inMine = ids.some((id) => myWordSet.has(id))
+                    const inTraining = ids.some((id) => trainingSet.has(id))
+                    return (
+                      <li key={primaryId ?? `${word.writing}-${word.kana}`}>
+                        <div className="kanji-info-word-main">
+                          <span className="kanji-info-word-writing">{word.writing}</span>
                           <button
                             type="button"
-                            className="text-button"
-                            data-testid={`kanji-info-save-word-${word.id}`}
-                            onClick={() => onToggleMyWord(word.id!)}
+                            className="text-button kanji-info-word-speak"
+                            data-testid={`kanji-info-speak-word-${word.writing}`}
+                            aria-label={`Озвучить ${word.writing}`}
+                            onClick={() => speakJapanese(word.kana || word.writing)}
                           >
-                            {myWordSet.has(word.id) ? 'В моих' : '+ В мои'}
+                            ▶
                           </button>
-                        ) : null}
-                      </div>
-                      <HighlightedReading
-                        writing={word.writing}
-                        kana={word.kana}
-                        focusKanji={current}
-                        fallbackRomaji={word.romaji}
-                      />
-                      <p className="kanji-info-word-meaning">{word.meanings[0] ?? '—'}</p>
-                    </li>
-                  ))}
+                          {primaryId && onToggleTrainingWord ? (
+                            <button
+                              type="button"
+                              className="text-button"
+                              data-testid={`kanji-info-train-word-${primaryId}`}
+                              onClick={() => {
+                                for (const id of ids) {
+                                  if (inTraining === trainingSet.has(id)) onToggleTrainingWord(id)
+                                }
+                              }}
+                            >
+                              {inTraining ? 'В наборе' : '+ В набор'}
+                            </button>
+                          ) : null}
+                          {primaryId && onToggleMyWord ? (
+                            <button
+                              type="button"
+                              className="text-button"
+                              data-testid={`kanji-info-save-word-${primaryId}`}
+                              onClick={() => onToggleMyWord(primaryId)}
+                            >
+                              {inMine ? 'В моих' : '+ В мои'}
+                            </button>
+                          ) : null}
+                        </div>
+                        <HighlightedReading
+                          writing={word.writing}
+                          kana={word.kana}
+                          focusKanji={current}
+                          fallbackRomaji={word.romaji}
+                        />
+                        <p className="kanji-info-word-meaning">
+                          {word.meanings.slice(0, 2).join(' · ') || '—'}
+                          {word.readings && word.readings.length > 1
+                            ? ` · ${word.readings.length} чтения`
+                            : ''}
+                        </p>
+                      </li>
+                    )
+                  })}
                 </ul>
               </section>
             ) : null}
