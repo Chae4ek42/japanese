@@ -1,8 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type {
+  CardTrainerLiveSession,
   KanjiWord,
   KanjiWordJlptLevel,
+  LatencyModel,
+  MemoryState,
   PracticeSession,
+  ReviewDayCounters,
+  ReviewGrade,
   StatsRecord,
   VocabCard,
   VocabLevelFilter,
@@ -10,20 +15,18 @@ import type {
 } from '../../shared/lib/types'
 import {
   DEFAULT_HYPERPARAMS,
-  bumpSessionShow,
   createStatsRecord,
   pickNextCardId,
   pushRecentCard,
-  setCardCooldown,
-  successCooldownTurns,
 } from '../../shared/lib/trainer'
+import { afterSuccessfulCard, enqueueMistake, prepareShownCard } from '../../shared/lib/trainerCore'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
+import { DEFAULT_LATENCY_MODEL, isForgivableTypo } from '../../shared/lib/review/grade'
 import { getWordById, getWordsByWriting } from '../../data/words/bank'
 import {
   buildVocabPool,
   buildWideVocabDistractorPool,
   evaluateRomajiReadings,
-  filterTemporaryVocabPool,
   normalizeRomajiDraft,
   pickNextSourceCard,
   pickWeightedVocabCardId,
@@ -31,6 +34,20 @@ import {
 } from './pool'
 import { mergeWordsByWriting } from './mergeHomographs'
 import { buildMeaningPrompt, buildMixedPrompt, type VocabMixedPrompt } from './mixed'
+import {
+  answerLengthForCard,
+  cardHintsFromVocab,
+  drillModeToAspect,
+  deriveRoundGrade,
+  gradeAndAdvanceReview,
+  patchReviewWeights,
+  pickReviewCard,
+  removeCardFromReviewSession,
+  resolveCardMemory,
+  startReviewPracticeSession,
+} from './reviewSession'
+import type { PriorDifficultyHints } from '../../shared/lib/review/memory'
+import type { StatsOutcome, UpdateStatsContext } from '../../shared/lib/types'
 import { VocabPractice } from './VocabPractice'
 import { VocabSessionSidebar } from './VocabSessionSidebar'
 import { VocabSetup } from './VocabSetup'
@@ -38,15 +55,16 @@ import { VocabSetup } from './VocabSetup'
 export interface VocabTrainerProps {
   preferences: VocabPreferences
   stats: Record<string, StatsRecord>
+  memory?: Record<string, MemoryState>
+  latencyModel?: LatencyModel
+  reviewDay?: ReviewDayCounters
   myWords: string[]
   customWords?: Record<string, KanjiWord>
   hiddenWordIds?: string[]
   learnedWordIds?: string[]
   trainingWordIds?: string[]
-  /** Fixed card pool (e.g. kanji-scoped). Ignores preferences.source for pool building. */
-  poolOverride?: VocabCard[]
-  /** Treat like group: add-to-mine UX, mine exclusion via trainFullGroup. */
-  temporaryPool?: boolean
+  liveSession?: CardTrainerLiveSession | null
+  onSaveLiveSession?: (session: CardTrainerLiveSession | null) => void
   onPatchPreferences: (patch: Partial<VocabPreferences>) => void
   onUpdateStats: (
     cardId: string,
@@ -57,8 +75,24 @@ export interface VocabTrainerProps {
       mistakesOnCard?: number
       hintUsed?: boolean
       inputMode?: VocabPreferences['inputMode']
+      drillMode?: VocabPreferences['drillMode']
+      answerLength?: number
     },
   ) => void
+  onApplyGradedReview?: (input: {
+    cardId: string
+    aspect: 0 | 1
+    grade: ReviewGrade
+    now: number
+    latencyMs: number
+    drillMode: VocabPreferences['drillMode']
+    answerLength: number
+    hints?: PriorDifficultyHints
+    distractor?: string
+    masteryOutcome?: StatsOutcome
+    masteryContext?: UpdateStatsContext
+    countAsNewIntro?: boolean
+  }) => void
   onAddMyWords?: (wordIds: string[]) => void
   onSaveWordEdit?: (word: KanjiWord) => void
   onHideWords?: (wordIds: string[]) => void
@@ -69,15 +103,19 @@ export interface VocabTrainerProps {
 export function VocabTrainer({
   preferences,
   stats,
+  memory = {},
+  latencyModel = DEFAULT_LATENCY_MODEL,
+  reviewDay = { dayKey: '', newIntroduced: 0 },
   myWords,
   customWords = {},
   hiddenWordIds = [],
   learnedWordIds = [],
   trainingWordIds = [],
-  poolOverride,
-  temporaryPool = false,
+  liveSession = null,
+  onSaveLiveSession,
   onPatchPreferences,
   onUpdateStats,
+  onApplyGradedReview,
   onAddMyWords,
   onSaveWordEdit,
   onHideWords,
@@ -96,6 +134,7 @@ export function VocabTrainer({
     resetRound,
     patchRound,
     sessionStats,
+    setSessionStats,
     feedback,
     setFeedback,
     pendingAdvanceRef,
@@ -115,6 +154,9 @@ export function VocabTrainer({
   const inputRef = useRef<HTMLInputElement>(null)
   const preferencesRef = useRef(preferences)
   const statsRef = useRef(stats)
+  const memoryRef = useRef(memory)
+  const latencyModelRef = useRef(latencyModel)
+  const reviewDayRef = useRef(reviewDay)
   const myWordsRef = useRef(myWords)
   const customWordsRef = useRef(customWords)
   const hiddenWordIdsRef = useRef(hiddenWordIds)
@@ -124,49 +166,51 @@ export function VocabTrainer({
   const currentCardIdRef = useRef<string | null>(null)
   const navHistoryRef = useRef<string[]>([])
   const navIndexRef = useRef(-1)
+  const didRestoreLiveSessionRef = useRef(false)
   const [sessionWeightMultipliers, setSessionWeightMultipliers] = useState<Record<string, number>>({})
   const [selectedWeightCardId, setSelectedWeightCardId] = useState<string | null>(null)
+  const [setupExcludedIds, setSetupExcludedIds] = useState<Set<string>>(() => new Set())
 
   const poolOpts = { hiddenWordIds, learnedWordIds, trainingWordIds }
-  const usesOverride = Boolean(poolOverride)
-  const isTemporarySet = temporaryPool || usesOverride
   const isSetSource =
-    isTemporarySet ||
     preferences.source === 'group' ||
     preferences.source === 'kanji' ||
     preferences.source === 'list'
-  const activePool = useMemo(() => {
-    if (poolOverride) {
-      return filterTemporaryVocabPool(poolOverride, {
-        myWords,
-        trainFullGroup: preferences.trainFullGroup === true,
-        newWordLimit: preferences.newWordLimit ?? -1,
-        applyNewWordLimit: true,
-        wordJlptLevels: preferences.wordJlptLevels ?? [],
-      })
-    }
-    return buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: true, ...poolOpts })
-  }, [poolOverride, preferences, myWords, customWords, hiddenWordIds, learnedWordIds, trainingWordIds])
-  const sourcePool = useMemo(() => {
-    if (poolOverride) {
-      return filterTemporaryVocabPool(poolOverride, {
-        myWords,
-        trainFullGroup: preferences.trainFullGroup === true,
-        newWordLimit: preferences.newWordLimit ?? -1,
-        applyNewWordLimit: false,
-        wordJlptLevels: preferences.wordJlptLevels ?? [],
-      })
-    }
-    return buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: false, ...poolOpts })
-  }, [poolOverride, preferences, myWords, customWords, hiddenWordIds, learnedWordIds, trainingWordIds])
-  const poolOverrideRef = useRef(poolOverride)
-  const isTemporarySetRef = useRef(isTemporarySet)
+  const activePool = useMemo(
+    () =>
+      buildVocabPool(preferences, myWords, customWords, {
+        // v2 planner selects due/new itself; setup list shows the full filtered scope.
+        applyNewWordLimit: preferences.reviewV2 === false,
+        ...poolOpts,
+      }),
+    [preferences, myWords, customWords, hiddenWordIds, learnedWordIds, trainingWordIds],
+  )
+  const sourcePool = useMemo(
+    () => buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: false, ...poolOpts }),
+    [preferences, myWords, customWords, hiddenWordIds, learnedWordIds, trainingWordIds],
+  )
+  const startPool = useMemo(
+    () => activePool.filter((card) => !setupExcludedIds.has(card.id)),
+    [activePool, setupExcludedIds],
+  )
+
+  useEffect(() => {
+    setSetupExcludedIds((prev) => {
+      if (!prev.size) return prev
+      const allow = new Set(activePool.map((card) => card.id))
+      let changed = false
+      const next = new Set<string>()
+      for (const id of prev) {
+        if (allow.has(id)) next.add(id)
+        else changed = true
+      }
+      return changed || next.size !== prev.size ? next : prev
+    })
+  }, [activePool])
   const isSetSourceRef = useRef(isSetSource)
   useEffect(() => {
-    poolOverrideRef.current = poolOverride
-    isTemporarySetRef.current = isTemporarySet
     isSetSourceRef.current = isSetSource
-  }, [poolOverride, isTemporarySet, isSetSource])
+  }, [isSetSource])
   const activeCard = useMemo(() => {
     if (!currentCardId) return null
     const fromPool =
@@ -193,12 +237,31 @@ export function VocabTrainer({
   useEffect(() => {
     preferencesRef.current = preferences
     statsRef.current = stats
+    memoryRef.current = memory
+    latencyModelRef.current = latencyModel
+    reviewDayRef.current = reviewDay
     myWordsRef.current = myWords
     customWordsRef.current = customWords
     hiddenWordIdsRef.current = hiddenWordIds
     learnedWordIdsRef.current = learnedWordIds
     trainingWordIdsRef.current = trainingWordIds
-  }, [preferences, stats, myWords, customWords, hiddenWordIds, learnedWordIds, trainingWordIds])
+  }, [
+    preferences,
+    stats,
+    memory,
+    latencyModel,
+    reviewDay,
+    myWords,
+    customWords,
+    hiddenWordIds,
+    learnedWordIds,
+    trainingWordIds,
+  ])
+
+  function usesReviewV2(session?: PracticeSession) {
+    if (session?.review) return true
+    return preferencesRef.current.reviewV2 !== false
+  }
 
   useEffect(() => {
     activeCardRef.current = activeCard
@@ -207,6 +270,63 @@ export function VocabTrainer({
   useEffect(() => {
     currentCardIdRef.current = currentCardId
   }, [currentCardId])
+
+  useEffect(() => {
+    if (didRestoreLiveSessionRef.current) return
+    didRestoreLiveSessionRef.current = true
+    if (
+      !liveSession ||
+      liveSession.view !== 'practice' ||
+      !liveSession.currentCardId ||
+      !liveSession.session.poolIds.includes(liveSession.currentCardId)
+    ) {
+      return
+    }
+
+    const cardId = liveSession.currentCardId
+    sessionRef.current = liveSession.session
+    setSession(liveSession.session)
+    setSessionStats(liveSession.sessionStats)
+    setCurrentCardId(cardId)
+    setView('practice')
+    setSessionWeightMultipliers(liveSession.weightMultipliers ?? {})
+    navHistoryRef.current = liveSession.navHistory ?? []
+    navIndexRef.current = liveSession.navIndex ?? -1
+    setCanGoPrev((liveSession.navIndex ?? -1) > 0)
+    resetRound(Date.now())
+    setInputValue('')
+    setSelectedChoice(null)
+    setFeedback({ type: 'idle', text: '' })
+
+    const mode = preferencesRef.current.drillMode
+    const card =
+      activePool.find((item) => item.id === cardId) ??
+      sourcePool.find((item) => item.id === cardId) ??
+      null
+    if (card && (mode === 'choice' || mode === 'mixed')) {
+      const distractorPool = buildWideVocabDistractorPool(customWordsRef.current, hiddenWordIdsRef.current)
+      const optionsPool = distractorPool.length >= 6 ? distractorPool : sourcePool.length ? sourcePool : activePool
+      setCurrentPrompt(
+        mode === 'mixed' ? buildMixedPrompt(card, optionsPool) : buildMeaningPrompt(card, optionsPool),
+      )
+    } else {
+      setCurrentPrompt(null)
+    }
+  }, [liveSession, activePool, sourcePool, setSession, setSessionStats, setView, sessionRef, resetRound, setFeedback])
+
+  useEffect(() => {
+    if (!onSaveLiveSession) return
+    if (view !== 'practice' || !currentCardId) return
+    onSaveLiveSession({
+      session,
+      currentCardId,
+      view,
+      sessionStats,
+      weightMultipliers: sessionWeightMultipliers,
+      navHistory: navHistoryRef.current,
+      navIndex: navIndexRef.current,
+    })
+  }, [view, currentCardId, session, sessionStats, sessionWeightMultipliers, onSaveLiveSession])
 
   useEffect(() => {
     if (view !== 'practice' || !practicePool.length) {
@@ -262,7 +382,11 @@ export function VocabTrainer({
     cardId: string,
     nextSession: PracticeSession,
     optionsPool: VocabCard[],
-    { recordSeen = true }: { recordSeen?: boolean } = {},
+    {
+      recordSeen = true,
+      /** When false, do not bump showCounts/cooldowns (skip navigation). */
+      countPresentation = true,
+    }: { recordSeen?: boolean; countPresentation?: boolean } = {},
   ) {
     const now = Date.now()
     const practicePool = getPracticePool()
@@ -275,7 +399,11 @@ export function VocabTrainer({
     setInputValue('')
     setSelectedChoice(null)
     setFeedback({ type: 'idle', text: '' })
-    const shownSession = bumpSessionShow(nextSession, cardId)
+    // C5: presentation pacing only when this is a real drill show, not a nav skip.
+    const shownSession =
+      countPresentation && !usesReviewV2(nextSession)
+        ? prepareShownCard(nextSession, cardId)
+        : nextSession
     sessionRef.current = shownSession
     setSession(shownSession)
 
@@ -313,16 +441,6 @@ export function VocabTrainer({
 
   function resolveFullPool(applyNewWordLimit: boolean) {
     const prefs = preferencesRef.current
-    const override = poolOverrideRef.current
-    if (override) {
-      return filterTemporaryVocabPool(override, {
-        myWords: myWordsRef.current,
-        trainFullGroup: prefs.trainFullGroup === true,
-        newWordLimit: prefs.newWordLimit ?? -1,
-        applyNewWordLimit,
-        wordJlptLevels: prefs.wordJlptLevels ?? [],
-      })
-    }
     return buildVocabPool(prefs, myWordsRef.current, customWordsRef.current, {
       applyNewWordLimit,
       hiddenWordIds: hiddenWordIdsRef.current,
@@ -364,9 +482,29 @@ export function VocabTrainer({
       }
       return next
     })
+    if (sessionRef.current.review) {
+      const nextSession = patchReviewWeights(sessionRef.current, cardId, clamped)
+      sessionRef.current = nextSession
+      setSession(nextSession)
+    }
   }
 
   function pickNextVocabCardId(pool: VocabCard[], currentCardId: string | null, session: PracticeSession) {
+    // B7: freeze mode from the session when v2 is active.
+    if (usesReviewV2(session) && session.review) {
+      const picked = pickReviewCard(
+        session,
+        pool,
+        memoryRef.current,
+        statsRef.current,
+        preferencesRef.current,
+      )
+      sessionRef.current = picked.session
+      setSession(picked.session)
+      if (picked.done) return null
+      return picked.cardId
+    }
+
     if (preferencesRef.current.pickMode === 'even') {
       return pickWeightedVocabCardId(pool, {
         excludeIds: currentCardId ? [currentCardId] : [],
@@ -387,12 +525,7 @@ export function VocabTrainer({
 
   function getDistractorPool() {
     const prefs = preferencesRef.current
-    if (
-      poolOverrideRef.current ||
-      prefs.source === 'kanji' ||
-      prefs.source === 'list' ||
-      prefs.source === 'group'
-    ) {
+    if (prefs.source === 'kanji' || prefs.source === 'list' || prefs.source === 'group') {
       const wide = buildWideVocabDistractorPool(customWordsRef.current, hiddenWordIdsRef.current)
       if (wide.length >= 6) return wide
     }
@@ -415,9 +548,15 @@ export function VocabTrainer({
     const distractorPool = getDistractorPool()
     const optionsPool = distractorPool.length >= 6 ? distractorPool : pool
 
-    const nextSession = nextSessionOverride ?? sessionRef.current
+    let nextSession = nextSessionOverride ?? sessionRef.current
     const nextId = pickNextVocabCardId(pool, currentCardIdRef.current, nextSession)
+    nextSession = sessionRef.current
     if (!nextId) {
+      if (usesReviewV2(nextSession) && nextSession.review?.done) {
+        stopPractice()
+        setFeedback({ type: 'success', text: 'На сегодня всё — план сессии выполнен.' })
+        return
+      }
       setView('setup')
       setCurrentCardId(null)
       return
@@ -432,7 +571,7 @@ export function VocabTrainer({
         sinceQueuePick: pickedFromQueue ? 0 : (nextSession.sinceQueuePick ?? 0) + 1,
       },
       optionsPool,
-      { recordSeen: true },
+      { recordSeen: true, countPresentation: true },
     )
   }
 
@@ -451,7 +590,7 @@ export function VocabTrainer({
       navIndexRef.current -= 1
       setCanGoPrev(navIndexRef.current > 0)
       const prevId = navHistoryRef.current[navIndexRef.current]
-      showCard(prevId, sessionRef.current, optionsPool, { recordSeen: false })
+      showCard(prevId, sessionRef.current, optionsPool, { recordSeen: false, countPresentation: false })
       return
     }
 
@@ -459,36 +598,57 @@ export function VocabTrainer({
       navIndexRef.current += 1
       setCanGoPrev(navIndexRef.current > 0)
       const nextId = navHistoryRef.current[navIndexRef.current]
-      showCard(nextId, sessionRef.current, optionsPool, { recordSeen: false })
+      showCard(nextId, sessionRef.current, optionsPool, { recordSeen: false, countPresentation: false })
       return
+    }
+
+    // C6: hint opened then forward-skip counts as again.
+    const leaving = activeCardRef.current
+    if (leaving && roundRef.current.hintUsed && !roundRef.current.wrongRecorded) {
+      settleGrade({
+        card: leaving,
+        grade: 1,
+        wrong: true,
+        delay: 0,
+        distractor: undefined,
+        advance: false,
+      })
     }
 
     const currentId = currentCardIdRef.current
     const session = sessionRef.current
-    const pickSession: PracticeSession = currentId ? pushRecentCard(session, currentId) : session
+    const pickSession: PracticeSession =
+      usesReviewV2(session) || !currentId ? session : pushRecentCard(session, currentId)
     const nextId = pickNextVocabCardId(pool, currentId, pickSession)
     if (!nextId || nextId === currentId) {
       if (pool.length < 2) return
       const fallback = pool.find((card) => card.id !== currentId)
       if (!fallback) return
       rememberNavCard(fallback.id)
-      showCard(fallback.id, pickSession, optionsPool, { recordSeen: false })
+      showCard(fallback.id, sessionRef.current, optionsPool, {
+        recordSeen: false,
+        countPresentation: false,
+      })
       return
     }
 
     rememberNavCard(nextId)
-    showCard(nextId, pickSession, optionsPool, { recordSeen: false })
+    showCard(nextId, sessionRef.current, optionsPool, { recordSeen: false, countPresentation: false })
   }
 
   function startPractice() {
-    if (!activePool.length) {
+    const scope =
+      preferences.reviewV2 !== false
+        ? sourcePool.filter((card) => !setupExcludedIds.has(card.id))
+        : startPool
+    if (!scope.length) {
       setFeedback({
         type: 'error',
         text:
-          isTemporarySet
-            ? 'В этом наборе нет слов для тренировки.'
-            : preferences.source === 'mine'
-              ? 'В «Моих словах» пока пусто. Добавьте слова из каталога.'
+          preferences.source === 'mine'
+            ? 'В «Моих словах» пока пусто. Добавьте слова из каталога.'
+            : setupExcludedIds.size && activePool.length
+              ? 'Все слова исключены. Верните хотя бы одно в список справа.'
               : 'В этом наборе нет слов для тренировки.',
       })
       return
@@ -499,8 +659,37 @@ export function VocabTrainer({
     navHistoryRef.current = []
     navIndexRef.current = -1
     setCanGoPrev(false)
+
+    if (preferences.reviewV2 !== false) {
+      const planned = startReviewPracticeSession({
+        scope,
+        preferences,
+        memory: memoryRef.current,
+        stats: statsRef.current,
+        newUsedToday: reviewDayRef.current.newIntroduced,
+        weightMultipliers: {},
+      })
+      if (planned.planEmpty) {
+        setFeedback({
+          type: 'success',
+          text: 'На сегодня всё — нет карточек к повторению и новых по квоте.',
+        })
+        return
+      }
+      const nextSession = beginPractice(planned.session)
+      sessionRef.current = nextSession
+      advanceToNextCard(nextSession)
+      if (planned.dueCount || planned.newCount) {
+        setFeedback({
+          type: 'idle',
+          text: `К повторению: ${planned.dueCount}, новых: ${planned.newCount}`,
+        })
+      }
+      return
+    }
+
     const nextSession = beginPractice({
-      poolIds: activePool.map((card) => card.id),
+      poolIds: startPool.map((card) => card.id),
       mode: preferences.pickMode,
     })
     advanceToNextCard(nextSession)
@@ -518,63 +707,156 @@ export function VocabTrainer({
     navHistoryRef.current = []
     navIndexRef.current = -1
     setCanGoPrev(false)
+    onSaveLiveSession?.(null)
+  }
+
+  function settleGrade({
+    card,
+    grade,
+    wrong,
+    delay,
+    distractor,
+    advance = true,
+  }: {
+    card: VocabCard
+    grade: ReviewGrade
+    wrong: boolean
+    delay: number
+    distractor?: string
+    advance?: boolean
+  }) {
+    const now = Date.now()
+    const activeRound = roundRef.current
+    const prefs = preferencesRef.current
+    const latencyMs = Math.max(200, now - activeRound.shownAt)
+    const aspect = drillModeToAspect(prefs.drillMode)
+    const answerLength = answerLengthForCard(card.answers, prefs.drillMode)
+    const statsOutcome: 'correct' | 'wrong' | 'hint' =
+      grade === 1 ? 'wrong' : grade === 2 || activeRound.hintUsed ? 'hint' : 'correct'
+
+    if (onApplyGradedReview && usesReviewV2()) {
+      onApplyGradedReview({
+        cardId: card.id,
+        aspect,
+        grade,
+        now,
+        latencyMs,
+        drillMode: prefs.drillMode,
+        answerLength,
+        hints: cardHintsFromVocab(card),
+        distractor,
+        masteryOutcome: statsOutcome,
+        masteryContext: {
+          now,
+          latencyMs,
+          mistakesOnCard: activeRound.mistakes,
+          hintUsed: activeRound.hintUsed || grade === 1,
+          inputMode: prefs.inputMode,
+          drillMode: prefs.drillMode,
+          answerLength,
+        },
+        countAsNewIntro: true,
+      })
+    } else {
+      onUpdateStats(card.id, statsOutcome === 'wrong' ? 'wrong' : statsOutcome, {
+        now,
+        latencyMs,
+        mistakesOnCard: activeRound.mistakes,
+        hintUsed: activeRound.hintUsed || grade === 1,
+        inputMode: prefs.inputMode,
+        drillMode: prefs.drillMode,
+        answerLength,
+      })
+    }
+
+    let nextSession = sessionRef.current
+    if (usesReviewV2(nextSession) && nextSession.review) {
+      nextSession = gradeAndAdvanceReview({
+        session: nextSession,
+        cardId: card.id,
+        grade,
+        pool: getPracticePool(),
+      })
+    } else if (grade >= 3 || (!wrong && grade === 2 && !activeRound.hintUsed)) {
+      const poolSize = getPracticePool().length || nextSession.poolIds.length || 1
+      const clean = grade >= 3 && activeRound.mistakes === 0 && !activeRound.hintUsed
+      nextSession = afterSuccessfulCard(nextSession, card.id, {
+        kind: statsOutcome === 'hint' ? 'hint' : 'correct',
+        poolSize,
+        clean,
+      })
+    } else if (wrong || grade === 1) {
+      nextSession = enqueueMistake(nextSession, card.id)
+    }
+
+    recordCleanAnswer(grade >= 3 && activeRound.mistakes === 0 && !activeRound.hintUsed)
+    sessionRef.current = nextSession
+    setSession(nextSession)
+    patchRound({ wrongRecorded: true })
+
+    if (!advance) return
+    if (grade >= 3) setFeedback({ type: 'success', text: '' })
+    queueAdvance(() => advanceToNextCard(nextSession), delay)
   }
 
   function finalizeCorrect(kind: 'correct' | 'hint', delay = 280) {
     if (!activeCard) return
-
-    const now = Date.now()
     const activeRound = roundRef.current
-    const currentSession = sessionRef.current
-    const poolSize = getPracticePool().length || currentSession.poolIds.length || 1
-    const clean = kind === 'correct' && activeRound.mistakes === 0 && !activeRound.hintUsed
-
-    let nextSession: PracticeSession = {
-      ...pushRecentCard(currentSession, activeCard.id),
-      mistakeQueue: currentSession.mistakeQueue.filter((id) => id !== activeCard.id),
-    }
-
-    if (kind === 'hint') {
-      nextSession.mistakeQueue = [activeCard.id, ...nextSession.mistakeQueue].slice(
-        0,
-        DEFAULT_HYPERPARAMS.queueSize,
-      )
-    } else {
-      nextSession = setCardCooldown(
-        nextSession,
-        activeCard.id,
-        successCooldownTurns(poolSize, clean),
-      )
-    }
-
-    recordCleanAnswer(clean)
-    sessionRef.current = nextSession
-    setSession(nextSession)
-    onUpdateStats(activeCard.id, kind === 'hint' ? 'hint' : 'correct', {
+    const prefs = preferencesRef.current
+    const now = Date.now()
+    const mem = resolveCardMemory(
+      memoryRef.current,
+      statsRef.current,
+      activeCard.id,
+      drillModeToAspect(prefs.drillMode),
       now,
-      latencyMs: now - activeRound.shownAt,
+    )
+    const grade = deriveRoundGrade({
+      wrong: false,
+      hintUsed: kind === 'hint' || activeRound.hintUsed,
+      dontKnow: Boolean(activeRound.dontKnow),
+      typoForgiven: Boolean(activeRound.typoForgiven),
       mistakesOnCard: activeRound.mistakes,
-      hintUsed: activeRound.hintUsed || kind === 'hint',
-      inputMode: preferencesRef.current.inputMode,
+      latencyMs: now - activeRound.shownAt,
+      answers: activeCard.answers,
+      drillMode: prefs.drillMode,
+      latencyModel: latencyModelRef.current,
+      hadRecentLapse: mem.lapses > 0 && mem.lastAt > 0 && now - mem.lastAt < 8 * 3_600_000,
     })
-    setFeedback({ type: 'success', text: '' })
-    queueAdvance(() => advanceToNextCard(nextSession), delay)
+    settleGrade({ card: activeCard, grade, wrong: false, delay })
   }
 
   function registerWrongAttempt() {
     if (!activeCard) return
-    const now = Date.now()
-    patchRound({ mistakes: roundRef.current.mistakes + 1 })
-    setSession((prev) => ({
-      ...prev,
-      mistakeQueue: [activeCard.id, ...prev.mistakeQueue.filter((id) => id !== activeCard.id)].slice(
-        0,
-        DEFAULT_HYPERPARAMS.queueSize,
-      ),
-    }))
-    onUpdateStats(activeCard.id, 'wrong', {
-      now,
-      inputMode: preferencesRef.current.inputMode,
+    // C1: at most one again / stats wrong per round.
+    if (roundRef.current.wrongRecorded) {
+      patchRound({ mistakes: Math.max(1, roundRef.current.mistakes) })
+      return
+    }
+    patchRound({ mistakes: roundRef.current.mistakes + 1, wrongRecorded: true })
+    // C8: sync sessionRef immediately.
+    if (!usesReviewV2()) {
+      const nextSession = enqueueMistake(sessionRef.current, activeCard.id)
+      sessionRef.current = nextSession
+      setSession(nextSession)
+      onUpdateStats(activeCard.id, 'wrong', {
+        now: Date.now(),
+        inputMode: preferencesRef.current.inputMode,
+        drillMode: preferencesRef.current.drillMode,
+        answerLength: answerLengthForCard(activeCard.answers, preferencesRef.current.drillMode),
+      })
+    }
+  }
+
+  function handleDontKnow() {
+    if (!activeCard || viewRef.current !== 'practice' || pendingAdvanceRef.current) return
+    patchRound({ dontKnow: true, hintUsed: true, wrongRecorded: true })
+    setFeedback({ type: 'wrong', text: 'Не помню' })
+    settleGrade({
+      card: activeCard,
+      grade: 1,
+      wrong: true,
+      delay: preferences.drillMode === 'romaji' ? 500 : 900,
     })
   }
 
@@ -593,7 +875,13 @@ export function VocabTrainer({
     const result = evaluateRomajiReadings(activeCard.answers, value, 'instant')
 
     if (result === 'wrong') {
-      if (previousResult !== 'wrong') {
+      // C2: soft typo → hard, not again.
+      if (isForgivableTypo(activeCard.answers, value)) {
+        patchRound({ typoForgiven: true, mistakes: Math.max(roundRef.current.mistakes, 1) })
+        setFeedback({ type: 'wrong', text: 'Почти — проверьте опечатку' })
+        return
+      }
+      if (previousResult !== 'wrong' && !roundRef.current.wrongRecorded) {
         registerWrongAttempt()
         setFeedback({ type: 'wrong', text: '' })
       }
@@ -605,7 +893,10 @@ export function VocabTrainer({
     }
 
     if (result === 'correct') {
-      finalizeCorrect(round.hintUsed ? 'hint' : 'correct', 220)
+      finalizeCorrect(
+        roundRef.current.hintUsed || roundRef.current.wrongRecorded ? 'hint' : 'correct',
+        220,
+      )
     }
   }
 
@@ -615,12 +906,21 @@ export function VocabTrainer({
     if (result === 'empty') return
 
     if (result === 'correct') {
-      finalizeCorrect(roundRef.current.hintUsed ? 'hint' : 'correct', 220)
+      finalizeCorrect(
+        roundRef.current.hintUsed || roundRef.current.wrongRecorded ? 'hint' : 'correct',
+        220,
+      )
+      return
+    }
+
+    // C2: forgivable typo does not force hintUsed / again.
+    if (isForgivableTypo(activeCard.answers, inputValue)) {
+      patchRound({ typoForgiven: true, mistakes: Math.max(roundRef.current.mistakes, 1) })
+      setFeedback({ type: 'wrong', text: 'Почти — исправьте опечатку и отправьте снова' })
       return
     }
 
     registerWrongAttempt()
-    patchRound({ hintUsed: true })
     setInputValue('')
     setFeedback({
       type: 'wrong',
@@ -662,40 +962,36 @@ export function VocabTrainer({
       return
     }
 
-    registerWrongAttempt()
-    patchRound({ hintUsed: true })
+    // C7: choice wrong == romaji again (same grade / lag via settleGrade).
+    patchRound({ mistakes: roundRef.current.mistakes + 1, wrongRecorded: true, hintUsed: true })
     setFeedback({
       type: 'wrong',
       text: `Верно: ${currentPrompt.correctAnswer}`,
     })
-    const currentSession = sessionRef.current
-    const nextSession: PracticeSession = {
-      ...pushRecentCard(currentSession, activeCard.id),
-      mistakeQueue: [activeCard.id, ...currentSession.mistakeQueue.filter((id) => id !== activeCard.id)].slice(
-        0,
-        DEFAULT_HYPERPARAMS.queueSize,
-      ),
-    }
-    sessionRef.current = nextSession
-    setSession(nextSession)
-    recordCleanAnswer(false)
-    queueAdvance(() => advanceToNextCard(nextSession), 1100)
+    settleGrade({
+      card: activeCard,
+      grade: 1,
+      wrong: true,
+      delay: 1100,
+      distractor: answer,
+    })
   }
 
   function dropCardFromSession(cardId: string): PracticeSession {
     const currentSession = sessionRef.current
-    const poolIds = (
-      currentSession.poolIds.length
-        ? currentSession.poolIds
-        : getPracticePool().map((card) => card.id)
-    ).filter((id) => id !== cardId)
-    const nextSession: PracticeSession = {
-      ...currentSession,
-      poolIds,
-      mistakeQueue: currentSession.mistakeQueue.filter((id) => id !== cardId),
-      recentHistory: currentSession.recentHistory.filter((id) => id !== cardId),
-      lastCardId: currentSession.lastCardId === cardId ? null : currentSession.lastCardId,
-    }
+    const nextSession = usesReviewV2(currentSession)
+      ? removeCardFromReviewSession(currentSession, cardId)
+      : {
+          ...currentSession,
+          poolIds: (
+            currentSession.poolIds.length
+              ? currentSession.poolIds
+              : getPracticePool().map((card) => card.id)
+          ).filter((id) => id !== cardId),
+          mistakeQueue: currentSession.mistakeQueue.filter((id) => id !== cardId),
+          recentHistory: currentSession.recentHistory.filter((id) => id !== cardId),
+          lastCardId: currentSession.lastCardId === cardId ? null : currentSession.lastCardId,
+        }
     setSession(nextSession)
     sessionRef.current = nextSession
     setSessionWeightMultipliers((prev) => {
@@ -822,8 +1118,7 @@ export function VocabTrainer({
       preferences.source !== 'group' &&
       preferences.source !== 'level' &&
       preferences.source !== 'kanji' &&
-      preferences.source !== 'list' &&
-      !isTemporarySetRef.current
+      preferences.source !== 'list'
     ) {
       return
     }
@@ -943,16 +1238,14 @@ export function VocabTrainer({
     (preferences.source === 'group' ||
       preferences.source === 'level' ||
       preferences.source === 'kanji' ||
-      preferences.source === 'list' ||
-      isTemporarySet) &&
+      preferences.source === 'list') &&
     Boolean(pickNextSourceCard(sourcePool, session.poolIds))
 
   const showWordJlptFilter =
     preferences.source === 'group' ||
     preferences.source === 'mine' ||
     preferences.source === 'kanji' ||
-    preferences.source === 'list' ||
-    isTemporarySet
+    preferences.source === 'list'
 
   const practiceSidebar =
     view === 'practice' ? (
@@ -981,15 +1274,26 @@ export function VocabTrainer({
     return (
       <VocabSetup
         preferences={preferences}
+        poolCards={activePool}
         poolCount={activePool.length}
         sourcePoolCount={sourcePool.length}
         myWordsCount={myWords.length}
         myWordIds={myWords}
         errorText={feedback.type === 'error' ? feedback.text : ''}
         infoText={feedback.type === 'success' ? feedback.text : ''}
-        temporaryPool={isTemporarySet}
         trainingWordCount={trainingWordIds.length}
+        excludedIds={setupExcludedIds}
+        memory={memory}
         onPatchPreferences={onPatchPreferences}
+        onToggleExclude={(cardId) => {
+          setSetupExcludedIds((prev) => {
+            const next = new Set(prev)
+            if (next.has(cardId)) next.delete(cardId)
+            else next.add(cardId)
+            return next
+          })
+        }}
+        onClearExcluded={() => setSetupExcludedIds(new Set())}
         onStart={startPractice}
       />
     )
@@ -1027,6 +1331,7 @@ export function VocabTrainer({
       onInputChange={handleInputChange}
       onInputKeyDown={handleInputKeyDown}
       onRevealHint={revealHint}
+      onDontKnow={handleDontKnow}
       onChoose={handleChoose}
       onSkipPrev={() => skipToAdjacent('prev')}
       onSkipNext={() => skipToAdjacent('next')}

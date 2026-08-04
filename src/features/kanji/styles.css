@@ -30,6 +30,12 @@
   color: var(--muted);
 }
 
+.kanji-word-jlpt-hint {
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 .kanji-word-jlpt-tabs {
   display: inline-flex;
   flex-wrap: wrap;
@@ -109,6 +115,7 @@
   margin: 0;
   font-size: 1.05rem;
   letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
 }
 
 .kanji-composition-parts {
@@ -313,6 +320,8 @@
   font-size: 0.9rem;
   line-height: 1.45;
   color: var(--muted-strong);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .kanji-composition-used {
@@ -545,7 +554,8 @@
   margin: 0;
   padding: 8px 12px;
   border-radius: 10px;
-  background: #f3f5f7;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  background: #fff;
   color: var(--text);
   font-size: 0.95rem;
   line-height: 1.4;
@@ -626,6 +636,15 @@
 
 .kanji-words-panel {
   min-width: 0;
+  min-height: 100%;
+  height: 100%;
+}
+
+.kanji-trainer-layout .kanji-word-list,
+.vocab-setup-pool .kanji-word-list {
+  flex: 1;
+  max-height: none;
+  min-height: 0;
 }
 
 .kanji-word-list {
@@ -670,6 +689,14 @@
   font-weight: 700;
   line-height: 1.15;
   white-space: nowrap;
+}
+
+.kanji-word-list-writing .kanji-chip {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  padding: 0;
+  border-radius: 4px;
 }
 
 .kanji-word-list-body {
@@ -757,7 +784,8 @@
   margin: 0;
   padding: 6px 10px;
   border-radius: 8px;
-  background: #f3f5f7;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  background: #fff;
   font-size: 0.86rem;
   line-height: 1.35;
 }
@@ -887,12 +915,18 @@
 }
 
 .kanji-info-words .reading-highlight {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 8px;
-  align-items: baseline;
+  display: grid;
+  gap: 1px;
   justify-items: start;
   margin-top: 2px;
+  max-width: 100%;
+}
+
+.kanji-info-words .kanji-word-kana,
+.kanji-info-words .kanji-word-romaji {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .kanji-info-words .kanji-word-kana {
@@ -905,29 +939,64 @@
 
 .reading-seg {
   display: inline;
+  border-radius: 4px;
+  padding: 0 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.reading-seg.is-c0 {
+  color: #1d4f91;
+  background: rgba(29, 79, 145, 0.1);
+  font-weight: 700;
+}
+
+.reading-seg.is-c1 {
+  color: #0f7a5a;
+  background: rgba(15, 122, 90, 0.1);
+  font-weight: 700;
+}
+
+.reading-seg.is-c2 {
+  color: #b45309;
+  background: rgba(180, 83, 9, 0.1);
+  font-weight: 700;
+}
+
+.reading-seg.is-c3 {
+  color: #9f1239;
+  background: rgba(159, 18, 57, 0.1);
+  font-weight: 700;
+}
+
+.reading-seg.is-c4 {
+  color: #0e7490;
+  background: rgba(14, 116, 144, 0.1);
+  font-weight: 700;
+}
+
+.reading-seg.is-c5 {
+  color: #854d0e;
+  background: rgba(133, 77, 14, 0.1);
+  font-weight: 700;
+}
+
+.reading-seg.is-okuri,
+.reading-seg.is-other {
+  color: var(--muted-strong);
+  font-weight: 400;
+  background: transparent;
+  padding: 0;
+}
+
+.reading-seg.is-shared,
+.reading-seg.is-shared-reading {
+  box-shadow: inset 0 -2px 0 currentColor;
 }
 
 .reading-seg.is-focus {
-  color: #1d4f91;
-  font-weight: 700;
-  background: rgba(29, 79, 145, 0.1);
-  border-radius: 4px;
-  padding: 0 2px;
-  box-decoration-break: clone;
-}
-
-.reading-seg.is-other {
-  color: var(--muted);
-  font-weight: 400;
-}
-
-.reading-seg.is-shared {
-  color: var(--muted-strong);
-  font-weight: 600;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-  padding: 0 2px;
-  box-decoration-break: clone;
+  /* Avoid outline expanding modal scrollport */
+  box-shadow: 0 0 0 1px currentColor;
 }
 
 .kanji-word-romaji .reading-seg.is-focus {
@@ -1017,12 +1086,16 @@
   place-items: center;
   padding: 24px;
   background: rgba(18, 18, 18, 0.42);
+  overflow: auto;
 }
 
 .kanji-info-card {
-  width: min(440px, 100%);
+  width: min(560px, calc(100vw - 48px));
+  max-width: min(560px, calc(100vw - 48px));
+  min-width: 0;
   max-height: min(860px, calc(100vh - 48px));
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: grid;
   gap: 16px;
   padding: 22px 22px 18px;
@@ -1030,6 +1103,20 @@
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 8px 24px rgba(17, 17, 17, 0.1);
+  box-sizing: border-box;
+}
+
+.kanji-info-card > *,
+.kanji-info-section,
+.kanji-info-words,
+.kanji-info-words li,
+.kanji-composition {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.kanji-info-card .kanji-hero-readings {
+  width: 100%;
 }
 
 .kanji-info-head {
@@ -1077,7 +1164,8 @@
   margin: 0;
   padding: 8px 12px;
   border-radius: 10px;
-  background: #f3f5f7;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  background: #fff;
   line-height: 1.4;
 }
 
@@ -1105,8 +1193,10 @@
 .kanji-info-word-main {
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   gap: 8px;
   min-width: 0;
+  max-width: 100%;
 }
 
 .kanji-info-word-writing {
@@ -1114,6 +1204,7 @@
   font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.2;
+  min-width: 0;
 }
 
 .kanji-info-word-speak {
@@ -1129,6 +1220,7 @@
   color: var(--muted);
   font-size: 0.78rem;
   line-height: 1.3;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1256,6 +1348,7 @@
   .kanji-info-card {
     width: 100%;
     max-width: none;
+    min-width: 0;
     max-height: min(90vh, 780px);
     margin: 0;
     border-radius: 16px 16px 0 0;

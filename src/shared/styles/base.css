@@ -17,6 +17,10 @@
   margin: 0 auto;
 }
 
+.app-shell:has(.train-page) {
+  max-width: 1680px;
+}
+
 .site-header {
   display: grid;
   gap: 12px;
@@ -32,6 +36,14 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
+}
+
+.site-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px 10px;
 }
 
 .site-header-brand {
@@ -71,7 +83,7 @@
   padding: 3px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: #fafafa;
+  background: #fff;
   max-width: 100%;
   min-width: 0;
 }
@@ -92,7 +104,7 @@
 }
 
 .site-nav-link:hover {
-  background: #f0f0f0;
+  background: rgba(17, 17, 17, 0.04);
   color: var(--text);
 }
 
@@ -374,7 +386,7 @@ h1 {
 .column-toggle:hover,
 .selection-cell:hover,
 .mode-card:hover {
-  background: #f4f4f4;
+  background: rgba(17, 17, 17, 0.04);
 }
 
 .tab.is-active,
@@ -416,8 +428,8 @@ h1 {
   display: inline-block;
   padding: 5px 12px;
   border-radius: 999px;
-  background: #f3ede4;
-  border: 1px solid rgba(92, 74, 50, 0.12);
+  background: #fff;
+  border: 1px solid rgba(17, 17, 17, 0.12);
 }
 
 .control-group {
@@ -485,7 +497,7 @@ h1 {
 .selection-cell.is-active,
 .mode-card.is-active {
   border-color: #111;
-  background: #f4f4f4;
+  background: rgba(17, 17, 17, 0.06);
 }
 
 .selection-cell.is-learned {
@@ -753,7 +765,7 @@ h1 {
 .infographic-track {
   height: 8px;
   border-radius: 999px;
-  background: #efefef;
+  background: rgba(17, 17, 17, 0.08);
   overflow: hidden;
 }
 
@@ -1020,7 +1032,7 @@ kbd {
 }
 
 .mastery-cell.is-untouched {
-  background: #f2f2f2;
+  background: rgba(17, 17, 17, 0.06);
   color: #b5b5b5;
 }
 

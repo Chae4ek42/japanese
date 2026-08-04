@@ -1,5 +1,10 @@
 import { getKanjiInfo } from '../../data/words/bank'
-import type { KanjiInfo, ReadingSegment, ReadingSegmentRole } from './types'
+import type {
+  ColoredReadingSegment,
+  KanjiInfo,
+  ReadingSegment,
+  ReadingSegmentRole,
+} from './types'
 import {
   isKanaChar,
   isKanjiChar,
@@ -7,6 +12,8 @@ import {
   toHiragana,
   withRendakuVariants,
 } from './kana'
+
+export const READING_COLOR_COUNT = 6
 
 interface AlignSegment extends ReadingSegment {
   source?: string
@@ -53,6 +60,9 @@ function candidateReadings(character: string): string[] {
 }
 
 function roleForChars(chars: string, focusKanji: string): ReadingSegmentRole {
+  if (!focusKanji) {
+    return chars.length > 1 ? 'shared' : 'other'
+  }
   if (chars === focusKanji) {
     return 'focus'
   }
@@ -129,6 +139,7 @@ export function alignReading(
     }
 
     const known = candidateReadings(ch)
+    let knownHit = false
 
     for (const candidate of known) {
       if (!reading.startsWith(candidate, ri)) {
@@ -136,6 +147,7 @@ export function alignReading(
       }
       const rest = solve(wi + 1, ri + candidate.length)
       if (rest) {
+        knownHit = true
         options.push({
           segments: [
             {
@@ -151,32 +163,15 @@ export function alignReading(
       }
     }
 
-    if (!known.length) {
-      for (let take = 1; take <= reading.length - ri; take += 1) {
-        const slice = reading.slice(ri, ri + take)
-        const rest = solve(wi + 1, ri + take)
-        if (rest) {
-          options.push({
-            segments: [
-              {
-                chars: ch,
-                kana: slice,
-                role: roleForChars(ch, focusKanji),
-                source: 'guess',
-              },
-              ...rest.segments,
-            ],
-            score: 2 + rest.score,
-          })
-        }
-      }
-    }
-
     let end = wi + 1
     while (end < chars.length && isKanjiChar(chars[end])) {
       end += 1
     }
-    if (end > wi + 1) {
+    const runLen = end - wi
+
+    // Multi-kanji run: allow a shared slice for jukujikun / ateji / irregular compounds.
+    // Score beats known+guess hybrids (≈12) but loses to clean per-kanji known matches (10 each).
+    if (runLen > 1) {
       const groupChars = chars.slice(wi, end).join('')
       for (let take = 1; take <= reading.length - ri; take += 1) {
         const slice = reading.slice(ri, ri + take)
@@ -192,7 +187,27 @@ export function alignReading(
               },
               ...rest.segments,
             ],
-            score: Math.max(0, 3 - groupChars.length) + rest.score,
+            score: 14 + rest.score,
+          })
+        }
+      }
+    } else if (!knownHit) {
+      // Isolated kanji with non-dictionary reading (before okurigana / end).
+      for (let take = 1; take <= reading.length - ri; take += 1) {
+        const slice = reading.slice(ri, ri + take)
+        const rest = solve(wi + 1, ri + take)
+        if (rest) {
+          options.push({
+            segments: [
+              {
+                chars: ch,
+                kana: slice,
+                role: roleForChars(ch, focusKanji),
+                source: 'guess',
+              },
+              ...rest.segments,
+            ],
+            score: 2 + rest.score,
           })
         }
       }
@@ -223,6 +238,7 @@ export function mergeReadingSegments(segments: ReadingSegment[] | null | undefin
         chars: segment.chars,
         kana: segment.kana,
         role,
+        source: segment.source,
         romaji: '',
       })
     }
@@ -243,4 +259,104 @@ export function getHighlightedReading(
     return null
   }
   return mergeReadingSegments(aligned)
+}
+
+/**
+ * Align writing↔kana without merging consecutive kanji, and assign palette slots.
+ * Shared/group segments (jukujikun, ateji) keep one color for the whole group.
+ */
+export function getColoredReading(
+  writing: string,
+  kana: string,
+  focusKanji = '',
+): ColoredReadingSegment[] | null {
+  const aligned = alignReading(writing, kana, focusKanji)
+  if (!aligned?.length) {
+    return null
+  }
+
+  const result: ColoredReadingSegment[] = []
+  let nextColor = 0
+
+  for (const segment of aligned) {
+    const isOkuri = segment.role === 'okuri' || segment.source === 'okuri'
+    if (isOkuri) {
+      const prev = result[result.length - 1]
+      if (prev && prev.colorIndex < 0) {
+        prev.chars += segment.chars
+        prev.kana += segment.kana
+        prev.romaji = kanaToRomaji(prev.kana)
+        continue
+      }
+      result.push({
+        chars: segment.chars,
+        kana: segment.kana,
+        romaji: kanaToRomaji(segment.kana),
+        colorIndex: -1,
+        role: 'okuri',
+        source: 'okuri',
+      })
+      continue
+    }
+
+    result.push({
+      chars: segment.chars,
+      kana: segment.kana,
+      romaji: kanaToRomaji(segment.kana),
+      colorIndex: nextColor++ % READING_COLOR_COUNT,
+      role: segment.role,
+      source: segment.source,
+    })
+  }
+
+  return result
+}
+
+/** Map each writing character to a palette slot (for kanji chips). */
+export function mapWritingColorIndexes(
+  writing: string,
+  segments: ColoredReadingSegment[] | null | undefined,
+): number[] {
+  const chars = Array.from(String(writing ?? ''))
+  if (!chars.length) {
+    return []
+  }
+  if (!segments?.length) {
+    return chars.map((ch) => (isKanjiChar(ch) ? 0 : -1))
+  }
+
+  const indexes: number[] = []
+  let offset = 0
+  for (const segment of segments) {
+    const part = Array.from(segment.chars)
+    for (let i = 0; i < part.length; i += 1) {
+      indexes[offset + i] = segment.colorIndex
+    }
+    offset += part.length
+  }
+  while (indexes.length < chars.length) {
+    indexes.push(isKanjiChar(chars[indexes.length]) ? 0 : -1)
+  }
+  return indexes.slice(0, chars.length)
+}
+
+export function readingSegClassName(
+  colorIndex: number,
+  role?: ReadingSegmentRole,
+  focusKanji?: string,
+  chars?: string,
+): string {
+  const classes = ['reading-seg']
+  if (colorIndex >= 0) {
+    classes.push(`is-c${colorIndex % READING_COLOR_COUNT}`)
+  } else {
+    classes.push('is-okuri')
+  }
+  if (role === 'shared' || (chars && focusKanji && chars.length > 1 && chars.includes(focusKanji))) {
+    classes.push('is-shared-reading')
+  }
+  if (focusKanji && chars && (chars === focusKanji || (chars.length === 1 && chars === focusKanji))) {
+    classes.push('is-focus')
+  }
+  return classes.join(' ')
 }

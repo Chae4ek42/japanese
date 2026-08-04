@@ -614,6 +614,8 @@ export function ContextPage() {
           note={note}
           myWords={myWords}
           canGoPrev={session ? sessionCanGoPrev(session) : false}
+          pagesAnswered={session?.pages.length ?? 0}
+          wordsLearned={session?.wordsLearnedIds.length ?? 0}
           onReveal={handleToggleReveal}
           onKnowWord={handleKnowWord}
           onKnowAll={handleKnowAll}

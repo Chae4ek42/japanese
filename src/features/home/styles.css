@@ -6,7 +6,7 @@
 
 .home-hero {
   display: grid;
-  gap: 8px;
+  gap: 0;
   max-width: 22ch;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .home-entry:hover {
-  background: #fafafa;
+  background: rgba(17, 17, 17, 0.03);
   padding-left: 8px;
   padding-right: 8px;
 }
@@ -115,6 +115,6 @@
   }
 
   .home-entry:active {
-    background: #f5f5f5;
+    background: rgba(17, 17, 17, 0.05);
   }
 }

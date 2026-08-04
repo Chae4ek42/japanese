@@ -17,12 +17,24 @@
 
 .kanji-chip:hover,
 .kanji-chip:focus-visible {
-  background: #e8eef8;
+  background: rgba(17, 17, 17, 0.06);
   outline: none;
 }
 
 .kanji-chip.is-focus {
-  color: #1d4f91;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.kanji-chip.is-c0 { color: #1d4f91; }
+.kanji-chip.is-c1 { color: #0f7a5a; }
+.kanji-chip.is-c2 { color: #b45309; }
+.kanji-chip.is-c3 { color: #9f1239; }
+.kanji-chip.is-c4 { color: #0e7490; }
+.kanji-chip.is-c5 { color: #854d0e; }
+
+.kanji-chip.is-shared-reading {
+  border-bottom: 2px dotted currentColor;
 }
 
 .kanji-chip-kana {

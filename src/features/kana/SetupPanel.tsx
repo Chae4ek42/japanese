@@ -28,26 +28,14 @@ const scriptOptions = [
 ]
 
 const inputModeOptions = [
-  {
-    id: 'instant',
-    label: 'Автозачёт',
-    hint: 'Ответ засчитывается сразу. Ошибка — на первой неверной букве.',
-  },
-  {
-    id: 'submit',
-    label: 'По Enter',
-    hint: 'Проверка по Enter. При ошибке покажем правильный ответ.',
-  },
+  { id: 'instant', label: 'Автозачёт' },
+  { id: 'submit', label: 'По Enter' },
 ]
 
 const modeOptions = [
-  {
-    id: 'adaptive',
-    label: 'Адаптивный',
-    hint: 'Чаще слабые и новые знаки; после ошибки подтягивает похожие (シ/ツ, ぬ/め…).',
-  },
-  { id: 'even', label: 'Равномерный', hint: 'Все знаки встречаются одинаково часто.' },
-  { id: 'problem', label: 'Проблемные', hint: 'Только знаки, которые пока даются хуже.' },
+  { id: 'adaptive', label: 'Адаптивный' },
+  { id: 'even', label: 'Равномерный' },
+  { id: 'problem', label: 'Проблемные' },
 ]
 
 const settingsSections = [
@@ -212,8 +200,6 @@ export function SetupPanel({
   preferences,
   showFineTuning,
 }: SetupPanelProps) {
-  const activeInputMode = inputModeOptions.find((option) => option.id === preferences.inputMode)
-
   function getFieldValue(fieldId: keyof Hyperparams | 'targetLatencySec') {
     if (fieldId === 'targetLatencySec') {
       return preferences.hyperparams.targetLatencyMs / 1000
@@ -331,7 +317,6 @@ export function SetupPanel({
             </button>
           ))}
         </div>
-        <p className="control-hint">{activeInputMode?.hint}</p>
       </div>
 
       <div className="control-group">
@@ -346,7 +331,6 @@ export function SetupPanel({
               onClick={() => onPatchPreferences({ mode: mode.id as KanaPickMode })}
             >
               <strong>{mode.label}</strong>
-              <small>{mode.hint}</small>
             </button>
           ))}
         </div>

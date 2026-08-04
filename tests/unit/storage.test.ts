@@ -42,7 +42,7 @@ describe('storage', () => {
 
   it('без сохранения возвращает дефолтное состояние', () => {
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 21)
+    assert.equal(state.version, 24)
     assert.equal(state.kana.preferences.mode, 'adaptive')
     assert.equal(state.numbers.preferences.mode, 'plain')
     assert.equal(state.numbers.preferences.rangeId, '99')
@@ -59,6 +59,7 @@ describe('storage', () => {
     assert.deepEqual(state.context.trainingLog, [])
     assert.deepEqual(state.vocab.myWords, [])
     assert.deepEqual(state.vocab.customWords, {})
+    assert.deepEqual(state.vocab.myWordAddedAt, {})
     assert.equal(state.vocab.preferences.drillMode, 'romaji')
     assert.deepEqual(state.vocab.stats, {})
   })
@@ -146,7 +147,7 @@ describe('storage', () => {
       kanji: { learned: ['日'], preferences: { complexityFilter: false } },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 21)
+    assert.equal(state.version, 24)
     assert.equal(state.kana.preferences.scriptMode, 'katakana')
     assert.equal(state.kana.preferences.mode, 'even')
     assert.equal(state.kana.stats['katakana:shi'].clears, 7)
@@ -172,7 +173,7 @@ describe('storage', () => {
       kanji: { learned: ['日'], preferences: { complexityFilter: true } },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 21)
+    assert.equal(state.version, 24)
     assert.deepEqual(state.kanji.learned, ['日'])
     assert.ok(!('complexityFilter' in state.kanji.preferences))
     assert.deepEqual(state.vocab.myWords, [])
@@ -188,7 +189,7 @@ describe('storage', () => {
       },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 21)
+    assert.equal(state.version, 24)
     assert.equal(state.numbers.preferences.mode, 'age')
     assert.equal(state.numbers.preferences.pickMode, 'even')
     assert.equal(state.numbers.stats['age:20'].hints, 2)
@@ -211,7 +212,7 @@ describe('storage', () => {
       },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 21)
+    assert.equal(state.version, 24)
     assert.equal(state.kana.preferences.scriptMode, 'katakana')
     assert.equal(state.kana.preferences.mode, 'even')
     assert.equal(state.kana.stats['katakana:shi'].clears, 7)
@@ -225,7 +226,7 @@ describe('storage', () => {
     nested.kana.stats['hiragana:a'].clears = 3
     nested.vocab.myWords = ['1000390']
     const state = parseStoredState(JSON.stringify(nested))
-    assert.equal(state.version, 21)
+    assert.equal(state.version, 24)
     assert.equal(state.kana.preferences.mode, 'problem')
     assert.equal(state.kana.stats['hiragana:a'].clears, 3)
     assert.deepEqual(state.vocab.myWords, ['1000390'])
@@ -245,7 +246,7 @@ describe('storage', () => {
       },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 21)
+    assert.equal(state.version, 24)
     assert.equal(state.vocab.preferences.newWordLimit, -1)
   })
 
@@ -259,7 +260,7 @@ describe('storage', () => {
 
   it('битые данные не роняют приложение', () => {
     const state = parseStoredState('{broken json')
-    assert.equal(state.version, 21)
+    assert.equal(state.version, 24)
   })
 
   it('reset удаляет localStorage сохранение', async () => {

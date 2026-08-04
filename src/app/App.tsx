@@ -8,11 +8,13 @@ import { TrainPage } from '../features/vocab/TrainPage'
 import { ContextPage } from '../features/context/ContextPage'
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import { AppStateProvider, useAppState, useResetApp } from '../shared/state/AppStateContext'
+import { useBackupApp } from '../shared/state/backup'
 
 function AppRoutes() {
   const appState = useAppState()
   const { page, goPage } = useAppRouter()
   const resetStats = useResetApp()
+  const { exportBackup, openImportPicker, fileInputRef, onImportFileChange, canExport } = useBackupApp()
 
   if (!appState) {
     return (
@@ -28,6 +30,10 @@ function AppRoutes() {
         currentPage={page}
         onNavigate={(nextPage) => goPage(nextPage, nextPage === 'vocab' ? 'catalog' : undefined)}
         onResetStats={resetStats}
+        onExportBackup={canExport ? exportBackup : undefined}
+        onImportBackup={openImportPicker}
+        importInputRef={fileInputRef}
+        onImportFileChange={onImportFileChange}
       />
 
       {page === 'home' ? (

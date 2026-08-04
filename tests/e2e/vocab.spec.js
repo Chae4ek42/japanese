@@ -16,7 +16,7 @@ test('dictionary: catalog, groups and my words', async ({ page }, testInfo) => {
   const toggleId = await toggle.getAttribute('data-testid')
   await toggle.click()
   await page.getByTestId('vocab-tab-mine').click()
-  await expect(page.getByTestId('vocab-list').locator('.vocab-word')).toHaveCount(1)
+  await expect(page.getByTestId('vocab-list').locator('[data-testid^="vocab-word-"]')).toHaveCount(1)
 
   await page.getByTestId(toggleId).click()
   await expect(page.getByText('Пока пусто')).toBeVisible()
@@ -43,9 +43,10 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
     await expect(page.getByTestId('kanji-info-card')).toHaveCount(0)
   }
 
-  await page.getByTestId('vocab-hint-button').click()
+  await page.getByTestId('vocab-answer-input').focus()
+  await page.keyboard.press('Space')
   await expect(page.getByTestId('vocab-hint-panel')).toBeVisible()
-  const romajiParts = await page.locator('.vocab-hint-romaji').allInnerTexts()
+  const romajiParts = await page.locator('[data-testid="vocab-hint-panel"] .kanji-word-romaji').allInnerTexts()
   const answer = romajiParts
     .map((part) => part.trim().replace(/[\s_\-’']/g, '').toLowerCase())
     .filter(Boolean)
@@ -89,9 +90,10 @@ test('vocab trainer: in-session panel changes pick mode and weights', async ({ p
   await page.getByTestId('open-vocab-train').click()
   await page.getByTestId('vocab-source-group').click()
   await page.getByTestId('vocab-train-group-weekdays').click()
-  await page.getByTestId('vocab-new-word-limit').fill('1')
+  await page.getByTestId('vocab-new-per-day').fill('1')
   await page.getByTestId('start-vocab').click()
   await expect(page.getByTestId('vocab-session-sidebar')).toBeVisible()
+  await page.getByTestId('vocab-session-toggle-filters').click()
   await expect(page.getByTestId('vocab-session-word-jlpt')).toBeVisible()
   await page.getByTestId('vocab-session-word-jlpt-5').click()
   await expect(page.getByTestId('vocab-session-word-jlpt-5')).toHaveAttribute('aria-pressed', 'true')

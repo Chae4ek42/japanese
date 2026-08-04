@@ -30,21 +30,29 @@ const joyoListCache = { value: null as KanjiInfo[] | null }
 /** Cap for “popular” examples per kanji in training / UI lists. */
 export const POPULAR_WORDS_PER_KANJI = 12
 
+/**
+ * Relative popularity for study order.
+ * Today: JMDict `common` (priority forms) + JLPT ease + short writing.
+ * Later: can fold in corpus `freqRank` without changing call sites.
+ */
+export function wordPopularityScore(
+  word: Pick<KanjiWord, 'jlpt' | 'common' | 'writing'>,
+  character?: string,
+): number {
+  let score = 0
+  if (word.common) score += 100_000
+  if (typeof word.jlpt === 'number' && word.jlpt >= 1 && word.jlpt <= 5) {
+    score += word.jlpt * 10_000
+  }
+  if (character && word.writing === character) score += 5_000
+  score -= Math.min(word.writing.length, 24) * 100
+  return score
+}
+
 function sortWords(list: KanjiWord[], character?: string): KanjiWord[] {
   return [...list].sort((left, right) => {
-    const jlptDelta = (right.jlpt ?? 0) - (left.jlpt ?? 0)
-    if (jlptDelta) return jlptDelta
-    if (Boolean(right.common) !== Boolean(left.common)) {
-      return Number(Boolean(right.common)) - Number(Boolean(left.common))
-    }
-    if (character) {
-      const leftSolo = left.writing === character ? 1 : 0
-      const rightSolo = right.writing === character ? 1 : 0
-      if (leftSolo !== rightSolo) return rightSolo - leftSolo
-    }
-    if (left.writing.length !== right.writing.length) {
-      return left.writing.length - right.writing.length
-    }
+    const scoreDelta = wordPopularityScore(right, character) - wordPopularityScore(left, character)
+    if (scoreDelta) return scoreDelta
     return left.writing.localeCompare(right.writing, 'ja')
   })
 }
@@ -143,8 +151,8 @@ export function getTopWordsForKanji(
 }
 
 /**
- * Most useful study words for a kanji: JLPT-tagged first (N5→N1), then shorter /
- * single-character writings. Falls back to untagged words when JLPT coverage is thin.
+ * Most useful study words for a kanji: JMDict-common + JLPT first, then shorter /
+ * single-character writings. Falls back to untagged words when tagged coverage is thin.
  */
 export function getPopularWordsForKanji(
   character: string,
@@ -153,8 +161,12 @@ export function getPopularWordsForKanji(
   const cap = Math.max(0, limit)
   if (!cap) return []
   const sorted = getWordsForKanji(character)
-  const withJlpt = sorted.filter((word) => typeof word.jlpt === 'number' && word.jlpt >= 1 && word.jlpt <= 5)
-  const pool = withJlpt.length >= Math.min(4, cap) ? withJlpt : sorted
+  const preferred = sorted.filter(
+    (word) =>
+      Boolean(word.common) ||
+      (typeof word.jlpt === 'number' && word.jlpt >= 1 && word.jlpt <= 5),
+  )
+  const pool = preferred.length >= Math.min(4, cap) ? preferred : sorted
   return pool.slice(0, cap)
 }
 

@@ -14,25 +14,25 @@ export function TrainPage() {
   return (
     <main className="vocab-page train-page" data-testid="train-page">
       <header className="section-heading vocab-page-head">
-        <div>
-          <h2>Тренажёр слов</h2>
-          <p className="subsection-note">
-            Ромадзи, перевод или смешанный режим — по уровню, группе, кандзи, «Моим словам» или вашему
-            набору.
-          </p>
-        </div>
+        <h2>Тренажёр слов</h2>
       </header>
 
       <VocabTrainer
         preferences={vocab.preferences ?? DEFAULT_VOCAB_PREFERENCES}
         stats={vocab.stats}
+        memory={vocab.memory}
+        latencyModel={vocab.latencyModel}
+        reviewDay={vocab.reviewDay}
         myWords={vocab.myWords}
         customWords={vocab.customWords}
         hiddenWordIds={vocab.hiddenWordIds}
         learnedWordIds={vocab.learnedWordIds}
         trainingWordIds={vocab.trainingWordIds}
+        liveSession={vocab.liveSession}
+        onSaveLiveSession={vocab.saveLiveSession}
         onPatchPreferences={vocab.patchPreferences}
         onUpdateStats={vocab.updateStats}
+        onApplyGradedReview={vocab.applyGradedReview}
         onAddMyWords={vocab.addMyWords}
         onSaveWordEdit={vocab.saveWordEdit}
         onHideWords={vocab.hideWords}

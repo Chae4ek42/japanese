@@ -48,12 +48,7 @@ export function ContextSetup({
   return (
     <section className="context-setup" data-testid="context-setup">
       <header className="context-hero">
-        <p className="context-eyebrow">Контекст</p>
-        <h2 className="context-title">Учите слова в предложениях</h2>
-        <p className="context-lead">
-          Новые слова идут пакетом; в одном предложении — не больше выбранного числа новых. Грамматика и тема
-          задают, какие фразы можно показывать.
-        </p>
+        <h2 className="context-title">Контекст</h2>
       </header>
 
       <div>
@@ -113,14 +108,9 @@ export function ContextSetup({
           />
         </label>
       </div>
-      <p className="subsection-note">
-        Пакет — сколько незнакомых слов держать в работе сразу. «В предложении» — сколько новых слов темы
-        может встретиться сразу (1 = классический i+1, 2+ = более плотные фразы).
-      </p>
 
       <div>
         <h3>Грамматика</h3>
-        <p className="subsection-note">Вкл. = уже знакомо и можно использовать в предложениях.</p>
         <div className="context-grammar" data-testid="context-grammar">
           {GRAMMAR_CATALOG.map((item) => {
             const on = context.knownGrammarIds.includes(item.id)

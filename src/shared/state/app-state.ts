@@ -11,9 +11,12 @@ import { sanitizeNumbersPreferences, sanitizeNumbersStats } from './slices/numbe
 import { sanitizeKanjiState } from './slices/kanji'
 import { DEFAULT_VOCAB_PREFERENCES, sanitizeVocabState } from './slices/vocab'
 import { DEFAULT_CONTEXT_PREFERENCES, sanitizeContextState } from './slices/context'
+import { sanitizeCardTrainerLiveSession } from './slices/live-session'
 
-export const CURRENT_VERSION = 21 as const
-export const KNOWN_VERSIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, CURRENT_VERSION]
+export const CURRENT_VERSION = 24 as const
+export const KNOWN_VERSIONS = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, CURRENT_VERSION,
+]
 
 export { DEFAULT_VOCAB_PREFERENCES, DEFAULT_CONTEXT_PREFERENCES }
 
@@ -31,6 +34,7 @@ export function createDefaultAppState(): AppState {
       },
       stats: Object.fromEntries(ALL_CARD_IDS.map((cardId) => [cardId, createStatsRecord()])),
       history: createEmptyHistory(),
+      liveSession: null,
     },
     numbers: {
       preferences: {
@@ -50,11 +54,21 @@ export function createDefaultAppState(): AppState {
     vocab: {
       myWords: [],
       customWords: {},
+      myWordAddedAt: {},
       hiddenWordIds: [],
       learnedWordIds: [],
       trainingWordIds: [],
       preferences: { ...DEFAULT_VOCAB_PREFERENCES },
       stats: {},
+      memory: {},
+      latencyModel: {
+        mu: { romaji: Math.log(1800), choice: Math.log(3200), mixed: Math.log(2800) },
+        beta: { romaji: 0.08, choice: 0.04, mixed: 0.05 },
+        samples: 0,
+        zSamples: [],
+      },
+      reviewDay: { dayKey: '', newIntroduced: 0 },
+      liveSession: null,
     },
     context: {
       knownWordIds: [],
@@ -97,6 +111,10 @@ export function normalizeAppState(parsed: unknown): AppState | null {
       preferences: kanaPreferences,
       stats: sanitizeKanaStats(legacyKana?.stats ?? source.stats, fallback.kana.stats),
       history: sanitizeHistory(legacyKana?.history ?? source.history, fallback.kana.history),
+      liveSession: sanitizeCardTrainerLiveSession(
+        legacyKana?.liveSession,
+        fallback.kana.liveSession,
+      ),
     },
     numbers: {
       preferences: sanitizeNumbersPreferences(

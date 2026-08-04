@@ -1,9 +1,19 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { getHighlightedReading } from '../../src/shared/lib/reading-align'
+import {
+  getColoredReading,
+  getHighlightedReading,
+  mapWritingColorIndexes,
+} from '../../src/shared/lib/reading-align'
 
 function roles(writing: string, kana: string, focus: string) {
   return getHighlightedReading(writing, kana, focus)?.map((item) => `${item.role}:${item.kana}`)
+}
+
+function colors(writing: string, kana: string) {
+  return getColoredReading(writing, kana)?.map(
+    (item) => `${item.colorIndex}:${item.kana}:${item.chars}:${item.source ?? ''}`,
+  )
 }
 
 describe('getHighlightedReading', () => {
@@ -25,5 +35,59 @@ describe('getHighlightedReading', () => {
     const segments = getHighlightedReading('毎日', 'まいにち', '日')!
     assert.equal(segments.map((item) => item.romaji).join(''), 'mainichi')
     assert.equal(segments.find((item) => item.role === 'focus')?.romaji, 'nichi')
+  })
+})
+
+describe('getColoredReading', () => {
+  it('красит каждый кандзи своим цветом вместе с чтением', () => {
+    const segments = getColoredReading('校長', 'こうちょう')
+    assert.ok(segments)
+    assert.equal(segments.length, 2)
+    assert.equal(segments[0].chars, '校')
+    assert.equal(segments[0].kana, 'こう')
+    assert.equal(segments[0].colorIndex, 0)
+    assert.equal(segments[1].chars, '長')
+    assert.equal(segments[1].kana, 'ちょう')
+    assert.equal(segments[1].colorIndex, 1)
+
+    assert.deepEqual(mapWritingColorIndexes('校長', segments), [0, 1])
+  })
+
+  it('не сливает соседние кандзи в один цвет', () => {
+    const segments = getColoredReading('火曜日', 'かようび')
+    assert.ok(segments)
+    assert.equal(segments.length, 3)
+    assert.deepEqual(
+      segments.map((item) => item.chars),
+      ['火', '曜', '日'],
+    )
+    assert.deepEqual(
+      segments.map((item) => item.colorIndex),
+      [0, 1, 2],
+    )
+  })
+
+  it('для дзюкудзикун даёт один общий цвет на группу', () => {
+    const segments = getColoredReading('今日', 'きょう')
+    assert.ok(segments)
+    assert.equal(segments.length, 1)
+    assert.equal(segments[0].source, 'group')
+    assert.equal(segments[0].chars, '今日')
+    assert.equal(segments[0].kana, 'きょう')
+    assert.deepEqual(mapWritingColorIndexes('今日', segments), [0, 0])
+  })
+
+  it('угадывает нестандартное чтение одиночного кандзи перед окуриганой', () => {
+    const segments = getColoredReading('彼の', 'あの')
+    assert.ok(segments, 'alignment should succeed for irregular 彼→あ')
+    assert.equal(segments[0].chars, '彼')
+    assert.equal(segments[0].kana, 'あ')
+    assert.equal(segments[0].source, 'guess')
+    assert.equal(segments[1].kana, 'の')
+    assert.equal(segments[1].colorIndex, -1)
+  })
+
+  it('помечает окуригану нейтральным цветом', () => {
+    assert.deepEqual(colors('食べる', 'たべる'), ['0:た:食:known', '-1:べる:べる:okuri'])
   })
 })

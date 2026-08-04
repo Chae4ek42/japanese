@@ -196,6 +196,25 @@
   gap: 14px;
 }
 
+.context-page:has(.context-drill) {
+  width: min(100%, 1080px);
+}
+
+.practice-layout.context-practice-layout.has-aside {
+  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 300px);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.context-practice-aside {
+  min-width: 0;
+  min-height: 100%;
+}
+
+.context-practice-aside .context-batch-list {
+  grid-template-columns: 1fr;
+}
+
 .context-drill-head {
   display: flex;
   flex-wrap: wrap;
@@ -480,6 +499,12 @@
   font-size: 0.82rem;
   color: var(--muted);
   line-height: 1.4;
+}
+
+@media (max-width: 880px) {
+  .practice-layout.context-practice-layout.has-aside {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 560px) {

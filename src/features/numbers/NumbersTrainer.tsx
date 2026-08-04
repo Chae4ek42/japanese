@@ -52,8 +52,8 @@ function NumbersTrainerView({
   onUpdateStats,
 }: NumbersTrainerViewProps) {
   const pickModeOptions = [
-    { id: 'adaptive', label: 'Адаптивный', hint: 'Чаще слабые и ещё не встречавшиеся числа.' },
-    { id: 'even', label: 'Равномерный', hint: 'Все числа из диапазона с равной частотой.' },
+    { id: 'adaptive', label: 'Адаптивный' },
+    { id: 'even', label: 'Равномерный' },
   ]
 
   const { preferences, stats } = numbersState
@@ -278,9 +278,6 @@ function NumbersTrainerView({
                 </button>
               ))}
             </div>
-            <p className="control-hint">
-              {NUMBER_MODES.find((mode) => mode.id === preferences.mode)?.hint}
-            </p>
           </div>
 
           <div className="control-group">
@@ -318,9 +315,6 @@ function NumbersTrainerView({
                 </button>
               ))}
             </div>
-            <p className="control-hint">
-              {pickModeOptions.find((mode) => mode.id === preferences.pickMode)?.hint}
-            </p>
           </div>
 
           <div className="primary-actions">

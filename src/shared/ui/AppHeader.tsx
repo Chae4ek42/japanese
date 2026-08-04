@@ -1,10 +1,15 @@
 import type { AppPage } from '../lib/types'
 import { PATHS, shouldHandleClientNav } from '../lib/routes'
+import type { RefObject, ChangeEvent } from 'react'
 
 export interface AppHeaderProps {
   currentPage: AppPage
   onNavigate: (page: AppPage) => void
   onResetStats: () => void
+  onExportBackup?: () => void
+  onImportBackup?: () => void
+  importInputRef?: RefObject<HTMLInputElement | null>
+  onImportFileChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
 const NAV_ITEMS = [
@@ -17,7 +22,15 @@ const NAV_ITEMS = [
   { id: 'context', label: 'Контекст', href: PATHS.context, testId: 'nav-context' },
 ] as const
 
-export function AppHeader({ currentPage, onNavigate, onResetStats }: AppHeaderProps) {
+export function AppHeader({
+  currentPage,
+  onNavigate,
+  onResetStats,
+  onExportBackup,
+  onImportBackup,
+  importInputRef,
+  onImportFileChange,
+}: AppHeaderProps) {
   return (
     <header className="site-header">
       <div className="site-header-top">
@@ -38,10 +51,32 @@ export function AppHeader({ currentPage, onNavigate, onResetStats }: AppHeaderPr
           <p className="site-tagline">Японский · каждый день</p>
         </div>
 
-        <button type="button" className="text-button site-reset" data-testid="reset-stats" onClick={onResetStats}>
-          <span className="site-reset-full">Сбросить данные</span>
-          <span className="site-reset-short">Сброс</span>
-        </button>
+        <div className="site-header-actions">
+          {onExportBackup ? (
+            <button type="button" className="text-button" data-testid="export-backup" onClick={onExportBackup}>
+              Экспорт
+            </button>
+          ) : null}
+          {onImportBackup ? (
+            <button type="button" className="text-button" data-testid="import-backup" onClick={onImportBackup}>
+              Импорт
+            </button>
+          ) : null}
+          <button type="button" className="text-button site-reset" data-testid="reset-stats" onClick={onResetStats}>
+            <span className="site-reset-full">Сбросить данные</span>
+            <span className="site-reset-short">Сброс</span>
+          </button>
+          {importInputRef && onImportFileChange ? (
+            <input
+              ref={importInputRef}
+              type="file"
+              accept="application/json,.json"
+              className="visually-hidden"
+              data-testid="import-backup-file"
+              onChange={onImportFileChange}
+            />
+          ) : null}
+        </div>
       </div>
 
       <nav className="site-nav" aria-label="Основная навигация">

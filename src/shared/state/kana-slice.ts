@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import type { KanaPreferences, PracticeHistory } from '../lib/types'
+import type { CardTrainerLiveSession, KanaPreferences, PracticeHistory } from '../lib/types'
 import type { AppState } from '../lib/types'
 import { useAppStateContext } from './core'
 
@@ -81,6 +81,26 @@ export function useKanaState() {
     [setAppState],
   )
 
+  const saveLiveSession = useCallback(
+    (liveSession: CardTrainerLiveSession | null) => {
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        return {
+          ...prevState,
+          kana: {
+            ...prevState.kana,
+            liveSession,
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const clearLiveSession = useCallback(() => {
+    saveLiveSession(null)
+  }, [saveLiveSession])
+
   if (!appState) {
     return null
   }
@@ -89,8 +109,11 @@ export function useKanaState() {
     preferences: appState.kana.preferences,
     stats: appState.kana.stats,
     history: appState.kana.history,
+    liveSession: appState.kana.liveSession ?? null,
     patchPreferences,
     patchHyperparam,
     updatePractice,
+    saveLiveSession,
+    clearLiveSession,
   }
 }

@@ -16,7 +16,6 @@ const ENTRIES = [
     href: PATHS.kana,
     symbol: 'あ',
     title: 'Кана',
-    text: 'Хирагана и катакана. Адаптивная очередь и разбор похожих знаков.',
     action: 'Начать',
     testId: 'open-kana',
   },
@@ -25,7 +24,6 @@ const ENTRIES = [
     href: PATHS.kanji,
     symbol: '字',
     title: 'Кандзи',
-    text: 'Знаки JLPT N5–N1 и Jōyō, разбор на составляющие, слова из словаря.',
     action: 'Открыть',
     testId: 'open-kanji',
   },
@@ -34,7 +32,6 @@ const ENTRIES = [
     href: PATHS.numbers,
     symbol: '十',
     title: 'Числа и возраст',
-    text: 'Чтение чисел и возраста по-японски. Со шпаргалкой под рукой.',
     action: 'Начать',
     testId: 'open-numbers',
   },
@@ -43,7 +40,6 @@ const ENTRIES = [
     href: PATHS.train,
     symbol: '練',
     title: 'Слова',
-    text: 'Отдельный тренажёр: уровень, группа, кандзи или ваш набор слов.',
     action: 'Начать',
     testId: 'open-vocab-train',
   },
@@ -52,7 +48,6 @@ const ENTRIES = [
     href: PATHS.vocab,
     symbol: '語',
     title: 'Словарь',
-    text: 'Все слова библиотеки и ваш личный список с чтением и озвучкой.',
     action: 'Открыть',
     testId: 'open-vocab',
   },
@@ -61,7 +56,6 @@ const ENTRIES = [
     href: PATHS.context,
     symbol: '文',
     title: 'Контекст',
-    text: 'Слова темы через предложения i+1: одно новое слово за раз.',
     action: 'Открыть',
     testId: 'open-context',
   },
@@ -88,7 +82,6 @@ export function HomePage({
     <main className="home-page">
       <section className="home-hero">
         <h1 className="home-title">JP тренажёры</h1>
-        <p className="home-lead">Практика японского: кана, кандзи, числа, словарь и контекст — в одном месте.</p>
       </section>
 
       <section className="home-entries" aria-label="Разделы">
@@ -110,7 +103,6 @@ export function HomePage({
             </span>
             <span className="home-entry-body">
               <span className="home-entry-title">{entry.title}</span>
-              <span className="home-entry-text">{entry.text}</span>
             </span>
             <span className="home-entry-action">{entry.action}</span>
           </a>

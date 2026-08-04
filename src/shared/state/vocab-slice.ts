@@ -1,6 +1,29 @@
 import { useCallback } from 'react'
-import type { KanjiWord, StatsOutcome, UpdateStatsContext, VocabPreferences } from '../lib/types'
-import { DEFAULT_HYPERPARAMS, createStatsRecord, updateCardStats } from '../lib/trainer'
+import type {
+  CardTrainerLiveSession,
+  KanjiWord,
+  LatencyModel,
+  MemoryState,
+  ReviewAspect,
+  ReviewGrade,
+  StatsOutcome,
+  UpdateStatsContext,
+  VocabPreferences,
+} from '../lib/types'
+import { DEFAULT_HYPERPARAMS, createStatsRecord, getDayKey, updateCardStats } from '../lib/trainer'
+import {
+  applyReview,
+  createNewMemoryState,
+  encodeReviewEvent,
+  markPresented,
+  memoryKey,
+  migrateFromMastery,
+  retentionAt,
+  type PriorDifficultyHints,
+  updateLatencyModel,
+} from '../lib/review'
+import { appendReviewEvent } from '../lib/review/journal'
+import { hoursBetween } from '../lib/review/math'
 import { useAppStateContext } from './core'
 
 export function useVocabState() {
@@ -15,14 +38,21 @@ export function useVocabState() {
         const removing = myWords.includes(wordId)
         const nextWords = removing ? myWords.filter((item) => item !== wordId) : [...myWords, wordId]
         const customWords = { ...prevState.vocab.customWords }
-        if (removing && wordId.startsWith('custom:')) {
-          delete customWords[wordId]
+        const myWordAddedAt = { ...(prevState.vocab.myWordAddedAt ?? {}) }
+        if (removing) {
+          delete myWordAddedAt[wordId]
+          if (wordId.startsWith('custom:')) {
+            delete customWords[wordId]
+          }
+        } else {
+          myWordAddedAt[wordId] = Date.now()
         }
         return {
           ...prevState,
           vocab: {
             ...prevState.vocab,
             myWords: nextWords,
+            myWordAddedAt,
             customWords,
             learnedWordIds: removing
               ? (prevState.vocab.learnedWordIds ?? []).filter((id) => id !== wordId)
@@ -43,11 +73,17 @@ export function useVocabState() {
         const known = new Set(prevState.vocab.myWords)
         const toAdd = ids.filter((id) => !known.has(id))
         if (!toAdd.length) return prevState
+        const now = Date.now()
+        const myWordAddedAt = { ...(prevState.vocab.myWordAddedAt ?? {}) }
+        for (const id of toAdd) {
+          myWordAddedAt[id] = now
+        }
         return {
           ...prevState,
           vocab: {
             ...prevState.vocab,
             myWords: [...prevState.vocab.myWords, ...toAdd],
+            myWordAddedAt,
           },
         }
       })
@@ -64,7 +100,9 @@ export function useVocabState() {
         const nextWords = prevState.vocab.myWords.filter((id) => !ids.has(id))
         if (nextWords.length === prevState.vocab.myWords.length) return prevState
         const customWords = { ...prevState.vocab.customWords }
+        const myWordAddedAt = { ...(prevState.vocab.myWordAddedAt ?? {}) }
         for (const id of ids) {
+          delete myWordAddedAt[id]
           if (id.startsWith('custom:')) delete customWords[id]
         }
         return {
@@ -72,6 +110,7 @@ export function useVocabState() {
           vocab: {
             ...prevState.vocab,
             myWords: nextWords,
+            myWordAddedAt,
             customWords,
             learnedWordIds: (prevState.vocab.learnedWordIds ?? []).filter((id) => !ids.has(id)),
           },
@@ -88,17 +127,23 @@ export function useVocabState() {
       setAppState((prevState) => {
         if (!prevState) return prevState
         const addToMine = wordId.startsWith('custom:') || prevState.vocab.myWords.includes(wordId)
+        const alreadyMine = prevState.vocab.myWords.includes(wordId)
         const myWords = addToMine
-          ? prevState.vocab.myWords.includes(wordId)
+          ? alreadyMine
             ? prevState.vocab.myWords
             : [...prevState.vocab.myWords, wordId]
           : prevState.vocab.myWords
+        const myWordAddedAt = { ...(prevState.vocab.myWordAddedAt ?? {}) }
+        if (addToMine && !alreadyMine) {
+          myWordAddedAt[wordId] = Date.now()
+        }
         const hiddenWordIds = (prevState.vocab.hiddenWordIds ?? []).filter((id) => id !== wordId)
         return {
           ...prevState,
           vocab: {
             ...prevState.vocab,
             myWords,
+            myWordAddedAt,
             hiddenWordIds,
             customWords: {
               ...prevState.vocab.customWords,
@@ -111,7 +156,6 @@ export function useVocabState() {
     [setAppState],
   )
 
-  /** Save field edits for a bank or custom word without forcing «Мои слова». */
   const saveWordEdit = useCallback(
     (word: KanjiWord) => {
       if (!word?.id) return
@@ -135,7 +179,6 @@ export function useVocabState() {
     [setAppState],
   )
 
-  /** Permanently hide words from vocab pools (and drop custom overrides). */
   const hideWords = useCallback(
     (wordIds: string[]) => {
       const ids = [...new Set(wordIds.filter((id) => typeof id === 'string' && id.length > 0))]
@@ -144,12 +187,17 @@ export function useVocabState() {
         if (!prevState) return prevState
         const hide = new Set(ids)
         const customWords = { ...prevState.vocab.customWords }
-        for (const id of ids) delete customWords[id]
+        const myWordAddedAt = { ...(prevState.vocab.myWordAddedAt ?? {}) }
+        for (const id of ids) {
+          delete customWords[id]
+          delete myWordAddedAt[id]
+        }
         return {
           ...prevState,
           vocab: {
             ...prevState.vocab,
             myWords: prevState.vocab.myWords.filter((id) => !hide.has(id)),
+            myWordAddedAt,
             customWords,
             hiddenWordIds: [...new Set([...(prevState.vocab.hiddenWordIds ?? []), ...ids])],
             learnedWordIds: (prevState.vocab.learnedWordIds ?? []).filter((id) => !hide.has(id)),
@@ -274,14 +322,22 @@ export function useVocabState() {
     (patch: Partial<VocabPreferences>) => {
       setAppState((prevState) => {
         if (!prevState) return prevState
+        const nextPrefs = {
+          ...prevState.vocab.preferences,
+          ...patch,
+        }
+        // Keep legacy newWordLimit aligned with newPerDay when the planner knob changes.
+        if (typeof patch.newPerDay === 'number' && patch.newWordLimit === undefined) {
+          nextPrefs.newWordLimit = patch.newPerDay
+        }
+        if (typeof patch.newWordLimit === 'number' && patch.newPerDay === undefined && patch.newWordLimit >= 0) {
+          nextPrefs.newPerDay = patch.newWordLimit
+        }
         return {
           ...prevState,
           vocab: {
             ...prevState.vocab,
-            preferences: {
-              ...prevState.vocab.preferences,
-              ...patch,
-            },
+            preferences: nextPrefs,
           },
         }
       })
@@ -294,20 +350,156 @@ export function useVocabState() {
       setAppState((prevState) => {
         if (!prevState) return prevState
         const existing = prevState.vocab.stats[cardId] ?? createStatsRecord()
+        const nextStats = updateCardStats(existing, outcome, context, DEFAULT_HYPERPARAMS)
+
+        // Dual-write: keep mastery path, also touch presentation timestamp on seen.
+        let memory = prevState.vocab.memory ?? {}
+        if (outcome === 'seen') {
+          const aspectKeys: ReviewAspect[] = [0, 1]
+          const nextMemory = { ...memory }
+          for (const aspect of aspectKeys) {
+            const key = memoryKey(cardId, aspect)
+            const prev =
+              nextMemory[key] ??
+              (existing.exposures || existing.clears || existing.errors
+                ? migrateFromMastery(existing, context.now)
+                : createNewMemoryState(context.now))
+            nextMemory[key] = markPresented(prev, context.now)
+          }
+          memory = nextMemory
+        }
+
         return {
           ...prevState,
           vocab: {
             ...prevState.vocab,
             stats: {
               ...prevState.vocab.stats,
-              [cardId]: updateCardStats(existing, outcome, context, DEFAULT_HYPERPARAMS),
+              [cardId]: nextStats,
             },
+            memory,
           },
         }
       })
     },
     [setAppState],
   )
+
+  const applyGradedReview = useCallback(
+    (input: {
+      cardId: string
+      aspect: ReviewAspect
+      grade: ReviewGrade
+      now: number
+      latencyMs: number
+      drillMode: VocabPreferences['drillMode']
+      answerLength: number
+      hints?: PriorDifficultyHints
+      distractor?: string
+      /** Also update legacy mastery stats. */
+      masteryOutcome?: StatsOutcome
+      masteryContext?: UpdateStatsContext
+      countAsNewIntro?: boolean
+    }) => {
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const key = memoryKey(input.cardId, input.aspect)
+        const stats = prevState.vocab.stats[input.cardId] ?? createStatsRecord()
+        const prevMem =
+          prevState.vocab.memory?.[key] ??
+          (stats.exposures || stats.clears || stats.errors
+            ? migrateFromMastery(stats, input.now)
+            : createNewMemoryState(input.now))
+
+        const predictedR = retentionAt(prevMem, input.now)
+        const elapsed = prevMem.lastAt ? hoursBetween(prevMem.lastAt, input.now) : 0
+        const nextMem = applyReview(prevMem, input.grade, input.now, input.hints)
+        const wasNew = prevMem.state === 'new'
+
+        const latencyModel = updateLatencyModel(
+          prevState.vocab.latencyModel,
+          input.drillMode,
+          input.latencyMs,
+          input.answerLength,
+          input.grade >= 3,
+        )
+
+        let statsMap = prevState.vocab.stats
+        if (input.masteryOutcome && input.masteryContext) {
+          statsMap = {
+            ...statsMap,
+            [input.cardId]: updateCardStats(
+              stats,
+              input.masteryOutcome,
+              input.masteryContext,
+              DEFAULT_HYPERPARAMS,
+            ),
+          }
+        }
+
+        const dayKey = getDayKey(input.now)
+        let reviewDay = prevState.vocab.reviewDay ?? { dayKey, newIntroduced: 0 }
+        if (reviewDay.dayKey !== dayKey) {
+          reviewDay = { dayKey, newIntroduced: 0 }
+        }
+        if (input.countAsNewIntro && wasNew) {
+          reviewDay = { ...reviewDay, newIntroduced: reviewDay.newIntroduced + 1 }
+        }
+
+        const modeCode = input.drillMode === 'romaji' ? 0 : input.drillMode === 'choice' ? 1 : 2
+        void appendReviewEvent(
+          encodeReviewEvent({
+            t: input.now,
+            c: input.cardId,
+            a: input.aspect,
+            g: input.grade,
+            l: input.latencyMs,
+            e: elapsed,
+            r: predictedR,
+            s: prevMem.s,
+            d: prevMem.d,
+            m: modeCode as 0 | 1 | 2,
+            distractor: input.distractor,
+          }),
+        )
+
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            stats: statsMap,
+            memory: {
+              ...(prevState.vocab.memory ?? {}),
+              [key]: nextMem,
+            },
+            latencyModel,
+            reviewDay,
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const saveLiveSession = useCallback(
+    (liveSession: CardTrainerLiveSession | null) => {
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            liveSession,
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const clearLiveSession = useCallback(() => {
+    saveLiveSession(null)
+  }, [saveLiveSession])
 
   const isMyWord = useCallback(
     (wordId: string | null | undefined) => {
@@ -324,11 +516,16 @@ export function useVocabState() {
   return {
     myWords: appState.vocab.myWords,
     customWords: appState.vocab.customWords,
+    myWordAddedAt: appState.vocab.myWordAddedAt ?? {},
     hiddenWordIds: appState.vocab.hiddenWordIds ?? [],
     learnedWordIds: appState.vocab.learnedWordIds ?? [],
     trainingWordIds: appState.vocab.trainingWordIds ?? [],
     preferences: appState.vocab.preferences,
     stats: appState.vocab.stats,
+    memory: appState.vocab.memory ?? {},
+    latencyModel: appState.vocab.latencyModel as LatencyModel,
+    reviewDay: appState.vocab.reviewDay,
+    liveSession: appState.vocab.liveSession ?? null,
     toggleMyWord,
     addMyWords,
     removeMyWords,
@@ -342,6 +539,12 @@ export function useVocabState() {
     addSelectedKanji,
     patchPreferences,
     updateStats,
+    applyGradedReview,
     isMyWord,
+    saveLiveSession,
+    clearLiveSession,
   }
 }
+
+export type ApplyGradedReview = NonNullable<ReturnType<typeof useVocabState>>['applyGradedReview']
+export type { MemoryState }

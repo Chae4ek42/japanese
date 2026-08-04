@@ -1,15 +1,24 @@
-import { getHighlightedReading } from '../../shared/lib/reading-align'
+import {
+  getColoredReading,
+  readingSegClassName,
+} from '../../shared/lib/reading-align'
 
 export interface HighlightedReadingProps {
   writing: string
   kana: string
-  focusKanji: string
+  focusKanji?: string
   fallbackRomaji?: string
   testId?: string
 }
 
-export function HighlightedReading({ writing, kana, focusKanji, fallbackRomaji, testId }: HighlightedReadingProps) {
-  const segments = getHighlightedReading(writing, kana, focusKanji)
+export function HighlightedReading({
+  writing,
+  kana,
+  focusKanji = '',
+  fallbackRomaji,
+  testId,
+}: HighlightedReadingProps) {
+  const segments = getColoredReading(writing, kana, focusKanji)
 
   if (!segments?.length) {
     return (
@@ -26,8 +35,12 @@ export function HighlightedReading({ writing, kana, focusKanji, fallbackRomaji, 
         {segments.map((segment, index) => (
           <span
             key={`kana-${index}-${segment.kana}`}
-            className={`reading-seg is-${segment.role}`}
-            title={segment.chars}
+            className={readingSegClassName(segment.colorIndex, segment.role, focusKanji, segment.chars)}
+            title={
+              segment.source === 'group' || segment.source === 'guess'
+                ? `${segment.chars} · нестандартное чтение`
+                : segment.chars
+            }
           >
             {segment.kana}
           </span>
@@ -37,7 +50,7 @@ export function HighlightedReading({ writing, kana, focusKanji, fallbackRomaji, 
         {segments.map((segment, index) => (
           <span
             key={`romaji-${index}-${segment.romaji}`}
-            className={`reading-seg is-${segment.role}`}
+            className={readingSegClassName(segment.colorIndex, segment.role, focusKanji, segment.chars)}
             title={segment.chars}
           >
             {segment.romaji}

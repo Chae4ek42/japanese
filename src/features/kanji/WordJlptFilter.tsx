@@ -36,7 +36,7 @@ export function WordJlptFilter({
 }: WordJlptFilterProps) {
   return (
     <div className="kanji-word-jlpt" data-testid={testIdPrefix} role="group" aria-label="Фильтр слов по JLPT">
-      <span className="kanji-word-jlpt-label">Слова</span>
+      <span className="kanji-word-jlpt-label">JLPT слов</span>
       <div className="kanji-word-jlpt-tabs">
         {WORD_JLPT_LEVELS.map((level) => {
           const active = isWordJlptLevelActive(selected, level)
@@ -47,6 +47,11 @@ export function WordJlptFilter({
               className={active ? 'kanji-filter-tab is-active' : 'kanji-filter-tab'}
               data-testid={`${testIdPrefix}-${level}`}
               aria-pressed={active}
+              title={
+                selected.length === 0
+                  ? 'Уровень слова, не знака. Все слова, включая без метки JLPT'
+                  : 'Уровень слова, не знака. Только выбранные метки (слова без метки скрыты)'
+              }
               onClick={() => onChange(toggleWordJlptLevel(selected, level))}
             >
               N{level}
@@ -54,6 +59,9 @@ export function WordJlptFilter({
           )
         })}
       </div>
+      <span className="kanji-word-jlpt-hint">
+        {selected.length === 0 ? 'слов · все' : 'слов · без метки скрыты'}
+      </span>
     </div>
   )
 }

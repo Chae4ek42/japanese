@@ -6,11 +6,15 @@ import { SessionChips } from './SessionChips'
 export interface PracticeShellProps {
   onStop: () => void
   sessionStats: SessionStats & { accuracy?: number }
+  unit?: 'cards' | 'sentences'
   feedbackType?: FeedbackState['type']
   className?: string
   stageClassName?: string
   aside?: ReactNode
   asideClassName?: string
+  testId?: string
+  stopTestId?: string
+  stopLabel?: string
   children?: ReactNode
   /** Mobile swipe shortcuts (←→ Space Enter). Ignored on desktop. */
   swipes?: SwipeGestureHandlers
@@ -20,11 +24,15 @@ export interface PracticeShellProps {
 export function PracticeShell({
   onStop,
   sessionStats,
+  unit = 'cards',
   feedbackType = 'idle',
   className = '',
   stageClassName = '',
   aside,
   asideClassName = '',
+  testId,
+  stopTestId,
+  stopLabel = '← К настройкам',
   children,
   swipes,
   swipesEnabled = true,
@@ -35,12 +43,13 @@ export function PracticeShell({
   return (
     <section
       className={`practice-panel ${swipesActive ? 'has-mobile-swipes' : ''} ${className}`.trim()}
+      data-testid={testId}
     >
       <div className="practice-topline">
-        <button type="button" className="text-button" onClick={onStop}>
-          ← К настройкам
+        <button type="button" className="text-button" data-testid={stopTestId} onClick={onStop}>
+          {stopLabel}
         </button>
-        <SessionChips sessionStats={sessionStats} />
+        <SessionChips sessionStats={sessionStats} unit={unit} />
       </div>
 
       <div className={`practice-layout ${aside ? 'has-aside' : ''} ${stageClassName}`.trim()}>

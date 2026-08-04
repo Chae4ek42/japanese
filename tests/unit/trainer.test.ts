@@ -154,6 +154,27 @@ describe('getAdaptiveWeight', () => {
     }
     assert.ok(getAdaptiveWeight(weak, H, NOW) > getAdaptiveWeight(known, H, NOW) * 5)
   })
+
+  it('пенсия не умножает masteredWeight дважды — stale всё ещё влияет', () => {
+    const recentRetired = {
+      ...createStatsRecord(),
+      exposures: 30,
+      clears: 28,
+      mastery: 0.9,
+      streak: H.retireStreak,
+      eventAccuracy: 95,
+      lastSeenAt: NOW - 60_000,
+    }
+    const staleRetired = {
+      ...recentRetired,
+      lastSeenAt: NOW - 48 * 3_600_000,
+    }
+    const recentW = getAdaptiveWeight(recentRetired, H, NOW)
+    const staleW = getAdaptiveWeight(staleRetired, H, NOW)
+    assert.ok(staleW > recentW)
+    // Single retirement discount keeps weight above the absolute floor in practice.
+    assert.ok(staleW > 0.01)
+  })
 })
 
 describe('getConfusionMultiplier', () => {

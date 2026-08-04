@@ -1,22 +1,27 @@
-import type { Hyperparams, KanaCard, KanaPreferences, PracticeSession, StatsOutcome, StatsRecord } from '../../shared/lib/types'
+import type {
+  CardTrainerLiveSession,
+  Hyperparams,
+  KanaCard,
+  KanaPreferences,
+  PracticeSession,
+  StatsOutcome,
+  StatsRecord,
+} from '../../shared/lib/types'
 import type { KanaPracticePatch, KanaPracticeSlice } from '../../shared/state/AppStateContext'
 import { useKanaState } from '../../shared/state/AppStateContext'
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react'
 import './styles.css'
 import { KANA_STATS_CARDS, buildPool } from '../../data/kana'
 import {
-  bumpSessionShow,
   createStatsRecord,
   evaluateInput,
   evaluateSubmission,
   pickNextCardId,
-  pushRecentCard,
   recordConfusion,
   recordHistoryEvent,
-  setCardCooldown,
-  successCooldownTurns,
   updateCardStats,
 } from '../../shared/lib/trainer'
+import { afterSuccessfulCard, enqueueMistake, prepareShownCard } from '../../shared/lib/trainerCore'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { SetupPanel } from './SetupPanel'
 import { PracticePanel } from './PracticePanel'
@@ -28,6 +33,9 @@ export function KanaTrainer() {
     <KanaTrainerView
       preferences={kana.preferences}
       stats={kana.stats}
+      liveSession={kana.liveSession}
+      onSaveLiveSession={kana.saveLiveSession}
+      onClearLiveSession={kana.clearLiveSession}
       onPatchPreferences={kana.patchPreferences}
       onPatchHyperparam={kana.patchHyperparam}
       onPracticeUpdate={kana.updatePractice}
@@ -38,6 +46,9 @@ export function KanaTrainer() {
 interface KanaTrainerViewProps {
   preferences: KanaPreferences
   stats: Record<string, StatsRecord>
+  liveSession?: CardTrainerLiveSession | null
+  onSaveLiveSession?: (session: CardTrainerLiveSession | null) => void
+  onClearLiveSession?: () => void
   onPatchPreferences: (patch: Partial<KanaPreferences>) => void
   onPatchHyperparam: (key: keyof Hyperparams, value: number) => void
   onPracticeUpdate: (recipe: (slice: KanaPracticeSlice) => KanaPracticePatch) => void
@@ -46,6 +57,9 @@ interface KanaTrainerViewProps {
 function KanaTrainerView({
   preferences,
   stats,
+  liveSession = null,
+  onSaveLiveSession,
+  onClearLiveSession,
   onPatchPreferences,
   onPatchHyperparam,
   onPracticeUpdate,
@@ -54,6 +68,7 @@ function KanaTrainerView({
     view: practiceState,
     setView: setPracticeState,
     viewRef: practiceStateRef,
+    session,
     setSession,
     sessionRef,
     round,
@@ -61,6 +76,7 @@ function KanaTrainerView({
     resetRound,
     patchRound,
     sessionStats,
+    setSessionStats,
     feedback,
     setFeedback,
     pendingAdvanceRef,
@@ -79,6 +95,7 @@ function KanaTrainerView({
   const activeCardRef = useRef<KanaCard | null>(null)
   const preferencesRef = useRef(preferences)
   const statsRef = useRef(stats)
+  const didRestoreLiveSessionRef = useRef(false)
 
   const activePool = useMemo(
     () => buildPool(preferences.scriptMode, preferences.selectedGroups),
@@ -94,6 +111,39 @@ function KanaTrainerView({
     preferencesRef.current = preferences
     statsRef.current = stats
   }, [preferences, stats])
+
+  useEffect(() => {
+    if (didRestoreLiveSessionRef.current) return
+    didRestoreLiveSessionRef.current = true
+    if (
+      !liveSession ||
+      liveSession.view !== 'practice' ||
+      !liveSession.currentCardId ||
+      !liveSession.session.poolIds.includes(liveSession.currentCardId)
+    ) {
+      return
+    }
+
+    sessionRef.current = liveSession.session
+    setSession(liveSession.session)
+    setSessionStats(liveSession.sessionStats)
+    setCurrentCardId(liveSession.currentCardId)
+    setPracticeState('practice')
+    resetRound(Date.now())
+    setInputValue('')
+    setFeedback({ type: 'idle', text: '' })
+  }, [liveSession, setSession, setSessionStats, setPracticeState, sessionRef, resetRound, setFeedback])
+
+  useEffect(() => {
+    if (!onSaveLiveSession) return
+    if (practiceState !== 'practice' || !currentCardId) return
+    onSaveLiveSession({
+      session,
+      currentCardId,
+      view: practiceState,
+      sessionStats,
+    })
+  }, [practiceState, currentCardId, session, sessionStats, onSaveLiveSession])
 
   useEffect(() => {
     if (practiceState === 'practice') {
@@ -125,7 +175,7 @@ function KanaTrainerView({
 
   function revealNextCard(nextId: string, nextSession: PracticeSession) {
     const now = Date.now()
-    const shownSession = bumpSessionShow(nextSession, nextId)
+    const shownSession = prepareShownCard(nextSession, nextId)
     sessionRef.current = shownSession
     startTransition(() => {
       resetRound(now)
@@ -182,6 +232,11 @@ function KanaTrainerView({
     endPractice()
     setCurrentCardId(null)
     setInputValue('')
+    if (onClearLiveSession) {
+      onClearLiveSession()
+    } else {
+      onSaveLiveSession?.(null)
+    }
   }
 
   function finalizeOutcome(kind: StatsOutcome) {
@@ -195,23 +250,13 @@ function KanaTrainerView({
     const poolSize = activePool.length || currentSession.poolIds.length || 1
     const clean = kind === 'correct' && activeRound.mistakes === 0
 
-    let nextSession: PracticeSession = {
-      ...pushRecentCard(currentSession, activeCard.id),
-      mistakeQueue: currentSession.mistakeQueue.filter((id) => id !== activeCard.id),
-    }
-
-    if (kind === 'hint' && preferencesRef.current.retryQueueEnabled) {
-      nextSession.mistakeQueue = [activeCard.id, ...nextSession.mistakeQueue].slice(
-        0,
-        preferencesRef.current.hyperparams.queueSize,
-      )
-    } else if (kind === 'correct') {
-      nextSession = setCardCooldown(
-        nextSession,
-        activeCard.id,
-        successCooldownTurns(poolSize, clean),
-      )
-    }
+    const nextSession = afterSuccessfulCard(currentSession, activeCard.id, {
+      kind: kind === 'hint' ? 'hint' : 'correct',
+      poolSize,
+      clean,
+      queueSize: preferencesRef.current.hyperparams.queueSize,
+      enqueueOnHint: preferencesRef.current.retryQueueEnabled,
+    })
 
     recordCleanAnswer(clean)
 
@@ -272,14 +317,7 @@ function KanaTrainerView({
       if (!preferencesRef.current.retryQueueEnabled) {
         return prevSession
       }
-
-      return {
-        ...prevSession,
-        mistakeQueue: [activeCard.id, ...prevSession.mistakeQueue.filter((id) => id !== activeCard.id)].slice(
-          0,
-          preferencesRef.current.hyperparams.queueSize,
-        ),
-      }
+      return enqueueMistake(prevSession, activeCard.id, preferencesRef.current.hyperparams.queueSize)
     })
     onPracticeUpdate((prev) => ({
       stats: {

@@ -149,6 +149,9 @@ export function createNextRoundState(shownAt = Date.now()): RoundState {
     mistakes: 0,
     hintUsed: false,
     confusionLogged: false,
+    wrongRecorded: false,
+    typoForgiven: false,
+    dontKnow: false,
   }
 }
 
@@ -232,7 +235,7 @@ export function updateCardStats(
       ? Math.round(stats.avgLatencyMs * 0.82 + latencyMs * 0.18)
       : latencyMs
 
-    const target = hyperparams.targetLatencyMs
+    const target = targetLatencyForContext(hyperparams, context)
     const clean = context.mistakesOnCard === 0 && !context.hintUsed
     const fluencyBonus = latencyMs <= target * 0.7 ? 1.18 : latencyMs >= target * 1.7 ? 0.8 : 1
     const recoveryPenalty = clean ? 1 : 0.48
@@ -289,7 +292,10 @@ export function getAdaptiveWeight(stats: StatsRecord, hyperparams: Hyperparams, 
 
   let knownPenalty = 1
   const knownThreshold = hyperparams.knownMasteryThreshold ?? 0.65
-  if (stats.streak >= hyperparams.retireStreak && stats.mastery >= knownThreshold) {
+  const retired =
+    stats.streak >= hyperparams.retireStreak && stats.mastery >= knownThreshold
+  if (retired) {
+    // Single retirement path — do not also multiply by streakReducer=masteredWeight (was ×625).
     knownPenalty = hyperparams.masteredWeight
   } else if (stats.mastery >= knownThreshold && stats.eventAccuracy >= 80 && stats.clears >= 2) {
     const over = clamp((stats.mastery - knownThreshold) / Math.max(1e-6, 1 - knownThreshold), 0, 1)
@@ -298,8 +304,9 @@ export function getAdaptiveWeight(stats: StatsRecord, hyperparams: Hyperparams, 
     knownPenalty = 0.28
   }
 
-  const streakReducer =
-    stats.streak >= hyperparams.retireStreak
+  const streakReducer = retired
+    ? 1
+    : stats.streak >= hyperparams.retireStreak
       ? hyperparams.masteredWeight
       : 1 - Math.min(stats.streak, hyperparams.retireStreak - 1) * 0.16
 
@@ -318,6 +325,16 @@ export function getAdaptiveWeight(stats: StatsRecord, hyperparams: Hyperparams, 
     knownPenalty
 
   return clamp(raw, 0.01, 14)
+}
+
+function targetLatencyForContext(hyperparams: Hyperparams, context: UpdateStatsContext): number {
+  const base = hyperparams.targetLatencyMs
+  const mode = context.drillMode
+  if (mode === 'choice') return base * 1.7
+  if (mode === 'mixed') return base * 1.35
+  const len = context.answerLength ?? 0
+  if (len > 0) return base * (0.85 + Math.min(0.8, len * 0.06))
+  return base
 }
 
 export function getSessionShowCount(session: PracticeSession, cardId: string): number {
@@ -447,11 +464,13 @@ export function pickNextCardId(
         // After the first pass, heavily penalize cards already drilled this session.
         const sessionFactor =
           shows === 0 ? freshBoost : 1 / (1 + shows * 1.65) ** 1.25
-        const multiplier = options?.weightMultipliers?.[card.id] ?? 1
-        const linear = base * getConfusionMultiplier(card.id, statsMap, hyperparams, now) * sessionFactor * Math.max(0, multiplier)
-        // Temperature < 1 sharpens the distribution toward the weakest cards.
-        const weight = linear <= 0 || temperature >= 0.999 ? linear : linear ** (1 / temperature)
-        return { card, weight }
+        const multiplier = Math.max(0, options?.weightMultipliers?.[card.id] ?? 1)
+        const linear =
+          base * getConfusionMultiplier(card.id, statsMap, hyperparams, now) * sessionFactor
+        // Temperature sharpens mastery weights; session multiplier stays linear (200% = ×2).
+        const sharpened =
+          linear <= 0 || temperature >= 0.999 ? linear : linear ** (1 / temperature)
+        return { card, weight: sharpened * multiplier }
       }),
       rng,
     )?.id ?? null

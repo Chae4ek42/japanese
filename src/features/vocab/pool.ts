@@ -6,6 +6,7 @@ import type {
   VocabPreferences,
 } from '../../shared/lib/types'
 import { normalizeQuizGlossKey, pickQuizMeaning } from '../../shared/lib/jmdict-gloss'
+import { vocabSimilarity } from '../../shared/lib/review/similarity'
 import {
   getJlptWords,
   getPopularWordsForKanji,
@@ -460,22 +461,42 @@ export function buildChoiceOptions(
   const correct = card.meaning
   const correctKey = normalizeQuizGlossKey(correct)
   const seen = new Set<string>(correctKey ? [correctKey] : [])
-  const distractors: string[] = []
 
-  for (const item of pool) {
-    if (item.id === card.id || !item.meaning) continue
-    const key = normalizeQuizGlossKey(item.meaning)
+  // Prefer similar distractors (shared kanji / close kana / meaning overlap).
+  const ranked = [...pool]
+    .filter((item) => item.id !== card.id && item.meaning)
+    .map((item) => ({
+      item,
+      score: vocabSimilarity(card, item),
+    }))
+    .sort((a, b) => b.score - a.score)
+
+  const similar: string[] = []
+  const rest: string[] = []
+  for (const entry of ranked) {
+    const key = normalizeQuizGlossKey(entry.item.meaning)
     if (!key || seen.has(key)) continue
     seen.add(key)
-    distractors.push(item.meaning)
+    if (entry.score >= 0.18) similar.push(entry.item.meaning)
+    else rest.push(entry.item.meaning)
   }
 
   const picked: string[] = []
-  const bag = [...distractors]
+  const similarBag = [...similar]
+  const restBag = [...rest]
+  const similarTarget = Math.min(count - 1, Math.max(2, Math.ceil((count - 1) * 0.6)))
 
-  while (picked.length < count - 1 && bag.length) {
-    const index = Math.floor(rng() * bag.length)
-    picked.push(bag.splice(index, 1)[0])
+  while (picked.length < similarTarget && similarBag.length) {
+    // Soft-weighted: front of the list (more similar) more often.
+    const index = Math.floor(rng() * rng() * similarBag.length)
+    picked.push(similarBag.splice(index, 1)[0]!)
+  }
+  while (picked.length < count - 1 && restBag.length) {
+    const index = Math.floor(rng() * restBag.length)
+    picked.push(restBag.splice(index, 1)[0]!)
+  }
+  while (picked.length < count - 1 && similarBag.length) {
+    picked.push(similarBag.shift()!)
   }
 
   while (picked.length < count - 1) {

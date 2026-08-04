@@ -10,7 +10,7 @@ import { CustomWordForm } from './CustomWordForm'
 import { resolveMyWords } from './customWords'
 import { VOCAB_GROUPS, getWordsForGroup } from './groups'
 import { isWordSaved, mergeWordsByWriting, wordVariantIds } from './mergeHomographs'
-import { WordCard } from './WordCard'
+import { DictionaryWordList } from './DictionaryWordList'
 
 const PAGE_SIZE = 40
 
@@ -43,6 +43,7 @@ export function DictionaryPage() {
 
   const myWords = vocab?.myWords ?? []
   const customWords = vocab?.customWords ?? {}
+  const myWordAddedAt = vocab?.myWordAddedAt ?? {}
   const hiddenWordIds = vocab?.hiddenWordIds ?? []
   const learnedWordIds = vocab?.learnedWordIds ?? []
   const trainingWordIds = vocab?.trainingWordIds ?? []
@@ -81,10 +82,15 @@ export function DictionaryPage() {
     )
   }, [catalogMode, deferredQuery, groupId, level, hiddenSet])
 
-  const mineWords = useMemo(
-    () => resolveMyWords(myWords, customWords, hiddenWordIds),
-    [myWords, customWords, hiddenWordIds],
-  )
+  const mineWords = useMemo(() => {
+    const resolved = resolveMyWords(myWords, customWords, hiddenWordIds)
+    return [...resolved].sort((a, b) => {
+      const aAt = Math.max(0, ...wordVariantIds(a).map((id) => myWordAddedAt[id] ?? 0))
+      const bAt = Math.max(0, ...wordVariantIds(b).map((id) => myWordAddedAt[id] ?? 0))
+      if (aAt !== bAt) return bAt - aAt
+      return (a.writing || '').localeCompare(b.writing || '', 'ja')
+    })
+  }, [myWords, customWords, hiddenWordIds, myWordAddedAt])
   const activeGroup = VOCAB_GROUPS.find((group) => group.id === groupId) ?? null
 
   const list = section === 'mine' ? mineWords : catalogWords
@@ -138,9 +144,6 @@ export function DictionaryPage() {
       <header className="vocab-hero">
         <div className="vocab-hero-copy">
           <h2 className="vocab-title">Словарь</h2>
-          <p className="vocab-lead">
-            Каталог и личный список. Тренировка слов — в разделе «Слова» в меню.
-          </p>
         </div>
 
         <div className="vocab-section-tabs" role="tablist" aria-label="Разделы словаря">
@@ -282,21 +285,16 @@ export function DictionaryPage() {
         </p>
       </div>
 
-      <div className="vocab-list" data-testid="vocab-list">
-        {visible.map((word) => (
-          <WordCard
-            key={word.id ?? `${word.writing}-${word.kana}`}
-            word={word}
-            isSaved={isWordSaved(word, myWordSet)}
-            onToggleSaved={handleToggleSaved}
-            onEdit={section === 'mine' ? setEditingWord : undefined}
-            isLearned={section === 'mine' ? isWordSaved(word, learnedWordSet) : false}
-            onToggleLearned={section === 'mine' ? handleToggleLearned : undefined}
-            inTrainingList={isWordSaved(word, trainingWordSet)}
-            onToggleTraining={handleToggleTraining}
-          />
-        ))}
-      </div>
+      <DictionaryWordList
+        words={visible}
+        isSaved={(word) => isWordSaved(word, myWordSet)}
+        onToggleSaved={handleToggleSaved}
+        onEdit={section === 'mine' ? setEditingWord : undefined}
+        isLearned={section === 'mine' ? (word) => isWordSaved(word, learnedWordSet) : undefined}
+        onToggleLearned={section === 'mine' ? handleToggleLearned : undefined}
+        inTrainingList={(word) => isWordSaved(word, trainingWordSet)}
+        onToggleTraining={handleToggleTraining}
+      />
 
       {hasMore ? (
         <div className="vocab-more">

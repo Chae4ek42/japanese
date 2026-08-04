@@ -9,7 +9,7 @@ import type {
   KanjiWord,
 } from '../../shared/lib/types'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
-import { ShortcutNote } from '../../shared/ui/ShortcutNote'
+import { HighlightedReading } from '../kanji/HighlightedReading'
 import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
 import {
   buildWordFromReadings,
@@ -38,6 +38,7 @@ export interface VocabPracticeProps {
   onInputChange: (event: ChangeEvent<HTMLInputElement>) => void
   onInputKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
   onRevealHint: () => void
+  onDontKnow?: () => void
   onChoose: (answer: string) => void
   onSkipPrev: () => void
   onSkipNext: () => void
@@ -77,6 +78,7 @@ export function VocabPractice({
   onInputChange,
   onInputKeyDown,
   onRevealHint,
+  onDontKnow,
   onChoose,
   onSkipPrev,
   onSkipNext,
@@ -174,6 +176,11 @@ export function VocabPractice({
           ) : (
             <KanjiWritingHotspots
               writing={editing ? editWriting || card.writing : isChoiceDrill && prompt ? prompt.stemText : card.writing}
+              kana={
+                !editing && round.hintUsed && activeCard && drillMode === 'romaji'
+                  ? activeCard.kana
+                  : null
+              }
               className="vocab-question-writing"
               writingTestId="vocab-current-writing"
               onOpenInfo={onOpenKanjiInfo}
@@ -187,8 +194,12 @@ export function VocabPractice({
                 <ul className="vocab-hint-readings" data-testid="vocab-hint-readings">
                   {activeCard.readings.map((reading) => (
                     <li key={`${reading.kana}-${reading.romaji}`} className="vocab-hint-reading">
-                      <p className="vocab-hint-kana">{reading.kana}</p>
-                      <p className="vocab-hint-romaji">{reading.romaji}</p>
+                      <HighlightedReading
+                        writing={activeCard.writing}
+                        kana={reading.kana}
+                        fallbackRomaji={reading.romaji}
+                        testId={undefined}
+                      />
                       <ul className="vocab-hint-meanings">
                         {(reading.meanings.length ? reading.meanings : [activeCard.meaning]).map((meaning) => (
                           <li key={meaning}>{meaning}</li>
@@ -199,12 +210,12 @@ export function VocabPractice({
                 </ul>
               ) : (
                 <>
-                  <p className="vocab-hint-kana" data-testid="vocab-current-kana">
-                    {activeCard.kana}
-                  </p>
-                  <p className="vocab-hint-romaji" data-testid="vocab-hint-romaji">
-                    {activeCard.romaji}
-                  </p>
+                  <HighlightedReading
+                    writing={activeCard.writing}
+                    kana={activeCard.kana}
+                    fallbackRomaji={activeCard.romaji}
+                    testId="vocab-current-reading"
+                  />
                   <ul className="vocab-hint-meanings" data-testid="vocab-hint-meanings">
                     {(activeCard.meanings.length ? activeCard.meanings : [activeCard.meaning]).map((meaning) => (
                       <li key={meaning}>{meaning}</li>
@@ -233,9 +244,6 @@ export function VocabPractice({
             data-testid="vocab-card-editor"
             onSubmit={handleSaveEdit}
           >
-            <p className="control-hint">
-              Каждое чтение — отдельный блок. Несколько значений в одном чтении — через запятую.
-            </p>
             <label className="vocab-edit-writing">
               Написание
               <input
@@ -364,42 +372,6 @@ export function VocabPractice({
                 <div className="feedback-row">
                   <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
                 </div>
-                <div className="answer-actions">
-                  <button
-                    type="button"
-                    className="hint-button"
-                    data-testid="vocab-hint-button"
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={onRevealHint}
-                  >
-                    Подсказка
-                  </button>
-                  <ShortcutNote
-                    keyboard={
-                      <>
-                        <kbd>Space</kbd> — подсказка
-                        {inputMode === 'submit' ? (
-                          <>
-                            {' · '}
-                            <kbd>Enter</kbd> — проверить
-                          </>
-                        ) : (
-                          ' · автозачёт'
-                        )}
-                        {' · '}
-                        <kbd>←</kbd>/<kbd>→</kbd> — пропуск
-                      </>
-                    }
-                    swipe={
-                      <>
-                        Свайп вниз — подсказка
-                        {inputMode === 'submit' ? ' · вверх — проверить' : ' · автозачёт'}
-                        {' · '}
-                        влево/вправо — пропуск
-                      </>
-                    }
-                  />
-                </div>
               </>
             ) : (
               <>
@@ -442,6 +414,16 @@ export function VocabPractice({
               >
                 ← Предыдущее
               </button>
+              {onDontKnow ? (
+                <button
+                  type="button"
+                  className="ghost-button"
+                  data-testid="vocab-dont-know"
+                  onClick={onDontKnow}
+                >
+                  Не помню
+                </button>
+              ) : null}
               <button type="button" className="ghost-button" data-testid="vocab-skip-next" onClick={onSkipNext}>
                 Следующее →
               </button>

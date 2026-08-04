@@ -9,6 +9,7 @@ export type PracticeView = 'setup' | 'practice'
 
 export type TrainerOutcome = 'empty' | 'correct' | 'wrong' | 'pending' | 'seen' | 'hint'
 export type StatsOutcome = 'correct' | 'wrong' | 'hint' | 'seen'
+export type VocabDrillMode = 'romaji' | 'choice' | 'mixed'
 
 export interface Hyperparams {
   masteryGain: number
@@ -94,6 +95,8 @@ export interface PracticeSession {
    * Decremented on each subsequent card show.
    */
   cooldowns?: Record<string, number>
+  /** Adaptive-review v2 sequencer state (vocab). */
+  review?: ReviewSessionState
 }
 
 export interface RoundState {
@@ -101,6 +104,12 @@ export interface RoundState {
   mistakes: number
   hintUsed: boolean
   confusionLogged: boolean
+  /** C1: at most one wrong stats write / again grade per round. */
+  wrongRecorded?: boolean
+  /** Soft typo forgiven this round → hard, not again. */
+  typoForgiven?: boolean
+  /** Explicit «don't know» pressed. */
+  dontKnow?: boolean
 }
 
 export interface UpdateStatsContext {
@@ -109,6 +118,85 @@ export interface UpdateStatsContext {
   mistakesOnCard?: number
   hintUsed?: boolean
   inputMode?: InputMode
+  /** Drill mode for mode-aware latency / fluency. */
+  drillMode?: VocabDrillMode
+  answerLength?: number
+}
+
+/** 0 = recognition (choice), 1 = production (romaji). */
+export type ReviewAspect = 0 | 1
+export type ReviewGrade = 1 | 2 | 3 | 4
+export type MemoryCardState = 'new' | 'learning' | 'review' | 'relearning' | 'leech'
+
+export interface MemoryState {
+  /** Stability in hours: interval where retention ≈ 0.9. */
+  s: number
+  /** Difficulty ∈ [0.05, 0.95]. */
+  d: number
+  /** Last successful/failed recall timestamp (not mere presentation). */
+  lastAt: number
+  /** Last time the card was shown on screen. */
+  lastPresentedAt: number
+  reps: number
+  lapses: number
+  state: MemoryCardState
+  /** Migrated from mastery; tighten intervals until confirmed. */
+  uncertain: boolean
+  modelVersion: number
+  createdAt: number
+  leechUntil?: number
+}
+
+export interface ReviewPlanKnobs {
+  targetRetention: number
+  newPerDay: number
+  sessionMinutes: number
+}
+
+export interface LatencyModel {
+  mu: Record<'romaji' | 'choice' | 'mixed', number>
+  beta: Record<'romaji' | 'choice' | 'mixed', number>
+  samples: number
+  /** Recent residual z = log(t) - log(Ê) for personal quantiles. */
+  zSamples: number[]
+}
+
+export interface ReviewSessionState {
+  turn: number
+  planIds: string[]
+  planIndex: number
+  dueTurns: Record<string, number>
+  inFlight: string[]
+  goodStreaks: Record<string, number>
+  graduatedIds: string[]
+  seed: number
+  mode: 'adaptive' | 'even'
+  weightMultipliers: Record<string, number>
+  answersInSession: number
+  targetAnswers: number
+  done: boolean
+}
+
+/** Compact append-only review log row (IndexedDB). */
+export interface ReviewEvent {
+  t: number
+  c: string
+  a: ReviewAspect
+  g: ReviewGrade
+  l: number
+  e: number
+  r: number
+  s: number
+  d: number
+  m: 0 | 1 | 2
+  /** Chosen wrong distractor id/text when available. */
+  x?: string
+}
+
+export interface ReviewDayCounters {
+  /** YYYY-MM-DD */
+  dayKey: string
+  newIntroduced: number
 }
 
 export interface KanaEntry {
@@ -182,7 +270,6 @@ export interface KanjiPreferences {
 }
 
 
-export type VocabDrillMode = 'romaji' | 'choice' | 'mixed'
 export type VocabSource = 'level' | 'group' | 'mine' | 'kanji' | 'list'
 export type VocabLevelFilter = 5 | 4 | 3 | 2 | 1
 export type VocabPickMode = 'adaptive' | 'even'
@@ -202,8 +289,8 @@ export interface VocabPreferences {
    */
   wordJlptLevels: KanjiWordJlptLevel[]
   /**
-   * Max words in the practice pool.
-   * -1 = no limit.
+   * Max words in the practice pool (legacy setup slice).
+   * -1 = no limit. Prefer `newPerDay` for the v2 planner.
    */
   newWordLimit: number
   /**
@@ -218,6 +305,14 @@ export interface VocabPreferences {
   mineIncludeLearned: boolean
   /** Kanji characters selected for source === 'kanji' (order = practice order). */
   selectedKanji: string[]
+  /** Target retention for due scheduling (0.85…0.95). */
+  targetRetention: number
+  /** New cards introduced per day via the planner. */
+  newPerDay: number
+  /** Soft session length in minutes → answer budget. */
+  sessionMinutes: number
+  /** Use adaptive-review v2 planner/sequencer (default true). */
+  reviewV2: boolean
 }
 
 export interface KanjiWordReading {
@@ -251,6 +346,8 @@ export interface VocabState {
    * Bank overrides shadow `getWordById` when resolving pools.
    */
   customWords: Record<string, KanjiWord>
+  /** Epoch ms when each id was added to `myWords` (newest sort). */
+  myWordAddedAt: Record<string, number>
   /** Word ids permanently removed from vocab pools / catalog training. */
   hiddenWordIds: string[]
   /** My-word ids marked as learned («Выученные»). */
@@ -259,6 +356,17 @@ export interface VocabState {
   trainingWordIds: string[]
   preferences: VocabPreferences
   stats: Record<string, StatsRecord>
+  /**
+   * Per (cardId:aspect) memory model state.
+   * Keys from `memoryKey(cardId, aspect)`.
+   */
+  memory: Record<string, MemoryState>
+  /** Online latency model for grade derivation. */
+  latencyModel: LatencyModel
+  /** Daily new-card intake counter. */
+  reviewDay: ReviewDayCounters
+  /** In-progress drill; survives navigation / remount. */
+  liveSession: CardTrainerLiveSession | null
 }
 
 export interface ContextPreferences {
@@ -321,11 +429,13 @@ export interface ContextSentence {
 }
 
 export interface AppState {
-  version: 21
+  version: 24
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>
     history: PracticeHistory
+    /** In-progress drill; survives navigation / remount. */
+    liveSession: CardTrainerLiveSession | null
   }
   numbers: {
     preferences: NumbersPreferences
@@ -346,6 +456,19 @@ export interface SessionStats {
   answered: number
   clean: number
   streak: number
+}
+
+/** Snapshot of an in-progress card trainer (kana / vocab). Survives navigation. */
+export interface CardTrainerLiveSession {
+  session: PracticeSession
+  currentCardId: string | null
+  view: PracticeView
+  sessionStats: SessionStats
+  /** Vocab-only: per-card weight multipliers for the live session. */
+  weightMultipliers?: Record<string, number>
+  /** Vocab-only: skip navigation history. */
+  navHistory?: string[]
+  navIndex?: number
 }
 
 export type FeedbackType = 'idle' | 'success' | 'wrong' | 'hint' | 'error'
@@ -426,6 +549,17 @@ export interface ReadingSegment {
   role: ReadingSegmentRole
   source?: string
   romaji?: string
+}
+
+/** Per-kanji (or shared-group) coloring for writing + reading alignment. */
+export interface ColoredReadingSegment {
+  chars: string
+  kana: string
+  romaji: string
+  /** Palette slot; `-1` = okurigana / non-kanji. */
+  colorIndex: number
+  role: ReadingSegmentRole
+  source?: string
 }
 
 export interface GlossFootnote {

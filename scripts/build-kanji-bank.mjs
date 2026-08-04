@@ -261,11 +261,12 @@ function extractTgzJson(tgzPath, outJsonPath) {
 }
 
 function hasPriority(entry) {
-  const tags = [
-    ...(entry.kanji ?? []).flatMap((k) => k.tags ?? []),
-    ...(entry.kana ?? []).flatMap((k) => k.tags ?? []),
-  ]
-  return tags.some((tag) => /^(ichi|news|spec|gai)\d/.test(tag))
+  // jmdict-rus JSON exposes priority as `common: true` on kanji/kana forms
+  // (not as ichi1/news1 tags — those appear in the XML dump).
+  const forms = [...(entry.kanji ?? []), ...(entry.kana ?? [])]
+  if (forms.some((form) => form?.common === true)) return true
+  const tags = forms.flatMap((form) => form.tags ?? [])
+  return tags.some((tag) => /^(ichi|news|spec|gai)\d/.test(String(tag)))
 }
 
 function pickSurface(entry) {

@@ -177,6 +177,10 @@ export function KanjiPage() {
             onToggleLearned={onToggleLearned}
             onToggleMyWord={onToggleMyWord}
             onToggleTrainingWord={onToggleTrainingWord}
+            onStartPractice={(character) => {
+              setInfoKanji(null)
+              setFocusKanji(character)
+            }}
           />
         ) : null}
       </>
@@ -192,9 +196,7 @@ export function KanjiPage() {
             <p className="subsection-note">
               {KANJI_BANK_META.counts.kanji} знаков
               {KANJI_BANK_META.counts.joyo ? ` · ${KANJI_BANK_META.counts.joyo} Jōyō` : ''} ·{' '}
-              {KANJI_BANK_META.counts.words} слов.{' '}
-              <span className="hint-kbd">Клик — практика · колёсико — карточка знака.</span>
-              <span className="hint-swipe">Тап — практика · долгое нажатие — карточка знака.</span>
+              {KANJI_BANK_META.counts.words} слов
             </p>
           </div>
           <div className="kanji-page-actions">

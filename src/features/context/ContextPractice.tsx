@@ -1,9 +1,8 @@
-import { useRef } from 'react'
 import type { ContextSentence, KanjiWord } from '../../shared/lib/types'
 import { kanaToRomaji } from '../../shared/lib/kana'
 import { pickQuizMeaning } from '../../shared/lib/jmdict-gloss'
 import { speakJapanese } from '../../shared/lib/speech'
-import { useSwipeGestures } from '../../shared/lib/useSwipeGestures'
+import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 import { ContextSentenceText } from './ContextSentenceText'
 
@@ -17,6 +16,8 @@ export interface ContextPracticeProps {
   note: string
   myWords: string[]
   canGoPrev: boolean
+  pagesAnswered?: number
+  wordsLearned?: number
   onReveal: () => void
   onKnowWord: (wordId: string) => void
   onKnowAll: () => void
@@ -44,6 +45,8 @@ export function ContextPractice({
   note,
   myWords,
   canGoPrev,
+  pagesAnswered = 0,
+  wordsLearned = 0,
   onReveal,
   onKnowWord,
   onKnowAll,
@@ -56,34 +59,15 @@ export function ContextPractice({
   onToggleMyWord,
   onOpenKanji,
 }: ContextPracticeProps) {
-  const stageRef = useRef<HTMLElement>(null)
-  useSwipeGestures(stageRef, {
-    onSwipeLeft: onPrevSentence,
-    onSwipeRight: onNextSentence,
-    onSwipeDown: onReveal,
-  })
-
   const highlightWritings = sentenceNewWords
     .map((word) => word.writing || word.kana)
     .filter(Boolean)
   const romaji = sentence?.reading ? kanaToRomaji(sentence.reading) : ''
   const mySet = new Set(myWords)
   const activeNewIds = new Set(sentenceNewWords.map((word) => word.id).filter(Boolean))
-
-  return (
-    <section ref={stageRef} className="context-drill has-mobile-swipes" data-testid="context-drill">
-      <header className="context-drill-head">
-        <div className="context-drill-head-copy">
-          <p className="context-eyebrow">Тренировка</p>
-          <p className="context-progress" data-testid="context-coverage">
-            {coverageLabel}
-          </p>
-        </div>
-        <button type="button" className="ghost-button" data-testid="context-back-setup" onClick={onBackToSetup}>
-          Настройки
-        </button>
-      </header>
-
+  const accuracy = pagesAnswered > 0 ? Math.round((wordsLearned / pagesAnswered) * 100) : 100
+  const batchAside = (
+    <>
       {batchWords.length ? (
         <div className="context-batch" data-testid="context-batch">
           <div className="context-section-label-row">
@@ -144,6 +128,34 @@ export function ContextPractice({
           </button>
         </div>
       )}
+    </>
+  )
+
+  return (
+    <PracticeShell
+      onStop={onBackToSetup}
+      stopTestId="context-back-setup"
+      testId="context-drill"
+      className="context-drill"
+      stageClassName="context-practice-layout"
+      aside={batchAside}
+      asideClassName="context-practice-aside"
+      unit="sentences"
+      sessionStats={{
+        answered: pagesAnswered,
+        clean: wordsLearned,
+        streak: 0,
+        accuracy,
+      }}
+      swipes={{
+        onSwipeLeft: onPrevSentence,
+        onSwipeRight: onNextSentence,
+        onSwipeDown: onReveal,
+      }}
+    >
+      <p className="context-progress" data-testid="context-coverage">
+        {coverageLabel}
+      </p>
 
       {status === 'loading-llm' ? (
         <div className="context-stage context-stage-muted">
@@ -309,6 +321,6 @@ export function ContextPractice({
           {note}
         </p>
       ) : null}
-    </section>
+    </PracticeShell>
   )
 }

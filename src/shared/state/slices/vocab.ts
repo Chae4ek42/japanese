@@ -1,11 +1,25 @@
-import type { KanjiWord, KanjiWordReading, StatsRecord, VocabPreferences, VocabState } from '../../lib/types'
+import type {
+  KanjiWord,
+  KanjiWordReading,
+  LatencyModel,
+  MemoryState,
+  ReviewDayCounters,
+  StatsRecord,
+  VocabPreferences,
+  VocabState,
+} from '../../lib/types'
+import { DEFAULT_LATENCY_MODEL } from '../../lib/review/grade'
+import { MEMORY_MODEL_VERSION } from '../../lib/review/memory'
+import { getDayKey } from '../../lib/trainer'
 import { sanitizeWordJlptLevels } from './kanji'
+import { sanitizeCardTrainerLiveSession } from './live-session'
 
 const VALID_VOCAB_DRILLS = new Set(['romaji', 'choice', 'mixed'])
 const VALID_VOCAB_SOURCES = new Set(['level', 'group', 'mine', 'kanji', 'list'])
 const VALID_VOCAB_LEVELS = new Set([5, 4, 3, 2, 1])
 const VALID_PICK_MODES = new Set(['adaptive', 'even'])
 const VALID_INPUT_MODES = new Set(['instant', 'submit'])
+const VALID_MEMORY_STATES = new Set(['new', 'learning', 'review', 'relearning', 'leech'])
 
 export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
   drillMode: 'romaji',
@@ -19,6 +33,10 @@ export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
   trainFullGroup: false,
   mineIncludeLearned: true,
   selectedKanji: [],
+  targetRetention: 0.9,
+  newPerDay: 10,
+  sessionMinutes: 15,
+  reviewV2: true,
 }
 
 function sanitizeSelectedKanji(raw: unknown, fallback: string[]): string[] {
@@ -40,11 +58,24 @@ function clampInt(value: unknown, min: number, max: number, fallback: number): n
   return Math.min(max, Math.max(min, n))
 }
 
+function clampFloat(value: unknown, min: number, max: number, fallback: number): number {
+  const n = typeof value === 'number' && Number.isFinite(value) ? value : fallback
+  return Math.min(max, Math.max(min, n))
+}
+
 function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): VocabPreferences {
   const source = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {}
   const levelRaw = typeof source.level === 'number' ? source.level : fallback.level
   const groupId =
     typeof source.groupId === 'string' && source.groupId.length > 0 ? source.groupId : fallback.groupId
+
+  const newWordLimit = clampInt(source.newWordLimit, -1, 50, fallback.newWordLimit)
+  const newPerDayRaw =
+    typeof source.newPerDay === 'number' && Number.isFinite(source.newPerDay)
+      ? Math.round(source.newPerDay)
+      : newWordLimit >= 0
+        ? newWordLimit
+        : fallback.newPerDay
 
   return {
     drillMode: VALID_VOCAB_DRILLS.has(String(source.drillMode))
@@ -62,7 +93,7 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
       ? (source.inputMode as VocabPreferences['inputMode'])
       : fallback.inputMode,
     wordJlptLevels: sanitizeWordJlptLevels(source.wordJlptLevels, fallback.wordJlptLevels),
-    newWordLimit: clampInt(source.newWordLimit, -1, 50, fallback.newWordLimit),
+    newWordLimit,
     trainFullGroup:
       typeof source.trainFullGroup === 'boolean' ? source.trainFullGroup : fallback.trainFullGroup,
     mineIncludeLearned:
@@ -70,6 +101,10 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
         ? source.mineIncludeLearned
         : fallback.mineIncludeLearned,
     selectedKanji: sanitizeSelectedKanji(source.selectedKanji, fallback.selectedKanji ?? []),
+    targetRetention: clampFloat(source.targetRetention, 0.85, 0.95, fallback.targetRetention),
+    newPerDay: Math.min(50, Math.max(0, newPerDayRaw)),
+    sessionMinutes: clampInt(source.sessionMinutes, 5, 60, fallback.sessionMinutes),
+    reviewV2: typeof source.reviewV2 === 'boolean' ? source.reviewV2 : fallback.reviewV2,
   }
 }
 
@@ -152,6 +187,73 @@ function sanitizeCustomWords(raw: unknown): Record<string, KanjiWord> {
   return result
 }
 
+function sanitizeMemoryState(raw: unknown): MemoryState | null {
+  if (!raw || typeof raw !== 'object') return null
+  const source = raw as Record<string, unknown>
+  const state = String(source.state)
+  if (!VALID_MEMORY_STATES.has(state)) return null
+  return {
+    s: clampFloat(source.s, 0, 20_000, 0),
+    d: clampFloat(source.d, 0.05, 0.95, 0.3),
+    lastAt: clampFloat(source.lastAt, 0, Number.MAX_SAFE_INTEGER, 0),
+    lastPresentedAt: clampFloat(source.lastPresentedAt, 0, Number.MAX_SAFE_INTEGER, 0),
+    reps: clampInt(source.reps, 0, 1_000_000, 0),
+    lapses: clampInt(source.lapses, 0, 1_000_000, 0),
+    state: state as MemoryState['state'],
+    uncertain: Boolean(source.uncertain),
+    modelVersion: clampInt(source.modelVersion, 1, 100, MEMORY_MODEL_VERSION),
+    createdAt: clampFloat(source.createdAt, 0, Number.MAX_SAFE_INTEGER, Date.now()),
+    leechUntil:
+      typeof source.leechUntil === 'number' && Number.isFinite(source.leechUntil)
+        ? source.leechUntil
+        : undefined,
+  }
+}
+
+function sanitizeMemoryMap(raw: unknown): Record<string, MemoryState> {
+  if (!raw || typeof raw !== 'object') return {}
+  const out: Record<string, MemoryState> = {}
+  for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (!key.includes(':')) continue
+    const mem = sanitizeMemoryState(value)
+    if (mem) out[key] = mem
+  }
+  return out
+}
+
+function sanitizeLatencyModel(raw: unknown, fallback: LatencyModel): LatencyModel {
+  const source = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {}
+  const muRaw = source.mu && typeof source.mu === 'object' ? (source.mu as Record<string, unknown>) : {}
+  const betaRaw =
+    source.beta && typeof source.beta === 'object' ? (source.beta as Record<string, unknown>) : {}
+  const zSamples = Array.isArray(source.zSamples)
+    ? source.zSamples.filter((item): item is number => typeof item === 'number' && Number.isFinite(item)).slice(-120)
+    : fallback.zSamples
+  return {
+    mu: {
+      romaji: clampFloat(muRaw.romaji, 0, 12, fallback.mu.romaji),
+      choice: clampFloat(muRaw.choice, 0, 12, fallback.mu.choice),
+      mixed: clampFloat(muRaw.mixed, 0, 12, fallback.mu.mixed),
+    },
+    beta: {
+      romaji: clampFloat(betaRaw.romaji, 0.01, 0.25, fallback.beta.romaji),
+      choice: clampFloat(betaRaw.choice, 0.01, 0.25, fallback.beta.choice),
+      mixed: clampFloat(betaRaw.mixed, 0.01, 0.25, fallback.beta.mixed),
+    },
+    samples: clampInt(source.samples, 0, 10_000_000, fallback.samples),
+    zSamples,
+  }
+}
+
+function sanitizeReviewDay(raw: unknown): ReviewDayCounters {
+  const source = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {}
+  const today = getDayKey(Date.now())
+  const dayKey = typeof source.dayKey === 'string' ? source.dayKey : today
+  const newIntroduced = clampInt(source.newIntroduced, 0, 10_000, 0)
+  if (dayKey !== today) return { dayKey: today, newIntroduced: 0 }
+  return { dayKey, newIntroduced }
+}
+
 export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabState {
   const source = raw && typeof raw === 'object' ? (raw as Partial<VocabState>) : {}
   const customWords = sanitizeCustomWords(source.customWords)
@@ -159,6 +261,18 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
     ? source.myWords.filter((item): item is string => typeof item === 'string' && item.length > 0)
     : [...fallback.myWords]
   const myWords = [...new Set([...myWordsRaw, ...Object.keys(customWords).filter((id) => id.startsWith('custom:'))])]
+
+  const myWordAddedAtRaw =
+    source.myWordAddedAt && typeof source.myWordAddedAt === 'object'
+      ? (source.myWordAddedAt as Record<string, unknown>)
+      : {}
+  const myWordAddedAt: Record<string, number> = {}
+  const migrateBase = Date.now() - myWords.length * 1000
+  myWords.forEach((id, index) => {
+    const raw = myWordAddedAtRaw[id]
+    myWordAddedAt[id] =
+      typeof raw === 'number' && Number.isFinite(raw) && raw > 0 ? raw : migrateBase + index * 1000
+  })
 
   const hiddenWordIds = [
     ...new Set(
@@ -187,10 +301,15 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
   return {
     myWords,
     customWords,
+    myWordAddedAt,
     hiddenWordIds,
     learnedWordIds,
     trainingWordIds,
     preferences: sanitizeVocabPreferences(source.preferences, fallback.preferences),
     stats,
+    memory: sanitizeMemoryMap(source.memory),
+    latencyModel: sanitizeLatencyModel(source.latencyModel, fallback.latencyModel ?? DEFAULT_LATENCY_MODEL),
+    reviewDay: sanitizeReviewDay(source.reviewDay),
+    liveSession: sanitizeCardTrainerLiveSession(source.liveSession, fallback.liveSession ?? null),
   }
 }

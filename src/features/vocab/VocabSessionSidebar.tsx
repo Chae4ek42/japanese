@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type {
   KanjiWordJlptLevel,
   VocabCard,
@@ -11,17 +12,9 @@ import {
   toggleWordJlptLevel,
 } from '../kanji/WordJlptFilter'
 
-const PICK_OPTIONS: Array<{ id: VocabPickMode; label: string; hint: string }> = [
-  {
-    id: 'adaptive',
-    label: 'Адаптивный',
-    hint: 'Слабые и новые чаще; веса тоже учитываются',
-  },
-  {
-    id: 'even',
-    label: 'Равномерный',
-    hint: 'Все слова с равной частотой, если вес не меняли',
-  },
+const PICK_OPTIONS: Array<{ id: VocabPickMode; label: string }> = [
+  { id: 'adaptive', label: 'Адаптивный' },
+  { id: 'even', label: 'Равномерный' },
 ]
 
 const WEIGHT_PRESETS = [0, 100, 200] as const
@@ -66,13 +59,14 @@ export function VocabSessionSidebar({
   onResetWeights,
   onAddSourceWord,
 }: VocabSessionSidebarProps) {
-  const activePick = PICK_OPTIONS.find((item) => item.id === pickMode) ?? PICK_OPTIONS[0]!
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const changedCount = cards.filter((card) => {
     const value = weightMultipliers[card.id]
     return value !== undefined && Math.abs(value - 1) >= 0.01
   }).length
   const excludedCount = cards.filter((card) => (weightMultipliers[card.id] ?? 1) <= 0).length
   const showSourceLevel = source === 'level' && Boolean(onLevelChange)
+  const hasFilters = showSourceLevel || showWordJlptFilter
 
   return (
     <div className="vocab-session-panel" data-testid="vocab-session-sidebar">
@@ -108,6 +102,16 @@ export function VocabSessionSidebar({
       <section className="vocab-session-block">
         <div className="vocab-session-block-head">
           <span className="vocab-session-label">Подбор</span>
+          {hasFilters ? (
+            <button
+              type="button"
+              className="vocab-session-reset"
+              data-testid="vocab-session-toggle-filters"
+              onClick={() => setFiltersOpen((open) => !open)}
+            >
+              {filtersOpen ? 'Скрыть фильтры' : 'Фильтры'}
+            </button>
+          ) : null}
         </div>
         <div className="vocab-session-pick" role="group" aria-label="Режим подбора">
           {PICK_OPTIONS.map((option) => (
@@ -126,10 +130,9 @@ export function VocabSessionSidebar({
             </button>
           ))}
         </div>
-        <p className="vocab-session-hint">{activePick.hint}</p>
       </section>
 
-      {showSourceLevel ? (
+      {filtersOpen && showSourceLevel ? (
         <section className="vocab-session-block" data-testid="vocab-session-level-filter">
           <div className="vocab-session-block-head">
             <span className="vocab-session-label">Уровень JLPT</span>
@@ -153,7 +156,7 @@ export function VocabSessionSidebar({
         </section>
       ) : null}
 
-      {showWordJlptFilter && onWordJlptChange ? (
+      {filtersOpen && showWordJlptFilter && onWordJlptChange ? (
         <section className="vocab-session-block" data-testid="vocab-session-word-jlpt">
           <div className="vocab-session-block-head">
             <span className="vocab-session-label">Слова JLPT</span>
@@ -193,7 +196,6 @@ export function VocabSessionSidebar({
             Сбросить
           </button>
         </div>
-        <p className="vocab-session-hint">0% — не показывать · 100% — обычно · выше — чаще</p>
 
         <ul className="vocab-session-list" role="list" aria-label="Слова текущей тренировки">
           {cards.map((card) => {
@@ -227,6 +229,24 @@ export function VocabSessionSidebar({
                   {isCurrent ? <span className="vocab-session-now">сейчас</span> : null}
                 </button>
 
+                <div className="vocab-session-row-presets" role="group" aria-label={`Вес ${card.writing}`}>
+                  {WEIGHT_PRESETS.map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      className={
+                        weightPercent === preset
+                          ? 'vocab-session-preset is-active'
+                          : 'vocab-session-preset'
+                      }
+                      data-testid={`vocab-session-preset-${card.id}-${preset}`}
+                      onClick={() => onSetWeight(card.id, preset / 100)}
+                    >
+                      {preset}%
+                    </button>
+                  ))}
+                </div>
+
                 {expanded ? (
                   <div className="vocab-session-row-editor" data-testid="vocab-session-weight-editor">
                     <input
@@ -239,22 +259,6 @@ export function VocabSessionSidebar({
                       aria-label={`Вес слова ${card.writing}`}
                       onChange={(event) => onSetWeight(card.id, Number(event.target.value) / 100)}
                     />
-                    <div className="vocab-session-presets">
-                      {WEIGHT_PRESETS.map((preset) => (
-                        <button
-                          key={preset}
-                          type="button"
-                          className={
-                            weightPercent === preset
-                              ? 'vocab-session-preset is-active'
-                              : 'vocab-session-preset'
-                          }
-                          onClick={() => onSetWeight(card.id, preset / 100)}
-                        >
-                          {preset}%
-                        </button>
-                      ))}
-                    </div>
                   </div>
                 ) : null}
               </li>

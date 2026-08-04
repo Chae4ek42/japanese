@@ -3,7 +3,6 @@ import type { KanjiPreferences, KanjiWord, KanjiWordJlptLevel } from '../../shar
 import { useEffect, useMemo, useState } from 'react'
 import {
   getKanjiInfo,
-  getPopularWordsForKanji,
   getPracticeWords,
   POPULAR_WORDS_PER_KANJI,
 } from '../../data/words/bank'
@@ -21,7 +20,7 @@ import { GlossFootnotes } from './GlossFootnotes'
 import { HighlightedReading } from './HighlightedReading'
 import { KanjiComposition } from './KanjiComposition'
 import { KanjiGlyph } from './KanjiGlyph'
-import { isKanjiChar } from './KanjiWritingHotspots'
+import { isKanjiChar, KanjiWritingHotspots } from './KanjiWritingHotspots'
 import { WordJlptFilter } from './WordJlptFilter'
 
 export interface KanjiTrainerProps {
@@ -73,8 +72,10 @@ export function KanjiTrainer({
   const [editWriting, setEditWriting] = useState('')
   const [editReadings, setEditReadings] = useState<ReadingDraft[]>([])
   const [editError, setEditError] = useState('')
+  const [showAllWords, setShowAllWords] = useState(false)
   const mySet = useMemo(() => new Set(myWords), [myWords])
   const trainingSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
+  const wordLimit = showAllWords ? Number.MAX_SAFE_INTEGER : POPULAR_WORDS_PER_KANJI
 
   const words = useMemo(
     () =>
@@ -83,22 +84,32 @@ export function KanjiTrainer({
           getPracticeWords(character, {
             excludedIds: hiddenWordIds,
             wordJlptLevels,
-            limit: POPULAR_WORDS_PER_KANJI,
+            limit: wordLimit,
           }),
         ),
         customWords,
         [],
       ),
-    [character, hiddenWordIds, wordJlptLevels, customWords],
+    [character, hiddenWordIds, wordJlptLevels, customWords, wordLimit],
   )
-  const totalAvailable = getPopularWordsForKanji(character).length
+  const totalAvailable = useMemo(
+    () =>
+      getPracticeWords(character, {
+        excludedIds: hiddenWordIds,
+        wordJlptLevels,
+        limit: Number.MAX_SAFE_INTEGER,
+      }).length,
+    [character, hiddenWordIds, wordJlptLevels],
+  )
   const hiddenCount = hiddenWordIds.length
   const expandedWord = words.find((word) => wordKey(word) === expandedKey) ?? null
+  const canShowMore = totalAvailable > POPULAR_WORDS_PER_KANJI
 
   useEffect(() => {
     setExpandedKey(null)
     setEditing(false)
     setEditError('')
+    setShowAllWords(false)
   }, [character])
 
   useEffect(() => {
@@ -268,6 +279,18 @@ export function KanjiTrainer({
                 {hiddenCount ? ` · скрыто ${hiddenCount}` : ''}
               </p>
             </div>
+            {canShowMore ? (
+              <div className="kanji-words-head-actions">
+                <button
+                  type="button"
+                  className="text-button"
+                  data-testid="kanji-show-all-words"
+                  onClick={() => setShowAllWords((value) => !value)}
+                >
+                  {showAllWords ? 'Только популярные' : `Показать все (${totalAvailable})`}
+                </button>
+              </div>
+            ) : null}
           </div>
 
           {!words.length ? (
@@ -304,7 +327,12 @@ export function KanjiTrainer({
                       onClick={() => toggleExpanded(word)}
                     >
                       <span className="kanji-word-list-writing" data-testid="kanji-word-writing">
-                        {word.writing}
+                        <KanjiWritingHotspots
+                          writing={word.writing}
+                          kana={word.kana}
+                          focusKanji={character}
+                          interactive={false}
+                        />
                       </span>
                       <div className="kanji-word-list-body">
                         <HighlightedReading
