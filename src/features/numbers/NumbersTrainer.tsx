@@ -78,6 +78,9 @@ function NumbersTrainerView({
 
   const [currentCardId, setCurrentCardId] = useState<string | null>(null)
   const [revealed, setRevealed] = useState(false)
+  const navHistoryRef = useRef<string[]>([])
+  const navIndexRef = useRef(-1)
+  const skipToAdjacentRef = useRef<(direction: 'prev' | 'next') => void>(() => {})
   const practiceRef = useRef<{
     view: PracticeView
     activeCard: NumberCard | null
@@ -122,16 +125,30 @@ function NumbersTrainerView({
 
   const modeLabel = NUMBER_MODES.find((mode) => mode.id === preferences.mode)?.label ?? 'Числа'
 
-  function showCard(cardId: string, baseSession?: PracticeSession) {
+  function rememberNavCard(cardId: string) {
+    const trimmed = navHistoryRef.current.slice(0, navIndexRef.current + 1)
+    trimmed.push(cardId)
+    navHistoryRef.current = trimmed
+    navIndexRef.current = trimmed.length - 1
+  }
+
+  function showCard(
+    cardId: string,
+    baseSession?: PracticeSession,
+    { countPresentation = true }: { countPresentation?: boolean } = {},
+  ) {
     const now = Date.now()
-    const shownSession = bumpSessionShow(baseSession ?? sessionRef.current, cardId)
+    const base = baseSession ?? sessionRef.current
+    const shownSession = countPresentation ? bumpSessionShow(base, cardId) : base
     sessionRef.current = shownSession
     setSession(shownSession)
     resetRound(now)
     setCurrentCardId(cardId)
     setRevealed(false)
     setFeedback({ type: 'idle', text: '' })
-    onUpdateStats(cardId, 'seen', { now })
+    if (countPresentation) {
+      onUpdateStats(cardId, 'seen', { now })
+    }
   }
 
   function advanceToNextCard(nextSessionOverride?: PracticeSession) {
@@ -148,6 +165,7 @@ function NumbersTrainerView({
     }
 
     const pickedFromQueue = nextSession.mistakeQueue.includes(nextId)
+    rememberNavCard(nextId)
     showCard(nextId, {
       ...nextSession,
       sinceQueuePick: pickedFromQueue ? 0 : (nextSession.sinceQueuePick ?? 0) + 1,
@@ -160,6 +178,8 @@ function NumbersTrainerView({
       return
     }
 
+    navHistoryRef.current = []
+    navIndexRef.current = -1
     const nextSession = beginPractice({
       poolIds: activePool.map((card) => card.id),
       mode: preferences.pickMode,
@@ -170,6 +190,8 @@ function NumbersTrainerView({
   function stopPractice() {
     clearPendingAdvance()
     endPractice()
+    navHistoryRef.current = []
+    navIndexRef.current = -1
     setCurrentCardId(null)
     setRevealed(false)
   }
@@ -187,9 +209,10 @@ function NumbersTrainerView({
     })
   }
 
-  function finalizeAndAdvance() {
+  /** Apply hint/cooldown bookkeeping for the current revealed card. Returns next session. */
+  function settleRevealedCard(): PracticeSession | null {
     if (!activeCard || !revealed) {
-      return
+      return null
     }
 
     const now = Date.now()
@@ -217,9 +240,56 @@ function NumbersTrainerView({
       hintUsed: true,
       inputMode: 'submit',
     })
+    return nextSession
+  }
 
+  function finalizeAndAdvance() {
+    const nextSession = settleRevealedCard()
+    if (!nextSession) {
+      return
+    }
     queueAdvance(() => advanceToNextCard(nextSession), 700)
   }
+
+  function skipToAdjacent(direction: 'prev' | 'next') {
+    if (view !== 'practice') {
+      return
+    }
+    clearPendingAdvance()
+
+    if (direction === 'prev') {
+      if (navIndexRef.current <= 0) return
+      navIndexRef.current -= 1
+      const prevId = navHistoryRef.current[navIndexRef.current]
+      if (!prevId) return
+      showCard(prevId, sessionRef.current, { countPresentation: false })
+      return
+    }
+
+    if (navIndexRef.current >= 0 && navIndexRef.current < navHistoryRef.current.length - 1) {
+      navIndexRef.current += 1
+      const nextId = navHistoryRef.current[navIndexRef.current]
+      if (!nextId) return
+      showCard(nextId, sessionRef.current, { countPresentation: false })
+      return
+    }
+
+    if (currentCardId && revealed) {
+      const nextSession = settleRevealedCard()
+      advanceToNextCard(nextSession ?? sessionRef.current)
+      return
+    }
+
+    const currentId = currentCardId
+    const baseSession = currentId
+      ? pushRecentCard(sessionRef.current, currentId)
+      : sessionRef.current
+    sessionRef.current = baseSession
+    setSession(baseSession)
+    advanceToNextCard(baseSession)
+  }
+
+  skipToAdjacentRef.current = skipToAdjacent
 
   function handleSpace() {
     if (!activeCard || view !== 'practice' || pendingAdvanceRef.current) {
@@ -236,7 +306,22 @@ function NumbersTrainerView({
 
   function handlePracticeKeyDown(event: KeyboardEvent) {
     const ctx = practiceRef.current
-    if (ctx.view !== 'practice' || !ctx.activeCard || ctx.pendingAdvance) {
+    if (ctx.view !== 'practice' || !ctx.activeCard) {
+      return
+    }
+
+    if (event.code === 'ArrowLeft' && !event.metaKey && !event.ctrlKey && !event.altKey) {
+      event.preventDefault()
+      skipToAdjacentRef.current('prev')
+      return
+    }
+    if (event.code === 'ArrowRight' && !event.metaKey && !event.ctrlKey && !event.altKey) {
+      event.preventDefault()
+      skipToAdjacentRef.current('next')
+      return
+    }
+
+    if (ctx.pendingAdvance) {
       return
     }
 
@@ -339,6 +424,8 @@ function NumbersTrainerView({
       sessionStats={{ ...sessionStats, accuracy: sessionAccuracy }}
       feedbackType={feedback.type}
       swipes={{
+        onSwipeLeft: () => skipToAdjacent('prev'),
+        onSwipeRight: () => skipToAdjacent('next'),
         onSwipeDown: handleSpace,
         onSwipeUp: handleSpace,
       }}
@@ -385,10 +472,15 @@ function NumbersTrainerView({
               <ShortcutNote
                 keyboard={
                   <>
-                    <kbd>Space</kbd> — {revealed ? 'следующее' : 'показать'}
+                    <kbd>←</kbd>/<kbd>→</kbd> — назад/дальше · <kbd>Space</kbd> —{' '}
+                    {revealed ? 'следующее' : 'показать'}
                   </>
                 }
-                swipe={<>Свайп вниз или вверх — {revealed ? 'следующее' : 'показать'}</>}
+                swipe={
+                  <>
+                    Свайп ←/→ — назад/дальше · вниз/вверх — {revealed ? 'следующее' : 'показать'}
+                  </>
+                }
               />
             </div>
           </div>

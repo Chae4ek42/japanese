@@ -5,7 +5,6 @@ import type { RefObject, ChangeEvent } from 'react'
 export interface AppHeaderProps {
   currentPage: AppPage
   onNavigate: (page: AppPage) => void
-  onResetStats: () => void
   onExportBackup?: () => void
   onImportBackup?: () => void
   importInputRef?: RefObject<HTMLInputElement | null>
@@ -25,7 +24,6 @@ const NAV_ITEMS = [
 export function AppHeader({
   currentPage,
   onNavigate,
-  onResetStats,
   onExportBackup,
   onImportBackup,
   importInputRef,
@@ -62,10 +60,6 @@ export function AppHeader({
               Импорт
             </button>
           ) : null}
-          <button type="button" className="text-button site-reset" data-testid="reset-stats" onClick={onResetStats}>
-            <span className="site-reset-full">Сбросить данные</span>
-            <span className="site-reset-short">Сброс</span>
-          </button>
           {importInputRef && onImportFileChange ? (
             <input
               ref={importInputRef}

@@ -414,6 +414,12 @@ h1 {
   background: transparent;
 }
 
+.controls-panel {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
 .group-label,
 .question-script,
 .script-badge {

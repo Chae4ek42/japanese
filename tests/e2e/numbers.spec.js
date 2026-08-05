@@ -46,3 +46,24 @@ test('numbers mobile smoke: reveal and advance', async ({ page }, testInfo) => {
   await page.getByTestId('numbers-hint-button').click()
   await expect(page.locator('.practice-stage')).toHaveClass(/is-success/)
 })
+
+test('numbers: arrow keys go previous/next', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Keyboard nav is desktop-only.')
+  await openFreshApp(page)
+  await openNumbersTrainer(page)
+
+  await page.getByTestId('numbers-range-10').click()
+  await page.getByTestId('start-numbers').click()
+  await expect(page.getByTestId('current-number')).toBeVisible()
+
+  const firstNumber = await page.getByTestId('current-number').innerText()
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByTestId('current-number')).not.toHaveText(firstNumber)
+
+  const secondNumber = await page.getByTestId('current-number').innerText()
+  await page.keyboard.press('ArrowLeft')
+  await expect(page.getByTestId('current-number')).toHaveText(firstNumber)
+
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByTestId('current-number')).toHaveText(secondNumber)
+})

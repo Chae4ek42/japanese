@@ -8,6 +8,21 @@
 .numbers-controls-panel {
   position: sticky;
   top: 12px;
+  /* Prefer content width; don't stretch Start into the cheat sheet column. */
+  width: 100%;
+  max-width: 360px;
+}
+
+.numbers-controls-panel .segmented {
+  width: 100%;
+}
+
+.numbers-controls-panel .primary-button {
+  width: 100%;
+}
+
+.numbers-controls-panel .control-hint {
+  margin: 0;
 }
 
 .numbers-cheat-sheet {
