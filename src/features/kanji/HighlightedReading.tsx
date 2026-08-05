@@ -14,8 +14,8 @@ export interface HighlightedReadingProps {
   colorize?: boolean
 }
 
-function romajiLabel(segments: Array<{ romaji: string }>, fallbackRomaji?: string): string {
-  const fromSegments = segments.map((item) => item.romaji).join('')
+function romajiLabel(segments: Array<{ romaji?: string }>, fallbackRomaji?: string): string {
+  const fromSegments = segments.map((item) => item.romaji ?? '').join('')
   if (fallbackRomaji && /\/|\s\/\s/.test(fallbackRomaji)) {
     return fallbackRomaji
   }

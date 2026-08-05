@@ -269,7 +269,7 @@ export function mergeReadingSegments(segments: ReadingSegment[] | null | undefin
 }
 
 /** Fill romaji; a trailing っ borrows the next segment’s first consonant (がっ|こう → gak|kou). */
-function applySegmentRomaji(segments: Array<{ kana: string; romaji: string }>): void {
+function applySegmentRomaji(segments: Array<{ kana: string; romaji?: string }>): void {
   for (let i = 0; i < segments.length; i += 1) {
     const item = segments[i]!
     const next = segments[i + 1]
