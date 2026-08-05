@@ -10,6 +10,7 @@ function word(writing: string): KanjiWord {
     kana: writing,
     romaji: writing,
     meanings: [writing],
+    kanji: [...writing],
   }
 }
 

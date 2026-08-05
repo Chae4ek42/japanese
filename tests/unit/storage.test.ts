@@ -38,6 +38,12 @@ const { ALL_CARD_IDS } = await import('../../src/data/kana')
 describe('storage', () => {
   beforeEach(() => {
     window.localStorage.clear()
+    // Simulate Vite/dev without Worker API (HTML instead of JSON).
+    globalThis.fetch = async () =>
+      new Response('<!doctype html>', {
+        status: 200,
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      })
   })
 
   it('без сохранения возвращает дефолтное состояние', () => {
@@ -267,5 +273,50 @@ describe('storage', () => {
     await saveAppState(createDefaultAppState())
     await resetStoredState()
     assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
+  })
+
+  it('читает и пишет состояние через /api/state', async () => {
+    let remoteRaw: string | null = null
+    globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input)
+      assert.match(url, /\/api\/state$/)
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (method === 'GET') {
+        if (!remoteRaw) {
+          return new Response(null, { status: 404 })
+        }
+        return new Response(remoteRaw, {
+          status: 200,
+          headers: { 'content-type': 'application/json; charset=utf-8' },
+        })
+      }
+      if (method === 'PUT') {
+        remoteRaw = String(init?.body ?? '')
+        return new Response(null, { status: 204 })
+      }
+      if (method === 'DELETE') {
+        remoteRaw = null
+        return new Response(null, { status: 204 })
+      }
+      return new Response('Method Not Allowed', { status: 405 })
+    }
+
+    const empty = await bootstrapAppState()
+    assert.deepEqual(empty.vocab.myWords, [])
+    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
+
+    const state = createDefaultAppState()
+    state.vocab.myWords = ['1524720']
+    await saveAppState(state)
+    assert.ok(remoteRaw, 'expected PUT /api/state to store payload')
+    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
+
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(createDefaultAppState()))
+    const loaded = await bootstrapAppState()
+    assert.deepEqual(loaded.vocab.myWords, ['1524720'])
+    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
+
+    await resetStoredState()
+    assert.equal(remoteRaw, null)
   })
 })

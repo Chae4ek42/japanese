@@ -40,7 +40,7 @@ export function useBackupApp() {
     const mineCount = next.vocab.myWords.length
     if (
       !window.confirm(
-        `Импортировать данные? «Мои слова»: ${mineCount}. Текущие данные на этом адресе будут заменены.`,
+        `Импортировать данные? «Мои слова»: ${mineCount}. Текущие данные на сервере будут заменены.`,
       )
     ) {
       return

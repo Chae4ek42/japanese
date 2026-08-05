@@ -1,8 +1,17 @@
 {
   "name": "japanese",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-08-05",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "single-page-application"
-  }
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  // Auto-provisioned on first deploy (Workers Builds / wrangler deploy).
+  "kv_namespaces": [
+    {
+      "binding": "APP_STATE"
+    }
+  ]
 }
