@@ -5,8 +5,10 @@ import { DEFAULT_VOCAB_PREFERENCES } from '../../src/shared/state/app-state'
 import { getWordsByWriting } from '../../src/data/words/bank'
 import {
   buildChoiceOptions,
+  buildEvenModeWeightMultipliers,
   buildKanjiPracticeVocabPool,
   buildVocabPool,
+  EVEN_NEW_WORD_SHOWS,
   evaluateRomajiReadings,
   normalizeRomajiAnswer,
   pickNextSourceCard,
@@ -22,17 +24,17 @@ describe('vocab pool', () => {
     assert.equal(normalizeRomajiAnswer('  o cha '), 'ocha')
   })
 
-  it('evaluateRomajiReadings требует все чтения одним ответом', () => {
+  it('evaluateRomajiReadings принимает любое одно чтение', () => {
     const required = ['watashi', 'watakushi']
     assert.equal(evaluateRomajiReadings(required, '', 'instant'), 'empty')
     assert.equal(evaluateRomajiReadings(required, 'wata', 'instant'), 'pending')
-    assert.equal(evaluateRomajiReadings(required, 'watashi', 'instant'), 'pending')
+    assert.equal(evaluateRomajiReadings(required, 'watashi', 'instant'), 'correct')
+    assert.equal(evaluateRomajiReadings(required, 'watakushi', 'submit'), 'correct')
     assert.equal(evaluateRomajiReadings(required, 'watashi/watakushi', 'instant'), 'correct')
     assert.equal(evaluateRomajiReadings(required, 'watakushi / watashi', 'instant'), 'correct')
     assert.equal(evaluateRomajiReadings(required, 'watashi watakushi', 'instant'), 'correct')
     assert.equal(evaluateRomajiReadings(required, 'watashi/foo', 'instant'), 'wrong')
-    assert.equal(evaluateRomajiReadings(required, 'watashi', 'submit'), 'wrong')
-    assert.equal(evaluateRomajiReadings(required, 'watashi/watakushi', 'submit'), 'correct')
+    assert.equal(evaluateRomajiReadings(required, 'watashi', 'submit'), 'correct')
     assert.equal(evaluateRomajiReadings(['neko'], 'neko', 'instant'), 'correct')
     assert.equal(evaluateRomajiReadings(['neko'], 'ne', 'instant'), 'pending')
   })
@@ -91,6 +93,25 @@ describe('vocab pool', () => {
       pool.map((card) => card.id),
       ids,
     )
+  })
+
+  it('source=list оставляет слова из «Моих слов» без trainFullGroup', () => {
+    const n5 = buildVocabPool({ ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5 }, [])
+    const ids = n5.slice(0, 3).map((card) => card.id)
+    const mineId = ids[0]!
+    const pool = buildVocabPool(
+      {
+        ...DEFAULT_VOCAB_PREFERENCES,
+        source: 'list',
+        trainFullGroup: false,
+        newWordLimit: -1,
+      },
+      [mineId],
+      {},
+      { applyNewWordLimit: false, trainingWordIds: ids },
+    )
+    assert.equal(pool.length, 3)
+    assert.ok(pool.some((card) => card.id === mineId))
   })
 
   it('собирает пул N5', () => {
@@ -305,6 +326,24 @@ describe('vocab pool', () => {
     )
   })
 
+  it('even mode: ×2 по числу показов в сессии, до 8, без учёта ответов', () => {
+    const ids = ['a', 'b', 'excluded']
+    const weights = buildEvenModeWeightMultipliers(ids, {
+      weightMultipliers: { excluded: 0 },
+      showCounts: { a: 2, b: 7 },
+    })
+    assert.equal(weights.a, 2)
+    assert.equal(weights.b, 2)
+    assert.equal(weights.excluded, 0)
+
+    const after = buildEvenModeWeightMultipliers(ids, {
+      showCounts: { a: EVEN_NEW_WORD_SHOWS, b: EVEN_NEW_WORD_SHOWS - 1 },
+    })
+    assert.equal(after.a, undefined)
+    assert.equal(after.b, 2)
+  })
+
+
   it('для mine можно исключить выученные', () => {
     const custom = {
       id: 'custom:a',
@@ -327,6 +366,29 @@ describe('vocab pool', () => {
       { learnedWordIds: [custom.id] },
     )
     assert.equal(unlearned.length, 0)
+  })
+
+  it('источник problem берёт слова из problemWordIds без лимита новых', () => {
+    const custom = {
+      id: 'custom:problem',
+      writing: '犬',
+      kana: 'いぬ',
+      romaji: 'inu',
+      meanings: ['собака'],
+      kanji: ['犬'],
+    }
+    const pool = buildVocabPool(
+      {
+        ...DEFAULT_VOCAB_PREFERENCES,
+        source: 'problem',
+        newWordLimit: 0,
+      },
+      [],
+      { [custom.id]: custom },
+      { problemWordIds: [custom.id], applyNewWordLimit: true },
+    )
+    assert.equal(pool.length, 1)
+    assert.equal(pool[0]!.id, custom.id)
   })
 
   it('строит 6 вариантов перевода с одним верным', () => {

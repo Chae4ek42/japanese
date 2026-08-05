@@ -15,7 +15,7 @@ import { sanitizeWordJlptLevels } from './kanji'
 import { sanitizeCardTrainerLiveSession } from './live-session'
 
 const VALID_VOCAB_DRILLS = new Set(['romaji', 'choice', 'mixed'])
-const VALID_VOCAB_SOURCES = new Set(['level', 'group', 'mine', 'kanji', 'list'])
+const VALID_VOCAB_SOURCES = new Set(['level', 'group', 'mine', 'kanji', 'list', 'problem'])
 const VALID_VOCAB_LEVELS = new Set([5, 4, 3, 2, 1])
 const VALID_PICK_MODES = new Set(['adaptive', 'even'])
 const VALID_INPUT_MODES = new Set(['instant', 'submit'])
@@ -295,6 +295,13 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
     ),
   ]
 
+  const problemWordIds = [
+    ...new Set(
+      (Array.isArray(source.problemWordIds) ? source.problemWordIds : fallback.problemWordIds ?? [])
+        .filter((item): item is string => typeof item === 'string' && item.length > 0),
+    ),
+  ]
+
   const stats =
     source.stats && typeof source.stats === 'object' ? { ...(source.stats as Record<string, StatsRecord>) } : {}
 
@@ -305,6 +312,7 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
     hiddenWordIds,
     learnedWordIds,
     trainingWordIds,
+    problemWordIds,
     preferences: sanitizeVocabPreferences(source.preferences, fallback.preferences),
     stats,
     memory: sanitizeMemoryMap(source.memory),

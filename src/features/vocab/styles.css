@@ -255,16 +255,27 @@
   gap: 0 28px;
 }
 
-.vocab-dict-list.kanji-word-list {
+.vocab-dict-columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 28px;
+  align-items: start;
+}
+
+.vocab-dict-columns.is-narrow {
+  grid-template-columns: 1fr;
+}
+
+.vocab-dict-list.kanji-word-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   max-height: none;
   overflow: visible;
   padding: 0;
-  border: 1px solid rgba(17, 17, 17, 0.1);
-  border-radius: 12px;
-  background: #fff;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .vocab-dict-list .kanji-word-list-item {
@@ -272,8 +283,7 @@
   min-width: 0;
 }
 
-.vocab-dict-list .kanji-word-list-item:nth-child(1),
-.vocab-dict-list .kanji-word-list-item:nth-child(2) {
+.vocab-dict-list .kanji-word-list-item:first-child {
   border-top: 0;
 }
 
@@ -285,12 +295,12 @@
 }
 
 .vocab-dict-list .kanji-word-list-main {
-  padding: 8px 10px;
-  gap: 6px 10px;
+  padding: 8px 11px;
+  gap: 6px 11px;
 }
 
 .vocab-dict-list .kanji-word-list-writing {
-  font-size: 1.1rem;
+  font-size: 1.16rem;
 }
 
 .vocab-dict-list .kanji-word-list-writing .kanji-chip {
@@ -298,8 +308,20 @@
   font-weight: inherit;
 }
 
+.vocab-dict-list .kanji-word-list-body {
+  gap: 1px;
+}
+
+.vocab-dict-list .kanji-word-list-item .kanji-word-kana {
+  font-size: 0.92rem;
+}
+
+.vocab-dict-list .kanji-word-list-item .kanji-word-romaji {
+  font-size: 0.78rem;
+}
+
 .vocab-dict-list .kanji-word-list-meaning {
-  font-size: 0.72rem;
+  font-size: 0.76rem;
 }
 
 .vocab-dict-tag {
@@ -310,34 +332,58 @@
 }
 
 .vocab-dict-badge {
-  font-size: 0.68rem;
+  font-size: 0.71rem;
   font-weight: 700;
   color: var(--muted-strong);
 }
 
 .vocab-dict-multi {
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   color: var(--muted);
 }
 
 .vocab-dict-row-actions {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(2.4rem, auto) minmax(0, 1fr);
   align-items: stretch;
   gap: 4px;
-  padding: 8px 10px 8px 0;
+  padding: 8px 11px 8px 0;
+  min-width: 9.5rem;
 }
 
 .vocab-dict-row-actions .vocab-save-button,
 .vocab-dict-row-actions .vocab-icon-button {
-  min-height: 28px;
-  padding: 0 8px;
+  min-height: 30px;
+  padding: 0 6px;
   font-size: 0.72rem;
   border-radius: 8px;
 }
 
+.vocab-dict-row-actions .vocab-icon-button {
+  min-width: 2.4rem;
+}
+
 .vocab-dict-list .kanji-word-detail {
-  padding: 0 10px 10px;
+  padding: 0 11px 11px;
+  gap: 11px;
+}
+
+.vocab-dict-list .kanji-word-detail-readings .kanji-word-kana {
+  font-size: 1.11rem;
+}
+
+.vocab-dict-list .kanji-word-detail-readings .kanji-word-romaji {
+  font-size: 0.9rem;
+}
+
+.vocab-dict-list .kanji-word-detail-meanings li {
+  padding: 6px 11px;
+  font-size: 0.9rem;
+}
+
+.vocab-dict-list .kanji-word-detail-actions .ghost-button {
+  padding: 6px 11px;
+  font-size: 0.86rem;
 }
 
 .vocab-dict-list .kanji-word-list-item.is-learned .kanji-word-list-writing {
@@ -348,8 +394,32 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: var(--muted-strong);
+}
+
+.vocab-mine-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.vocab-add-word-button {
+  justify-self: start;
+  min-height: 30px;
+  padding: 0 14px;
+}
+
+.vocab-mine-mode-count {
+  margin-left: 0.35rem;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.85em;
+}
+
+.vocab-mode-link.is-active .vocab-mine-mode-count {
+  color: inherit;
 }
 
 .vocab-word {
@@ -496,6 +566,11 @@
 .vocab-mine-row .ghost-button.is-learned-on {
   border-color: color-mix(in srgb, #1d4f91 45%, transparent);
   color: #1d4f91;
+}
+
+.vocab-mine-row .ghost-button.is-excluded-on {
+  border-color: color-mix(in srgb, #8a5a2b 45%, transparent);
+  color: #8a5a2b;
 }
 
 .vocab-card-editor {
@@ -777,6 +852,47 @@
   font-size: 0.95rem;
 }
 
+.vocab-setup-word-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.vocab-setup-word-row .kanji-word-list-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.vocab-setup-word-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6px 10px 6px 0;
+}
+
+.vocab-setup-exclude-button {
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.vocab-setup-exclude-button:hover {
+  border-color: #111;
+}
+
+.vocab-setup-exclude-button.is-excluded-on {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
 .vocab-setup-pool .kanji-word-list-main {
   gap: 6px 10px;
   padding: 6px 12px;
@@ -1042,6 +1158,33 @@
   color: #fff;
 }
 
+.vocab-session-sort {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+  border-radius: 10px;
+  background: rgba(17, 17, 17, 0.05);
+}
+
+.vocab-session-sort-btn {
+  min-height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted-strong);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.vocab-session-sort-btn.is-active {
+  background: #111;
+  color: #fff;
+}
+
 .vocab-session-jlpt {
   display: flex;
   flex-wrap: wrap;
@@ -1097,11 +1240,6 @@
   border-color: rgba(17, 17, 17, 0.35);
 }
 
-.vocab-session-row.is-expanded {
-  border-color: #111;
-  box-shadow: 0 1px 0 rgba(17, 17, 17, 0.04);
-}
-
 .vocab-session-row.is-excluded {
   opacity: 0.55;
 }
@@ -1110,17 +1248,15 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
-    'writing weight'
-    'meaning weight'
+    'writing stat'
+    'meaning meaning'
+    'detail detail'
     'now now';
   gap: 1px 8px;
   width: 100%;
   padding: 7px 10px;
-  border: 0;
-  background: transparent;
   color: inherit;
   text-align: left;
-  cursor: pointer;
 }
 
 .vocab-session-row-writing {
@@ -1141,19 +1277,23 @@
   white-space: nowrap;
 }
 
-.vocab-session-row-weight {
-  grid-area: weight;
-  align-self: center;
+.vocab-session-row-detail {
+  grid-area: detail;
+  color: var(--muted);
+  font-size: 0.66rem;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+
+.vocab-session-row-stat {
+  grid-area: stat;
+  align-self: start;
   min-width: 2.8rem;
   text-align: right;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--muted-strong);
-}
-
-.vocab-session-row.is-expanded .vocab-session-row-weight {
-  color: #111;
 }
 
 .vocab-session-now {
@@ -1168,26 +1308,6 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-.vocab-session-row-editor {
-  display: grid;
-  gap: 8px;
-  padding: 0 10px 10px;
-  border-top: 1px solid rgba(17, 17, 17, 0.06);
-  padding-top: 8px;
-  margin-top: 0;
-}
-
-.vocab-session-row-editor input[type='range'] {
-  width: 100%;
-  accent-color: #111;
-}
-
-.vocab-session-presets {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
 }
 
 .vocab-session-row-presets {
@@ -1214,6 +1334,11 @@
   border-color: #111;
   background: #111;
   color: #fff;
+}
+
+.vocab-session-preset.vocab-session-restore {
+  border-color: color-mix(in srgb, #8a5a2b 40%, transparent);
+  color: #8a5a2b;
 }
 
 .vocab-number-field {
@@ -1448,13 +1573,12 @@
 }
 
 @media (max-width: 900px) {
-  .vocab-list,
-  .vocab-dict-list.kanji-word-list {
+  .vocab-list {
     grid-template-columns: 1fr;
   }
 
-  .vocab-dict-list .kanji-word-list-item:nth-child(2) {
-    border-top: 1px solid rgba(17, 17, 17, 0.08);
+  .vocab-dict-columns {
+    grid-template-columns: 1fr;
   }
 }
 

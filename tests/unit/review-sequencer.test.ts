@@ -4,7 +4,9 @@ import {
   applyGradeToSequencer,
   createReviewSessionState,
   IN_FLIGHT_LIMIT,
+  learningLag,
   pickNextCard,
+  shouldIntroduce,
 } from '../../src/shared/lib/review'
 
 describe('review sequencer', () => {
@@ -59,12 +61,55 @@ describe('review sequencer', () => {
     }
   })
 
-  it('again schedules +2 turns', () => {
+  it('again schedules at least working-set size turns', () => {
     let state = createReviewSessionState(['a', 'b', 'c', 'd', 'e'], { seed: 3 })
+    // Build a fuller working set first.
+    for (let i = 0; i < 4; i += 1) {
+      const pick = pickNextCard(state)
+      assert.equal(pick.kind, 'card')
+      if (pick.kind !== 'card') return
+      state = applyGradeToSequencer(pick.state, pick.cardId, 3)
+    }
+    const next = pickNextCard(state)
+    assert.equal(next.kind, 'card')
+    if (next.kind !== 'card') return
+    const after = applyGradeToSequencer(next.state, next.cardId, 1)
+    const working = after.inFlight.filter((id) => (after.weightMultipliers[id] ?? 1) > 0).length
+    assert.equal(after.dueTurns[next.cardId], after.turn + learningLag(working, 3))
+    assert.ok((after.dueTurns[next.cardId] ?? 0) - after.turn >= working)
+  })
+
+  it('does not introduce while the working set is full', () => {
+    let state = createReviewSessionState(
+      Array.from({ length: 12 }, (_, i) => `c${i}`),
+      { seed: 11 },
+    )
+    for (let i = 0; i < IN_FLIGHT_LIMIT; i += 1) {
+      const pick = pickNextCard(state)
+      assert.equal(pick.kind, 'card')
+      if (pick.kind !== 'card') return
+      state = applyGradeToSequencer(pick.state, pick.cardId, 3)
+    }
+    assert.equal(state.inFlight.length, IN_FLIGHT_LIMIT)
+    assert.equal(shouldIntroduce(state), false)
+    const planIndex = state.planIndex
+    // Next pick must come from the in-flight set, not a brand-new plan card.
+    const pick = pickNextCard(state)
+    assert.equal(pick.kind, 'card')
+    if (pick.kind !== 'card') return
+    assert.ok(state.inFlight.includes(pick.cardId) || pick.state.inFlight.includes(pick.cardId))
+    assert.equal(pick.state.planIndex, planIndex)
+  })
+
+  it('does not re-show the only new card immediately after a good', () => {
+    let state = createReviewSessionState(['a', 'b', 'c', 'd'], { seed: 5 })
     const first = pickNextCard(state)
     assert.equal(first.kind, 'card')
     if (first.kind !== 'card') return
-    const after = applyGradeToSequencer(first.state, first.cardId, 1)
-    assert.equal(after.dueTurns[first.cardId], after.turn + 2)
+    state = applyGradeToSequencer(first.state, first.cardId, 3)
+    const second = pickNextCard(state)
+    assert.equal(second.kind, 'card')
+    if (second.kind !== 'card') return
+    assert.notEqual(second.cardId, first.cardId)
   })
 })

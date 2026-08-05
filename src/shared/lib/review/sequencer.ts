@@ -2,7 +2,8 @@ import type { ReviewGrade, ReviewSessionState } from '../types'
 import { createSeededRng } from './rng'
 
 export const IN_FLIGHT_LIMIT = 5
-export const GOOD_LAGS = [6, 14, 30] as const
+/** Base lags after 1st / 2nd good before graduation; scaled up by working-set size. */
+export const GOOD_LAGS = [8, 16, 30] as const
 
 export function createReviewSessionState(
   planIds: string[],
@@ -37,17 +38,52 @@ function jitter(rng: () => number, span = 0.35): number {
   return (rng() - 0.5) * 2 * span
 }
 
+function activeInFlight(state: ReviewSessionState): string[] {
+  return state.inFlight.filter((id) => (state.weightMultipliers[id] ?? 1) > 0)
+}
+
+function dueInFlight(state: ReviewSessionState): string[] {
+  return activeInFlight(state).filter(
+    (id) => (state.dueTurns[id] ?? Infinity) <= state.turn + 1e-9,
+  )
+}
+
+function nearestDueTurn(state: ReviewSessionState): number {
+  const active = activeInFlight(state)
+  if (!active.length) return state.turn
+  return Math.min(...active.map((id) => state.dueTurns[id] ?? state.turn))
+}
+
+/** Lag that rotates through the current working set before the card returns. */
+export function learningLag(inFlightCount: number, base: number): number {
+  return Math.max(base, inFlightCount)
+}
+
+/**
+ * Introduce a new plan card only when the working set needs filling and
+ * existing learners are not due soon (avoids new-card spam).
+ */
+export function shouldIntroduce(state: ReviewSessionState): boolean {
+  if (state.done) return false
+  if (state.planIndex >= state.planIds.length) return false
+  const active = activeInFlight(state)
+  if (active.length >= IN_FLIGHT_LIMIT) return false
+  if (!active.length) return true
+  // Refill only when the next learner is farther away than the current set size
+  // (room to show a new card without starving spaced reviews).
+  const gap = nearestDueTurn(state) - state.turn
+  return gap > active.length
+}
+
 /** Introduce next plan card if under the in-flight gate. */
 export function introduceNext(
   state: ReviewSessionState,
   urgencyById: Record<string, number> = {},
 ): ReviewSessionState {
-  if (state.done) return state
-  if (state.inFlight.length >= IN_FLIGHT_LIMIT) return state
-  if (state.planIndex >= state.planIds.length) return state
+  if (!shouldIntroduce(state)) return state
 
   let next = { ...state, dueTurns: { ...state.dueTurns }, inFlight: [...state.inFlight] }
-  while (next.inFlight.length < IN_FLIGHT_LIMIT && next.planIndex < next.planIds.length) {
+  while (activeInFlight(next).length < IN_FLIGHT_LIMIT && next.planIndex < next.planIds.length) {
     const id = next.planIds[next.planIndex]!
     next.planIndex += 1
     if (next.graduatedIds.includes(id) || next.inFlight.includes(id)) continue
@@ -67,58 +103,58 @@ export type SequencerPick =
   | { kind: 'done'; state: ReviewSessionState }
   | { kind: 'waiting'; state: ReviewSessionState }
 
+function selectDueCard(
+  state: ReviewSessionState,
+  due: string[],
+  urgencyById: Record<string, number>,
+): SequencerPick {
+  const rng = createSeededRng(state.seed + state.turn * 17 + state.answersInSession)
+  const ranked = [...due].sort((a, b) => {
+    const da = state.dueTurns[a] ?? 0
+    const db = state.dueTurns[b] ?? 0
+    if (da !== db) return da - db
+    const ua = (urgencyById[a] ?? 0) * (state.weightMultipliers[a] ?? 1)
+    const ub = (urgencyById[b] ?? 0) * (state.weightMultipliers[b] ?? 1)
+    if (ua !== ub) return ub - ua
+    return rng() - 0.5
+  })
+  return { kind: 'card', cardId: ranked[0]!, state }
+}
+
 /**
  * Pick the due in-flight card with lowest dueTurn.
- * If none are due, try introducing; if plan exhausted and queue empty → done.
+ * Prefer spaced learners over injecting brand-new cards.
  */
 export function pickNextCard(
   state: ReviewSessionState,
   urgencyById: Record<string, number> = {},
 ): SequencerPick {
-  let next = introduceNext(state, urgencyById)
-  const rng = createSeededRng(next.seed + next.turn * 17 + next.answersInSession)
+  let next = state
 
-  const due = next.inFlight
-    .filter((id) => (next.weightMultipliers[id] ?? 1) > 0)
-    .filter((id) => (next.dueTurns[id] ?? Infinity) <= next.turn + 1e-9)
-
-  if (due.length) {
-    due.sort((a, b) => {
-      const da = next.dueTurns[a] ?? 0
-      const db = next.dueTurns[b] ?? 0
-      if (da !== db) return da - db
-      const ua = (urgencyById[a] ?? 0) * (next.weightMultipliers[a] ?? 1)
-      const ub = (urgencyById[b] ?? 0) * (next.weightMultipliers[b] ?? 1)
-      if (ua !== ub) return ub - ua
-      return rng() - 0.5
-    })
-    return { kind: 'card', cardId: due[0]!, state: next }
+  const dueNow = dueInFlight(next)
+  if (dueNow.length) {
+    return selectDueCard(next, dueNow, urgencyById)
   }
 
-  // Nothing due yet — introduce more if possible, else wait / finish.
-  if (next.planIndex < next.planIds.length && next.inFlight.length < IN_FLIGHT_LIMIT) {
+  // Nothing due — introduce only when the working set needs / can absorb a new card.
+  if (shouldIntroduce(next)) {
     next = introduceNext(next, urgencyById)
-    const introduced = next.inFlight.find((id) => (next.dueTurns[id] ?? Infinity) <= next.turn + 1e-9)
-    if (introduced) return { kind: 'card', cardId: introduced, state: next }
+    const dueAfter = dueInFlight(next)
+    if (dueAfter.length) {
+      return selectDueCard(next, dueAfter, urgencyById)
+    }
   }
 
-  if (!next.inFlight.length && next.planIndex >= next.planIds.length) {
+  if (!activeInFlight(next).length && next.planIndex >= next.planIds.length) {
     return { kind: 'done', state: { ...next, done: true } }
   }
 
-  if (
-    next.targetAnswers > 0 &&
-    next.answersInSession >= next.targetAnswers &&
-    !next.inFlight.some((id) => (next.goodStreaks[id] ?? 0) === 0)
-  ) {
-    // Soft finish: only force done when nothing struggling.
-    const struggling = next.inFlight.some((id) => (next.goodStreaks[id] ?? 0) < 1)
-    if (!struggling) return { kind: 'done', state: { ...next, done: true } }
-  }
+  // Do not soft-stop on targetAnswers — that felt like a random «На сегодня всё»
+  // while words were still left. Session ends only when the plan is exhausted.
 
-  // Advance virtual time to nearest due card so the session never stalls.
-  if (next.inFlight.length) {
-    const nearest = Math.min(...next.inFlight.map((id) => next.dueTurns[id] ?? next.turn))
+  // Advance virtual time to nearest due learner instead of stuffing more new cards.
+  if (activeInFlight(next).length) {
+    const nearest = nearestDueTurn(next)
     if (nearest > next.turn) {
       next = { ...next, turn: nearest }
       return pickNextCard(next, urgencyById)
@@ -147,15 +183,18 @@ export function applyGradeToSequencer(
     next.inFlight.push(cardId)
   }
 
+  const working = Math.max(1, activeInFlight(next).length)
+
   if (grade === 1) {
     next.goodStreaks[cardId] = 0
-    next.dueTurns[cardId] = next.turn + 2
+    // Rotate through the whole working set before the same new/failing card returns.
+    next.dueTurns[cardId] = next.turn + learningLag(working, 3)
     return next
   }
 
   if (grade === 2) {
     next.goodStreaks[cardId] = 0
-    next.dueTurns[cardId] = next.turn + 4
+    next.dueTurns[cardId] = next.turn + learningLag(working, 5)
     return next
   }
 
@@ -170,8 +209,8 @@ export function applyGradeToSequencer(
     return next
   }
 
-  const lag = GOOD_LAGS[Math.min(streak - 1, GOOD_LAGS.length - 1)] ?? 30
-  next.dueTurns[cardId] = next.turn + lag
+  const baseLag = GOOD_LAGS[Math.min(streak - 1, GOOD_LAGS.length - 1)] ?? 30
+  next.dueTurns[cardId] = next.turn + learningLag(working, baseLag)
   return next
 }
 
@@ -225,5 +264,21 @@ export function dropFromReview(state: ReviewSessionState, cardId: string): Revie
     graduatedIds: state.graduatedIds.filter((id) => id !== cardId),
     dueTurns,
     goodStreaks,
+  }
+}
+
+/** Mid-session expand: append a source word so the sequencer can introduce it. */
+export function appendToReviewPlan(state: ReviewSessionState, cardId: string): ReviewSessionState {
+  if (
+    state.planIds.includes(cardId) ||
+    state.inFlight.includes(cardId) ||
+    state.graduatedIds.includes(cardId)
+  ) {
+    return state
+  }
+  return {
+    ...state,
+    planIds: [...state.planIds, cardId],
+    done: false,
   }
 }

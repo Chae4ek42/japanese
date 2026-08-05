@@ -155,7 +155,18 @@ export function kanaToRomaji(kana: string | null | undefined): string {
         continue
       }
     }
-    out += ROMAJI[ch] ?? (/[a-zA-Z0-9]/.test(ch) ? ch : '')
+    if (ROMAJI[ch]) {
+      out += ROMAJI[ch]
+      continue
+    }
+    // Keep reading separators (e.g. 「わたし / わたくし」 → watashi / watakushi).
+    if (ch === '/' || /\s/.test(ch)) {
+      out += ch
+      continue
+    }
+    if (/[a-zA-Z0-9]/.test(ch)) {
+      out += ch
+    }
   }
   return out
 }

@@ -122,7 +122,7 @@ export function CustomWordForm({ editingWord = null, onSave, onCancelEdit }: Cus
         <button type="submit" className="secondary-button" data-testid="custom-word-submit">
           {isEditing ? 'Сохранить' : 'Добавить слово'}
         </button>
-        {isEditing ? (
+        {onCancelEdit ? (
           <button
             type="button"
             className="text-button"

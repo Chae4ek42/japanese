@@ -13,6 +13,13 @@ import {
   getDayKey,
   getTopConfusions,
   pickNextCardId,
+  appendRecentAnswer,
+  countsFromRecentAnswers,
+  isProblemByRecentAnswers,
+  projectRecentAnswers,
+  projectErrorRatioCounts,
+  isProblemByErrorRatio,
+  PROBLEM_RATIO_WINDOW,
   recordConfusion,
   recordHistoryEvent,
   setCardCooldown,
@@ -403,5 +410,47 @@ describe('история для графиков', () => {
     assert.equal(top[0].fromId, 'katakana:shi')
     assert.equal(top[0].count, 2)
     assert.equal(top.length, 2)
+  })
+})
+
+describe('isProblemByErrorRatio', () => {
+  it('порог строго больше 1:2', () => {
+    assert.equal(isProblemByErrorRatio({ errors: 1, clears: 0 }), true)
+    assert.equal(isProblemByErrorRatio({ errors: 1, clears: 1 }), true)
+    assert.equal(isProblemByErrorRatio({ errors: 1, clears: 2 }), false)
+    assert.equal(isProblemByErrorRatio({ errors: 2, clears: 3 }), true)
+    assert.equal(isProblemByErrorRatio({ errors: 2, clears: 4 }), false)
+    assert.equal(isProblemByErrorRatio({ errors: 0, clears: 0 }), false)
+  })
+
+  it('учитывает только последние 15 ответов', () => {
+    const oldWrongs = Array.from({ length: 10 }, () => 'wrong' as const)
+    const recentGood = Array.from({ length: 15 }, () => 'correct' as const)
+    const window = appendRecentAnswer([...oldWrongs, ...recentGood.slice(0, 14)], 'correct')
+    assert.equal(window.length, PROBLEM_RATIO_WINDOW)
+    assert.equal(isProblemByRecentAnswers(window), false)
+
+    const stillBad = projectRecentAnswers(
+      Array.from({ length: 10 }, () => 'wrong' as const),
+      'correct',
+    )
+    assert.deepEqual(countsFromRecentAnswers(stillBad), { errors: 10, clears: 1 })
+    assert.equal(isProblemByRecentAnswers(stillBad), true)
+  })
+
+  it('проекция учитывает wrong/correct и игнорирует hint', () => {
+    const base = ['correct', 'correct', 'wrong'] as const
+    assert.deepEqual(projectErrorRatioCounts([...base], 'wrong'), {
+      errors: 2,
+      clears: 2,
+    })
+    assert.deepEqual(projectErrorRatioCounts([...base], 'correct'), {
+      errors: 1,
+      clears: 3,
+    })
+    assert.deepEqual(projectErrorRatioCounts([...base], 'hint'), {
+      errors: 1,
+      clears: 2,
+    })
   })
 })

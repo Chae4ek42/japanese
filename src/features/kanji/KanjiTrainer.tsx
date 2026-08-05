@@ -20,7 +20,7 @@ import { GlossFootnotes } from './GlossFootnotes'
 import { HighlightedReading } from './HighlightedReading'
 import { KanjiComposition } from './KanjiComposition'
 import { KanjiGlyph } from './KanjiGlyph'
-import { isKanjiChar, KanjiWritingHotspots } from './KanjiWritingHotspots'
+import { isKanjiChar } from './KanjiWritingHotspots'
 import { WordJlptFilter } from './WordJlptFilter'
 
 export interface KanjiTrainerProps {
@@ -327,12 +327,7 @@ export function KanjiTrainer({
                       onClick={() => toggleExpanded(word)}
                     >
                       <span className="kanji-word-list-writing" data-testid="kanji-word-writing">
-                        <KanjiWritingHotspots
-                          writing={word.writing}
-                          kana={word.kana}
-                          focusKanji={character}
-                          interactive={false}
-                        />
+                        {word.writing}
                       </span>
                       <div className="kanji-word-list-body">
                         <HighlightedReading

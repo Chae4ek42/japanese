@@ -202,6 +202,7 @@ export function useVocabState() {
             hiddenWordIds: [...new Set([...(prevState.vocab.hiddenWordIds ?? []), ...ids])],
             learnedWordIds: (prevState.vocab.learnedWordIds ?? []).filter((id) => !hide.has(id)),
             trainingWordIds: (prevState.vocab.trainingWordIds ?? []).filter((id) => !hide.has(id)),
+            problemWordIds: (prevState.vocab.problemWordIds ?? []).filter((id) => !hide.has(id)),
           },
         }
       })
@@ -269,6 +270,66 @@ export function useVocabState() {
     [setAppState],
   )
 
+  const addProblemWords = useCallback(
+    (wordIds: string[]) => {
+      const ids = [...new Set(wordIds.filter((id) => typeof id === 'string' && id.length > 0))]
+      if (!ids.length) return
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const known = new Set(prevState.vocab.problemWordIds ?? [])
+        const toAdd = ids.filter((id) => !known.has(id))
+        if (!toAdd.length) return prevState
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            problemWordIds: [...(prevState.vocab.problemWordIds ?? []), ...toAdd],
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const removeProblemWords = useCallback(
+    (wordIds: string[]) => {
+      const ids = new Set(wordIds.filter((id) => typeof id === 'string' && id.length > 0))
+      if (!ids.size) return
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const next = (prevState.vocab.problemWordIds ?? []).filter((id) => !ids.has(id))
+        if (next.length === (prevState.vocab.problemWordIds ?? []).length) return prevState
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            problemWordIds: next,
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const toggleProblemWord = useCallback(
+    (wordId: string) => {
+      if (!wordId) return
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const list = prevState.vocab.problemWordIds ?? []
+        const removing = list.includes(wordId)
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            problemWordIds: removing ? list.filter((id) => id !== wordId) : [...list, wordId],
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
   const addSelectedKanji = useCallback(
     (characters: string[]) => {
       const chars = [...new Set(characters.map((ch) => ch.trim()).filter(Boolean))]
@@ -326,13 +387,7 @@ export function useVocabState() {
           ...prevState.vocab.preferences,
           ...patch,
         }
-        // Keep legacy newWordLimit aligned with newPerDay when the planner knob changes.
-        if (typeof patch.newPerDay === 'number' && patch.newWordLimit === undefined) {
-          nextPrefs.newWordLimit = patch.newPerDay
-        }
-        if (typeof patch.newWordLimit === 'number' && patch.newPerDay === undefined && patch.newWordLimit >= 0) {
-          nextPrefs.newPerDay = patch.newWordLimit
-        }
+        // newPerDay (SRS quota) and newWordLimit (session set size) stay independent.
         return {
           ...prevState,
           vocab: {
@@ -520,6 +575,7 @@ export function useVocabState() {
     hiddenWordIds: appState.vocab.hiddenWordIds ?? [],
     learnedWordIds: appState.vocab.learnedWordIds ?? [],
     trainingWordIds: appState.vocab.trainingWordIds ?? [],
+    problemWordIds: appState.vocab.problemWordIds ?? [],
     preferences: appState.vocab.preferences,
     stats: appState.vocab.stats,
     memory: appState.vocab.memory ?? {},
@@ -536,6 +592,9 @@ export function useVocabState() {
     addTrainingWords,
     removeTrainingWords,
     toggleTrainingWord,
+    addProblemWords,
+    removeProblemWords,
+    toggleProblemWord,
     addSelectedKanji,
     patchPreferences,
     updateStats,

@@ -939,68 +939,72 @@
 
 .reading-seg {
   display: inline;
-  border-radius: 4px;
-  padding: 0 2px;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-}
-
-.reading-seg.is-c0 {
-  color: #1d4f91;
-  background: rgba(29, 79, 145, 0.1);
-  font-weight: 700;
-}
-
-.reading-seg.is-c1 {
-  color: #0f7a5a;
-  background: rgba(15, 122, 90, 0.1);
-  font-weight: 700;
-}
-
-.reading-seg.is-c2 {
-  color: #b45309;
-  background: rgba(180, 83, 9, 0.1);
-  font-weight: 700;
-}
-
-.reading-seg.is-c3 {
-  color: #9f1239;
-  background: rgba(159, 18, 57, 0.1);
-  font-weight: 700;
-}
-
-.reading-seg.is-c4 {
-  color: #0e7490;
-  background: rgba(14, 116, 144, 0.1);
-  font-weight: 700;
-}
-
-.reading-seg.is-c5 {
-  color: #854d0e;
-  background: rgba(133, 77, 14, 0.1);
-  font-weight: 700;
-}
-
-.reading-seg.is-okuri,
-.reading-seg.is-other {
-  color: var(--muted-strong);
-  font-weight: 400;
-  background: transparent;
-  padding: 0;
-}
-
-.reading-seg.is-shared,
-.reading-seg.is-shared-reading {
-  box-shadow: inset 0 -2px 0 currentColor;
 }
 
 .reading-seg.is-focus {
-  /* Avoid outline expanding modal scrollport */
-  box-shadow: 0 0 0 1px currentColor;
+  color: #3d5f8a;
+  font-weight: 650;
 }
 
-.kanji-word-romaji .reading-seg.is-focus {
-  font-weight: 700;
+.reading-seg.is-other,
+.reading-seg.is-okuri {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.reading-seg.is-shared {
+  color: var(--muted-strong);
+  font-weight: 550;
+}
+
+/* Soft multi-color map — only when `.reading-highlight.is-colorized` (training reveal). */
+.reading-highlight.is-colorized .reading-seg {
+  border-radius: 3px;
+  padding: 0 1px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  font-weight: 600;
+}
+
+.reading-highlight.is-colorized .reading-seg.is-c0 {
+  color: #4a6280;
+  background: rgba(74, 98, 128, 0.08);
+}
+
+.reading-highlight.is-colorized .reading-seg.is-c1 {
+  color: #4a7a66;
+  background: rgba(74, 122, 102, 0.08);
+}
+
+.reading-highlight.is-colorized .reading-seg.is-c2 {
+  color: #8a6a45;
+  background: rgba(138, 106, 69, 0.08);
+}
+
+.reading-highlight.is-colorized .reading-seg.is-c3 {
+  color: #7a5560;
+  background: rgba(122, 85, 96, 0.08);
+}
+
+.reading-highlight.is-colorized .reading-seg.is-c4 {
+  color: #4a7380;
+  background: rgba(74, 115, 128, 0.08);
+}
+
+.reading-highlight.is-colorized .reading-seg.is-c5 {
+  color: #7a6a48;
+  background: rgba(122, 106, 72, 0.08);
+}
+
+.reading-highlight.is-colorized .reading-seg.is-okuri {
+  color: var(--muted);
+  background: transparent;
+  font-weight: 400;
+  padding: 0;
+}
+
+.reading-highlight.is-colorized .reading-seg.is-shared-reading {
+  box-shadow: inset 0 -1px 0 rgba(17, 17, 17, 0.22);
 }
 
 .kanji-word-romaji,

@@ -47,6 +47,9 @@ const CONFUSION_RECENCY_MS = 30 * 60_000
 const RECENT_ANSWERS_LIMIT = 60
 const DAILY_HISTORY_LIMIT = 60
 
+/** Window size for vocab «Проблемные» ratio (last N correct/wrong). */
+export const PROBLEM_RATIO_WINDOW = 15
+
 export function createStatsRecord(): StatsRecord {
   return {
     exposures: 0,
@@ -63,6 +66,7 @@ export function createStatsRecord(): StatsRecord {
     lastErrorAt: 0,
     lastHintAt: 0,
     eventAccuracy: 0,
+    recentAnswers: [],
   }
 }
 
@@ -199,6 +203,7 @@ export function updateCardStats(
     stats.streak = 0
     stats.lastErrorAt = now
     stats.lastSeenAt = now
+    stats.recentAnswers = appendRecentAnswer(stats.recentAnswers, 'wrong')
     const modeFactor = context.inputMode === 'submit' ? 1 : 0.75
     const drop = hyperparams.mistakePenalty * modeFactor * (0.45 + stats.mastery * 0.55)
     stats.mastery = clamp(stats.mastery - drop, 0.02, 1)
@@ -226,6 +231,7 @@ export function updateCardStats(
     stats.bestStreak = Math.max(stats.bestStreak, stats.streak)
     stats.lastClearAt = now
     stats.lastSeenAt = now
+    stats.recentAnswers = appendRecentAnswer(stats.recentAnswers, 'correct')
 
     const latencyMs = Math.max(200, context.latencyMs || 0)
     stats.fastestLatencyMs = stats.fastestLatencyMs
@@ -370,6 +376,55 @@ export function getConfusionMultiplier(
     }
   }
   return 1
+}
+
+export function appendRecentAnswer(
+  recent: StatsRecord['recentAnswers'] | undefined,
+  outcome: 'correct' | 'wrong',
+): NonNullable<StatsRecord['recentAnswers']> {
+  return [...(recent ?? []), outcome].slice(-PROBLEM_RATIO_WINDOW)
+}
+
+export function countsFromRecentAnswers(
+  recent: StatsRecord['recentAnswers'] | undefined,
+): Pick<StatsRecord, 'errors' | 'clears'> {
+  let errors = 0
+  let clears = 0
+  for (const item of recent ?? []) {
+    if (item === 'wrong') errors += 1
+    else clears += 1
+  }
+  return { errors, clears }
+}
+
+/**
+ * Vocab «Проблемные»: among the last 15 correct/wrong answers,
+ * errors:clears strictly worse than 1:2.
+ */
+export function isProblemByErrorRatio(stats: Pick<StatsRecord, 'errors' | 'clears'>): boolean {
+  return stats.errors * 2 > stats.clears
+}
+
+export function isProblemByRecentAnswers(recent: StatsRecord['recentAnswers'] | undefined): boolean {
+  return isProblemByErrorRatio(countsFromRecentAnswers(recent))
+}
+
+/** Project recent-answer window after one stats outcome (hints leave it unchanged). */
+export function projectRecentAnswers(
+  recent: StatsRecord['recentAnswers'] | undefined,
+  outcome: StatsOutcome,
+): NonNullable<StatsRecord['recentAnswers']> {
+  if (outcome === 'wrong' || outcome === 'correct') {
+    return appendRecentAnswer(recent, outcome)
+  }
+  return [...(recent ?? [])]
+}
+
+export function projectErrorRatioCounts(
+  recent: StatsRecord['recentAnswers'] | undefined,
+  outcome: StatsOutcome,
+): Pick<StatsRecord, 'errors' | 'clears'> {
+  return countsFromRecentAnswers(projectRecentAnswers(recent, outcome))
 }
 
 export function getCardProblemScore(stats: StatsRecord, hyperparams: Hyperparams, now: number): number {

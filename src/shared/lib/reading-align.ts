@@ -59,6 +59,24 @@ function candidateReadings(character: string): string[] {
   return [...expanded].sort((a, b) => b.length - a.length)
 }
 
+/** Final mora that can collapse to っ before k/s/t/p (学+校 → がっこう). */
+const SOKUONIZABLE = new Set(['き', 'く', 'ち', 'つ', 'か', 'た', 'さ'])
+
+/**
+ * Match a dictionary reading at `ri`, including sokuon surface forms
+ * (がく → がっ in がっこう).
+ */
+function matchReadingAt(reading: string, ri: number, candidate: string): string | null {
+  if (!candidate) return null
+  if (reading.startsWith(candidate, ri)) return candidate
+  if (candidate.length < 2) return null
+  const last = candidate[candidate.length - 1]!
+  if (!SOKUONIZABLE.has(last)) return null
+  const surface = `${candidate.slice(0, -1)}っ`
+  if (reading.startsWith(surface, ri)) return surface
+  return null
+}
+
 function roleForChars(chars: string, focusKanji: string): ReadingSegmentRole {
   if (!focusKanji) {
     return chars.length > 1 ? 'shared' : 'other'
@@ -142,17 +160,18 @@ export function alignReading(
     let knownHit = false
 
     for (const candidate of known) {
-      if (!reading.startsWith(candidate, ri)) {
+      const matched = matchReadingAt(reading, ri, candidate)
+      if (!matched) {
         continue
       }
-      const rest = solve(wi + 1, ri + candidate.length)
+      const rest = solve(wi + 1, ri + matched.length)
       if (rest) {
         knownHit = true
         options.push({
           segments: [
             {
               chars: ch,
-              kana: candidate,
+              kana: matched,
               role: roleForChars(ch, focusKanji),
               source: 'known',
             },
@@ -226,27 +245,42 @@ export function mergeReadingSegments(segments: ReadingSegment[] | null | undefin
   if (!segments?.length) {
     return []
   }
+  // Keep one segment per kanji (do not glue adjacent "other"/"focus") so
+  // boundaries like 学|校 in がっ|こう stay visible. Only collapse okurigana runs.
   const merged: ReadingSegment[] = []
   for (const segment of segments) {
-    const role: ReadingSegmentRole = segment.role === 'okuri' ? 'other' : segment.role
+    const isOkuri = segment.role === 'okuri' || segment.source === 'okuri'
     const prev = merged[merged.length - 1]
-    if (prev && prev.role === role) {
+    if (isOkuri && prev?.source === 'okuri') {
       prev.kana += segment.kana
       prev.chars += segment.chars
-    } else {
-      merged.push({
-        chars: segment.chars,
-        kana: segment.kana,
-        role,
-        source: segment.source,
-        romaji: '',
-      })
+      continue
     }
+    merged.push({
+      chars: segment.chars,
+      kana: segment.kana,
+      role: isOkuri ? 'other' : segment.role,
+      source: isOkuri ? 'okuri' : segment.source,
+      romaji: '',
+    })
   }
-  for (const item of merged) {
+  applySegmentRomaji(merged)
+  return merged
+}
+
+/** Fill romaji; a trailing っ borrows the next segment’s first consonant (がっ|こう → gak|kou). */
+function applySegmentRomaji(segments: Array<{ kana: string; romaji: string }>): void {
+  for (let i = 0; i < segments.length; i += 1) {
+    const item = segments[i]!
+    const next = segments[i + 1]
+    if (item.kana.endsWith('っ') && next?.kana) {
+      const stem = kanaToRomaji(item.kana.slice(0, -1))
+      const nextRomaji = kanaToRomaji(next.kana)
+      item.romaji = stem + (nextRomaji[0] ?? '')
+      continue
+    }
     item.romaji = kanaToRomaji(item.kana)
   }
-  return merged
 }
 
 export function getHighlightedReading(
@@ -285,13 +319,12 @@ export function getColoredReading(
       if (prev && prev.colorIndex < 0) {
         prev.chars += segment.chars
         prev.kana += segment.kana
-        prev.romaji = kanaToRomaji(prev.kana)
         continue
       }
       result.push({
         chars: segment.chars,
         kana: segment.kana,
-        romaji: kanaToRomaji(segment.kana),
+        romaji: '',
         colorIndex: -1,
         role: 'okuri',
         source: 'okuri',
@@ -302,13 +335,14 @@ export function getColoredReading(
     result.push({
       chars: segment.chars,
       kana: segment.kana,
-      romaji: kanaToRomaji(segment.kana),
+      romaji: '',
       colorIndex: nextColor++ % READING_COLOR_COUNT,
       role: segment.role,
       source: segment.source,
     })
   }
 
+  applySegmentRomaji(result)
   return result
 }
 

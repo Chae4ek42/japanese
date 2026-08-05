@@ -19,7 +19,22 @@ function colors(writing: string, kana: string) {
 describe('getHighlightedReading', () => {
   it('деляет онные чтения в составных словах', () => {
     assert.deepEqual(roles('毎日', 'まいにち', '日'), ['other:まい', 'focus:にち'])
-    assert.deepEqual(roles('火曜日', 'かようび', '日'), ['other:かよう', 'focus:び'])
+    assert.deepEqual(roles('火曜日', 'かようび', '日'), ['other:か', 'other:よう', 'focus:び'])
+  })
+
+  it('учитывает сокуон и делит 学校 в 中学校', () => {
+    assert.deepEqual(roles('中学校', 'ちゅうがっこう', '中'), [
+      'focus:ちゅう',
+      'other:がっ',
+      'other:こう',
+    ])
+    const colored = getColoredReading('中学校', 'ちゅうがっこう')
+    assert.ok(colored)
+    assert.deepEqual(
+      colored.map((item) => `${item.chars}:${item.kana}:${item.colorIndex}`),
+      ['中:ちゅう:0', '学:がっ:1', '校:こう:2'],
+    )
+    assert.equal(colored.map((item) => item.romaji).join(''), 'chyuugakkou')
   })
 
   it('помечает дзюкудзикун как shared', () => {
@@ -35,6 +50,11 @@ describe('getHighlightedReading', () => {
     const segments = getHighlightedReading('毎日', 'まいにち', '日')!
     assert.equal(segments.map((item) => item.romaji).join(''), 'mainichi')
     assert.equal(segments.find((item) => item.role === 'focus')?.romaji, 'nichi')
+  })
+
+  it('сохраняет разделитель нескольких чтений в ромадзи', () => {
+    const segments = getHighlightedReading('私', 'わたし / わたくし', '私')!
+    assert.equal(segments.map((item) => item.romaji).join(''), 'watashi / watakushi')
   })
 })
 

@@ -142,6 +142,14 @@ export function sanitizeCardTrainerLiveSession(
           ),
         )
       : undefined
+  const poolAddedAt =
+    source.poolAddedAt && typeof source.poolAddedAt === 'object'
+      ? Object.fromEntries(
+          Object.entries(source.poolAddedAt as Record<string, unknown>).filter(
+            (entry): entry is [string, number] => typeof entry[1] === 'number' && Number.isFinite(entry[1]),
+          ),
+        )
+      : undefined
   const navHistory = Array.isArray(source.navHistory)
     ? source.navHistory.filter((id): id is string => typeof id === 'string')
     : undefined
@@ -156,6 +164,7 @@ export function sanitizeCardTrainerLiveSession(
     view,
     sessionStats: sanitizeSessionStats(source.sessionStats, { answered: 0, clean: 0, streak: 0 }),
     weightMultipliers,
+    poolAddedAt,
     navHistory,
     navIndex,
   }

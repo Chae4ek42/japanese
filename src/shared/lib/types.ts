@@ -45,6 +45,8 @@ export interface Hyperparams {
   mistakeQueueChance: number
 }
 
+export type RecentAnswerOutcome = 'correct' | 'wrong'
+
 export interface StatsRecord {
   exposures: number
   clears: number
@@ -60,6 +62,8 @@ export interface StatsRecord {
   lastErrorAt: number
   lastHintAt: number
   eventAccuracy: number
+  /** Rolling window of correct/wrong for «Проблемные» (last 15). */
+  recentAnswers?: RecentAnswerOutcome[]
 }
 
 export interface DailyHistoryRecord {
@@ -270,7 +274,7 @@ export interface KanjiPreferences {
 }
 
 
-export type VocabSource = 'level' | 'group' | 'mine' | 'kanji' | 'list'
+export type VocabSource = 'level' | 'group' | 'mine' | 'kanji' | 'list' | 'problem'
 export type VocabLevelFilter = 5 | 4 | 3 | 2 | 1
 export type VocabPickMode = 'adaptive' | 'even'
 /** Prompt shapes for mixed multiple-choice drills (renshuu-style). */
@@ -354,6 +358,8 @@ export interface VocabState {
   learnedWordIds: string[]
   /** Words staged for source === 'list' (from kanji cards / catalog). */
   trainingWordIds: string[]
+  /** Words with recent errors:clears worse than 1:2 — source === 'problem'. */
+  problemWordIds: string[]
   preferences: VocabPreferences
   stats: Record<string, StatsRecord>
   /**
@@ -429,7 +435,7 @@ export interface ContextSentence {
 }
 
 export interface AppState {
-  version: 24
+  version: 25
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>
@@ -466,6 +472,8 @@ export interface CardTrainerLiveSession {
   sessionStats: SessionStats
   /** Vocab-only: per-card weight multipliers for the live session. */
   weightMultipliers?: Record<string, number>
+  /** Vocab-only: epoch ms when each card entered the session pool. */
+  poolAddedAt?: Record<string, number>
   /** Vocab-only: skip navigation history. */
   navHistory?: string[]
   navIndex?: number

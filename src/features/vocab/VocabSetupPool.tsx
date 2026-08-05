@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import type { VocabCard } from '../../shared/lib/types'
 import { HighlightedReading } from '../kanji/HighlightedReading'
-import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
 
 export interface VocabSetupPoolProps {
   cards: VocabCard[]
@@ -79,31 +78,47 @@ export function VocabSetupPool({
                   .join(' ')}
                 data-testid={`vocab-setup-word-${card.id}`}
               >
-                <button
-                  type="button"
-                  className="kanji-word-list-main"
-                  aria-expanded={expanded}
-                  onClick={() => setExpandedId((prev) => (prev === card.id ? null : card.id))}
-                >
-                  <span className="kanji-word-list-writing">
-                    <KanjiWritingHotspots writing={card.writing} kana={card.kana} interactive={false} />
-                  </span>
-                  <div className="kanji-word-list-body">
-                    <HighlightedReading
-                      writing={card.writing}
-                      kana={card.kana}
-                      focusKanji={focusChar(card.writing)}
-                      fallbackRomaji={card.romaji}
-                    />
-                    <p className="kanji-word-list-meaning" title={meaningLine}>
-                      {meaningLine}
-                    </p>
+                <div className="vocab-setup-word-row">
+                  <button
+                    type="button"
+                    className="kanji-word-list-main"
+                    aria-expanded={expanded}
+                    onClick={() => setExpandedId((prev) => (prev === card.id ? null : card.id))}
+                  >
+                    <span className="kanji-word-list-writing">{card.writing}</span>
+                    <div className="kanji-word-list-body">
+                      <HighlightedReading
+                        writing={card.writing}
+                        kana={card.kana}
+                        focusKanji={focusChar(card.writing)}
+                        fallbackRomaji={card.romaji}
+                      />
+                      <p className="kanji-word-list-meaning" title={meaningLine}>
+                        {meaningLine}
+                      </p>
+                    </div>
+                    <span className="kanji-word-list-tag">
+                      {card.jlpt ? `N${card.jlpt}` : '—'}
+                      {card.readings && card.readings.length > 1 ? ` · ${card.readings.length}` : ''}
+                    </span>
+                  </button>
+                  <div className="vocab-setup-word-actions">
+                    <button
+                      type="button"
+                      className={excluded ? 'vocab-setup-exclude-button is-excluded-on' : 'vocab-setup-exclude-button'}
+                      data-testid={`vocab-setup-exclude-${card.id}`}
+                      aria-pressed={excluded}
+                      aria-label={
+                        excluded
+                          ? `Вернуть ${card.writing} в тренировку`
+                          : `Исключить ${card.writing} из тренировки`
+                      }
+                      onClick={() => onToggleExclude(card.id)}
+                    >
+                      {excluded ? 'Вернуть' : 'Искл.'}
+                    </button>
                   </div>
-                  <span className="kanji-word-list-tag">
-                    {card.jlpt ? `N${card.jlpt}` : '—'}
-                    {card.readings && card.readings.length > 1 ? ` · ${card.readings.length}` : ''}
-                  </span>
-                </button>
+                </div>
 
                 {expanded ? (
                   <div className="kanji-word-detail" data-testid="vocab-setup-word-detail">
@@ -132,16 +147,6 @@ export function VocabSetupPool({
                         <li key={meaning}>{meaning}</li>
                       ))}
                     </ul>
-                    <div className="kanji-word-detail-actions">
-                      <button
-                        type="button"
-                        className="ghost-button"
-                        data-testid={`vocab-setup-exclude-${card.id}`}
-                        onClick={() => onToggleExclude(card.id)}
-                      >
-                        {excluded ? 'Вернуть в тренировку' : 'Исключить'}
-                      </button>
-                    </div>
                   </div>
                 ) : null}
               </li>

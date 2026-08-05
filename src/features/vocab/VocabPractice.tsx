@@ -47,6 +47,9 @@ export interface VocabPracticeProps {
   onAddCurrentToMyWords?: () => void
   onAddSessionToMyWords?: () => void
   onToggleLearned?: () => void
+  onExcludeFromSession?: () => void
+  onRestoreToSession?: () => void
+  currentExcluded?: boolean
   onSaveWordEdit?: (word: KanjiWord) => void
   onDeleteWord?: () => void
   onOpenKanjiInfo?: (character: string) => void
@@ -75,6 +78,7 @@ export function VocabPractice({
   showAddSessionToMyWords = false,
   sessionWordCount = 0,
   currentLearned = false,
+  currentExcluded = false,
   onInputChange,
   onInputKeyDown,
   onRevealHint,
@@ -87,6 +91,8 @@ export function VocabPractice({
   onAddCurrentToMyWords,
   onAddSessionToMyWords,
   onToggleLearned,
+  onExcludeFromSession,
+  onRestoreToSession,
   onSaveWordEdit,
   onDeleteWord,
   onOpenKanjiInfo,
@@ -181,6 +187,7 @@ export function VocabPractice({
                   ? activeCard.kana
                   : null
               }
+              colorize={!editing && round.hintUsed && drillMode === 'romaji'}
               className="vocab-question-writing"
               writingTestId="vocab-current-writing"
               onOpenInfo={onOpenKanjiInfo}
@@ -198,6 +205,7 @@ export function VocabPractice({
                         writing={activeCard.writing}
                         kana={reading.kana}
                         fallbackRomaji={reading.romaji}
+                        colorize
                         testId={undefined}
                       />
                       <ul className="vocab-hint-meanings">
@@ -214,6 +222,7 @@ export function VocabPractice({
                     writing={activeCard.writing}
                     kana={activeCard.kana}
                     fallbackRomaji={activeCard.romaji}
+                    colorize
                     testId="vocab-current-reading"
                   />
                   <ul className="vocab-hint-meanings" data-testid="vocab-hint-meanings">
@@ -459,6 +468,25 @@ export function VocabPractice({
                   onClick={onToggleLearned}
                 >
                   {currentLearned ? 'Выучено ✓' : 'Выучено'}
+                </button>
+              ) : null}
+              {currentExcluded && onRestoreToSession ? (
+                <button
+                  type="button"
+                  className="ghost-button is-excluded-on"
+                  data-testid="vocab-restore-session"
+                  onClick={onRestoreToSession}
+                >
+                  Вернуть в тренировку
+                </button>
+              ) : onExcludeFromSession ? (
+                <button
+                  type="button"
+                  className="ghost-button"
+                  data-testid="vocab-exclude-session"
+                  onClick={onExcludeFromSession}
+                >
+                  Исключить
                 </button>
               ) : null}
               {showAddSessionToMyWords && onAddSessionToMyWords ? (

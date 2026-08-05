@@ -18,13 +18,15 @@ export function splitWriting(writing: string): string[] {
 
 export interface KanjiWritingHotspotsProps {
   writing: string
-  /** When set, color each kanji to match its reading segment. */
+  /** Reading used to map colors when `colorize` is on. */
   kana?: string | null
   focusKanji?: string | null
   className?: string
   writingTestId?: string
-  /** When false, render colored spans (safe inside outer buttons). */
+  /** When false, render spans (safe inside outer buttons). */
   interactive?: boolean
+  /** Multi-color kanji↔reading map. Only for training reveal. */
+  colorize?: boolean
   onOpenInfo?: (character: string) => void
 }
 
@@ -35,11 +37,12 @@ export function KanjiWritingHotspots({
   className = '',
   writingTestId,
   interactive = true,
+  colorize = false,
   onOpenInfo,
 }: KanjiWritingHotspotsProps) {
   const chars = splitWriting(writing)
-  const segments = kana ? getColoredReading(writing, kana, focusKanji ?? '') : null
-  const colorIndexes = kana ? mapWritingColorIndexes(writing, segments) : null
+  const segments = colorize && kana ? getColoredReading(writing, kana, focusKanji ?? '') : null
+  const colorIndexes = colorize && kana ? mapWritingColorIndexes(writing, segments) : null
 
   return (
     <span className={className || undefined} data-testid={writingTestId}>
@@ -54,11 +57,12 @@ export function KanjiWritingHotspots({
 
         const colorIndex = colorIndexes?.[index]
         const colorClass =
-          colorIndex != null && colorIndex >= 0
+          colorize && colorIndex != null && colorIndex >= 0
             ? `is-c${colorIndex % READING_COLOR_COUNT}`
             : ''
         const focusClass = focusKanji && ch === focusKanji ? 'is-focus' : ''
         const sharedClass =
+          colorize &&
           segments?.some(
             (segment) =>
               (segment.source === 'group' || segment.role === 'shared') &&

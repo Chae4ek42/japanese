@@ -1,11 +1,39 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type {
   KanjiWordJlptLevel,
+  StatsRecord,
   VocabCard,
   VocabLevelFilter,
   VocabPickMode,
   VocabSource,
 } from '../../shared/lib/types'
+import { countsFromRecentAnswers, createStatsRecord } from '../../shared/lib/trainer'
+
+/** Accuracy for session sidebar: last 15 correct/wrong (hints excluded). */
+export function wordDisplayAccuracy(stats: StatsRecord): {
+  percent: number | null
+  clears: number
+  errors: number
+} {
+  const recent = stats.recentAnswers
+  if (recent?.length) {
+    const { clears, errors } = countsFromRecentAnswers(recent)
+    const total = clears + errors
+    return {
+      percent: total ? Math.round((clears / total) * 100) : null,
+      clears,
+      errors,
+    }
+  }
+  const clears = stats.clears
+  const errors = stats.errors
+  const total = clears + errors
+  return {
+    percent: total ? Math.round((clears / total) * 100) : null,
+    clears,
+    errors,
+  }
+}
 import {
   WORD_JLPT_LEVELS,
   isWordJlptLevelActive,
@@ -17,8 +45,15 @@ const PICK_OPTIONS: Array<{ id: VocabPickMode; label: string }> = [
   { id: 'even', label: 'Равномерный' },
 ]
 
-const WEIGHT_PRESETS = [0, 100, 200] as const
+const SORT_OPTIONS: Array<{ id: SessionWordSort; label: string }> = [
+  { id: 'accuracy-asc', label: 'Точн. ↑' },
+  { id: 'accuracy-desc', label: 'Точн. ↓' },
+  { id: 'novelty', label: 'Новизна' },
+]
+
 const SOURCE_LEVELS: VocabLevelFilter[] = [5, 4, 3, 2, 1]
+
+export type SessionWordSort = 'accuracy-asc' | 'accuracy-desc' | 'novelty'
 
 export interface VocabSessionSidebarProps {
   pickMode: VocabPickMode
@@ -27,14 +62,15 @@ export interface VocabSessionSidebarProps {
   wordJlptLevels: KanjiWordJlptLevel[]
   cards: VocabCard[]
   currentCardId: string | null
-  selectedCardId: string | null
+  stats: Record<string, StatsRecord>
   weightMultipliers: Record<string, number>
+  /** Epoch ms when each card was added to the training session. */
+  poolAddedAt?: Record<string, number>
   canAddSourceWord?: boolean
   showWordJlptFilter?: boolean
   onPickModeChange: (mode: VocabPickMode) => void
   onLevelChange?: (level: VocabLevelFilter) => void
   onWordJlptChange?: (levels: KanjiWordJlptLevel[]) => void
-  onSelectCard: (cardId: string) => void
   onSetWeight: (cardId: string, multiplier: number) => void
   onResetWeights: () => void
   onAddSourceWord?: () => void
@@ -47,26 +83,28 @@ export function VocabSessionSidebar({
   wordJlptLevels,
   cards,
   currentCardId,
-  selectedCardId,
+  stats,
   weightMultipliers,
+  poolAddedAt = {},
   canAddSourceWord = false,
   showWordJlptFilter = false,
   onPickModeChange,
   onLevelChange,
   onWordJlptChange,
-  onSelectCard,
   onSetWeight,
   onResetWeights,
   onAddSourceWord,
 }: VocabSessionSidebarProps) {
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const changedCount = cards.filter((card) => {
-    const value = weightMultipliers[card.id]
-    return value !== undefined && Math.abs(value - 1) >= 0.01
-  }).length
+  const [sort, setSort] = useState<SessionWordSort>('accuracy-asc')
   const excludedCount = cards.filter((card) => (weightMultipliers[card.id] ?? 1) <= 0).length
   const showSourceLevel = source === 'level' && Boolean(onLevelChange)
   const hasFilters = showSourceLevel || showWordJlptFilter
+
+  const sortedCards = useMemo(
+    () => sortSessionCards(cards, stats, sort, poolAddedAt),
+    [cards, stats, sort, poolAddedAt],
+  )
 
   return (
     <div className="vocab-session-panel" data-testid="vocab-session-sidebar">
@@ -82,9 +120,6 @@ export function VocabSessionSidebar({
             <span className="vocab-session-pill" data-testid="vocab-session-excluded-count">
               вне: {excludedCount}
             </span>
-          ) : null}
-          {changedCount ? (
-            <span className="vocab-session-pill is-soft">{changedCount} изменены</span>
           ) : null}
           {canAddSourceWord && onAddSourceWord ? (
             <button
@@ -185,28 +220,54 @@ export function VocabSessionSidebar({
 
       <section className="vocab-session-block vocab-session-words-block">
         <div className="vocab-session-block-head">
-          <span className="vocab-session-label">Веса слов</span>
-          <button
-            type="button"
-            className="vocab-session-reset"
-            data-testid="vocab-session-reset-weights"
-            onClick={onResetWeights}
-            disabled={!changedCount}
-          >
-            Сбросить
-          </button>
+          <span className="vocab-session-label">Статистика</span>
+          {excludedCount ? (
+            <button
+              type="button"
+              className="vocab-session-reset"
+              data-testid="vocab-session-restore-all"
+              onClick={onResetWeights}
+            >
+              Вернуть все
+            </button>
+          ) : null}
         </div>
 
-        <ul className="vocab-session-list" role="list" aria-label="Слова текущей тренировки">
-          {cards.map((card) => {
-            const weightValue = weightMultipliers[card.id] ?? 1
-            const weightPercent = Math.round(weightValue * 100)
-            const expanded = selectedCardId === card.id
+        <div
+          className="vocab-session-sort"
+          role="group"
+          aria-label="Сортировка слов"
+          data-testid="vocab-session-sort"
+        >
+          {SORT_OPTIONS.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              className={
+                sort === option.id
+                  ? 'vocab-session-sort-btn is-active'
+                  : 'vocab-session-sort-btn'
+              }
+              data-testid={`vocab-session-sort-${option.id}`}
+              aria-pressed={sort === option.id}
+              onClick={() => setSort(option.id)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+
+        <ul className="vocab-session-list" role="list" aria-label="Статистика слов сессии">
+          {sortedCards.map((card) => {
+            const cardStats = stats[card.id] ?? createStatsRecord()
+            const excluded = (weightMultipliers[card.id] ?? 1) <= 0
             const isCurrent = card.id === currentCardId
-            const excluded = weightPercent <= 0
+            const { percent, clears, errors } = wordDisplayAccuracy(cardStats)
+            const answered = clears + errors
+            const accuracyLabel = percent === null ? '—' : `${percent}%`
+            const detail = answered > 0 ? `${clears}✓ · ${errors}✗` : 'нет ответов'
             const className = [
               'vocab-session-row',
-              expanded ? 'is-expanded' : '',
               isCurrent ? 'is-current' : '',
               excluded ? 'is-excluded' : '',
             ]
@@ -215,52 +276,45 @@ export function VocabSessionSidebar({
 
             return (
               <li key={card.id} className={className} data-testid={`vocab-session-word-${card.id}`}>
-                <button
-                  type="button"
-                  className="vocab-session-row-main"
-                  onClick={() => onSelectCard(card.id)}
-                  aria-expanded={expanded}
-                >
+                <div className="vocab-session-row-main">
                   <span className="vocab-session-row-writing">{card.writing}</span>
-                  <span className="vocab-session-row-weight" data-testid={expanded ? 'vocab-session-weight-value' : undefined}>
-                    {weightPercent}%
+                  <span
+                    className="vocab-session-row-stat"
+                    data-testid={`vocab-session-accuracy-${card.id}`}
+                    title={detail}
+                  >
+                    {excluded ? 'вне' : accuracyLabel}
                   </span>
                   <span className="vocab-session-row-meaning">{card.meaning}</span>
+                  <span className="vocab-session-row-detail">{detail}</span>
                   {isCurrent ? <span className="vocab-session-now">сейчас</span> : null}
-                </button>
-
-                <div className="vocab-session-row-presets" role="group" aria-label={`Вес ${card.writing}`}>
-                  {WEIGHT_PRESETS.map((preset) => (
-                    <button
-                      key={preset}
-                      type="button"
-                      className={
-                        weightPercent === preset
-                          ? 'vocab-session-preset is-active'
-                          : 'vocab-session-preset'
-                      }
-                      data-testid={`vocab-session-preset-${card.id}-${preset}`}
-                      onClick={() => onSetWeight(card.id, preset / 100)}
-                    >
-                      {preset}%
-                    </button>
-                  ))}
                 </div>
 
-                {expanded ? (
-                  <div className="vocab-session-row-editor" data-testid="vocab-session-weight-editor">
-                    <input
-                      type="range"
-                      min={0}
-                      max={300}
-                      step={10}
-                      value={weightPercent}
-                      data-testid="vocab-session-weight-slider"
-                      aria-label={`Вес слова ${card.writing}`}
-                      onChange={(event) => onSetWeight(card.id, Number(event.target.value) / 100)}
-                    />
-                  </div>
-                ) : null}
+                <div
+                  className="vocab-session-row-presets"
+                  role="group"
+                  aria-label={`Сессия ${card.writing}`}
+                >
+                  {excluded ? (
+                    <button
+                      type="button"
+                      className="vocab-session-preset vocab-session-restore"
+                      data-testid={`vocab-session-restore-${card.id}`}
+                      onClick={() => onSetWeight(card.id, 1)}
+                    >
+                      Вернуть
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="vocab-session-preset"
+                      data-testid={`vocab-session-exclude-${card.id}`}
+                      onClick={() => onSetWeight(card.id, 0)}
+                    >
+                      Исключить
+                    </button>
+                  )}
+                </div>
               </li>
             )
           })}
@@ -268,6 +322,35 @@ export function VocabSessionSidebar({
       </section>
     </div>
   )
+}
+
+export function sortSessionCards(
+  cards: VocabCard[],
+  stats: Record<string, StatsRecord>,
+  sort: SessionWordSort,
+  poolAddedAt: Record<string, number> = {},
+): VocabCard[] {
+  const ranked = cards.map((card, index) => {
+    const cardStats = stats[card.id] ?? createStatsRecord()
+    const { percent } = wordDisplayAccuracy(cardStats)
+    const accuracy = percent ?? -1
+    // Newest additions to the training session first.
+    const novelty = poolAddedAt[card.id] ?? 0
+    return { card, index, accuracy, novelty }
+  })
+
+  ranked.sort((a, b) => {
+    if (sort === 'accuracy-asc') {
+      if (a.accuracy !== b.accuracy) return a.accuracy - b.accuracy
+    } else if (sort === 'accuracy-desc') {
+      if (a.accuracy !== b.accuracy) return b.accuracy - a.accuracy
+    } else if (a.novelty !== b.novelty) {
+      return b.novelty - a.novelty
+    }
+    return sort === 'novelty' ? b.index - a.index : a.index - b.index
+  })
+
+  return ranked.map((entry) => entry.card)
 }
 
 function pluralWords(count: number): string {

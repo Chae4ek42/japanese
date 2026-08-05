@@ -61,7 +61,7 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
   await expect(page.getByTestId('vocab-choice-0')).toBeVisible()
 })
 
-test('vocab trainer: skip next and previous without scoring', async ({ page }, testInfo) => {
+test('vocab trainer: skip next scores as correct, previous navigates history', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Skip navigation covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
@@ -73,8 +73,8 @@ test('vocab trainer: skip next and previous without scoring', async ({ page }, t
   await page.getByTestId('vocab-skip-next').click()
   await expect(page.getByTestId('vocab-current-writing')).not.toHaveText(first)
   await expect(page.getByTestId('vocab-skip-prev')).toBeEnabled()
-  await expect(page.getByTestId('session-chips')).toContainText('0 карточек')
-  await expect(page.getByTestId('session-chips')).toContainText('серия 0')
+  await expect(page.getByTestId('session-chips')).toContainText('1 карточек')
+  await expect(page.getByTestId('session-chips')).toContainText('серия 1')
 
   const second = await page.getByTestId('vocab-current-writing').innerText()
   await page.getByTestId('vocab-skip-prev').click()
@@ -82,15 +82,34 @@ test('vocab trainer: skip next and previous without scoring', async ({ page }, t
 
   await page.getByTestId('vocab-skip-next').click()
   await expect(page.getByTestId('vocab-current-writing')).toHaveText(second)
+  await expect(page.getByTestId('session-chips')).toContainText('1 карточек')
 })
 
-test('vocab trainer: in-session panel changes pick mode and weights', async ({ page }, testInfo) => {
+test('vocab trainer: arrow keys navigate cards', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Keyboard navigation covered on desktop.')
+  await openFreshApp(page)
+  await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('start-vocab').click()
+
+  const first = await page.getByTestId('vocab-current-writing').innerText()
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByTestId('vocab-current-writing')).not.toHaveText(first)
+  const second = await page.getByTestId('vocab-current-writing').innerText()
+
+  await page.keyboard.press('ArrowLeft')
+  await expect(page.getByTestId('vocab-current-writing')).toHaveText(first)
+
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByTestId('vocab-current-writing')).toHaveText(second)
+})
+
+test('vocab trainer: in-session panel changes pick mode and shows word stats', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Sidebar controls covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
   await page.getByTestId('vocab-source-group').click()
   await page.getByTestId('vocab-train-group-weekdays').click()
-  await page.getByTestId('vocab-new-per-day').fill('1')
+  await page.getByTestId('vocab-new-word-limit').fill('1')
   await page.getByTestId('start-vocab').click()
   await expect(page.getByTestId('vocab-session-sidebar')).toBeVisible()
   await page.getByTestId('vocab-session-toggle-filters').click()
@@ -98,16 +117,16 @@ test('vocab trainer: in-session panel changes pick mode and weights', async ({ p
   await page.getByTestId('vocab-session-word-jlpt-5').click()
   await expect(page.getByTestId('vocab-session-word-jlpt-5')).toHaveAttribute('aria-pressed', 'true')
 
+  await expect(page.getByTestId('vocab-session-sort')).toBeVisible()
+  await page.getByTestId('vocab-session-sort-accuracy-desc').click()
+  await expect(page.getByTestId('vocab-session-sort-accuracy-desc')).toHaveAttribute('aria-pressed', 'true')
+  await page.getByTestId('vocab-session-sort-novelty').click()
+  await expect(page.getByTestId('vocab-session-sort-novelty')).toHaveAttribute('aria-pressed', 'true')
+
   await page.getByTestId('vocab-session-pick-even').click()
   await expect(page.getByTestId('vocab-session-pick-even')).toHaveClass(/is-active/)
-  await page.getByTestId('vocab-session-pick-adaptive').click()
-  await expect(page.getByTestId('vocab-session-pick-adaptive')).toHaveClass(/is-active/)
-
-  const currentWriting = await page.getByTestId('vocab-current-writing').innerText()
-  await page.locator('.vocab-session-row', { hasText: currentWriting }).first().click()
-  const slider = page.getByTestId('vocab-session-weight-slider')
-  await slider.fill('0')
-  await expect(page.getByTestId('vocab-session-weight-value')).toHaveText('0%')
+  await expect(page.getByTestId('vocab-session-sort')).toBeVisible()
+  await expect(page.getByTestId('vocab-session-weight-slider')).toHaveCount(0)
 
   const sessionWords = page.locator('[data-testid^="vocab-session-word-"]')
   const countBefore = await sessionWords.count()
@@ -115,8 +134,9 @@ test('vocab trainer: in-session panel changes pick mode and weights', async ({ p
   await page.getByTestId('vocab-add-source-word').click()
   await expect(sessionWords).toHaveCount(countBefore + 1)
 
-  await page.getByTestId('vocab-session-reset-weights').click()
-  await expect(page.getByTestId('vocab-session-weight-value')).toHaveText('100%')
+  await page.getByTestId('vocab-session-pick-adaptive').click()
+  await expect(page.getByTestId('vocab-session-pick-adaptive')).toHaveClass(/is-active/)
+  await expect(page.getByTestId('vocab-session-sort')).toBeVisible()
 })
 
 test('dictionary tabs update URL', async ({ page }, testInfo) => {
@@ -137,6 +157,9 @@ test('dictionary: add and edit custom word', async ({ page }, testInfo) => {
   await openFreshApp(page)
   await page.getByTestId('nav-vocab').click()
   await page.getByTestId('vocab-tab-mine').click()
+  await expect(page.getByTestId('custom-word-open')).toBeVisible()
+  await expect(page.getByTestId('custom-word-form')).toHaveCount(0)
+  await page.getByTestId('custom-word-open').click()
   await expect(page.getByTestId('custom-word-form')).toBeVisible()
 
   await page.getByTestId('custom-word-writing').fill('猫')
@@ -149,6 +172,12 @@ test('dictionary: add and edit custom word', async ({ page }, testInfo) => {
   await expect(page.getByTestId('vocab-word-猫')).toContainText('neko')
   await expect(page.getByTestId('vocab-word-猫')).toContainText('кошка')
   await expect(page.getByTestId('vocab-word-猫')).toContainText('своё')
+
+  await expect(page.getByTestId('vocab-mine-copy-words')).toBeVisible()
+  await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
+  await page.getByTestId('vocab-mine-copy-words').click()
+  await expect(page.getByTestId('vocab-mine-copy-words')).toHaveText('Скопировано')
+  await expect.poll(async () => page.evaluate(() => navigator.clipboard.readText())).toBe('猫')
 
   const editButton = page.locator('[data-testid^="vocab-edit-"]').first()
   await editButton.click()

@@ -28,15 +28,19 @@ export function TrainPage() {
         hiddenWordIds={vocab.hiddenWordIds}
         learnedWordIds={vocab.learnedWordIds}
         trainingWordIds={vocab.trainingWordIds}
+        problemWordIds={vocab.problemWordIds}
         liveSession={vocab.liveSession}
         onSaveLiveSession={vocab.saveLiveSession}
         onPatchPreferences={vocab.patchPreferences}
         onUpdateStats={vocab.updateStats}
         onApplyGradedReview={vocab.applyGradedReview}
         onAddMyWords={vocab.addMyWords}
+        onRemoveTrainingWords={vocab.removeTrainingWords}
         onSaveWordEdit={vocab.saveWordEdit}
         onHideWords={vocab.hideWords}
         onToggleLearnedWords={vocab.toggleLearnedWords}
+        onAddProblemWords={vocab.addProblemWords}
+        onRemoveProblemWords={vocab.removeProblemWords}
         onOpenKanjiInfo={setInfoKanji}
       />
 

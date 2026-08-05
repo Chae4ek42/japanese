@@ -18,6 +18,7 @@ const sourceOptions = [
   { id: 'group' as const, label: 'По группе' },
   { id: 'kanji' as const, label: 'По кандзи' },
   { id: 'list' as const, label: 'Набор' },
+  { id: 'problem' as const, label: 'Проблемные' },
   { id: 'mine' as const, label: 'Мои слова' },
 ]
 
@@ -41,6 +42,7 @@ export interface VocabSetupProps {
   myWordsCount: number
   myWordIds?: string[]
   trainingWordCount?: number
+  problemWordCount?: number
   excludedIds: Set<string>
   errorText?: string
   infoText?: string
@@ -59,6 +61,7 @@ export function VocabSetup({
   myWordsCount,
   myWordIds = [],
   trainingWordCount = 0,
+  problemWordCount = 0,
   excludedIds,
   errorText = '',
   infoText = '',
@@ -95,7 +98,8 @@ export function VocabSetup({
     preferences.source === 'group' ||
     preferences.source === 'mine' ||
     preferences.source === 'kanji' ||
-    preferences.source === 'list'
+    preferences.source === 'list' ||
+    preferences.source === 'problem'
 
   useEffect(() => {
     setNewLimitDraft(null)
@@ -147,6 +151,7 @@ export function VocabSetup({
               {option.label}
               {option.id === 'mine' ? ` (${myWordsCount})` : ''}
               {option.id === 'list' ? ` (${trainingWordCount})` : ''}
+              {option.id === 'problem' ? ` (${problemWordCount})` : ''}
               {option.id === 'kanji' && selectedKanji.length ? ` (${selectedKanji.length})` : ''}
             </button>
           ))}
@@ -270,6 +275,17 @@ export function VocabSetup({
         </div>
       ) : null}
 
+      {preferences.source === 'problem' ? (
+        <div className="control-group">
+          <span className="group-label">Проблемные слова</span>
+          <p className="control-hint" data-testid="vocab-problem-count">
+            {problemWordCount
+              ? `${problemWordCount} слов — по последним 15 ответам ошибки чаще чем 1 к 2`
+              : 'Пока пусто — слова появятся после ошибок в тренировке'}
+          </p>
+        </div>
+      ) : null}
+
       {preferences.source === 'mine' ? (
         <div className="control-group">
           <span className="group-label">Состав «Моих слов»</span>
@@ -338,26 +354,6 @@ export function VocabSetup({
       </div>
 
       <div className="control-group">
-        <span className="group-label">Новых в день</span>
-        <label className="vocab-number-field">
-          <input
-            type="number"
-            min={0}
-            max={50}
-            data-testid="vocab-new-per-day"
-            value={preferences.newPerDay ?? Math.max(0, newLimit)}
-            onChange={(event) => {
-              const parsed = Number(event.target.value)
-              if (!Number.isFinite(parsed)) return
-              const next = Math.min(50, Math.max(0, Math.round(parsed)))
-              onPatchPreferences({ newPerDay: next, newWordLimit: next })
-            }}
-          />
-          <span>0 = только повторение</span>
-        </label>
-      </div>
-
-      <div className="control-group">
         <span className="group-label">Длина сессии</span>
         <label className="vocab-number-field">
           <input
@@ -376,7 +372,7 @@ export function VocabSetup({
         </label>
       </div>
 
-      {showNewWordLimit && preferences.reviewV2 === false ? (
+      {showNewWordLimit ? (
         <div className="control-group">
           <span className="group-label">Слов за раз</span>
           <label className="vocab-number-field">
@@ -392,9 +388,7 @@ export function VocabSetup({
                 if (raw.trim() === '' || raw.trim() === '-') return
                 const parsed = Number(raw)
                 if (!Number.isFinite(parsed)) return
-                const next = Math.min(50, Math.max(-1, Math.round(parsed)))
-                onPatchPreferences({ newWordLimit: next })
-                setNewLimitDraft(null)
+                onPatchPreferences({ newWordLimit: Math.min(50, Math.max(-1, Math.round(parsed))) })
               }}
               onBlur={() => {
                 if (newLimitDraft === null) return
@@ -412,7 +406,7 @@ export function VocabSetup({
                 setNewLimitDraft(null)
               }}
             />
-            <span>-1 = без лимита</span>
+            <span>-1 = без лимита; расширяйте набор кнопкой «+ слово»</span>
           </label>
         </div>
       ) : null}
@@ -455,9 +449,9 @@ export function VocabSetup({
 
       <p className="control-hint" data-testid="vocab-pool-count">
         {poolCount === sourcePoolCount
-          ? `${poolCount} слов в наборе`
-          : `${poolCount} в тренировке из ${sourcePoolCount} в наборе`}
-        {excludedIds.size ? ` · к старту ${includedCount}` : ''}
+          ? `${sourcePoolCount} слов по критериям`
+          : `${poolCount} к старту из ${sourcePoolCount} по критериям`}
+        {excludedIds.size ? ` · исключено ${excludedIds.size}` : ''}
       </p>
 
       <div className="primary-actions">

@@ -41,8 +41,8 @@ export function normalizeRomajiDraft(value: string): string {
 }
 
 /**
- * Romaji drill: every required reading must appear in one answer (order-independent).
- * Delimiters: `/` `／` `,` `，`, or whitespace when several readings are required.
+ * Romaji drill: any one required reading is enough.
+ * Extra tokens (via `/` or spaces) are allowed if they are also valid readings.
  */
 export function evaluateRomajiReadings(
   required: string[],
@@ -89,12 +89,12 @@ export function evaluateRomajiReadings(
   const uniqueComplete = new Set(complete)
   if ([...uniqueComplete].some((part) => !requiredUnique.includes(part))) return 'wrong'
 
-  const allCovered = requiredUnique.every((answer) => uniqueComplete.has(answer))
-  if (allCovered && !pendingPrefix) return 'correct'
+  // One complete reading is enough; more valid readings are fine.
+  if (uniqueComplete.size >= 1 && !pendingPrefix) return 'correct'
 
   if (
     mode === 'instant' &&
-    (pendingPrefix || uniqueComplete.size < requiredUnique.length) &&
+    pendingPrefix &&
     [...uniqueComplete].every((part) => requiredUnique.includes(part))
   ) {
     return 'pending'
@@ -136,6 +136,23 @@ export function limitVocabCards(cards: VocabCard[], limit: number): VocabCard[] 
   return cards.slice(0, limit)
 }
 
+/** Apply «Слов за раз» when the source supports it (mine/problem/full-set skip). */
+export function applyVocabNewWordLimit(
+  cards: VocabCard[],
+  preferences: Pick<VocabPreferences, 'source' | 'newWordLimit' | 'trainFullGroup'>,
+): VocabCard[] {
+  const newWordLimit = preferences.newWordLimit ?? -1
+  const skipLimit =
+    preferences.source === 'mine' ||
+    preferences.source === 'problem' ||
+    ((preferences.source === 'group' ||
+      preferences.source === 'kanji' ||
+      preferences.source === 'list') &&
+      preferences.trainFullGroup)
+  if (skipLimit || newWordLimit < 0) return cards
+  return limitVocabCards(cards, newWordLimit)
+}
+
 function filterWordsByJlpt(words: KanjiWord[], levels: number[]): KanjiWord[] {
   if (!levels.length) return words
   const allow = new Set(levels)
@@ -164,7 +181,7 @@ function filterWordsByJlpt(words: KanjiWord[], levels: number[]): KanjiWord[] {
   return filtered
 }
 
-function resolveTrainingListWords(
+export function resolveTrainingListWords(
   trainingWordIds: string[],
   customWords: Record<string, KanjiWord>,
   hiddenWordIds: string[],
@@ -218,12 +235,14 @@ export function buildVocabPool(
     hiddenWordIds = [],
     learnedWordIds = [],
     trainingWordIds = [],
+    problemWordIds = [],
   }: {
     /** When false, ignore `newWordLimit` (e.g. choice distractors). */
     applyNewWordLimit?: boolean
     hiddenWordIds?: string[]
     learnedWordIds?: string[]
     trainingWordIds?: string[]
+    problemWordIds?: string[]
   } = {},
 ): VocabCard[] {
   let words: KanjiWord[] = []
@@ -253,11 +272,11 @@ export function buildVocabPool(
     }
     preserveOrder = true
   } else if (preferences.source === 'list') {
+    // «Набор» includes words already in «Мои слова» — membership is independent.
     words = resolveTrainingListWords(trainingWordIds, customWords, hiddenWordIds)
-    if (!preferences.trainFullGroup) {
-      const mine = new Set(myWords)
-      words = words.filter((word) => !wordVariantIds(word).some((id) => mine.has(id)))
-    }
+    preserveOrder = true
+  } else if (preferences.source === 'problem') {
+    words = resolveTrainingListWords(problemWordIds, customWords, hiddenWordIds)
     preserveOrder = true
   } else {
     words = applyLocalWordEdits(
@@ -284,15 +303,8 @@ export function buildVocabPool(
     cards.push(card)
   }
 
-  const newWordLimit = preferences.newWordLimit ?? -1
-  const skipLimit =
-    preferences.source === 'mine' ||
-    ((preferences.source === 'group' ||
-      preferences.source === 'kanji' ||
-      preferences.source === 'list') &&
-      preferences.trainFullGroup)
-  if (applyNewWordLimit && !skipLimit && newWordLimit >= 0) {
-    return limitVocabCards(cards, newWordLimit)
+  if (applyNewWordLimit) {
+    return applyVocabNewWordLimit(cards, preferences)
   }
   return cards
 }
@@ -415,6 +427,37 @@ export function pickUniformVocabCardId(
   const candidates = excluded.size ? pool.filter((card) => !excluded.has(card.id)) : pool
   const pickable = candidates.length ? candidates : pool
   return pickable[Math.floor(rng() * pickable.length)]?.id ?? null
+}
+
+/** Even mode: ×2 until the card has been shown this many times in the session. */
+export const EVEN_NEW_WORD_BOOST = 2
+export const EVEN_NEW_WORD_SHOWS = 8
+
+/**
+ * Merge manual session weights with the even-mode show boost (×2 for first 8 shows).
+ * Based only on session `showCounts` — answers/hints do not clear the boost early.
+ * Excluded cards (weight ≤ 0) stay excluded.
+ */
+export function buildEvenModeWeightMultipliers(
+  cardIds: string[],
+  {
+    weightMultipliers = {},
+    showCounts = {},
+  }: {
+    weightMultipliers?: Record<string, number>
+    showCounts?: Record<string, number>
+  } = {},
+): Record<string, number> {
+  const out: Record<string, number> = { ...weightMultipliers }
+  for (const id of cardIds) {
+    const base = out[id] ?? 1
+    if (base <= 0) continue
+    const shown = showCounts[id] ?? 0
+    if (shown < EVEN_NEW_WORD_SHOWS) {
+      out[id] = base * EVEN_NEW_WORD_BOOST
+    }
+  }
+  return out
 }
 
 export function pickWeightedVocabCardId(

@@ -22,19 +22,19 @@
 }
 
 .kanji-chip.is-focus {
-  text-decoration: underline;
-  text-underline-offset: 0.12em;
+  color: #3d5f8a;
 }
 
-.kanji-chip.is-c0 { color: #1d4f91; }
-.kanji-chip.is-c1 { color: #0f7a5a; }
-.kanji-chip.is-c2 { color: #b45309; }
-.kanji-chip.is-c3 { color: #9f1239; }
-.kanji-chip.is-c4 { color: #0e7490; }
-.kanji-chip.is-c5 { color: #854d0e; }
+/* Soft palette — used only with colorize in training */
+.kanji-chip.is-c0 { color: #4a6280; }
+.kanji-chip.is-c1 { color: #4a7a66; }
+.kanji-chip.is-c2 { color: #8a6a45; }
+.kanji-chip.is-c3 { color: #7a5560; }
+.kanji-chip.is-c4 { color: #4a7380; }
+.kanji-chip.is-c5 { color: #7a6a48; }
 
 .kanji-chip.is-shared-reading {
-  border-bottom: 2px dotted currentColor;
+  border-bottom: 1px dotted currentColor;
 }
 
 .kanji-chip-kana {

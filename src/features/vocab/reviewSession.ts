@@ -22,6 +22,7 @@ import {
   sessionSeed,
   setReviewWeight,
   dropFromReview,
+  appendToReviewPlan,
 } from '../../shared/lib/review'
 import { memoryKey, migrateFromMastery, urgency } from '../../shared/lib/review/memory'
 
@@ -60,9 +61,16 @@ export function startReviewPracticeSession(input: {
   now?: number
 }): { session: PracticeSession; planEmpty: boolean; dueCount: number; newCount: number } {
   const now = input.now ?? Date.now()
+  const weights = input.weightMultipliers ?? {}
+  // Scope is already capped by «Слов за раз» — keep the full set in the session.
+  // Adaptive planner only ranks priority; it must not shrink the pool.
+  const scopeIds = input.scope
+    .map((card) => card.id)
+    .filter((id) => (weights[id] ?? 1) > 0)
+
   const knobs = clampReviewKnobs({
     targetRetention: input.preferences.targetRetention,
-    newPerDay: input.preferences.newPerDay ?? Math.max(0, input.preferences.newWordLimit),
+    newPerDay: Math.max(scopeIds.length, 1),
     sessionMinutes: input.preferences.sessionMinutes,
   })
   const aspect = drillModeToAspect(input.preferences.drillMode)
@@ -74,21 +82,27 @@ export function startReviewPracticeSession(input: {
     aspect,
     knobs,
     now,
-    newUsedToday: input.newUsedToday,
+    newUsedToday: 0,
     weightMultipliers: input.weightMultipliers,
     avgLatencyMs: input.avgLatencyMs,
     even,
   })
 
-  const review = createReviewSessionState(plan.planIds, {
+  const planned = new Set(plan.planIds)
+  const poolIds = [
+    ...plan.planIds.filter((id) => scopeIds.includes(id)),
+    ...scopeIds.filter((id) => !planned.has(id)),
+  ]
+
+  const review = createReviewSessionState(poolIds, {
     mode: even ? 'even' : 'adaptive',
     seed: sessionSeed(now),
-    weightMultipliers: input.weightMultipliers ?? {},
+    weightMultipliers: weights,
   })
   review.targetAnswers = plan.targetAnswers
 
   const session: PracticeSession = {
-    poolIds: plan.planIds.length ? plan.planIds : input.scope.map((card) => card.id),
+    poolIds,
     recentHistory: [],
     lastCardId: null,
     mistakeQueue: [],
@@ -99,11 +113,16 @@ export function startReviewPracticeSession(input: {
     review,
   }
 
+  const newCount = poolIds.filter((id) => {
+    const mem = resolveCardMemory(input.memory, input.stats, id, aspect, now)
+    return mem.state === 'new'
+  }).length
+
   return {
     session,
-    planEmpty: plan.empty && !session.poolIds.length,
+    planEmpty: poolIds.length === 0,
     dueCount: plan.dueCount + plan.learningCount,
-    newCount: plan.newCount,
+    newCount,
   }
 }
 
@@ -202,6 +221,22 @@ export function deriveRoundGrade(input: {
   })
 }
 
+/**
+ * Legacy mastery / sidebar stats from round flags — not SRS grade bands.
+ * Grade 2 (slow / soft typo) must still count as a clear; mapping it to `hint`
+ * left the session sidebar stuck on «нет ответов».
+ */
+export function masteryOutcomeFromRound(input: {
+  wrong: boolean
+  dontKnow?: boolean
+  hintUsed?: boolean
+  wrongRecorded?: boolean
+}): 'correct' | 'wrong' | 'hint' {
+  if (input.wrong || input.dontKnow || input.wrongRecorded) return 'wrong'
+  if (input.hintUsed) return 'hint'
+  return 'correct'
+}
+
 export function patchReviewWeights(
   session: PracticeSession,
   cardId: string,
@@ -224,6 +259,15 @@ export function removeCardFromReviewSession(session: PracticeSession, cardId: st
     recentHistory: session.recentHistory.filter((id) => id !== cardId),
     lastCardId: session.lastCardId === cardId ? null : session.lastCardId,
     review,
+  }
+}
+
+export function appendCardToReviewSession(session: PracticeSession, cardId: string): PracticeSession {
+  if (session.poolIds.includes(cardId)) return session
+  return {
+    ...session,
+    poolIds: [...session.poolIds, cardId],
+    review: session.review ? appendToReviewPlan(session.review, cardId) : session.review,
   }
 }
 
