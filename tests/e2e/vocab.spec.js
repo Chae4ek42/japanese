@@ -34,6 +34,7 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
   await page.getByTestId('start-vocab').click()
   await expect(page.getByTestId('vocab-current-writing')).toBeVisible()
   await expect(page.getByTestId('vocab-answer-input')).toBeVisible()
+  await expect(page.getByTestId('vocab-hint-button')).toHaveCount(0)
 
   const kanjiChip = page.locator('[data-kanji-chip]').first()
   if ((await kanjiChip.count()) > 0) {
@@ -59,6 +60,18 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
   await page.getByTestId('start-vocab').click()
   await expect(page.getByTestId('vocab-choice-grid')).toBeVisible()
   await expect(page.getByTestId('vocab-choice-0')).toBeVisible()
+})
+
+test('vocab trainer mobile: hint button reveals reading', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chrome', 'Mobile-only hint button.')
+  await openFreshApp(page)
+  await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('start-vocab').click()
+  await expect(page.getByTestId('vocab-answer-input')).toBeVisible()
+  await expect(page.getByTestId('vocab-hint-button')).toBeVisible()
+  await page.getByTestId('vocab-hint-button').click()
+  await expect(page.getByTestId('vocab-hint-panel')).toBeVisible()
+  await expect(page.getByTestId('vocab-hint-button')).toBeDisabled()
 })
 
 test('vocab trainer: skip next scores as correct, previous navigates history', async ({ page }, testInfo) => {

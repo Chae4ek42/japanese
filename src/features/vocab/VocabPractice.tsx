@@ -8,6 +8,7 @@ import type {
   InputMode,
   KanjiWord,
 } from '../../shared/lib/types'
+import { useIsMobileTouch } from '../../shared/lib/media'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { HighlightedReading } from '../kanji/HighlightedReading'
 import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
@@ -98,6 +99,7 @@ export function VocabPractice({
   onOpenKanjiInfo,
   aside,
 }: VocabPracticeProps) {
+  const isMobile = useIsMobileTouch()
   const [editing, setEditing] = useState(false)
   const [editWriting, setEditWriting] = useState('')
   const [editReadings, setEditReadings] = useState<ReadingDraft[]>([])
@@ -381,6 +383,20 @@ export function VocabPractice({
                 <div className="feedback-row">
                   <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
                 </div>
+                {isMobile ? (
+                  <div className="answer-actions">
+                    <button
+                      type="button"
+                      className="hint-button"
+                      data-testid="vocab-hint-button"
+                      disabled={round.hintUsed}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={onRevealHint}
+                    >
+                      Подсказка
+                    </button>
+                  </div>
+                ) : null}
               </>
             ) : (
               <>
