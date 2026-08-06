@@ -15,11 +15,34 @@ test('dictionary: catalog, groups and my words', async ({ page }, testInfo) => {
   const toggle = page.locator('[data-testid^="vocab-toggle-"]').first()
   const toggleId = await toggle.getAttribute('data-testid')
   await toggle.click()
-  await page.getByTestId('vocab-tab-mine').click()
+  await page.getByTestId('nav-mine').click()
+  await expect(page.getByTestId('mine-page')).toBeVisible()
   await expect(page.getByTestId('vocab-list').locator('[data-testid^="vocab-word-"]')).toHaveCount(1)
 
   await page.getByTestId(toggleId).click()
   await expect(page.getByText('Пока пусто')).toBeVisible()
+})
+
+test('vocab setup: drill vs srs mode switch', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Setup mode switch covered on desktop.')
+  await openFreshApp(page)
+  await page.getByTestId('open-vocab-train').click()
+  await expect(page.getByTestId('vocab-setup')).toBeVisible()
+  await expect(page.getByTestId('vocab-session-mode-drill')).toHaveClass(/is-active/)
+  await expect(page.getByTestId('vocab-source-kanji')).toBeVisible()
+  await expect(page.getByTestId('vocab-srs-settings')).toHaveCount(0)
+
+  await page.getByTestId('vocab-session-mode-srs').click()
+  await expect(page.getByTestId('vocab-session-mode-srs')).toHaveClass(/is-active/)
+  await expect(page.getByTestId('vocab-srs-deck')).toBeVisible()
+  await expect(page.getByTestId('vocab-srs-settings')).toBeVisible()
+  await expect(page.getByTestId('vocab-source-kanji')).toHaveCount(0)
+  await expect(page.getByTestId('vocab-new-per-day')).toBeVisible()
+
+  await page.getByTestId('vocab-session-mode-drill').click()
+  await expect(page.getByTestId('vocab-session-mode-drill')).toHaveClass(/is-active/)
+  await expect(page.getByTestId('vocab-source-kanji')).toBeVisible()
+  await expect(page.getByTestId('vocab-srs-settings')).toHaveCount(0)
 })
 
 test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
@@ -152,14 +175,22 @@ test('vocab trainer: in-session panel changes pick mode and shows word stats', a
   await expect(page.getByTestId('vocab-session-sort')).toBeVisible()
 })
 
-test('dictionary tabs update URL', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name === 'mobile-chrome', 'Dictionary URL covered on desktop.')
+test('mine page nav and legacy redirect', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Mine URL covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('nav-vocab').click()
   await expect(page).toHaveURL(/\/vocab$/)
-  await page.getByTestId('vocab-tab-mine').click()
-  await expect(page).toHaveURL(/\/vocab\/mine$/)
-  await expect(page.getByTestId('vocab-tab-train')).toHaveCount(0)
+  await expect(page.getByTestId('vocab-page')).toBeVisible()
+  await expect(page.getByTestId('vocab-tab-mine')).toHaveCount(0)
+
+  await page.getByTestId('nav-mine').click()
+  await expect(page).toHaveURL(/\/mine$/)
+  await expect(page.getByTestId('mine-page')).toBeVisible()
+
+  await page.goto('/vocab/mine')
+  await expect(page).toHaveURL(/\/mine$/)
+  await expect(page.getByTestId('mine-page')).toBeVisible()
+
   await page.getByTestId('nav-train').click()
   await expect(page).toHaveURL(/\/train$/)
   await expect(page.getByTestId('train-page')).toBeVisible()
@@ -168,8 +199,7 @@ test('dictionary tabs update URL', async ({ page }, testInfo) => {
 test('dictionary: add and edit custom word', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Custom word flow covered on desktop.')
   await openFreshApp(page)
-  await page.getByTestId('nav-vocab').click()
-  await page.getByTestId('vocab-tab-mine').click()
+  await page.getByTestId('nav-mine').click()
   await expect(page.getByTestId('custom-word-open')).toBeVisible()
   await expect(page.getByTestId('custom-word-form')).toHaveCount(0)
   await page.getByTestId('custom-word-open').click()
@@ -192,6 +222,7 @@ test('dictionary: add and edit custom word', async ({ page }, testInfo) => {
   await expect(page.getByTestId('vocab-mine-copy-words')).toHaveText('Скопировано')
   await expect.poll(async () => page.evaluate(() => navigator.clipboard.readText())).toBe('猫')
 
+  await page.getByTestId('vocab-word-猫').click()
   const editButton = page.locator('[data-testid^="vocab-edit-"]').first()
   await editButton.click()
   await expect(page.getByTestId('custom-word-editing-label')).toBeVisible()
@@ -199,7 +230,10 @@ test('dictionary: add and edit custom word', async ({ page }, testInfo) => {
   await page.getByTestId('custom-word-meanings').fill('кот')
   await page.getByTestId('custom-word-submit').click()
 
-  await expect(page.getByTestId('vocab-word-猫')).toContainText('neko-san')
   await expect(page.getByTestId('vocab-word-猫')).toContainText('кот')
   await expect(page.getByTestId('custom-word-editing-label')).toHaveCount(0)
+  await page.getByTestId('vocab-word-猫').click()
+  await page.locator('[data-testid^="vocab-edit-"]').first().click()
+  await expect(page.getByTestId('custom-word-romaji')).toHaveValue('neko-san')
+  await expect(page.getByTestId('custom-word-meanings')).toHaveValue('кот')
 })

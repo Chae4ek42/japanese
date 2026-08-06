@@ -15,15 +15,17 @@ describe('routes', () => {
     assert.equal(normalizePath('/kana/'), '/kana')
     assert.equal(normalizePath('/train/'), '/train')
     assert.equal(normalizePath('/vocab/train/'), '/vocab/train')
+    assert.equal(normalizePath('/mine/'), '/mine')
   })
 
   it('парсит известные пути', () => {
     assert.deepEqual(parsePath('/'), { page: 'home' })
     assert.deepEqual(parsePath('/kana'), { page: 'kana' })
-    assert.deepEqual(parsePath('/vocab'), { page: 'vocab', section: 'catalog' })
+    assert.deepEqual(parsePath('/vocab'), { page: 'vocab' })
     assert.deepEqual(parsePath('/train'), { page: 'train' })
     assert.deepEqual(parsePath('/vocab/train'), { page: 'train' })
-    assert.deepEqual(parsePath('/vocab/mine'), { page: 'vocab', section: 'mine' })
+    assert.deepEqual(parsePath('/mine'), { page: 'mine' })
+    assert.deepEqual(parsePath('/vocab/mine'), { page: 'mine' })
   })
 
   it('неизвестный путь отдаёт home при парсинге', () => {
@@ -31,14 +33,16 @@ describe('routes', () => {
     assert.equal(isKnownPath('/nope'), false)
     assert.equal(isKnownPath('/kana'), true)
     assert.equal(isKnownPath('/train'), true)
+    assert.equal(isKnownPath('/mine'), true)
   })
 
   it('строит пути из маршрута и страницы', () => {
     assert.equal(pathForRoute({ page: 'numbers' }), '/numbers')
     assert.equal(pathForRoute({ page: 'train' }), '/train')
-    assert.equal(pathForRoute({ page: 'vocab', section: 'mine' }), '/vocab/mine')
+    assert.equal(pathForRoute({ page: 'mine' }), '/mine')
     assert.equal(pathForPage('train'), '/train')
     assert.equal(pathForPage('home'), '/')
+    assert.equal(pathForPage('mine'), '/mine')
   })
 
   it('shouldHandleClientNav пропускает модификаторы', () => {

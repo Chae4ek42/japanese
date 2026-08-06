@@ -387,6 +387,9 @@ export function useVocabState() {
           ...prevState.vocab.preferences,
           ...patch,
         }
+        if (nextPrefs.sessionMode === 'srs') {
+          nextPrefs.source = 'mine'
+        }
         // newPerDay (SRS quota) and newWordLimit (session set size) stay independent.
         return {
           ...prevState,

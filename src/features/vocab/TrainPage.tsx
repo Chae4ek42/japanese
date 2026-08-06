@@ -24,6 +24,7 @@ export function TrainPage() {
         latencyModel={vocab.latencyModel}
         reviewDay={vocab.reviewDay}
         myWords={vocab.myWords}
+        myWordAddedAt={vocab.myWordAddedAt}
         customWords={vocab.customWords}
         hiddenWordIds={vocab.hiddenWordIds}
         learnedWordIds={vocab.learnedWordIds}

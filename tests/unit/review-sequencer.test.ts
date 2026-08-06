@@ -101,15 +101,20 @@ describe('review sequencer', () => {
     assert.equal(pick.state.planIndex, planIndex)
   })
 
-  it('does not re-show the only new card immediately after a good', () => {
-    let state = createReviewSessionState(['a', 'b', 'c', 'd'], { seed: 5 })
-    const first = pickNextCard(state)
-    assert.equal(first.kind, 'card')
-    if (first.kind !== 'card') return
-    state = applyGradeToSequencer(first.state, first.cardId, 3)
-    const second = pickNextCard(state)
-    assert.equal(second.kind, 'card')
-    if (second.kind !== 'card') return
-    assert.notEqual(second.cardId, first.cardId)
+  it('refills from the plan while under the in-flight limit', () => {
+    let state = createReviewSessionState(
+      Array.from({ length: 12 }, (_, i) => `c${i}`),
+      { seed: 19 },
+    )
+    const seen = new Set<string>()
+    // Repeated again grades keep lags short — previously blocked introduce via gap gate.
+    for (let i = 0; i < 20; i += 1) {
+      const pick = pickNextCard(state)
+      assert.equal(pick.kind, 'card')
+      if (pick.kind !== 'card') return
+      seen.add(pick.cardId)
+      state = applyGradeToSequencer(pick.state, pick.cardId, 1)
+    }
+    assert.ok(seen.size >= IN_FLIGHT_LIMIT, `expected ≥${IN_FLIGHT_LIMIT} distinct, got ${seen.size}`)
   })
 })

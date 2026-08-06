@@ -114,6 +114,23 @@ describe('vocab pool', () => {
     assert.ok(pool.some((card) => card.id === mineId))
   })
 
+  it('source=list не режет набор фильтром JLPT', () => {
+    const n5 = buildVocabPool({ ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5 }, [])
+    const ids = n5.slice(0, 4).map((card) => card.id)
+    const pool = buildVocabPool(
+      {
+        ...DEFAULT_VOCAB_PREFERENCES,
+        source: 'list',
+        wordJlptLevels: [1],
+        newWordLimit: -1,
+      },
+      [],
+      {},
+      { applyNewWordLimit: false, trainingWordIds: ids },
+    )
+    assert.equal(pool.length, 4)
+  })
+
   it('собирает пул N5', () => {
     const pool = buildVocabPool({ ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5 }, [])
     assert.ok(pool.length >= 100)

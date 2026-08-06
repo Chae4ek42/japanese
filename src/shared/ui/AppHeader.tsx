@@ -18,6 +18,7 @@ const NAV_ITEMS = [
   { id: 'numbers', label: 'Числа', href: PATHS.numbers, testId: 'nav-numbers' },
   { id: 'train', label: 'Слова', href: PATHS.train, testId: 'nav-train' },
   { id: 'vocab', label: 'Словарь', href: PATHS.vocab, testId: 'nav-vocab' },
+  { id: 'mine', label: 'Мои слова', href: PATHS.mine, testId: 'nav-mine' },
   { id: 'context', label: 'Контекст', href: PATHS.context, testId: 'nav-context' },
 ] as const
 

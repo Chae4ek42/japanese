@@ -36,6 +36,8 @@ export function clampReviewKnobs(raw: Partial<ReviewPlanKnobs> | undefined): Rev
 export interface PlanCardMeta {
   id: string
   hints?: PriorDifficultyHints
+  /** Earliest time this card entered «Мои слова» (ms). Orders new-card intake. */
+  addedAt?: number
 }
 
 export interface BuildPlanInput {
@@ -72,6 +74,7 @@ function resolveMemory(
   cardId: string,
   aspect: ReviewAspect,
   now: number,
+  createdAt?: number,
 ): MemoryState {
   const key = memoryKey(cardId, aspect)
   if (memory[key]) return memory[key]!
@@ -88,7 +91,7 @@ function resolveMemory(
     state: 'new',
     uncertain: false,
     modelVersion: 1,
-    createdAt: now,
+    createdAt: createdAt && createdAt > 0 ? createdAt : now,
   }
 }
 
@@ -120,19 +123,21 @@ export function buildSessionPlan(input: BuildPlanInput): SessionPlan {
     }
   }
 
-  type Ranked = { id: string; urgency: number; kind: 'due' | 'learning' | 'new' }
+  type Ranked = { id: string; urgency: number; kind: 'due' | 'learning' | 'new'; addedAt: number }
   const due: Ranked[] = []
   const learning: Ranked[] = []
   const fresh: Ranked[] = []
 
   for (const card of input.scope) {
     if ((weights[card.id] ?? 1) <= 0) continue
-    const mem = resolveMemory(input.memory, input.stats, card.id, input.aspect, now)
+    const addedAt =
+      typeof card.addedAt === 'number' && Number.isFinite(card.addedAt) ? card.addedAt : Number.POSITIVE_INFINITY
+    const mem = resolveMemory(input.memory, input.stats, card.id, input.aspect, now, card.addedAt)
     const value = itemValueFromHints(card.hints) * (weights[card.id] ?? 1)
     if (mem.state === 'leech' && mem.leechUntil && mem.leechUntil > now) continue
 
     if (mem.state === 'new') {
-      fresh.push({ id: card.id, urgency: value, kind: 'new' })
+      fresh.push({ id: card.id, urgency: value, kind: 'new', addedAt })
       continue
     }
 
@@ -141,6 +146,7 @@ export function buildSessionPlan(input: BuildPlanInput): SessionPlan {
         id: card.id,
         urgency: urgency(mem, now, knobs.targetRetention, value),
         kind: 'learning',
+        addedAt,
       })
       continue
     }
@@ -151,6 +157,7 @@ export function buildSessionPlan(input: BuildPlanInput): SessionPlan {
         id: card.id,
         urgency: urgency(mem, now, knobs.targetRetention, value),
         kind: 'due',
+        addedAt,
       })
     }
   }
@@ -162,10 +169,16 @@ export function buildSessionPlan(input: BuildPlanInput): SessionPlan {
   let newIntake = Math.max(0, knobs.newPerDay - newUsedToday)
   // Pause new cards when the review pile is already a heavy day.
   if (backlog > Math.max(15, knobs.newPerDay * 1.5)) newIntake = 0
-  // Cap new cards relative to session length.
-  newIntake = Math.min(newIntake, Math.max(0, Math.floor(targetAnswers / 4)), 5)
+  // Cap new cards relative to session length (no tiny hard ceiling of 5 —
+  // that left mine sessions looping a handful of cards for the whole run).
+  const sessionNewCap = Math.max(6, Math.floor(targetAnswers / 3))
+  newIntake = Math.min(newIntake, sessionNewCap)
 
-  fresh.sort((a, b) => b.urgency - a.urgency)
+  // New intake: oldest «Мои слова» first, then higher item value.
+  fresh.sort((a, b) => {
+    if (a.addedAt !== b.addedAt) return a.addedAt - b.addedAt
+    return b.urgency - a.urgency
+  })
   const takenNew = fresh.slice(0, newIntake)
 
   // Interleave: learning first (active), then due by urgency, then new.

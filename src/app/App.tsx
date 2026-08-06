@@ -4,6 +4,7 @@ import { KanaTrainer } from '../features/kana/KanaTrainer'
 import { KanjiPage } from '../features/kanji/KanjiPage'
 import { NumbersTrainer } from '../features/numbers/NumbersTrainer'
 import { DictionaryPage } from '../features/vocab/DictionaryPage'
+import { MineWordsPage } from '../features/vocab/MineWordsPage'
 import { TrainPage } from '../features/vocab/TrainPage'
 import { ContextPage } from '../features/context/ContextPage'
 import { useAppRouter } from '../shared/lib/useAppRouter'
@@ -27,7 +28,7 @@ function AppRoutes() {
     <div className="app-shell">
       <AppHeader
         currentPage={page}
-        onNavigate={(nextPage) => goPage(nextPage, nextPage === 'vocab' ? 'catalog' : undefined)}
+        onNavigate={goPage}
         onExportBackup={canExport ? exportBackup : undefined}
         onImportBackup={openImportPicker}
         importInputRef={fileInputRef}
@@ -39,7 +40,8 @@ function AppRoutes() {
           onOpenKana={() => goPage('kana')}
           onOpenKanji={() => goPage('kanji')}
           onOpenNumbers={() => goPage('numbers')}
-          onOpenVocab={() => goPage('vocab', 'catalog')}
+          onOpenVocab={() => goPage('vocab')}
+          onOpenMine={() => goPage('mine')}
           onOpenVocabTrain={() => goPage('train')}
           onOpenContext={() => goPage('context')}
         />
@@ -49,6 +51,8 @@ function AppRoutes() {
         <TrainPage />
       ) : page === 'vocab' ? (
         <DictionaryPage />
+      ) : page === 'mine' ? (
+        <MineWordsPage />
       ) : page === 'context' ? (
         <ContextPage />
       ) : (

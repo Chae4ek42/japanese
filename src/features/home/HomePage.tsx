@@ -6,6 +6,7 @@ export interface HomePageProps {
   onOpenKanji: () => void
   onOpenNumbers: () => void
   onOpenVocab: () => void
+  onOpenMine: () => void
   onOpenVocabTrain: () => void
   onOpenContext: () => void
 }
@@ -52,6 +53,14 @@ const ENTRIES = [
     testId: 'open-vocab',
   },
   {
+    id: 'mine',
+    href: PATHS.mine,
+    symbol: '私',
+    title: 'Мои слова',
+    action: 'Открыть',
+    testId: 'open-mine',
+  },
+  {
     id: 'context',
     href: PATHS.context,
     symbol: '文',
@@ -66,6 +75,7 @@ export function HomePage({
   onOpenKanji,
   onOpenNumbers,
   onOpenVocab,
+  onOpenMine,
   onOpenVocabTrain,
   onOpenContext,
 }: HomePageProps) {
@@ -75,6 +85,7 @@ export function HomePage({
     numbers: onOpenNumbers,
     'vocab-train': onOpenVocabTrain,
     vocab: onOpenVocab,
+    mine: onOpenMine,
     context: onOpenContext,
   } as const
 

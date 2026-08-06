@@ -60,19 +60,14 @@ export function learningLag(inFlightCount: number, base: number): number {
 }
 
 /**
- * Introduce a new plan card only when the working set needs filling and
- * existing learners are not due soon (avoids new-card spam).
+ * Introduce a new plan card when the working set has a free slot.
+ * Prefer showing due learners first (caller checks due before calling this);
+ * do not block refill with a large gap gate — that trapped small sets in a loop.
  */
 export function shouldIntroduce(state: ReviewSessionState): boolean {
   if (state.done) return false
   if (state.planIndex >= state.planIds.length) return false
-  const active = activeInFlight(state)
-  if (active.length >= IN_FLIGHT_LIMIT) return false
-  if (!active.length) return true
-  // Refill only when the next learner is farther away than the current set size
-  // (room to show a new card without starving spaced reviews).
-  const gap = nearestDueTurn(state) - state.turn
-  return gap > active.length
+  return activeInFlight(state).length < IN_FLIGHT_LIMIT
 }
 
 /** Introduce next plan card if under the in-flight gate. */

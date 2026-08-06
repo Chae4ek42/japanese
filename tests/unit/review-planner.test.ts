@@ -44,4 +44,21 @@ describe('review planner', () => {
     })
     assert.deepEqual(plan.planIds, ['a', 'b', 'c'])
   })
+
+  it('orders new cards by oldest myWordAddedAt first', () => {
+    const now = Date.parse('2026-08-06T12:00:00Z')
+    const plan = buildSessionPlan({
+      scope: [
+        { id: 'new', addedAt: now - 1 * 86_400_000 },
+        { id: 'old', addedAt: now - 10 * 86_400_000 },
+        { id: 'mid', addedAt: now - 5 * 86_400_000 },
+      ],
+      memory: {},
+      aspect: 1,
+      knobs: { targetRetention: 0.9, newPerDay: 10, sessionMinutes: 15 },
+      now,
+      newUsedToday: 0,
+    })
+    assert.deepEqual(plan.planIds.slice(0, 3), ['old', 'mid', 'new'])
+  })
 })

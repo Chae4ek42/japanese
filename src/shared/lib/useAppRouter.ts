@@ -7,7 +7,6 @@ import {
   pathForRoute,
   titleForRoute,
   type AppRoute,
-  type VocabRouteSection,
 } from './routes'
 import type { AppPage } from './types'
 
@@ -45,8 +44,8 @@ export function useAppRouter() {
   )
 
   const goPage = useCallback(
-    (page: AppPage, vocabSection: VocabRouteSection = 'catalog', options?: { replace?: boolean }) => {
-      navigate(pathForPage(page, vocabSection), options)
+    (page: AppPage, options?: { replace?: boolean }) => {
+      navigate(pathForPage(page), options)
     },
     [navigate],
   )
@@ -59,6 +58,10 @@ export function useAppRouter() {
   useEffect(() => {
     if (pathname === '/vocab/train') {
       navigate(pathForRoute({ page: 'train' }), { replace: true })
+      return
+    }
+    if (pathname === '/vocab/mine') {
+      navigate(pathForRoute({ page: 'mine' }), { replace: true })
       return
     }
     if (!isKnownPath(pathname)) {
@@ -76,7 +79,6 @@ export function useAppRouter() {
     pathname,
     route,
     page: route.page,
-    vocabSection: route.page === 'vocab' ? route.section : 'catalog',
     navigate,
     go,
     goPage,

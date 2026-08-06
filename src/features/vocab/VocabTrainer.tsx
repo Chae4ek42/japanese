@@ -65,6 +65,7 @@ export interface VocabTrainerProps {
   latencyModel?: LatencyModel
   reviewDay?: ReviewDayCounters
   myWords: string[]
+  myWordAddedAt?: Record<string, number>
   customWords?: Record<string, KanjiWord>
   hiddenWordIds?: string[]
   learnedWordIds?: string[]
@@ -117,6 +118,7 @@ export function VocabTrainer({
   latencyModel = DEFAULT_LATENCY_MODEL,
   reviewDay = { dayKey: '', newIntroduced: 0 },
   myWords,
+  myWordAddedAt = {},
   customWords = {},
   hiddenWordIds = [],
   learnedWordIds = [],
@@ -174,6 +176,7 @@ export function VocabTrainer({
   const latencyModelRef = useRef(latencyModel)
   const reviewDayRef = useRef(reviewDay)
   const myWordsRef = useRef(myWords)
+  const myWordAddedAtRef = useRef(myWordAddedAt)
   const customWordsRef = useRef(customWords)
   const hiddenWordIdsRef = useRef(hiddenWordIds)
   const learnedWordIdsRef = useRef(learnedWordIds)
@@ -252,6 +255,24 @@ export function VocabTrainer({
     [sourcePool, setupExcludedIds, preferences],
   )
 
+  const minePlanPreview = useMemo(() => {
+    if (preferences.sessionMode !== 'srs' || preferences.reviewV2 === false) return null
+    const planned = startReviewPracticeSession({
+      scope: startPool,
+      preferences,
+      memory,
+      stats,
+      newUsedToday: reviewDay.newIntroduced,
+      myWordAddedAt,
+      spacedRepetition: true,
+    })
+    return {
+      dueCount: planned.dueCount,
+      newCount: planned.newCount,
+      sessionSize: planned.session.poolIds.length,
+    }
+  }, [preferences, startPool, memory, stats, reviewDay.newIntroduced, myWordAddedAt])
+
   useEffect(() => {
     setSetupExcludedIds((prev) => {
       if (!prev.size) return prev
@@ -299,6 +320,7 @@ export function VocabTrainer({
     latencyModelRef.current = latencyModel
     reviewDayRef.current = reviewDay
     myWordsRef.current = myWords
+    myWordAddedAtRef.current = myWordAddedAt
     customWordsRef.current = customWords
     hiddenWordIdsRef.current = hiddenWordIds
     learnedWordIdsRef.current = learnedWordIds
@@ -311,6 +333,7 @@ export function VocabTrainer({
     latencyModel,
     reviewDay,
     myWords,
+    myWordAddedAt,
     customWords,
     hiddenWordIds,
     learnedWordIds,
@@ -781,6 +804,7 @@ export function VocabTrainer({
     setLiveStats({})
 
     if (preferences.reviewV2 !== false) {
+      const spacedRepetition = preferences.sessionMode === 'srs'
       const planned = startReviewPracticeSession({
         scope,
         preferences,
@@ -788,11 +812,15 @@ export function VocabTrainer({
         stats: statsRef.current,
         newUsedToday: reviewDayRef.current.newIntroduced,
         weightMultipliers: {},
+        myWordAddedAt: myWordAddedAtRef.current,
+        spacedRepetition,
       })
       if (planned.planEmpty) {
         setFeedback({
           type: 'error',
-          text: 'В этом наборе нет слов для тренировки.',
+          text: spacedRepetition
+            ? 'На сегодня всё: нет карточек к повторению, а квота новых исчерпана.'
+            : 'В этом наборе нет слов для тренировки.',
         })
         return
       }
@@ -803,7 +831,9 @@ export function VocabTrainer({
       if (planned.dueCount || planned.newCount) {
         setFeedback({
           type: 'idle',
-          text: `К повторению: ${planned.dueCount}, новых: ${planned.newCount}`,
+          text: spacedRepetition
+            ? `Повторение: ${planned.dueCount}, новых (по дате добавления): ${planned.newCount}`
+            : `К повторению: ${planned.dueCount}, новых: ${planned.newCount}`,
         })
       }
       return
@@ -1464,8 +1494,7 @@ export function VocabTrainer({
     preferences.source === 'group' ||
     preferences.source === 'mine' ||
     preferences.source === 'kanji' ||
-    preferences.source === 'list' ||
-    preferences.source === 'problem'
+    preferences.sessionMode === 'srs'
 
   const practiceSidebar =
     view === 'practice' ? (
@@ -1479,8 +1508,9 @@ export function VocabTrainer({
         stats={{ ...stats, ...liveStats }}
         weightMultipliers={sessionWeightMultipliers}
         poolAddedAt={sessionPoolAddedAt}
-        canAddSourceWord={canAddSourceWord}
+        canAddSourceWord={canAddSourceWord && preferences.sessionMode !== 'srs'}
         showWordJlptFilter={showWordJlptFilter}
+        hidePickMode={preferences.sessionMode === 'srs'}
         onPickModeChange={handlePickModeChange}
         onLevelChange={handleSessionLevelChange}
         onWordJlptChange={handleSessionWordJlptChange}
@@ -1505,6 +1535,8 @@ export function VocabTrainer({
         problemWordCount={problemWordIds.length}
         excludedIds={setupExcludedIds}
         memory={memory}
+        reviewDayNewIntroduced={reviewDay.newIntroduced}
+        minePlanPreview={minePlanPreview}
         onPatchPreferences={onPatchPreferences}
         onToggleExclude={(cardId) => {
           setSetupExcludedIds((prev) => {

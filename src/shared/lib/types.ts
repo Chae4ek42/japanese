@@ -4,7 +4,7 @@ export type InputMode = 'instant' | 'submit'
 export type NumberMode = 'plain' | 'age'
 export type NumberRangeId = '10' | '99' | '999'
 export type NumbersPickMode = 'adaptive' | 'even'
-export type AppPage = 'home' | 'kana' | 'kanji' | 'numbers' | 'vocab' | 'train' | 'context'
+export type AppPage = 'home' | 'kana' | 'kanji' | 'numbers' | 'vocab' | 'mine' | 'train' | 'context'
 export type PracticeView = 'setup' | 'practice'
 
 export type TrainerOutcome = 'empty' | 'correct' | 'wrong' | 'pending' | 'seen' | 'hint'
@@ -277,10 +277,14 @@ export interface KanjiPreferences {
 export type VocabSource = 'level' | 'group' | 'mine' | 'kanji' | 'list' | 'problem'
 export type VocabLevelFilter = 5 | 4 | 3 | 2 | 1
 export type VocabPickMode = 'adaptive' | 'even'
+/** Top-level train mode: free drill vs spaced repetition on «Мои слова». */
+export type VocabSessionMode = 'drill' | 'srs'
 /** Prompt shapes for mixed multiple-choice drills (renshuu-style). */
 export type VocabPromptKind = 'meaning' | 'reading' | 'writing'
 
 export interface VocabPreferences {
+  /** Обычная тренировка vs интервальное повторение (только «Мои слова»). */
+  sessionMode: VocabSessionMode
   drillMode: VocabDrillMode
   source: VocabSource
   level: VocabLevelFilter
@@ -309,11 +313,11 @@ export interface VocabPreferences {
   mineIncludeLearned: boolean
   /** Kanji characters selected for source === 'kanji' (order = practice order). */
   selectedKanji: string[]
-  /** Target retention for due scheduling (0.85…0.95). */
+  /** Target retention for due scheduling (0.85…0.95). Used in SRS mode. */
   targetRetention: number
-  /** New cards introduced per day via the planner. */
+  /** New cards introduced per day via the planner. Used in SRS mode. */
   newPerDay: number
-  /** Soft session length in minutes → answer budget. */
+  /** Soft session length in minutes → answer budget. Used in SRS mode. */
   sessionMinutes: number
   /** Use adaptive-review v2 planner/sequencer (default true). */
   reviewV2: boolean

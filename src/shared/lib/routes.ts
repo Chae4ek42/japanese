@@ -1,10 +1,6 @@
 import type { AppPage } from './types'
 
-export type VocabRouteSection = 'catalog' | 'mine'
-
-export type AppRoute =
-  | { page: Exclude<AppPage, 'vocab'> }
-  | { page: 'vocab'; section: VocabRouteSection }
+export type AppRoute = { page: AppPage }
 
 export const PATHS = {
   home: '/',
@@ -12,6 +8,8 @@ export const PATHS = {
   kanji: '/kanji',
   numbers: '/numbers',
   vocab: '/vocab',
+  mine: '/mine',
+  /** @deprecated Use PATHS.mine — kept for redirects/bookmarks. */
   vocabMine: '/vocab/mine',
   /** @deprecated Use PATHS.train — kept for redirects/bookmarks. */
   vocabTrain: '/vocab/train',
@@ -25,6 +23,7 @@ const PAGE_TITLES: Record<AppPage, string> = {
   kanji: 'Кандзи — JP тренажёры',
   numbers: 'Числа — JP тренажёры',
   vocab: 'Словарь — JP тренажёры',
+  mine: 'Мои слова — JP тренажёры',
   train: 'Слова — JP тренажёры',
   context: 'Контекст — JP тренажёры',
 }
@@ -49,9 +48,10 @@ export function parsePath(pathname: string): AppRoute {
     case PATHS.numbers:
       return { page: 'numbers' }
     case PATHS.vocab:
-      return { page: 'vocab', section: 'catalog' }
+      return { page: 'vocab' }
     case PATHS.vocabMine:
-      return { page: 'vocab', section: 'mine' }
+    case PATHS.mine:
+      return { page: 'mine' }
     case PATHS.vocabTrain:
     case PATHS.train:
       return { page: 'train' }
@@ -63,19 +63,10 @@ export function parsePath(pathname: string): AppRoute {
 }
 
 export function pathForRoute(route: AppRoute): string {
-  if (route.page === 'vocab') {
-    if (route.section === 'mine') {
-      return PATHS.vocabMine
-    }
-    return PATHS.vocab
-  }
   return PATHS[route.page]
 }
 
-export function pathForPage(page: AppPage, vocabSection: VocabRouteSection = 'catalog'): string {
-  if (page === 'vocab') {
-    return pathForRoute({ page: 'vocab', section: vocabSection })
-  }
+export function pathForPage(page: AppPage): string {
   return pathForRoute({ page })
 }
 
@@ -87,6 +78,7 @@ export function isKnownPath(pathname: string): boolean {
     path === PATHS.kanji ||
     path === PATHS.numbers ||
     path === PATHS.vocab ||
+    path === PATHS.mine ||
     path === PATHS.vocabMine ||
     path === PATHS.vocabTrain ||
     path === PATHS.train ||

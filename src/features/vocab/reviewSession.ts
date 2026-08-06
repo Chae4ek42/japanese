@@ -32,6 +32,7 @@ export function resolveCardMemory(
   cardId: string,
   aspect: 0 | 1,
   now: number,
+  createdAt?: number,
 ): MemoryState {
   const key = memoryKey(cardId, aspect)
   if (memory[key]) return memory[key]!
@@ -46,8 +47,25 @@ export function resolveCardMemory(
     state: 'new',
     uncertain: false,
     modelVersion: 1,
-    createdAt: now,
+    createdAt: createdAt && createdAt > 0 ? createdAt : now,
   }
+}
+
+/** Earliest add-to-mine timestamp across a card's variant ids. */
+export function earliestMyWordAddedAt(
+  card: Pick<VocabCard, 'id' | 'variantIds'>,
+  myWordAddedAt: Record<string, number> | undefined,
+): number | undefined {
+  if (!myWordAddedAt) return undefined
+  const ids = card.variantIds?.length ? card.variantIds : [card.id]
+  let earliest: number | undefined
+  for (const id of ids) {
+    const stamp = myWordAddedAt[id]
+    if (typeof stamp === 'number' && Number.isFinite(stamp)) {
+      if (earliest === undefined || stamp < earliest) earliest = stamp
+    }
+  }
+  return earliest
 }
 
 export function startReviewPracticeSession(input: {
@@ -59,40 +77,57 @@ export function startReviewPracticeSession(input: {
   weightMultipliers?: Record<string, number>
   avgLatencyMs?: number
   now?: number
+  /** Add timestamps for «Мои слова» — orders new-card intake oldest-first. */
+  myWordAddedAt?: Record<string, number>
+  /**
+   * True for sessionMode === 'srs': real due + newPerDay quota, no padding
+   * with the rest of the deck. Drill keeps the full scoped set.
+   */
+  spacedRepetition?: boolean
 }): { session: PracticeSession; planEmpty: boolean; dueCount: number; newCount: number } {
   const now = input.now ?? Date.now()
   const weights = input.weightMultipliers ?? {}
-  // Scope is already capped by «Слов за раз» — keep the full set in the session.
-  // Adaptive planner only ranks priority; it must not shrink the pool.
+  const spaced = input.spacedRepetition === true
   const scopeIds = input.scope
     .map((card) => card.id)
     .filter((id) => (weights[id] ?? 1) > 0)
 
   const knobs = clampReviewKnobs({
     targetRetention: input.preferences.targetRetention,
-    newPerDay: Math.max(scopeIds.length, 1),
+    // Non-spaced: scope already capped by «Слов за раз» — take the whole set.
+    // Spaced (mine): honor daily new quota and review-day counter.
+    newPerDay: spaced
+      ? (input.preferences.newPerDay ?? 10)
+      : Math.max(scopeIds.length, 1),
     sessionMinutes: input.preferences.sessionMinutes,
   })
   const aspect = drillModeToAspect(input.preferences.drillMode)
   const even = input.preferences.pickMode === 'even'
   const plan = buildSessionPlan({
-    scope: input.scope.map((card) => ({ id: card.id, hints: cardHintsFromVocab(card) })),
+    scope: input.scope.map((card) => ({
+      id: card.id,
+      hints: cardHintsFromVocab(card),
+      addedAt: earliestMyWordAddedAt(card, input.myWordAddedAt),
+    })),
     memory: input.memory,
     stats: input.stats,
     aspect,
     knobs,
     now,
-    newUsedToday: 0,
+    newUsedToday: spaced ? Math.max(0, input.newUsedToday) : 0,
     weightMultipliers: input.weightMultipliers,
     avgLatencyMs: input.avgLatencyMs,
-    even,
+    // Spaced mine always uses due/new buckets; even only affects in-session pick.
+    even: spaced ? false : even,
   })
 
   const planned = new Set(plan.planIds)
-  const poolIds = [
-    ...plan.planIds.filter((id) => scopeIds.includes(id)),
-    ...scopeIds.filter((id) => !planned.has(id)),
-  ]
+  const poolIds = spaced
+    ? plan.planIds.filter((id) => scopeIds.includes(id))
+    : [
+        ...plan.planIds.filter((id) => scopeIds.includes(id)),
+        ...scopeIds.filter((id) => !planned.has(id)),
+      ]
 
   const review = createReviewSessionState(poolIds, {
     mode: even ? 'even' : 'adaptive',
@@ -113,10 +148,16 @@ export function startReviewPracticeSession(input: {
     review,
   }
 
-  const newCount = poolIds.filter((id) => {
-    const mem = resolveCardMemory(input.memory, input.stats, id, aspect, now)
-    return mem.state === 'new'
-  }).length
+  const newCount = spaced
+    ? plan.newCount
+    : poolIds.filter((id) => {
+        const addedAt = earliestMyWordAddedAt(
+          input.scope.find((card) => card.id === id) ?? { id },
+          input.myWordAddedAt,
+        )
+        const mem = resolveCardMemory(input.memory, input.stats, id, aspect, now, addedAt)
+        return mem.state === 'new'
+      }).length
 
   return {
     session,

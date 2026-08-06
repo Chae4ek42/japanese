@@ -18,10 +18,12 @@ const VALID_VOCAB_DRILLS = new Set(['romaji', 'choice', 'mixed'])
 const VALID_VOCAB_SOURCES = new Set(['level', 'group', 'mine', 'kanji', 'list', 'problem'])
 const VALID_VOCAB_LEVELS = new Set([5, 4, 3, 2, 1])
 const VALID_PICK_MODES = new Set(['adaptive', 'even'])
+const VALID_SESSION_MODES = new Set(['drill', 'srs'])
 const VALID_INPUT_MODES = new Set(['instant', 'submit'])
 const VALID_MEMORY_STATES = new Set(['new', 'learning', 'review', 'relearning', 'leech'])
 
 export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
+  sessionMode: 'drill',
   drillMode: 'romaji',
   source: 'level',
   level: 5,
@@ -77,13 +79,25 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
         ? newWordLimit
         : fallback.newPerDay
 
+  const resolvedSource = VALID_VOCAB_SOURCES.has(String(source.source))
+    ? (source.source as VocabPreferences['source'])
+    : fallback.source
+  const reviewV2 = typeof source.reviewV2 === 'boolean' ? source.reviewV2 : fallback.reviewV2
+  // Missing sessionMode: default drill. Legacy mine+v2 users who already used
+  // spaced mine sessions keep srs only when source was mine and reviewV2 on.
+  let sessionMode: VocabPreferences['sessionMode'] = fallback.sessionMode
+  if (VALID_SESSION_MODES.has(String(source.sessionMode))) {
+    sessionMode = source.sessionMode as VocabPreferences['sessionMode']
+  } else if (!('sessionMode' in source) && resolvedSource === 'mine' && reviewV2 !== false) {
+    sessionMode = 'srs'
+  }
+
   return {
+    sessionMode,
     drillMode: VALID_VOCAB_DRILLS.has(String(source.drillMode))
       ? (source.drillMode as VocabPreferences['drillMode'])
       : fallback.drillMode,
-    source: VALID_VOCAB_SOURCES.has(String(source.source))
-      ? (source.source as VocabPreferences['source'])
-      : fallback.source,
+    source: sessionMode === 'srs' ? 'mine' : resolvedSource,
     level: VALID_VOCAB_LEVELS.has(levelRaw) ? (levelRaw as VocabPreferences['level']) : fallback.level,
     groupId,
     pickMode: VALID_PICK_MODES.has(String(source.pickMode))
@@ -104,7 +118,7 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
     targetRetention: clampFloat(source.targetRetention, 0.85, 0.95, fallback.targetRetention),
     newPerDay: Math.min(50, Math.max(0, newPerDayRaw)),
     sessionMinutes: clampInt(source.sessionMinutes, 5, 60, fallback.sessionMinutes),
-    reviewV2: typeof source.reviewV2 === 'boolean' ? source.reviewV2 : fallback.reviewV2,
+    reviewV2,
   }
 }
 

@@ -68,6 +68,8 @@ export interface VocabSessionSidebarProps {
   poolAddedAt?: Record<string, number>
   canAddSourceWord?: boolean
   showWordJlptFilter?: boolean
+  /** Hide adaptive/even switch (SRS sessions). */
+  hidePickMode?: boolean
   onPickModeChange: (mode: VocabPickMode) => void
   onLevelChange?: (level: VocabLevelFilter) => void
   onWordJlptChange?: (levels: KanjiWordJlptLevel[]) => void
@@ -88,6 +90,7 @@ export function VocabSessionSidebar({
   poolAddedAt = {},
   canAddSourceWord = false,
   showWordJlptFilter = false,
+  hidePickMode = false,
   onPickModeChange,
   onLevelChange,
   onWordJlptChange,
@@ -134,10 +137,43 @@ export function VocabSessionSidebar({
         </div>
       </header>
 
-      <section className="vocab-session-block">
-        <div className="vocab-session-block-head">
-          <span className="vocab-session-label">Подбор</span>
-          {hasFilters ? (
+      {!hidePickMode ? (
+        <section className="vocab-session-block">
+          <div className="vocab-session-block-head">
+            <span className="vocab-session-label">Подбор</span>
+            {hasFilters ? (
+              <button
+                type="button"
+                className="vocab-session-reset"
+                data-testid="vocab-session-toggle-filters"
+                onClick={() => setFiltersOpen((open) => !open)}
+              >
+                {filtersOpen ? 'Скрыть фильтры' : 'Фильтры'}
+              </button>
+            ) : null}
+          </div>
+          <div className="vocab-session-pick" role="group" aria-label="Режим подбора">
+            {PICK_OPTIONS.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                className={
+                  pickMode === option.id
+                    ? 'vocab-session-pick-btn is-active'
+                    : 'vocab-session-pick-btn'
+                }
+                data-testid={`vocab-session-pick-${option.id}`}
+                onClick={() => onPickModeChange(option.id)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </section>
+      ) : hasFilters ? (
+        <section className="vocab-session-block">
+          <div className="vocab-session-block-head">
+            <span className="vocab-session-label">Интервальная</span>
             <button
               type="button"
               className="vocab-session-reset"
@@ -146,26 +182,9 @@ export function VocabSessionSidebar({
             >
               {filtersOpen ? 'Скрыть фильтры' : 'Фильтры'}
             </button>
-          ) : null}
-        </div>
-        <div className="vocab-session-pick" role="group" aria-label="Режим подбора">
-          {PICK_OPTIONS.map((option) => (
-            <button
-              key={option.id}
-              type="button"
-              className={
-                pickMode === option.id
-                  ? 'vocab-session-pick-btn is-active'
-                  : 'vocab-session-pick-btn'
-              }
-              data-testid={`vocab-session-pick-${option.id}`}
-              onClick={() => onPickModeChange(option.id)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </section>
+          </div>
+        </section>
+      ) : null}
 
       {filtersOpen && showSourceLevel ? (
         <section className="vocab-session-block" data-testid="vocab-session-level-filter">
@@ -197,6 +216,19 @@ export function VocabSessionSidebar({
             <span className="vocab-session-label">Слова JLPT</span>
           </div>
           <div className="vocab-session-jlpt" role="group" aria-label="Фильтр слов по JLPT">
+            <button
+              type="button"
+              className={
+                wordJlptLevels.length === 0
+                  ? 'vocab-session-jlpt-btn is-active'
+                  : 'vocab-session-jlpt-btn'
+              }
+              data-testid="vocab-session-word-jlpt-all"
+              aria-pressed={wordJlptLevels.length === 0}
+              onClick={() => onWordJlptChange([])}
+            >
+              Все
+            </button>
             {WORD_JLPT_LEVELS.map((item) => {
               const active = isWordJlptLevelActive(wordJlptLevels, item)
               return (

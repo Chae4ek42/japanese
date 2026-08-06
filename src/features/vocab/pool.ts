@@ -286,7 +286,13 @@ export function buildVocabPool(
     )
   }
 
-  if (preferences.source !== 'level' && preferences.wordJlptLevels?.length) {
+  // Curated lists keep every chosen word — JLPT filter would hide untagged custom entries.
+  if (
+    preferences.source !== 'level' &&
+    preferences.source !== 'list' &&
+    preferences.source !== 'problem' &&
+    preferences.wordJlptLevels?.length
+  ) {
     words = filterWordsByJlpt(words, preferences.wordJlptLevels)
   }
 
