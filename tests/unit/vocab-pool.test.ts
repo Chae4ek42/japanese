@@ -343,37 +343,50 @@ describe('vocab pool', () => {
     )
   })
 
-  it('even mode: вес обратно пропорционален числу показов', () => {
+  it('even mode: вес 1/(1+shows)²', () => {
     const ids = ['a', 'b', 'excluded']
     const weights = buildEvenModeWeightMultipliers(ids, {
       weightMultipliers: { excluded: 0 },
       showCounts: { a: 0, b: 3 },
     })
     assert.equal(weights.a, 1)
-    assert.equal(weights.b, 0.25)
+    assert.equal(weights.b, 1 / 16)
     assert.equal(weights.excluded, 0)
   })
 
-  it('even mode: всегда берёт карту с минимальным числом показов', () => {
+  it('even mode: мягко предпочитает менее показанные, без 100% детерминизма', () => {
     const pool = [{ id: 'a' }, { id: 'b' }, { id: 'c' }]
+    // Low rng → front of weighted list (a has highest weight when all equal / a unseen).
     assert.equal(
       pickEvenVocabCardId(pool, {
-        showCounts: { a: 2, b: 0, c: 1 },
-        rng: () => 0,
-      }),
-      'b',
-    )
-    assert.equal(
-      pickEvenVocabCardId(pool, {
-        showCounts: { a: 1, b: 1, c: 0 },
-        excludeIds: ['c'],
+        showCounts: { a: 0, b: 4, c: 4 },
         rng: () => 0,
       }),
       'a',
     )
-    // First pass: all unseen → any of them, never skips the cohort.
-    const first = pickEvenVocabCardId(pool, { showCounts: {}, rng: () => 0.99 })
-    assert.ok(first === 'a' || first === 'b' || first === 'c')
+    // High rng can still pick a more-shown card.
+    assert.equal(
+      pickEvenVocabCardId(pool, {
+        showCounts: { a: 0, b: 1, c: 1 },
+        rng: () => 0.999,
+      }),
+      'c',
+    )
+    // New card is not forced every other turn when excluded current is the only lagging one
+    // — others still have positive weight.
+    const counts = { new: 0 as number, other: 0 as number }
+    for (let i = 0; i < 200; i += 1) {
+      const id = pickEvenVocabCardId(pool, {
+        showCounts: { a: 0, b: 3, c: 3 },
+        excludeIds: [],
+        rng: () => (i + 0.5) / 200,
+      })
+      if (id === 'a') counts.new += 1
+      else counts.other += 1
+    }
+    assert.ok(counts.new > counts.other, 'unseen should win more often')
+    assert.ok(counts.other > 0, 'shown cards must still be pickable')
+    assert.ok(counts.new < 200, 'unseen must not win every time')
   })
 
 

@@ -436,9 +436,8 @@ export function pickUniformVocabCardId(
 }
 
 /**
- * Even mode: pick among cards with the fewest session shows.
- * Soft-weights by 1/(1+shows) only as a tie-break helper for tests/UI; the
- * real picker uses {@link pickEvenVocabCardId}.
+ * Even mode: soft bias toward less-shown cards via 1/(1+shows)².
+ * Hard “always least-shown” made a newly added word every other card.
  */
 export function buildEvenModeWeightMultipliers(
   cardIds: string[],
@@ -455,14 +454,14 @@ export function buildEvenModeWeightMultipliers(
     const base = out[id] ?? 1
     if (base <= 0) continue
     const shown = showCounts[id] ?? 0
-    out[id] = base / (1 + shown)
+    out[id] = base / (1 + shown) ** 2
   }
   return out
 }
 
 /**
- * True even coverage: always prefer the least-shown cards in the session.
- * Never-shown cards are exhausted before any card gets a second pass, etc.
+ * Soft even coverage: weighted random favoring fewer session shows.
+ * A brand-new card is preferred, but not forced every other turn.
  */
 export function pickEvenVocabCardId(
   pool: Array<{ id: string }>,
@@ -489,14 +488,25 @@ export function pickEvenVocabCardId(
   const candidates = pickable.length ? pickable : pool
   if (!candidates.length) return null
 
-  let minShows = Infinity
-  for (const card of candidates) {
+  const weighted = candidates.map((card) => {
+    const base = weightMultipliers[card.id] ?? 1
     const shown = showCounts[card.id] ?? 0
-    if (shown < minShows) minShows = shown
+    return {
+      card,
+      weight: Math.max(0, base) / (1 + shown) ** 2,
+    }
+  })
+  const total = weighted.reduce((sum, entry) => sum + entry.weight, 0)
+  if (total <= 0) {
+    return candidates[Math.floor(rng() * candidates.length)]?.id ?? null
   }
 
-  const leastShown = candidates.filter((card) => (showCounts[card.id] ?? 0) === minShows)
-  return leastShown[Math.floor(rng() * leastShown.length)]?.id ?? null
+  let cursor = rng() * total
+  for (const entry of weighted) {
+    cursor -= entry.weight
+    if (cursor <= 0) return entry.card.id
+  }
+  return weighted.at(-1)?.card.id ?? null
 }
 
 export function pickWeightedVocabCardId(
