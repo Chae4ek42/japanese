@@ -26,6 +26,7 @@ describe('routes', () => {
     assert.deepEqual(parsePath('/vocab/train'), { page: 'train' })
     assert.deepEqual(parsePath('/mine'), { page: 'mine' })
     assert.deepEqual(parsePath('/vocab/mine'), { page: 'mine' })
+    assert.deepEqual(parsePath('/analytics'), { page: 'analytics' })
   })
 
   it('неизвестный путь отдаёт home при парсинге', () => {

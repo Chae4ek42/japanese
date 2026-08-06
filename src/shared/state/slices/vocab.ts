@@ -39,6 +39,9 @@ export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
   newPerDay: 10,
   sessionMinutes: 15,
   reviewV2: true,
+  evenBoostShows: 3,
+  evenBoostFactor: 2,
+  evenDecayPower: 2,
 }
 
 function sanitizeSelectedKanji(raw: unknown, fallback: string[]): string[] {
@@ -119,6 +122,9 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
     newPerDay: Math.min(50, Math.max(0, newPerDayRaw)),
     sessionMinutes: clampInt(source.sessionMinutes, 5, 60, fallback.sessionMinutes),
     reviewV2,
+    evenBoostShows: clampInt(source.evenBoostShows, 0, 20, fallback.evenBoostShows),
+    evenBoostFactor: clampFloat(source.evenBoostFactor, 1, 10, fallback.evenBoostFactor),
+    evenDecayPower: clampFloat(source.evenDecayPower, 1, 4, fallback.evenDecayPower),
   }
 }
 

@@ -32,6 +32,7 @@ const {
   STORAGE_KEY,
   saveAppState,
 } = await import('../../src/shared/lib/storage')
+const { CURRENT_VERSION } = await import('../../src/shared/state/app-state')
 const { createStatsRecord } = await import('../../src/shared/lib/trainer')
 const { ALL_CARD_IDS } = await import('../../src/data/kana')
 
@@ -48,7 +49,7 @@ describe('storage', () => {
 
   it('без сохранения возвращает дефолтное состояние', () => {
     const state = loadAppState(createDefaultAppState)
-    assert.equal(state.version, 25)
+    assert.equal(state.version, CURRENT_VERSION)
     assert.equal(state.kana.preferences.mode, 'adaptive')
     assert.equal(state.numbers.preferences.mode, 'plain')
     assert.equal(state.numbers.preferences.rangeId, '99')
@@ -56,6 +57,7 @@ describe('storage', () => {
     assert.deepEqual(state.numbers.stats, {})
     assert.deepEqual(state.kanji.learned, [])
     assert.deepEqual(state.kanji.preferences.hiddenWordsByKanji, {})
+    assert.equal(state.analytics.lifetimeActiveMs, 0)
     assert.deepEqual(state.context.knownWordIds, [])
     assert.ok(state.context.knownGrammarIds.includes('copula_desu'))
     assert.equal(state.context.preferences.groupId, 'family')
@@ -153,7 +155,7 @@ describe('storage', () => {
       kanji: { learned: ['日'], preferences: { complexityFilter: false } },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 25)
+    assert.equal(state.version, CURRENT_VERSION)
     assert.equal(state.kana.preferences.scriptMode, 'katakana')
     assert.equal(state.kana.preferences.mode, 'even')
     assert.equal(state.kana.stats['katakana:shi'].clears, 7)
@@ -179,7 +181,7 @@ describe('storage', () => {
       kanji: { learned: ['日'], preferences: { complexityFilter: true } },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 25)
+    assert.equal(state.version, CURRENT_VERSION)
     assert.deepEqual(state.kanji.learned, ['日'])
     assert.ok(!('complexityFilter' in state.kanji.preferences))
     assert.deepEqual(state.vocab.myWords, [])
@@ -195,7 +197,7 @@ describe('storage', () => {
       },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 25)
+    assert.equal(state.version, CURRENT_VERSION)
     assert.equal(state.numbers.preferences.mode, 'age')
     assert.equal(state.numbers.preferences.pickMode, 'even')
     assert.equal(state.numbers.stats['age:20'].hints, 2)
@@ -218,7 +220,7 @@ describe('storage', () => {
       },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 25)
+    assert.equal(state.version, CURRENT_VERSION)
     assert.equal(state.kana.preferences.scriptMode, 'katakana')
     assert.equal(state.kana.preferences.mode, 'even')
     assert.equal(state.kana.stats['katakana:shi'].clears, 7)
@@ -232,7 +234,7 @@ describe('storage', () => {
     nested.kana.stats['hiragana:a'].clears = 3
     nested.vocab.myWords = ['1000390']
     const state = parseStoredState(JSON.stringify(nested))
-    assert.equal(state.version, 25)
+    assert.equal(state.version, CURRENT_VERSION)
     assert.equal(state.kana.preferences.mode, 'problem')
     assert.equal(state.kana.stats['hiragana:a'].clears, 3)
     assert.deepEqual(state.vocab.myWords, ['1000390'])
@@ -252,7 +254,7 @@ describe('storage', () => {
       },
     }
     const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, 25)
+    assert.equal(state.version, CURRENT_VERSION)
     assert.equal(state.vocab.preferences.newWordLimit, -1)
   })
 
@@ -266,7 +268,7 @@ describe('storage', () => {
 
   it('битые данные не роняют приложение', () => {
     const state = parseStoredState('{broken json')
-    assert.equal(state.version, 25)
+    assert.equal(state.version, CURRENT_VERSION)
   })
 
   it('reset удаляет localStorage сохранение', async () => {

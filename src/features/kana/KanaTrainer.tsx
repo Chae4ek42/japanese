@@ -8,7 +8,7 @@ import type {
   StatsRecord,
 } from '../../shared/lib/types'
 import type { KanaPracticePatch, KanaPracticeSlice } from '../../shared/state/AppStateContext'
-import { useKanaState } from '../../shared/state/AppStateContext'
+import { useAnalyticsState, useKanaState } from '../../shared/state/AppStateContext'
 import { startTransition, useEffect, useMemo, useRef, useState } from 'react'
 import './styles.css'
 import { KANA_STATS_CARDS, buildPool } from '../../data/kana'
@@ -87,6 +87,7 @@ function KanaTrainerView({
     recordCleanAnswer,
     sessionAccuracy,
   } = usePracticeSession()
+  const { recordAnswer } = useAnalyticsState()
 
   const [currentCardId, setCurrentCardId] = useState<string | null>(null)
   const [inputValue, setInputValue] = useState('')
@@ -259,6 +260,7 @@ function KanaTrainerView({
     })
 
     recordCleanAnswer(clean)
+    recordAnswer(clean)
 
     sessionRef.current = nextSession
     setSession(nextSession)

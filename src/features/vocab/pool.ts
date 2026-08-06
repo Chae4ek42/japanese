@@ -435,26 +435,51 @@ export function pickUniformVocabCardId(
   return pickable[Math.floor(rng() * pickable.length)]?.id ?? null
 }
 
+export interface EvenModeWeightOptions {
+  /** Extra multiplier while showCount < boostShows. 0 disables. */
+  boostShows?: number
+  boostFactor?: number
+  /** Soft decay exponent for 1/(1+shows)^power. */
+  decayPower?: number
+}
+
 /**
- * Even mode: soft bias toward less-shown cards via 1/(1+shows)².
+ * Even mode weight: soft 1/(1+shows)^power, optional boost for first N shows.
  * Hard “always least-shown” made a newly added word every other card.
+ */
+export function evenModeCardWeight(
+  shown: number,
+  base = 1,
+  { boostShows = 0, boostFactor = 1, decayPower = 2 }: EvenModeWeightOptions = {},
+): number {
+  if (base <= 0) return 0
+  const power = Math.max(1, decayPower)
+  const boost = boostShows > 0 && shown < boostShows ? Math.max(1, boostFactor) : 1
+  return (Math.max(0, base) * boost) / (1 + Math.max(0, shown)) ** power
+}
+
+/**
+ * Even mode: soft bias toward less-shown cards via 1/(1+shows)² (+ optional boost).
  */
 export function buildEvenModeWeightMultipliers(
   cardIds: string[],
   {
     weightMultipliers = {},
     showCounts = {},
+    boostShows = 0,
+    boostFactor = 1,
+    decayPower = 2,
   }: {
     weightMultipliers?: Record<string, number>
     showCounts?: Record<string, number>
-  } = {},
+  } & EvenModeWeightOptions = {},
 ): Record<string, number> {
   const out: Record<string, number> = { ...weightMultipliers }
+  const opts = { boostShows, boostFactor, decayPower }
   for (const id of cardIds) {
     const base = out[id] ?? 1
     if (base <= 0) continue
-    const shown = showCounts[id] ?? 0
-    out[id] = base / (1 + shown) ** 2
+    out[id] = evenModeCardWeight(showCounts[id] ?? 0, base, opts)
   }
   return out
 }
@@ -469,13 +494,16 @@ export function pickEvenVocabCardId(
     excludeIds = [],
     weightMultipliers = {},
     showCounts = {},
+    boostShows = 0,
+    boostFactor = 1,
+    decayPower = 2,
     rng = Math.random,
   }: {
     excludeIds?: string[]
     weightMultipliers?: Record<string, number>
     showCounts?: Record<string, number>
     rng?: () => number
-  } = {},
+  } & EvenModeWeightOptions = {},
 ): string | null {
   if (!pool.length) return null
 
@@ -488,12 +516,13 @@ export function pickEvenVocabCardId(
   const candidates = pickable.length ? pickable : pool
   if (!candidates.length) return null
 
+  const opts = { boostShows, boostFactor, decayPower }
   const weighted = candidates.map((card) => {
     const base = weightMultipliers[card.id] ?? 1
     const shown = showCounts[card.id] ?? 0
     return {
       card,
-      weight: Math.max(0, base) / (1 + shown) ** 2,
+      weight: evenModeCardWeight(shown, base, opts),
     }
   })
   const total = weighted.reduce((sum, entry) => sum + entry.weight, 0)

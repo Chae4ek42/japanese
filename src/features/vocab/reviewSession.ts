@@ -266,6 +266,7 @@ export function deriveRoundGrade(input: {
  * Legacy mastery / sidebar stats from round flags — not SRS grade bands.
  * Grade 2 (slow / soft typo) must still count as a clear; mapping it to `hint`
  * left the session sidebar stuck on «нет ответов».
+ * Hint counts as wrong (same as a failed answer).
  */
 export function masteryOutcomeFromRound(input: {
   wrong: boolean
@@ -273,9 +274,27 @@ export function masteryOutcomeFromRound(input: {
   hintUsed?: boolean
   wrongRecorded?: boolean
 }): 'correct' | 'wrong' | 'hint' {
-  if (input.wrong || input.dontKnow || input.wrongRecorded) return 'wrong'
-  if (input.hintUsed) return 'hint'
+  if (input.wrong || input.dontKnow || input.wrongRecorded || input.hintUsed) return 'wrong'
   return 'correct'
+}
+
+/** Session chips «чисто» / «серия»: no mistakes, hints, typos, or dont-know. */
+export function isSessionCleanAnswer(input: {
+  wrong: boolean
+  hintUsed?: boolean
+  dontKnow?: boolean
+  mistakes?: number
+  typoForgiven?: boolean
+  wrongRecorded?: boolean
+}): boolean {
+  return (
+    !input.wrong &&
+    !input.hintUsed &&
+    !input.dontKnow &&
+    !input.typoForgiven &&
+    !input.wrongRecorded &&
+    (input.mistakes ?? 0) === 0
+  )
 }
 
 export function patchReviewWeights(

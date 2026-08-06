@@ -23,6 +23,7 @@ import {
 } from '../../shared/lib/trainer'
 import { afterSuccessfulCard, enqueueMistake, prepareShownCard } from '../../shared/lib/trainerCore'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
+import { useAnalyticsState } from '../../shared/state/AppStateContext'
 import { DEFAULT_LATENCY_MODEL, isForgivableTypo } from '../../shared/lib/review/grade'
 import { getWordById, getWordsByWriting } from '../../data/words/bank'
 import {
@@ -43,6 +44,7 @@ import {
   drillModeToAspect,
   deriveRoundGrade,
   gradeAndAdvanceReview,
+  isSessionCleanAnswer,
   masteryOutcomeFromRound,
   patchReviewWeights,
   pickReviewCard,
@@ -160,6 +162,7 @@ export function VocabTrainer({
     recordCleanAnswer,
     sessionAccuracy,
   } = usePracticeSession()
+  const { recordAnswer } = useAnalyticsState()
 
   const [currentCardId, setCurrentCardId] = useState<string | null>(null)
   const [inputValue, setInputValue] = useState('')
@@ -616,10 +619,14 @@ export function VocabTrainer({
     // Even mode must win over the v2 review sequencer — otherwise mid-session
     // toggles look like a no-op while review keeps driving picks.
     if (pickMode === 'even') {
+      const prefs = preferencesRef.current
       return pickEvenVocabCardId(pickPool, {
         excludeIds,
         weightMultipliers: weights,
         showCounts: session.showCounts ?? {},
+        boostShows: prefs.evenBoostShows,
+        boostFactor: prefs.evenBoostFactor,
+        decayPower: prefs.evenDecayPower,
       })
     }
 
@@ -748,11 +755,12 @@ export function VocabTrainer({
       return
     }
 
-    // Fresh forward skip = correct (or soft-correct if hint/mistakes already happened).
+    // Fresh forward skip: grade for SRS/progress, but do not touch session chips.
     if (activeCardRef.current) {
       finalizeCorrect(
         roundRef.current.hintUsed || roundRef.current.mistakes > 0 ? 'hint' : 'correct',
         0,
+        { countSession: false },
       )
       return
     }
@@ -871,6 +879,7 @@ export function VocabTrainer({
     delay,
     distractor,
     advance = true,
+    countSession = true,
   }: {
     card: VocabCard
     grade: ReviewGrade
@@ -878,6 +887,8 @@ export function VocabTrainer({
     delay: number
     distractor?: string
     advance?: boolean
+    /** When false (nav skip), update SRS/mastery but not session chips / analytics. */
+    countSession?: boolean
   }) {
     const now = Date.now()
     const activeRound = roundRef.current
@@ -893,6 +904,14 @@ export function VocabTrainer({
     })
     const masteryHintUsed =
       activeRound.hintUsed || statsOutcome === 'hint' || statsOutcome === 'wrong'
+    const clean = isSessionCleanAnswer({
+      wrong,
+      hintUsed: activeRound.hintUsed,
+      dontKnow: Boolean(activeRound.dontKnow),
+      mistakes: activeRound.mistakes,
+      typoForgiven: Boolean(activeRound.typoForgiven),
+      wrongRecorded: Boolean(activeRound.wrongRecorded),
+    })
 
     if (onApplyGradedReview && usesReviewV2()) {
       onApplyGradedReview({
@@ -939,9 +958,8 @@ export function VocabTrainer({
       })
     } else if (grade >= 3 || (!wrong && grade === 2 && !activeRound.hintUsed)) {
       const poolSize = getPracticePool().length || nextSession.poolIds.length || 1
-      const clean = grade >= 3 && activeRound.mistakes === 0 && !activeRound.hintUsed
       nextSession = afterSuccessfulCard(nextSession, card.id, {
-        kind: statsOutcome === 'hint' ? 'hint' : 'correct',
+        kind: statsOutcome === 'correct' ? 'correct' : 'hint',
         poolSize,
         clean,
       })
@@ -949,7 +967,10 @@ export function VocabTrainer({
       nextSession = enqueueMistake(nextSession, card.id)
     }
 
-    recordCleanAnswer(grade >= 3 && activeRound.mistakes === 0 && !activeRound.hintUsed)
+    if (countSession) {
+      recordCleanAnswer(clean)
+      recordAnswer(clean)
+    }
     sessionRef.current = nextSession
     setSession(nextSession)
     patchRound({ wrongRecorded: true })
@@ -1003,7 +1024,11 @@ export function VocabTrainer({
     queueAdvance(() => advanceToNextCard(nextSession), delay)
   }
 
-  function finalizeCorrect(kind: 'correct' | 'hint', delay = 280) {
+  function finalizeCorrect(
+    kind: 'correct' | 'hint',
+    delay = 280,
+    { countSession = true }: { countSession?: boolean } = {},
+  ) {
     const card = activeCardRef.current
     if (!card) return
     const activeRound = roundRef.current
@@ -1028,7 +1053,7 @@ export function VocabTrainer({
       latencyModel: latencyModelRef.current,
       hadRecentLapse: mem.lapses > 0 && mem.lastAt > 0 && now - mem.lastAt < 8 * 3_600_000,
     })
-    settleGrade({ card, grade, wrong: false, delay })
+    settleGrade({ card, grade, wrong: false, delay, countSession })
   }
 
   function registerWrongAttempt() {
@@ -1039,17 +1064,11 @@ export function VocabTrainer({
       return
     }
     patchRound({ mistakes: roundRef.current.mistakes + 1, wrongRecorded: true })
-    // C8: sync sessionRef immediately.
+    // C8: sync sessionRef immediately. Stats settle once in settleGrade (avoids double-count).
     if (!usesReviewV2()) {
       const nextSession = enqueueMistake(sessionRef.current, activeCard.id)
       sessionRef.current = nextSession
       setSession(nextSession)
-      onUpdateStats(activeCard.id, 'wrong', {
-        now: Date.now(),
-        inputMode: preferencesRef.current.inputMode,
-        drillMode: preferencesRef.current.drillMode,
-        answerLength: answerLengthForCard(activeCard.answers, preferencesRef.current.drillMode),
-      })
     }
   }
 

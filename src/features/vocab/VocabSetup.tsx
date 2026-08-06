@@ -662,6 +662,81 @@ export function VocabSetup({
               </div>
             </div>
 
+            {preferences.pickMode === 'even' ? (
+              <div className="vocab-srs-settings" data-testid="vocab-even-settings">
+                <span className="group-label">Равномерный режим</span>
+                <div className="vocab-srs-settings-grid">
+                  <label className="vocab-srs-field">
+                    <span className="vocab-srs-field-label">Повышенный вес</span>
+                    <span className="vocab-srs-control">
+                      <input
+                        type="number"
+                        min={0}
+                        max={20}
+                        data-testid="vocab-even-boost-shows"
+                        value={preferences.evenBoostShows ?? 3}
+                        onChange={(event) => {
+                          const parsed = Number(event.target.value)
+                          if (!Number.isFinite(parsed)) return
+                          onPatchPreferences({
+                            evenBoostShows: Math.min(20, Math.max(0, Math.round(parsed))),
+                          })
+                        }}
+                      />
+                      <span className="vocab-srs-unit">показов</span>
+                    </span>
+                    <span className="control-hint">первые N показов слова в сессии</span>
+                  </label>
+
+                  <label className="vocab-srs-field">
+                    <span className="vocab-srs-field-label">Множитель</span>
+                    <span className="vocab-srs-control">
+                      <input
+                        type="number"
+                        min={1}
+                        max={10}
+                        step={0.5}
+                        data-testid="vocab-even-boost-factor"
+                        value={preferences.evenBoostFactor ?? 2}
+                        onChange={(event) => {
+                          const parsed = Number(event.target.value)
+                          if (!Number.isFinite(parsed)) return
+                          onPatchPreferences({
+                            evenBoostFactor: Math.min(10, Math.max(1, parsed)),
+                          })
+                        }}
+                      />
+                      <span className="vocab-srs-unit">×</span>
+                    </span>
+                    <span className="control-hint">во сколько раз сильнее вес</span>
+                  </label>
+
+                  <label className="vocab-srs-field vocab-srs-field-wide">
+                    <span className="vocab-srs-field-label">Сила выравнивания</span>
+                    <span className="vocab-srs-control">
+                      <input
+                        type="number"
+                        min={1}
+                        max={4}
+                        step={0.5}
+                        data-testid="vocab-even-decay-power"
+                        value={preferences.evenDecayPower ?? 2}
+                        onChange={(event) => {
+                          const parsed = Number(event.target.value)
+                          if (!Number.isFinite(parsed)) return
+                          onPatchPreferences({
+                            evenDecayPower: Math.min(4, Math.max(1, parsed)),
+                          })
+                        }}
+                      />
+                      <span className="vocab-srs-unit">степень</span>
+                    </span>
+                    <span className="control-hint">вес ≈ 1 / (1 + показы)^степень</span>
+                  </label>
+                </div>
+              </div>
+            ) : null}
+
             <p className="control-hint" data-testid="vocab-pool-count">
               {poolCount === sourcePoolCount
                 ? `${sourcePoolCount} слов по критериям`

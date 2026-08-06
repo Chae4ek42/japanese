@@ -4,7 +4,44 @@ export type InputMode = 'instant' | 'submit'
 export type NumberMode = 'plain' | 'age'
 export type NumberRangeId = '10' | '99' | '999'
 export type NumbersPickMode = 'adaptive' | 'even'
-export type AppPage = 'home' | 'kana' | 'kanji' | 'numbers' | 'vocab' | 'mine' | 'train' | 'context'
+export type AppPage =
+  | 'home'
+  | 'kana'
+  | 'kanji'
+  | 'numbers'
+  | 'vocab'
+  | 'mine'
+  | 'train'
+  | 'context'
+  | 'analytics'
+
+/** Sections that accumulate active-time analytics. */
+export type AnalyticsSection =
+  | 'home'
+  | 'kana'
+  | 'kanji'
+  | 'numbers'
+  | 'train'
+  | 'vocab'
+  | 'mine'
+  | 'context'
+
+export interface AnalyticsDayBucket {
+  dayKey: string
+  totalActiveMs: number
+  bySection: Partial<Record<AnalyticsSection, number>>
+  answers?: number
+  cleanAnswers?: number
+}
+
+export interface AnalyticsState {
+  lifetimeActiveMs: number
+  bySection: Record<AnalyticsSection, number>
+  days: AnalyticsDayBucket[]
+  activeDayStreak: number
+  lastActiveDayKey: string | null
+  updatedAt: number
+}
 export type PracticeView = 'setup' | 'practice'
 
 export type TrainerOutcome = 'empty' | 'correct' | 'wrong' | 'pending' | 'seen' | 'hint'
@@ -321,6 +358,15 @@ export interface VocabPreferences {
   sessionMinutes: number
   /** Use adaptive-review v2 planner/sequencer (default true). */
   reviewV2: boolean
+  /**
+   * Even pick mode: cards with fewer than this many session shows get `evenBoostFactor`.
+   * 0 = no plateau boost (only soft 1/(1+shows)^power decay).
+   */
+  evenBoostShows: number
+  /** Even pick mode: weight multiplier while showCount < evenBoostShows. */
+  evenBoostFactor: number
+  /** Even pick mode: exponent for soft decay 1/(1+shows)^power. */
+  evenDecayPower: number
 }
 
 export interface KanjiWordReading {
@@ -439,7 +485,7 @@ export interface ContextSentence {
 }
 
 export interface AppState {
-  version: 25
+  version: 26
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>
@@ -457,6 +503,7 @@ export interface AppState {
   }
   vocab: VocabState
   context: ContextState
+  analytics: AnalyticsState
 }
 
 /** @deprecated Use AppState — kept as alias during migration. */

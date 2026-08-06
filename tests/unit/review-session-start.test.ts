@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
+  isSessionCleanAnswer,
   masteryOutcomeFromRound,
   startReviewPracticeSession,
 } from '../../src/features/vocab/reviewSession.ts'
@@ -38,8 +39,37 @@ describe('masteryOutcomeFromRound', () => {
     assert.equal(masteryOutcomeFromRound({ wrong: false, wrongRecorded: true }), 'wrong')
   })
 
-  it('пишет hint только после подсказки без ошибки', () => {
-    assert.equal(masteryOutcomeFromRound({ wrong: false, hintUsed: true }), 'hint')
+  it('считает подсказку как неверный ответ', () => {
+    assert.equal(masteryOutcomeFromRound({ wrong: false, hintUsed: true }), 'wrong')
+  })
+})
+
+describe('isSessionCleanAnswer', () => {
+  it('чистый ответ без ошибок и подсказки', () => {
+    assert.equal(isSessionCleanAnswer({ wrong: false }), true)
+    assert.equal(
+      isSessionCleanAnswer({
+        wrong: false,
+        hintUsed: false,
+        mistakes: 0,
+        typoForgiven: false,
+        wrongRecorded: false,
+      }),
+      true,
+    )
+  })
+
+  it('медленный верный (grade 2) остаётся чистым, если не было ошибок', () => {
+    assert.equal(isSessionCleanAnswer({ wrong: false, mistakes: 0 }), true)
+  })
+
+  it('ошибка, подсказка, опечатка или dont-know ломают чистоту', () => {
+    assert.equal(isSessionCleanAnswer({ wrong: true }), false)
+    assert.equal(isSessionCleanAnswer({ wrong: false, hintUsed: true }), false)
+    assert.equal(isSessionCleanAnswer({ wrong: false, dontKnow: true }), false)
+    assert.equal(isSessionCleanAnswer({ wrong: false, mistakes: 1 }), false)
+    assert.equal(isSessionCleanAnswer({ wrong: false, typoForgiven: true }), false)
+    assert.equal(isSessionCleanAnswer({ wrong: false, wrongRecorded: true }), false)
   })
 })
 

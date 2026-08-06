@@ -19,7 +19,7 @@ import {
 } from '../../data/numbers'
 import { bumpSessionShow, pickNextCardId, pushRecentCard, setCardCooldown, successCooldownTurns } from '../../shared/lib/trainer'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
-import { useNumbersState } from '../../shared/state/AppStateContext'
+import { useAnalyticsState, useNumbersState } from '../../shared/state/AppStateContext'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 import { NumbersCheatSheet } from './NumbersCheatSheet'
@@ -75,6 +75,7 @@ function NumbersTrainerView({
     recordAnswered,
     sessionAccuracy,
   } = usePracticeSession()
+  const { recordAnswer } = useAnalyticsState()
 
   const [currentCardId, setCurrentCardId] = useState<string | null>(null)
   const [revealed, setRevealed] = useState(false)
@@ -229,15 +230,17 @@ function NumbersTrainerView({
       nextSession = setCardCooldown(nextSession, activeCard.id, successCooldownTurns(poolSize, true))
     }
 
-    recordAnswered(0)
+    const clean = !activeRound.hintUsed
+    recordAnswered(clean ? 1 : 0)
+    recordAnswer(clean)
     sessionRef.current = nextSession
     setSession(nextSession)
     setFeedback({ type: 'success', text: '' })
-    onUpdateStats(activeCard.id, 'hint', {
+    onUpdateStats(activeCard.id, activeRound.hintUsed ? 'hint' : 'correct', {
       now,
       latencyMs: now - activeRound.shownAt,
       mistakesOnCard: 0,
-      hintUsed: true,
+      hintUsed: activeRound.hintUsed,
       inputMode: 'submit',
     })
     return nextSession

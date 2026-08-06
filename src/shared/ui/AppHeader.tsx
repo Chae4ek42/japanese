@@ -20,6 +20,7 @@ const NAV_ITEMS = [
   { id: 'vocab', label: 'Словарь', href: PATHS.vocab, testId: 'nav-vocab' },
   { id: 'mine', label: 'Мои слова', href: PATHS.mine, testId: 'nav-mine' },
   { id: 'context', label: 'Контекст', href: PATHS.context, testId: 'nav-context' },
+  { id: 'analytics', label: 'Аналитика', href: PATHS.analytics, testId: 'nav-analytics' },
 ] as const
 
 export function AppHeader({

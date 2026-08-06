@@ -7,14 +7,23 @@ import { DictionaryPage } from '../features/vocab/DictionaryPage'
 import { MineWordsPage } from '../features/vocab/MineWordsPage'
 import { TrainPage } from '../features/vocab/TrainPage'
 import { ContextPage } from '../features/context/ContextPage'
+import { AnalyticsPage } from '../features/analytics/AnalyticsPage'
 import { useAppRouter } from '../shared/lib/useAppRouter'
-import { AppStateProvider, useAppState } from '../shared/state/AppStateContext'
+import { useActiveTimeTracker } from '../shared/lib/useActiveTimeTracker'
+import { AppStateProvider, useAnalyticsState, useAppState } from '../shared/state/AppStateContext'
 import { useBackupApp } from '../shared/state/backup'
 
 function AppRoutes() {
   const appState = useAppState()
   const { page, goPage } = useAppRouter()
   const { exportBackup, openImportPicker, fileInputRef, onImportFileChange, canExport } = useBackupApp()
+  const { applyActiveDeltas } = useAnalyticsState()
+
+  useActiveTimeTracker({
+    page,
+    enabled: Boolean(appState),
+    onFlush: applyActiveDeltas,
+  })
 
   if (!appState) {
     return (
@@ -44,6 +53,7 @@ function AppRoutes() {
           onOpenMine={() => goPage('mine')}
           onOpenVocabTrain={() => goPage('train')}
           onOpenContext={() => goPage('context')}
+          onOpenAnalytics={() => goPage('analytics')}
         />
       ) : page === 'kanji' ? (
         <KanjiPage />
@@ -55,6 +65,8 @@ function AppRoutes() {
         <MineWordsPage />
       ) : page === 'context' ? (
         <ContextPage />
+      ) : page === 'analytics' ? (
+        <AnalyticsPage />
       ) : (
         <main className="trainer-layout">
           {page === 'kana' ? <KanaTrainer /> : <NumbersTrainer />}

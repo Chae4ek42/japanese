@@ -9,6 +9,7 @@ export interface HomePageProps {
   onOpenMine: () => void
   onOpenVocabTrain: () => void
   onOpenContext: () => void
+  onOpenAnalytics: () => void
 }
 
 const ENTRIES = [
@@ -68,6 +69,14 @@ const ENTRIES = [
     action: 'Открыть',
     testId: 'open-context',
   },
+  {
+    id: 'analytics',
+    href: PATHS.analytics,
+    symbol: '統',
+    title: 'Аналитика',
+    action: 'Открыть',
+    testId: 'open-analytics',
+  },
 ] as const
 
 export function HomePage({
@@ -78,6 +87,7 @@ export function HomePage({
   onOpenMine,
   onOpenVocabTrain,
   onOpenContext,
+  onOpenAnalytics,
 }: HomePageProps) {
   const openers = {
     kana: onOpenKana,
@@ -87,6 +97,7 @@ export function HomePage({
     vocab: onOpenVocab,
     mine: onOpenMine,
     context: onOpenContext,
+    analytics: onOpenAnalytics,
   } as const
 
   return (

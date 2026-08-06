@@ -15,6 +15,7 @@ export const PATHS = {
   vocabTrain: '/vocab/train',
   train: '/train',
   context: '/context',
+  analytics: '/analytics',
 } as const
 
 const PAGE_TITLES: Record<AppPage, string> = {
@@ -26,6 +27,7 @@ const PAGE_TITLES: Record<AppPage, string> = {
   mine: 'Мои слова — JP тренажёры',
   train: 'Слова — JP тренажёры',
   context: 'Контекст — JP тренажёры',
+  analytics: 'Аналитика — JP тренажёры',
 }
 
 export function normalizePath(pathname: string): string {
@@ -57,6 +59,8 @@ export function parsePath(pathname: string): AppRoute {
       return { page: 'train' }
     case PATHS.context:
       return { page: 'context' }
+    case PATHS.analytics:
+      return { page: 'analytics' }
     default:
       return { page: 'home' }
   }
@@ -82,7 +86,8 @@ export function isKnownPath(pathname: string): boolean {
     path === PATHS.vocabMine ||
     path === PATHS.vocabTrain ||
     path === PATHS.train ||
-    path === PATHS.context
+    path === PATHS.context ||
+    path === PATHS.analytics
   )
 }
 

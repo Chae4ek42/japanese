@@ -343,23 +343,38 @@ describe('vocab pool', () => {
     )
   })
 
-  it('even mode: вес 1/(1+shows)²', () => {
+  it('even mode: вес 1/(1+shows)^power и boost для первых показов', () => {
     const ids = ['a', 'b', 'excluded']
     const weights = buildEvenModeWeightMultipliers(ids, {
       weightMultipliers: { excluded: 0 },
       showCounts: { a: 0, b: 3 },
+      boostShows: 0,
+      boostFactor: 1,
+      decayPower: 2,
     })
     assert.equal(weights.a, 1)
     assert.equal(weights.b, 1 / 16)
     assert.equal(weights.excluded, 0)
+
+    const boosted = buildEvenModeWeightMultipliers(['fresh', 'old'], {
+      showCounts: { fresh: 1, old: 3 },
+      boostShows: 3,
+      boostFactor: 2,
+      decayPower: 2,
+    })
+    // fresh: 2 / (1+1)^2 = 0.5; old: 1 / 16 = 0.0625
+    assert.equal(boosted.fresh, 0.5)
+    assert.equal(boosted.old, 1 / 16)
   })
 
   it('even mode: мягко предпочитает менее показанные, без 100% детерминизма', () => {
     const pool = [{ id: 'a' }, { id: 'b' }, { id: 'c' }]
+    const soft = { boostShows: 0, boostFactor: 1, decayPower: 2 }
     // Low rng → front of weighted list (a has highest weight when all equal / a unseen).
     assert.equal(
       pickEvenVocabCardId(pool, {
         showCounts: { a: 0, b: 4, c: 4 },
+        ...soft,
         rng: () => 0,
       }),
       'a',
@@ -368,6 +383,7 @@ describe('vocab pool', () => {
     assert.equal(
       pickEvenVocabCardId(pool, {
         showCounts: { a: 0, b: 1, c: 1 },
+        ...soft,
         rng: () => 0.999,
       }),
       'c',
@@ -379,6 +395,7 @@ describe('vocab pool', () => {
       const id = pickEvenVocabCardId(pool, {
         showCounts: { a: 0, b: 3, c: 3 },
         excludeIds: [],
+        ...soft,
         rng: () => (i + 0.5) / 200,
       })
       if (id === 'a') counts.new += 1
