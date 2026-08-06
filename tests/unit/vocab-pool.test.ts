@@ -6,9 +6,9 @@ import { getWordsByWriting } from '../../src/data/words/bank'
 import {
   buildChoiceOptions,
   buildEvenModeWeightMultipliers,
+  pickEvenVocabCardId,
   buildKanjiPracticeVocabPool,
   buildVocabPool,
-  EVEN_NEW_WORD_SHOWS,
   evaluateRomajiReadings,
   normalizeRomajiAnswer,
   pickNextSourceCard,
@@ -343,21 +343,37 @@ describe('vocab pool', () => {
     )
   })
 
-  it('even mode: ×2 по числу показов в сессии, до 8, без учёта ответов', () => {
+  it('even mode: вес обратно пропорционален числу показов', () => {
     const ids = ['a', 'b', 'excluded']
     const weights = buildEvenModeWeightMultipliers(ids, {
       weightMultipliers: { excluded: 0 },
-      showCounts: { a: 2, b: 7 },
+      showCounts: { a: 0, b: 3 },
     })
-    assert.equal(weights.a, 2)
-    assert.equal(weights.b, 2)
+    assert.equal(weights.a, 1)
+    assert.equal(weights.b, 0.25)
     assert.equal(weights.excluded, 0)
+  })
 
-    const after = buildEvenModeWeightMultipliers(ids, {
-      showCounts: { a: EVEN_NEW_WORD_SHOWS, b: EVEN_NEW_WORD_SHOWS - 1 },
-    })
-    assert.equal(after.a, undefined)
-    assert.equal(after.b, 2)
+  it('even mode: всегда берёт карту с минимальным числом показов', () => {
+    const pool = [{ id: 'a' }, { id: 'b' }, { id: 'c' }]
+    assert.equal(
+      pickEvenVocabCardId(pool, {
+        showCounts: { a: 2, b: 0, c: 1 },
+        rng: () => 0,
+      }),
+      'b',
+    )
+    assert.equal(
+      pickEvenVocabCardId(pool, {
+        showCounts: { a: 1, b: 1, c: 0 },
+        excludeIds: ['c'],
+        rng: () => 0,
+      }),
+      'a',
+    )
+    // First pass: all unseen → any of them, never skips the cohort.
+    const first = pickEvenVocabCardId(pool, { showCounts: {}, rng: () => 0.99 })
+    assert.ok(first === 'a' || first === 'b' || first === 'c')
   })
 
 

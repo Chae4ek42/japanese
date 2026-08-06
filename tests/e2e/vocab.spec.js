@@ -38,6 +38,9 @@ test('vocab setup: drill vs srs mode switch', async ({ page }, testInfo) => {
   await expect(page.getByTestId('vocab-srs-settings')).toBeVisible()
   await expect(page.getByTestId('vocab-source-kanji')).toHaveCount(0)
   await expect(page.getByTestId('vocab-new-per-day')).toBeVisible()
+  await expect(page.getByTestId('vocab-retention-90')).toBeVisible()
+  await page.getByTestId('vocab-retention-95').click()
+  await expect(page.getByTestId('vocab-target-retention-value')).toHaveText('95%')
 
   await page.getByTestId('vocab-session-mode-drill').click()
   await expect(page.getByTestId('vocab-session-mode-drill')).toHaveClass(/is-active/)

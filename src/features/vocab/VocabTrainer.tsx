@@ -27,13 +27,12 @@ import { DEFAULT_LATENCY_MODEL, isForgivableTypo } from '../../shared/lib/review
 import { getWordById, getWordsByWriting } from '../../data/words/bank'
 import {
   applyVocabNewWordLimit,
-  buildEvenModeWeightMultipliers,
   buildVocabPool,
   buildWideVocabDistractorPool,
   evaluateRomajiReadings,
   normalizeRomajiDraft,
+  pickEvenVocabCardId,
   pickNextSourceCard,
-  pickWeightedVocabCardId,
   wordToVocabCard,
 } from './pool'
 import { mergeWordsByWriting } from './mergeHomographs'
@@ -167,8 +166,9 @@ export function VocabTrainer({
   const [currentPrompt, setCurrentPrompt] = useState<VocabMixedPrompt | null>(null)
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null)
   const [canGoPrev, setCanGoPrev] = useState(false)
-  /** Optimistic per-card stats for the session sidebar (merged over persisted `stats`). */
+  /** Per-card stats for this session only (sidebar). Global stats stay in `stats` / AppState. */
   const [liveStats, setLiveStats] = useState<Record<string, StatsRecord>>({})
+  const liveStatsRef = useRef<Record<string, StatsRecord>>({})
   const inputRef = useRef<HTMLInputElement>(null)
   const preferencesRef = useRef(preferences)
   const statsRef = useRef(stats)
@@ -355,6 +355,10 @@ export function VocabTrainer({
   }, [currentCardId])
 
   useEffect(() => {
+    liveStatsRef.current = liveStats
+  }, [liveStats])
+
+  useEffect(() => {
     if (didRestoreLiveSessionRef.current) return
     didRestoreLiveSessionRef.current = true
     if (
@@ -487,7 +491,7 @@ export function VocabTrainer({
     setSelectedChoice(null)
     setFeedback({ type: 'idle', text: '' })
     // C5: presentation pacing for real drill shows (not nav skips).
-    // Even mode also needs showCounts for the new-word ×2 boost.
+    // Even mode needs showCounts for least-shown picking.
     const trackShows =
       countPresentation &&
       (!usesReviewV2(nextSession) || preferencesRef.current.pickMode === 'even')
@@ -612,16 +616,10 @@ export function VocabTrainer({
     // Even mode must win over the v2 review sequencer — otherwise mid-session
     // toggles look like a no-op while review keeps driving picks.
     if (pickMode === 'even') {
-      const evenWeights = buildEvenModeWeightMultipliers(
-        pickPool.map((card) => card.id),
-        {
-          weightMultipliers: weights,
-          showCounts: session.showCounts ?? {},
-        },
-      )
-      return pickWeightedVocabCardId(pickPool, {
+      return pickEvenVocabCardId(pickPool, {
         excludeIds,
-        weightMultipliers: evenWeights,
+        weightMultipliers: weights,
+        showCounts: session.showCounts ?? {},
       })
     }
 
@@ -801,6 +799,7 @@ export function VocabTrainer({
     navHistoryRef.current = []
     navIndexRef.current = -1
     setCanGoPrev(false)
+    liveStatsRef.current = {}
     setLiveStats({})
 
     if (preferences.reviewV2 !== false) {
@@ -857,6 +856,8 @@ export function VocabTrainer({
     setSelectedChoice(null)
     resetSessionWeights()
     replacePoolAddedAt({})
+    liveStatsRef.current = {}
+    setLiveStats({})
     navHistoryRef.current = []
     navIndexRef.current = -1
     setCanGoPrev(false)
@@ -954,30 +955,44 @@ export function VocabTrainer({
     patchRound({ wrongRecorded: true })
 
     const problemIds = card.variantIds?.length ? card.variantIds : [card.id]
-    const existingStats = statsRef.current[card.id] ?? createStatsRecord()
-    const projectedRecent = projectRecentAnswers(existingStats.recentAnswers, statsOutcome)
-    // Keep local ref in sync before React state catches up (multi-answer rounds).
-    const projectedClears =
-      existingStats.clears + (statsOutcome === 'correct' ? 1 : 0)
-    const projectedErrors = existingStats.errors + (statsOutcome === 'wrong' ? 1 : 0)
-    const projectedHints = existingStats.hints + (statsOutcome === 'hint' ? 1 : 0)
-    const projectedTotal = projectedClears + projectedErrors + projectedHints
-    const nextCardStats: StatsRecord = {
-      ...existingStats,
-      clears: projectedClears,
-      errors: projectedErrors,
-      hints: projectedHints,
-      recentAnswers: projectedRecent,
-      eventAccuracy: projectedTotal
-        ? Math.round((projectedClears / projectedTotal) * 100)
-        : 0,
-    }
+    // Global optimistic stats (planner / problem detection) — persisted via onApplyGradedReview.
+    const globalExisting = statsRef.current[card.id] ?? createStatsRecord()
+    const globalRecent = projectRecentAnswers(globalExisting.recentAnswers, statsOutcome)
+    const globalClears = globalExisting.clears + (statsOutcome === 'correct' ? 1 : 0)
+    const globalErrors = globalExisting.errors + (statsOutcome === 'wrong' ? 1 : 0)
+    const globalHints = globalExisting.hints + (statsOutcome === 'hint' ? 1 : 0)
+    const globalTotal = globalClears + globalErrors + globalHints
     statsRef.current = {
       ...statsRef.current,
-      [card.id]: nextCardStats,
+      [card.id]: {
+        ...globalExisting,
+        clears: globalClears,
+        errors: globalErrors,
+        hints: globalHints,
+        recentAnswers: globalRecent,
+        eventAccuracy: globalTotal ? Math.round((globalClears / globalTotal) * 100) : 0,
+      },
     }
-    setLiveStats((prev) => ({ ...prev, [card.id]: nextCardStats }))
-    if (isProblemByRecentAnswers(projectedRecent)) {
+
+    // Session sidebar: start from a clean slate each training run.
+    const sessionExisting = liveStatsRef.current[card.id] ?? createStatsRecord()
+    const sessionRecent = projectRecentAnswers(sessionExisting.recentAnswers, statsOutcome)
+    const sessionClears = sessionExisting.clears + (statsOutcome === 'correct' ? 1 : 0)
+    const sessionErrors = sessionExisting.errors + (statsOutcome === 'wrong' ? 1 : 0)
+    const sessionHints = sessionExisting.hints + (statsOutcome === 'hint' ? 1 : 0)
+    const sessionTotal = sessionClears + sessionErrors + sessionHints
+    const nextSessionStats: StatsRecord = {
+      ...sessionExisting,
+      clears: sessionClears,
+      errors: sessionErrors,
+      hints: sessionHints,
+      recentAnswers: sessionRecent,
+      eventAccuracy: sessionTotal ? Math.round((sessionClears / sessionTotal) * 100) : 0,
+    }
+    liveStatsRef.current = { ...liveStatsRef.current, [card.id]: nextSessionStats }
+    setLiveStats(liveStatsRef.current)
+
+    if (isProblemByRecentAnswers(globalRecent)) {
       onAddProblemWords?.(problemIds)
     } else {
       onRemoveProblemWords?.(problemIds)
@@ -1505,7 +1520,7 @@ export function VocabTrainer({
         wordJlptLevels={preferences.wordJlptLevels ?? []}
         cards={practicePool}
         currentCardId={currentCardId}
-        stats={{ ...stats, ...liveStats }}
+        stats={liveStats}
         weightMultipliers={sessionWeightMultipliers}
         poolAddedAt={sessionPoolAddedAt}
         canAddSourceWord={canAddSourceWord && preferences.sessionMode !== 'srs'}

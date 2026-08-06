@@ -435,14 +435,10 @@ export function pickUniformVocabCardId(
   return pickable[Math.floor(rng() * pickable.length)]?.id ?? null
 }
 
-/** Even mode: ×2 until the card has been shown this many times in the session. */
-export const EVEN_NEW_WORD_BOOST = 2
-export const EVEN_NEW_WORD_SHOWS = 8
-
 /**
- * Merge manual session weights with the even-mode show boost (×2 for first 8 shows).
- * Based only on session `showCounts` — answers/hints do not clear the boost early.
- * Excluded cards (weight ≤ 0) stay excluded.
+ * Even mode: pick among cards with the fewest session shows.
+ * Soft-weights by 1/(1+shows) only as a tie-break helper for tests/UI; the
+ * real picker uses {@link pickEvenVocabCardId}.
  */
 export function buildEvenModeWeightMultipliers(
   cardIds: string[],
@@ -459,11 +455,48 @@ export function buildEvenModeWeightMultipliers(
     const base = out[id] ?? 1
     if (base <= 0) continue
     const shown = showCounts[id] ?? 0
-    if (shown < EVEN_NEW_WORD_SHOWS) {
-      out[id] = base * EVEN_NEW_WORD_BOOST
-    }
+    out[id] = base / (1 + shown)
   }
   return out
+}
+
+/**
+ * True even coverage: always prefer the least-shown cards in the session.
+ * Never-shown cards are exhausted before any card gets a second pass, etc.
+ */
+export function pickEvenVocabCardId(
+  pool: Array<{ id: string }>,
+  {
+    excludeIds = [],
+    weightMultipliers = {},
+    showCounts = {},
+    rng = Math.random,
+  }: {
+    excludeIds?: string[]
+    weightMultipliers?: Record<string, number>
+    showCounts?: Record<string, number>
+    rng?: () => number
+  } = {},
+): string | null {
+  if (!pool.length) return null
+
+  const excluded = new Set(excludeIds)
+  const active = pool.filter((card) => {
+    if (excluded.has(card.id)) return false
+    return (weightMultipliers[card.id] ?? 1) > 0
+  })
+  const pickable = active.length ? active : pool.filter((card) => (weightMultipliers[card.id] ?? 1) > 0)
+  const candidates = pickable.length ? pickable : pool
+  if (!candidates.length) return null
+
+  let minShows = Infinity
+  for (const card of candidates) {
+    const shown = showCounts[card.id] ?? 0
+    if (shown < minShows) minShows = shown
+  }
+
+  const leastShown = candidates.filter((card) => (showCounts[card.id] ?? 0) === minShows)
+  return leastShown[Math.floor(rng() * leastShown.length)]?.id ?? null
 }
 
 export function pickWeightedVocabCardId(

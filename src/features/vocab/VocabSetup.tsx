@@ -243,7 +243,7 @@ export function VocabSetup({
               <div className="vocab-srs-settings-grid">
                 <label className="vocab-srs-field">
                   <span className="vocab-srs-field-label">Длина</span>
-                  <span className="vocab-number-field">
+                  <span className="vocab-srs-control">
                     <input
                       type="number"
                       min={5}
@@ -258,13 +258,14 @@ export function VocabSetup({
                         })
                       }}
                     />
-                    <span>мин</span>
+                    <span className="vocab-srs-unit">мин</span>
                   </span>
+                  <span className="control-hint">оценка объёма сессии</span>
                 </label>
 
                 <label className="vocab-srs-field">
                   <span className="vocab-srs-field-label">Новых в день</span>
-                  <span className="vocab-number-field">
+                  <span className="vocab-srs-control">
                     <input
                       type="number"
                       min={0}
@@ -279,23 +280,33 @@ export function VocabSetup({
                         })
                       }}
                     />
-                    <span>слов</span>
+                    <span className="vocab-srs-unit">слов</span>
                   </span>
-                  {reviewDayNewIntroduced > 0 ? (
-                    <span className="control-hint">сегодня уже {reviewDayNewIntroduced}</span>
-                  ) : (
-                    <span className="control-hint">очередь от даты добавления</span>
-                  )}
+                  <span className="control-hint">
+                    {reviewDayNewIntroduced > 0
+                      ? `сегодня уже ${reviewDayNewIntroduced}`
+                      : 'очередь от даты добавления'}
+                  </span>
                 </label>
 
-                <label className="vocab-srs-field vocab-srs-field-wide">
-                  <span className="vocab-srs-field-label">Удержание</span>
-                  <span className="vocab-number-field vocab-srs-retention">
+                <div className="vocab-srs-field vocab-srs-field-wide">
+                  <div className="vocab-srs-retention-head">
+                    <span className="vocab-srs-field-label">Удержание</span>
+                    <span className="vocab-srs-retention-value" data-testid="vocab-target-retention-value">
+                      {Math.round((preferences.targetRetention ?? 0.9) * 100)}%
+                    </span>
+                  </div>
+                  <div
+                    className="vocab-srs-retention"
+                    role="group"
+                    aria-label="Целевое удержание"
+                  >
                     <input
                       type="range"
                       min={85}
                       max={95}
                       step={1}
+                      list="vocab-retention-ticks"
                       data-testid="vocab-target-retention"
                       value={Math.round((preferences.targetRetention ?? 0.9) * 100)}
                       onChange={(event) =>
@@ -304,9 +315,49 @@ export function VocabSetup({
                         })
                       }
                     />
-                    <span>{Math.round((preferences.targetRetention ?? 0.9) * 100)}%</span>
-                  </span>
-                </label>
+                    <datalist id="vocab-retention-ticks">
+                      <option value="85" />
+                      <option value="90" />
+                      <option value="95" />
+                    </datalist>
+                    <div className="vocab-srs-retention-presets">
+                      {(
+                        [
+                          { value: 0.85, label: '85%', hint: 'Реже' },
+                          { value: 0.9, label: '90%', hint: 'Баланс' },
+                          { value: 0.95, label: '95%', hint: 'Чаще' },
+                        ] as const
+                      ).map((option) => {
+                        const active =
+                          Math.round((preferences.targetRetention ?? 0.9) * 100) ===
+                          Math.round(option.value * 100)
+                        return (
+                          <button
+                            key={option.value}
+                            type="button"
+                            data-testid={`vocab-retention-${Math.round(option.value * 100)}`}
+                            className={
+                              active
+                                ? 'vocab-srs-retention-preset is-active'
+                                : 'vocab-srs-retention-preset'
+                            }
+                            onClick={() => onPatchPreferences({ targetRetention: option.value })}
+                          >
+                            <span className="vocab-srs-retention-preset-label">{option.label}</span>
+                            <span className="vocab-srs-retention-preset-hint">{option.hint}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                    <p className="control-hint vocab-srs-retention-hint">
+                      {(preferences.targetRetention ?? 0.9) >= 0.93
+                        ? 'Карточки due раньше — больше повторений, меньше забывания.'
+                        : (preferences.targetRetention ?? 0.9) <= 0.87
+                          ? 'Карточки due позже — меньше нагрузки, выше риск забыть.'
+                          : 'Баланс между частотой повторов и объёмом сессии.'}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
