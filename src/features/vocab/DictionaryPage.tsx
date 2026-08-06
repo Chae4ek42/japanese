@@ -1,7 +1,8 @@
-import { useDeferredValue, useEffect, useMemo, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import type { KanjiWord } from '../../shared/lib/types'
 import './styles.css'
 import { getJlptWords, searchWords } from '../../data/words/bank'
+import { useLoadMoreOnScroll } from '../../shared/lib/useLoadMoreOnScroll'
 import { useKanjiState, useVocabState } from '../../shared/state/AppStateContext'
 import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
 import { VOCAB_GROUPS, getWordsForGroup } from './groups'
@@ -32,6 +33,7 @@ export function DictionaryPage() {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [infoKanji, setInfoKanji] = useState<string | null>(null)
   const deferredQuery = useDeferredValue(query.trim())
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
   const myWords = vocab?.myWords ?? []
   const hiddenWordIds = vocab?.hiddenWordIds ?? []
@@ -73,6 +75,11 @@ export function DictionaryPage() {
   const visible = list.slice(0, visibleCount)
   const hasMore = visible.length < list.length
   const activeGroup = VOCAB_GROUPS.find((group) => group.id === groupId) ?? null
+
+  useLoadMoreOnScroll(loadMoreRef, {
+    hasMore,
+    onLoadMore: () => setVisibleCount((count) => count + PAGE_SIZE),
+  })
 
   if (!vocab || !kanji) return null
 
@@ -223,15 +230,8 @@ export function DictionaryPage() {
       />
 
       {hasMore ? (
-        <div className="vocab-more">
-          <button
-            type="button"
-            className="vocab-more-button"
-            data-testid="vocab-load-more"
-            onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
-          >
-            Показать ещё
-          </button>
+        <div className="vocab-more" ref={loadMoreRef} data-testid="vocab-load-more">
+          <span className="vocab-more-hint">Подгружаем ещё…</span>
         </div>
       ) : null}
 

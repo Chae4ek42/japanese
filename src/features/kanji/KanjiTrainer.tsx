@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react'
 import type { KanjiPreferences, KanjiWord, KanjiWordJlptLevel } from '../../shared/lib/types'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   getKanjiInfo,
   getPracticeWords,
@@ -8,6 +8,7 @@ import {
 } from '../../data/words/bank'
 import { formatKanjiReadings } from '../../shared/lib/format'
 import { speakJapanese, speakKanjiReadings } from '../../shared/lib/speech'
+import { useSwipeGestures } from '../../shared/lib/useSwipeGestures'
 import {
   applyLocalWordEdits,
   buildWordFromReadings,
@@ -40,6 +41,11 @@ export interface KanjiTrainerProps {
   onSaveWordEdit?: (word: KanjiWord) => void
   onBack: () => void
   onOpenInfo?: (character: string) => void
+  /** Navigate within the current filter list. */
+  onPrevKanji?: () => void
+  onNextKanji?: () => void
+  canGoPrev?: boolean
+  canGoNext?: boolean
 }
 
 function wordKey(word: KanjiWord): string {
@@ -63,9 +69,18 @@ export function KanjiTrainer({
   onSaveWordEdit,
   onBack,
   onOpenInfo,
+  onPrevKanji,
+  onNextKanji,
+  canGoPrev = false,
+  canGoNext = false,
 }: KanjiTrainerProps) {
   const info = getKanjiInfo(character)
   const isLearned = learned.includes(character)
+  const trainerRef = useRef<HTMLElement | null>(null)
+  const onPrevRef = useRef(onPrevKanji)
+  const onNextRef = useRef(onNextKanji)
+  onPrevRef.current = onPrevKanji
+  onNextRef.current = onNextKanji
   const [highlightElement, setHighlightElement] = useState<string | null>(null)
   const [expandedKey, setExpandedKey] = useState<string | null>(null)
   const [editing, setEditing] = useState(false)
@@ -111,6 +126,47 @@ export function KanjiTrainer({
     setEditError('')
     setShowAllWords(false)
   }, [character])
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.metaKey || event.ctrlKey || event.altKey) return
+      const target = event.target as HTMLElement | null
+      if (
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.isContentEditable)
+      ) {
+        return
+      }
+      if (event.code === 'ArrowLeft') {
+        if (!canGoPrev) return
+        event.preventDefault()
+        onPrevRef.current?.()
+        return
+      }
+      if (event.code === 'ArrowRight') {
+        if (!canGoNext) return
+        event.preventDefault()
+        onNextRef.current?.()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [canGoPrev, canGoNext])
+
+  const swipesActive = useSwipeGestures(
+    trainerRef,
+    {
+      onSwipeLeft: () => {
+        if (canGoPrev) onPrevRef.current?.()
+      },
+      onSwipeRight: () => {
+        if (canGoNext) onNextRef.current?.()
+      },
+    },
+    Boolean(onPrevKanji || onNextKanji),
+  )
 
   useEffect(() => {
     if (!expandedWord) {
@@ -183,11 +239,37 @@ export function KanjiTrainer({
   }
 
   return (
-    <section className="kanji-trainer" data-testid="kanji-trainer">
+    <section
+      ref={trainerRef}
+      className={`kanji-trainer${swipesActive ? ' has-mobile-swipes' : ''}`}
+      data-testid="kanji-trainer"
+    >
       <div className="kanji-trainer-toolbar">
         <button type="button" className="text-button" onClick={onBack}>
           ← Все кандзи
         </button>
+        <div className="kanji-trainer-nav" role="group" aria-label="Соседние кандзи">
+          <button
+            type="button"
+            className="ghost-button kanji-trainer-nav-button"
+            data-testid="kanji-nav-prev"
+            disabled={!canGoPrev}
+            onClick={() => onPrevKanji?.()}
+            title="Предыдущий (←)"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            className="ghost-button kanji-trainer-nav-button"
+            data-testid="kanji-nav-next"
+            disabled={!canGoNext}
+            onClick={() => onNextKanji?.()}
+            title="Следующий (→)"
+          >
+            →
+          </button>
+        </div>
         <div className="kanji-trainer-filters">
           <WordJlptFilter
             selected={wordJlptLevels}

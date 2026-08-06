@@ -109,8 +109,22 @@ export function KanjiPage() {
 
   const items = useMemo(() => filterKanji(filter), [filter])
   const learnedCount = items.filter((item) => learnedSet.has(item.character)).length
+  const focusIndex = focusKanji
+    ? items.findIndex((item) => item.character === focusKanji)
+    : -1
+  const canGoPrev = focusIndex > 0
+  const canGoNext = focusIndex >= 0 && focusIndex < items.length - 1
 
   if (!kanji || !vocab) return null
+
+  function goAdjacentKanji(direction: 'prev' | 'next') {
+    if (focusIndex < 0) return
+    const nextIndex = direction === 'prev' ? focusIndex - 1 : focusIndex + 1
+    const next = items[nextIndex]
+    if (!next) return
+    setInfoKanji(null)
+    setFocusKanji(next.character)
+  }
 
   function startRandom() {
     const levels =
@@ -166,6 +180,10 @@ export function KanjiPage() {
           onSaveWordEdit={onSaveWordEdit}
           onBack={() => setFocusKanji(null)}
           onOpenInfo={(character) => setInfoKanji(character)}
+          onPrevKanji={() => goAdjacentKanji('prev')}
+          onNextKanji={() => goAdjacentKanji('next')}
+          canGoPrev={canGoPrev}
+          canGoNext={canGoNext}
         />
         {infoKanji ? (
           <KanjiInfoCard

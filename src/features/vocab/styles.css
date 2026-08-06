@@ -799,6 +799,12 @@
   display: flex;
   justify-content: center;
   padding: 4px 0 12px;
+  min-height: 44px;
+}
+
+.vocab-more-hint {
+  color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .vocab-more-button {

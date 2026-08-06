@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { KanjiWord } from '../../shared/lib/types'
 import './styles.css'
+import { useLoadMoreOnScroll } from '../../shared/lib/useLoadMoreOnScroll'
 import { useKanjiState, useVocabState } from '../../shared/state/AppStateContext'
 import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
 import { CustomWordForm } from './CustomWordForm'
@@ -23,6 +24,7 @@ export function MineWordsPage() {
   const [showCustomForm, setShowCustomForm] = useState(false)
   const [infoKanji, setInfoKanji] = useState<string | null>(null)
   const [copyStatus, setCopyStatus] = useState<'idle' | 'done' | 'error'>('idle')
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
   const myWords = vocab?.myWords ?? []
   const customWords = vocab?.customWords ?? {}
@@ -90,6 +92,11 @@ export function MineWordsPage() {
         : mineWords
   const visible = list.slice(0, visibleCount)
   const hasMore = visible.length < list.length
+
+  useLoadMoreOnScroll(loadMoreRef, {
+    hasMore,
+    onLoadMore: () => setVisibleCount((count) => count + PAGE_SIZE),
+  })
 
   if (!vocab || !kanji) return null
 
@@ -293,15 +300,8 @@ export function MineWordsPage() {
       />
 
       {hasMore ? (
-        <div className="vocab-more">
-          <button
-            type="button"
-            className="vocab-more-button"
-            data-testid="vocab-load-more"
-            onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
-          >
-            Показать ещё
-          </button>
+        <div className="vocab-more" ref={loadMoreRef} data-testid="vocab-load-more">
+          <span className="vocab-more-hint">Подгружаем ещё…</span>
         </div>
       ) : null}
 

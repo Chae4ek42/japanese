@@ -54,6 +54,26 @@ test('kanji section shows word list and can stage training words', async ({ page
   await expect(page.getByTestId('kanji-info-card')).toHaveCount(0)
 })
 
+test('kanji trainer navigates previous and next in filter', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile-chrome', 'Kanji nav covered on desktop.')
+  await openFreshApp(page)
+  await page.getByTestId('nav-kanji').click()
+  await page.getByTestId('kanji-filter-N5').click()
+  await page.getByTestId('kanji-cell-日').click()
+  await expect(page.getByTestId('kanji-trainer')).toBeVisible()
+  await expect(page.getByTestId('kanji-focus-char')).toHaveText('日')
+
+  await page.getByTestId('kanji-nav-next').click()
+  await expect(page.getByTestId('kanji-focus-char')).not.toHaveText('日')
+  const afterNext = await page.getByTestId('kanji-focus-char').innerText()
+
+  await page.getByTestId('kanji-nav-prev').click()
+  await expect(page.getByTestId('kanji-focus-char')).toHaveText('日')
+
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByTestId('kanji-focus-char')).toHaveText(afterNext)
+})
+
 test('kanji composition card opens component stack', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Composition covered on desktop.')
   await openFreshApp(page)
