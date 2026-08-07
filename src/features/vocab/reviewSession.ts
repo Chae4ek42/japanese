@@ -324,11 +324,26 @@ export function removeCardFromReviewSession(session: PracticeSession, cardId: st
 
 export function appendCardToReviewSession(session: PracticeSession, cardId: string): PracticeSession {
   if (session.poolIds.includes(cardId)) return session
+  // Seed at the session average so even-mode doesn't force the newcomer every other card.
+  const seededShows = averageSessionShowCount(session)
   return {
     ...session,
     poolIds: [...session.poolIds, cardId],
+    showCounts: {
+      ...(session.showCounts ?? {}),
+      [cardId]: seededShows,
+    },
     review: session.review ? appendToReviewPlan(session.review, cardId) : session.review,
   }
+}
+
+/** Mean show-count across the current session pool (missing counts count as 0). */
+export function averageSessionShowCount(session: PracticeSession): number {
+  const ids = session.poolIds
+  if (!ids.length) return 0
+  const counts = session.showCounts ?? {}
+  const total = ids.reduce((sum, id) => sum + (counts[id] ?? 0), 0)
+  return Math.round(total / ids.length)
 }
 
 export { drillModeToAspect, answerLengthForCard, cardHintsFromVocab }

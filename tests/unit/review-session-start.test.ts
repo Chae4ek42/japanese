@@ -1,10 +1,13 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
+  appendCardToReviewSession,
+  averageSessionShowCount,
   isSessionCleanAnswer,
   masteryOutcomeFromRound,
   startReviewPracticeSession,
 } from '../../src/features/vocab/reviewSession.ts'
+import { createInitialSession } from '../../src/shared/lib/trainer.ts'
 import {
   DEFAULT_VOCAB_PREFERENCES,
   sanitizeVocabState,
@@ -70,6 +73,40 @@ describe('isSessionCleanAnswer', () => {
     assert.equal(isSessionCleanAnswer({ wrong: false, mistakes: 1 }), false)
     assert.equal(isSessionCleanAnswer({ wrong: false, typoForgiven: true }), false)
     assert.equal(isSessionCleanAnswer({ wrong: false, wrongRecorded: true }), false)
+  })
+})
+
+describe('appendCardToReviewSession', () => {
+  it('ставит новому слову среднее число показов по пулу', () => {
+    const session = createInitialSession({
+      poolIds: ['a', 'b', 'c'],
+      showCounts: { a: 2, b: 4, c: 3 },
+    })
+    assert.equal(averageSessionShowCount(session), 3)
+
+    const next = appendCardToReviewSession(session, 'd')
+    assert.deepEqual(next.poolIds, ['a', 'b', 'c', 'd'])
+    assert.equal(next.showCounts?.d, 3)
+    assert.equal(next.showCounts?.a, 2)
+  })
+
+  it('округляет среднее и считает отсутствующие показы как 0', () => {
+    const session = createInitialSession({
+      poolIds: ['a', 'b'],
+      showCounts: { a: 1 },
+    })
+    assert.equal(averageSessionShowCount(session), 1) // (1+0)/2 → 0.5 → 1
+    const next = appendCardToReviewSession(session, 'c')
+    assert.equal(next.showCounts?.c, 1)
+  })
+
+  it('не меняет сессию, если слово уже в пуле', () => {
+    const session = createInitialSession({
+      poolIds: ['a'],
+      showCounts: { a: 5 },
+    })
+    const next = appendCardToReviewSession(session, 'a')
+    assert.equal(next, session)
   })
 })
 
