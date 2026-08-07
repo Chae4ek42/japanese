@@ -63,6 +63,19 @@ function clampInt(value: unknown, min: number, max: number, fallback: number): n
   return Math.min(max, Math.max(min, n))
 }
 
+/** Old JLPT reading buckets → thematic groups. */
+const LEGACY_READING_GROUP_IDS: Record<string, string> = {
+  'reading-foundation': 'reading-demo',
+  'reading-must': 'reading-demo',
+  'reading-n5': 'reading-demo',
+  'reading-n4': 'reading-adverbs',
+  'reading-n3': 'reading-adverbs',
+  'reading-n2': 'reading-onomatopoeia',
+  'reading-n1': 'reading-onomatopoeia',
+  'reading-hira': 'reading-hiragana',
+  'reading-kata': 'reading-katakana',
+}
+
 function clampFloat(value: unknown, min: number, max: number, fallback: number): number {
   const n = typeof value === 'number' && Number.isFinite(value) ? value : fallback
   return Math.min(max, Math.max(min, n))
@@ -71,8 +84,9 @@ function clampFloat(value: unknown, min: number, max: number, fallback: number):
 function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): VocabPreferences {
   const source = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {}
   const levelRaw = typeof source.level === 'number' ? source.level : fallback.level
-  const groupId =
+  const rawGroupId =
     typeof source.groupId === 'string' && source.groupId.length > 0 ? source.groupId : fallback.groupId
+  const groupId = LEGACY_READING_GROUP_IDS[rawGroupId] ?? rawGroupId
 
   const newWordLimit = clampInt(source.newWordLimit, -1, 50, fallback.newWordLimit)
   const newPerDayRaw =

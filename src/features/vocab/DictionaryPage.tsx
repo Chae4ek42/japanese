@@ -5,7 +5,12 @@ import { getJlptWords, searchWords } from '../../data/words/bank'
 import { useLoadMoreOnScroll } from '../../shared/lib/useLoadMoreOnScroll'
 import { useKanjiState, useVocabState } from '../../shared/state/AppStateContext'
 import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
-import { VOCAB_GROUPS, getWordsForGroup } from './groups'
+import {
+  VOCAB_GROUPS,
+  collectGroupTrainingIds,
+  getVocabGroupsByKind,
+  getWordsForGroup,
+} from './groups'
 import { isWordSaved, mergeWordsByWriting, wordVariantIds } from './mergeHomographs'
 import { DictionaryWordList } from './DictionaryWordList'
 
@@ -32,6 +37,7 @@ export function DictionaryPage() {
   const [query, setQuery] = useState('')
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [infoKanji, setInfoKanji] = useState<string | null>(null)
+  const [groupActionNote, setGroupActionNote] = useState('')
   const deferredQuery = useDeferredValue(query.trim())
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
@@ -54,10 +60,13 @@ export function DictionaryPage() {
   const trainingWordSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
   const hiddenSet = useMemo(() => new Set(hiddenWordIds), [hiddenWordIds])
   const learnedSet = useMemo(() => new Set(kanjiLearned), [kanjiLearned])
+  const readingGroups = useMemo(() => getVocabGroupsByKind('reading'), [])
+  const themeGroups = useMemo(() => getVocabGroupsByKind('theme'), [])
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE)
     setInfoKanji(null)
+    setGroupActionNote('')
   }, [catalogMode, level, groupId, deferredQuery])
 
   const catalogWords = useMemo(() => {
@@ -75,6 +84,17 @@ export function DictionaryPage() {
   const visible = list.slice(0, visibleCount)
   const hasMore = visible.length < list.length
   const activeGroup = VOCAB_GROUPS.find((group) => group.id === groupId) ?? null
+
+  const groupTrainingIds = useMemo(
+    () => (activeGroup ? collectGroupTrainingIds(activeGroup) : []),
+    [activeGroup],
+  )
+  const groupInTrainingCount = useMemo(
+    () => groupTrainingIds.filter((id) => trainingWordSet.has(id)).length,
+    [groupTrainingIds, trainingWordSet],
+  )
+  const groupFullyInTraining =
+    groupTrainingIds.length > 0 && groupInTrainingCount >= groupTrainingIds.length
 
   useLoadMoreOnScroll(loadMoreRef, {
     hasMore,
@@ -113,6 +133,22 @@ export function DictionaryPage() {
     onAddTrainingWords(ids)
   }
 
+  function handleToggleWholeGroup() {
+    if (!activeGroup || !groupTrainingIds.length) return
+    if (groupFullyInTraining) {
+      onRemoveTrainingWords(groupTrainingIds)
+      setGroupActionNote(`Группа «${activeGroup.label}» убрана из набора`)
+      return
+    }
+    const missing = groupTrainingIds.filter((id) => !trainingWordSet.has(id))
+    onAddTrainingWords(missing.length ? missing : groupTrainingIds)
+    setGroupActionNote(
+      missing.length
+        ? `В набор добавлено: ${missing.length} из «${activeGroup.label}»`
+        : `Группа «${activeGroup.label}» уже в наборе`,
+    )
+  }
+
   const listCaption = deferredQuery
     ? `Поиск «${deferredQuery}»`
     : catalogMode === 'group'
@@ -120,6 +156,34 @@ export function DictionaryPage() {
       : level === 'other'
         ? 'Вне JLPT'
         : `JLPT N${level}`
+
+  function renderGroupSection(title: string, groups: typeof VOCAB_GROUPS) {
+    if (!groups.length) return null
+    return (
+      <div className="vocab-group-section">
+        <p className="vocab-group-section-label">{title}</p>
+        <div className="vocab-group-grid" role="list">
+          {groups.map((group) => (
+            <button
+              key={group.id}
+              type="button"
+              role="listitem"
+              data-testid={`vocab-group-${group.id}`}
+              title={group.description || group.label}
+              className={groupId === group.id ? 'vocab-group-card is-active' : 'vocab-group-card'}
+              onClick={() => {
+                setGroupId(group.id)
+                resetPaging()
+              }}
+            >
+              <span className="vocab-group-label">{group.label}</span>
+              <span className="vocab-group-count">{group.wordIds.length}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <main className="vocab-page" data-testid="vocab-page">
@@ -189,23 +253,9 @@ export function DictionaryPage() {
                 ))}
               </div>
             ) : (
-              <div className="vocab-group-grid" role="list">
-                {VOCAB_GROUPS.map((group) => (
-                  <button
-                    key={group.id}
-                    type="button"
-                    role="listitem"
-                    data-testid={`vocab-group-${group.id}`}
-                    className={groupId === group.id ? 'vocab-group-card is-active' : 'vocab-group-card'}
-                    onClick={() => {
-                      setGroupId(group.id)
-                      resetPaging()
-                    }}
-                  >
-                    <span className="vocab-group-label">{group.label}</span>
-                    <span className="vocab-group-count">{group.wordIds.length}</span>
-                  </button>
-                ))}
+              <div className="vocab-group-sections">
+                {renderGroupSection('Чтение', readingGroups)}
+                {renderGroupSection('Темы', themeGroups)}
               </div>
             )}
           </>
@@ -213,10 +263,36 @@ export function DictionaryPage() {
       </section>
 
       <div className="vocab-list-head">
-        <h3 className="vocab-list-title">{listCaption}</h3>
-        <p className="vocab-count" data-testid="vocab-count">
-          {list.length ? `${visible.length} из ${list.length}` : 'Ничего не найдено.'}
-        </p>
+        <div className="vocab-list-head-main">
+          <h3 className="vocab-list-title">{listCaption}</h3>
+          <p className="vocab-count" data-testid="vocab-count">
+            {list.length ? `${visible.length} из ${list.length}` : 'Ничего не найдено.'}
+            {catalogMode === 'group' && activeGroup?.description && !deferredQuery
+              ? ` · ${activeGroup.description}`
+              : ''}
+          </p>
+          {groupActionNote ? (
+            <p className="vocab-group-action-note" data-testid="vocab-group-action-note">
+              {groupActionNote}
+            </p>
+          ) : null}
+        </div>
+        {catalogMode === 'group' && activeGroup && !deferredQuery ? (
+          <button
+            type="button"
+            className={
+              groupFullyInTraining ? 'vocab-group-bulk-button is-in-set' : 'vocab-group-bulk-button'
+            }
+            data-testid="vocab-group-add-all"
+            onClick={handleToggleWholeGroup}
+          >
+            {groupFullyInTraining
+              ? 'Убрать группу из набора'
+              : groupInTrainingCount
+                ? `Добавить остаток в набор (${groupTrainingIds.length - groupInTrainingCount})`
+                : 'Всю группу в набор'}
+          </button>
+        ) : null}
       </div>
 
       <DictionaryWordList

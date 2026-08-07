@@ -5,7 +5,7 @@ import type {
   VocabLevelFilter,
   VocabPreferences,
 } from '../../shared/lib/types'
-import { normalizeQuizGlossKey, pickQuizMeaning } from '../../shared/lib/jmdict-gloss'
+import { normalizeQuizGlossKey, softDisplayMeaning } from '../../shared/lib/jmdict-gloss'
 import { vocabSimilarity } from '../../shared/lib/review/similarity'
 import {
   getJlptWords,
@@ -113,7 +113,9 @@ export function wordToVocabCard(word: KanjiWord): VocabCard | null {
   const meanings = [
     ...new Set(readings.flatMap((reading) => reading.meanings).map((item) => item.trim()).filter(Boolean)),
   ]
-  const meaning = pickQuizMeaning(meanings.length ? meanings : word.meanings)
+  // Soft fallback: reading/interjection glosses often fail strict quiz cleaning,
+  // but must still appear in «Набор» / romaji drills.
+  const meaning = softDisplayMeaning(meanings.length ? meanings : word.meanings)
   if (!meaning) return null
   const variantIds = wordVariantIds(word)
   return {

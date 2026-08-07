@@ -5,6 +5,7 @@ import {
   collectGlossFootnotes,
   normalizeQuizGlossKey,
   pickQuizMeaning,
+  softDisplayMeaning,
 } from '../../src/shared/lib/jmdict-gloss'
 
 describe('collectGlossFootnotes', () => {
@@ -62,10 +63,31 @@ describe('cleanQuizGloss', () => {
     assert.equal(cleanQuizGloss(long), 'вы')
   })
 
+  it('берёт голову до скобок даже при «др.» в пояснении', () => {
+    assert.equal(
+      cleanQuizGloss('одэн (смесь из варёных конняку, тофу, бататов и др.)'),
+      'одэн',
+    )
+  })
+
+  it('берёт первый возглас у междометий', () => {
+    assert.equal(
+      cleanQuizGloss(
+        '(обращение) послушайте!, извините!, разрешите!, видите ли…; вот что…',
+      ),
+      'послушайте',
+    )
+  })
+
   it('выбирает первое пригодное значение', () => {
     assert.equal(pickQuizMeaning(['(см.) こちら', '1) здесь; эта сторона']), 'здесь; эта сторона')
     assert.equal(pickQuizMeaning(['(эпист.)', '1) Вы', '2) с Вашей стороны']), 'Вы')
     assert.equal(pickQuizMeaning(['(см.) あせби']), null)
+  })
+
+  it('softDisplayMeaning оставляет карточку без quiz-gloss', () => {
+    assert.equal(softDisplayMeaning(['(см.) あせби']), null)
+    assert.ok(softDisplayMeaning(['одэн (смесь из варёных конняку, тофу, бататов и др.)']))
   })
 
   it('нормализует ключ для дедупа', () => {

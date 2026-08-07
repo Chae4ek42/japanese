@@ -131,6 +131,23 @@ describe('vocab pool', () => {
     assert.equal(pool.length, 4)
   })
 
+  it('source=list показывает reading-слова с «трудными» глоссами', () => {
+    // あの / おでん historically failed pickQuizMeaning (др. / interjection cries).
+    const ids = ['1000430', '1001390']
+    const pool = buildVocabPool(
+      {
+        ...DEFAULT_VOCAB_PREFERENCES,
+        source: 'list',
+        newWordLimit: -1,
+      },
+      [],
+      {},
+      { applyNewWordLimit: false, trainingWordIds: ids },
+    )
+    assert.equal(pool.length, 2)
+    assert.ok(pool.every((card) => card.answers.length && card.meaning))
+  })
+
   it('собирает пул N5', () => {
     const pool = buildVocabPool({ ...DEFAULT_VOCAB_PREFERENCES, source: 'level', level: 5 }, [])
     assert.ok(pool.length >= 100)

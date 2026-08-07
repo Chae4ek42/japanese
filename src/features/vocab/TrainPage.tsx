@@ -36,6 +36,7 @@ export function TrainPage() {
         onUpdateStats={vocab.updateStats}
         onApplyGradedReview={vocab.applyGradedReview}
         onAddMyWords={vocab.addMyWords}
+        onAddTrainingWords={vocab.addTrainingWords}
         onRemoveTrainingWords={vocab.removeTrainingWords}
         onSaveWordEdit={vocab.saveWordEdit}
         onHideWords={vocab.hideWords}

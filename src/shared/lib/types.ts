@@ -603,7 +603,22 @@ export interface KanjiWord {
 export interface KanjiBankMeta {
   builtAt: string
   sources: Record<string, string>
-  counts: Record<string, number>
+  counts: {
+    kanji: number
+    words: number
+    components: number
+    joyo: number
+    n5: number
+    n4: number
+    n3: number
+    n2: number
+    n1: number
+    joyoOnly: number
+    withComponents: number
+    readingFoundation?: number
+    readingGroups?: Record<string, number>
+    [key: string]: number | Record<string, number> | undefined
+  }
 }
 
 export type ReadingSegmentRole = 'focus' | 'other' | 'shared' | 'okuri'

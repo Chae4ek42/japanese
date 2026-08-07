@@ -9,7 +9,12 @@ import type {
 import { getKanjiByLevel, getPopularWordsForKanji } from '../../data/words/bank'
 import { WordJlptFilter } from '../kanji/WordJlptFilter'
 import '../kanji/styles.css'
-import { VOCAB_GROUPS } from './groups'
+import {
+  VOCAB_GROUPS,
+  collectGroupTrainingIds,
+  getVocabGroup,
+  getVocabGroupsByKind,
+} from './groups'
 import { VocabCalibration } from './VocabCalibration'
 import { VocabSetupPool } from './VocabSetupPool'
 
@@ -53,6 +58,7 @@ export interface VocabSetupProps {
   myWordsCount: number
   myWordIds?: string[]
   trainingWordCount?: number
+  trainingWordIds?: string[]
   problemWordCount?: number
   excludedIds: Set<string>
   errorText?: string
@@ -64,6 +70,8 @@ export interface VocabSetupProps {
   onPatchPreferences: (patch: Partial<VocabPreferences>) => void
   onToggleExclude: (cardId: string) => void
   onClearExcluded: () => void
+  onAddTrainingWords?: (wordIds: string[]) => void
+  onRemoveTrainingWords?: (wordIds: string[]) => void
   onStart: () => void
 }
 
@@ -75,6 +83,7 @@ export function VocabSetup({
   myWordsCount,
   myWordIds = [],
   trainingWordCount = 0,
+  trainingWordIds = [],
   problemWordCount = 0,
   excludedIds,
   errorText = '',
@@ -85,6 +94,8 @@ export function VocabSetup({
   onPatchPreferences,
   onToggleExclude,
   onClearExcluded,
+  onAddTrainingWords,
+  onRemoveTrainingWords,
   onStart,
 }: VocabSetupProps) {
   const isSrs = preferences.sessionMode === 'srs'
@@ -92,10 +103,27 @@ export function VocabSetup({
   const [newLimitDraft, setNewLimitDraft] = useState<string | null>(null)
   const [kanjiPickLevel, setKanjiPickLevel] = useState<VocabLevelFilter>(5)
   const mySet = useMemo(() => new Set(myWordIds), [myWordIds])
+  const trainingSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
+  const readingGroups = useMemo(() => getVocabGroupsByKind('reading'), [])
+  const themeGroups = useMemo(() => getVocabGroupsByKind('theme'), [])
+  const activeGroup = useMemo(
+    () => getVocabGroup(preferences.groupId) ?? VOCAB_GROUPS[0] ?? null,
+    [preferences.groupId],
+  )
   const trainFullGroup = preferences.trainFullGroup === true
   const selectedKanji = preferences.selectedKanji ?? []
   const selectedKanjiSet = useMemo(() => new Set(selectedKanji), [selectedKanji])
   const kanjiPickerItems = useMemo(() => getKanjiByLevel(kanjiPickLevel), [kanjiPickLevel])
+  const activeGroupTrainingIds = useMemo(
+    () => (activeGroup ? collectGroupTrainingIds(activeGroup) : []),
+    [activeGroup],
+  )
+  const activeGroupInTraining = useMemo(
+    () => activeGroupTrainingIds.filter((id) => trainingSet.has(id)).length,
+    [activeGroupTrainingIds, trainingSet],
+  )
+  const activeGroupFullyInTraining =
+    activeGroupTrainingIds.length > 0 && activeGroupInTraining >= activeGroupTrainingIds.length
 
   const showFullSetToggle =
     !isSrs &&
@@ -423,31 +451,67 @@ export function VocabSetup({
             {preferences.source === 'group' ? (
               <div className="control-group">
                 <span className="group-label">Группа</span>
-                <div className="vocab-group-grid vocab-setup-groups">
-                  {VOCAB_GROUPS.map((group) => {
-                    const remaining = group.wordIds.filter((id) => !mySet.has(id)).length
-                    return (
-                      <button
-                        key={group.id}
-                        type="button"
-                        data-testid={`vocab-train-group-${group.id}`}
-                        className={
-                          preferences.groupId === group.id
-                            ? 'vocab-group-card is-active'
-                            : 'vocab-group-card'
-                        }
-                        onClick={() => onPatchPreferences({ groupId: group.id })}
-                      >
-                        <span className="vocab-group-label">{group.label}</span>
-                        <span className="vocab-group-count">
-                          {trainFullGroup
-                            ? group.wordIds.length
-                            : `${remaining}/${group.wordIds.length}`}
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
+                {[
+                  { title: 'Чтение', groups: readingGroups },
+                  { title: 'Темы', groups: themeGroups },
+                ].map((section) =>
+                  section.groups.length ? (
+                    <div key={section.title} className="vocab-group-section">
+                      <p className="vocab-group-section-label">{section.title}</p>
+                      <div className="vocab-group-grid vocab-setup-groups">
+                        {section.groups.map((group) => {
+                          const remaining = group.wordIds.filter((id) => !mySet.has(id)).length
+                          return (
+                            <button
+                              key={group.id}
+                              type="button"
+                              data-testid={`vocab-train-group-${group.id}`}
+                              title={group.description || group.label}
+                              className={
+                                preferences.groupId === group.id
+                                  ? 'vocab-group-card is-active'
+                                  : 'vocab-group-card'
+                              }
+                              onClick={() => onPatchPreferences({ groupId: group.id })}
+                            >
+                              <span className="vocab-group-label">{group.label}</span>
+                              <span className="vocab-group-count">
+                                {trainFullGroup
+                                  ? group.wordIds.length
+                                  : `${remaining}/${group.wordIds.length}`}
+                              </span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ) : null,
+                )}
+                {activeGroup && onAddTrainingWords && onRemoveTrainingWords ? (
+                  <button
+                    type="button"
+                    className={
+                      activeGroupFullyInTraining
+                        ? 'vocab-group-bulk-button is-in-set'
+                        : 'vocab-group-bulk-button'
+                    }
+                    data-testid="vocab-setup-group-add-all"
+                    onClick={() => {
+                      if (activeGroupFullyInTraining) {
+                        onRemoveTrainingWords(activeGroupTrainingIds)
+                        return
+                      }
+                      const missing = activeGroupTrainingIds.filter((id) => !trainingSet.has(id))
+                      onAddTrainingWords(missing.length ? missing : activeGroupTrainingIds)
+                    }}
+                  >
+                    {activeGroupFullyInTraining
+                      ? 'Убрать группу из набора'
+                      : activeGroupInTraining
+                        ? `Добавить остаток в набор (${activeGroupTrainingIds.length - activeGroupInTraining})`
+                        : 'Всю группу в набор'}
+                  </button>
+                ) : null}
               </div>
             ) : null}
 

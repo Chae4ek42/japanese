@@ -104,6 +104,7 @@ export interface VocabTrainerProps {
     countAsNewIntro?: boolean
   }) => void
   onAddMyWords?: (wordIds: string[]) => void
+  onAddTrainingWords?: (wordIds: string[]) => void
   onRemoveTrainingWords?: (wordIds: string[]) => void
   onSaveWordEdit?: (word: KanjiWord) => void
   onHideWords?: (wordIds: string[]) => void
@@ -132,6 +133,7 @@ export function VocabTrainer({
   onUpdateStats,
   onApplyGradedReview,
   onAddMyWords,
+  onAddTrainingWords,
   onRemoveTrainingWords,
   onSaveWordEdit,
   onHideWords,
@@ -1582,6 +1584,7 @@ export function VocabTrainer({
         errorText={feedback.type === 'error' ? feedback.text : ''}
         infoText={feedback.type === 'success' ? feedback.text : ''}
         trainingWordCount={trainingWordIds.length}
+        trainingWordIds={trainingWordIds}
         problemWordCount={problemWordIds.length}
         excludedIds={setupExcludedIds}
         memory={memory}
@@ -1597,6 +1600,8 @@ export function VocabTrainer({
           })
         }}
         onClearExcluded={() => setSetupExcludedIds(new Set())}
+        onAddTrainingWords={onAddTrainingWords}
+        onRemoveTrainingWords={onRemoveTrainingWords}
         onStart={startPractice}
       />
     )

@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { getJlptWords, getWordById, searchWords } from '../../src/data/words/bank'
-import { VOCAB_GROUPS, getWordsForGroup } from '../../src/features/vocab/groups'
+import {
+  VOCAB_GROUPS,
+  collectGroupTrainingIds,
+  getVocabGroup,
+  getVocabGroupsByKind,
+  getWordsForGroup,
+  groupKind,
+} from '../../src/features/vocab/groups'
 
 describe('vocab catalog', () => {
   it('группы содержат реальные слова', () => {
@@ -33,22 +40,36 @@ describe('vocab catalog', () => {
     assert.equal(getWordById(first!.id!)?.writing, '毎日')
   })
 
-  it('группы чтения: мастхев и уровни N5–N1', () => {
-    const must = getWordsForGroup('reading-must')
-    assert.ok(must.length >= 40 && must.length <= 200, `must size ${must.length}`)
-    assert.ok(must.some((word) => word.writing === 'これ' || word.kana === 'これ'))
-    assert.ok(must.some((word) => word.writing === 'です' || word.kana === 'です'))
+  it('группы чтения тематические и самостоятельные', () => {
+    const reading = getVocabGroupsByKind('reading')
+    assert.ok(reading.length >= 8, `reading groups ${reading.length}`)
+    assert.ok(reading.every((group) => groupKind(group) === 'reading'))
+    assert.ok(reading.every((group) => group.wordIds.length > 0))
 
-    const n5 = getWordsForGroup('reading-n5')
-    assert.ok(n5.length >= 20, `n5 size ${n5.length}`)
+    const demo = getWordsForGroup('reading-demo')
+    assert.ok(demo.length >= 8, `demo size ${demo.length}`)
+    assert.ok(demo.some((word) => word.writing === 'これ' || word.kana === 'これ'))
 
-    const giant = getWordsForGroup('reading-foundation')
-    assert.equal(giant.length, 0, 'старая монолитная группа удалена')
+    const adverbs = getWordsForGroup('reading-adverbs')
+    assert.ok(adverbs.length >= 20, `adverbs size ${adverbs.length}`)
 
-    for (const id of ['reading-must', 'reading-n5', 'reading-n4', 'reading-n3', 'reading-n2', 'reading-n1']) {
-      const group = getWordsForGroup(id)
-      assert.ok(group.length > 0, id)
-      assert.ok(group.every((word) => word.writing && word.kana && word.meanings.length))
-    }
+    const particles = getWordsForGroup('reading-particles')
+    assert.ok(particles.length >= 10, `particles size ${particles.length}`)
+
+    assert.equal(getWordsForGroup('reading-foundation').length, 0)
+    assert.equal(getWordsForGroup('reading-must').length, 0)
+    assert.equal(getWordsForGroup('reading-n5').length, 0)
+
+    const themes = getVocabGroupsByKind('theme')
+    assert.ok(themes.length >= 20)
+    assert.ok(themes.every((group) => groupKind(group) === 'theme'))
+  })
+
+  it('collectGroupTrainingIds собирает id группы для набора', () => {
+    const group = getVocabGroup('reading-demo')
+    assert.ok(group)
+    const ids = collectGroupTrainingIds(group!)
+    assert.ok(ids.length >= group!.wordIds.length)
+    assert.ok(group!.wordIds.every((id) => ids.includes(id)))
   })
 })

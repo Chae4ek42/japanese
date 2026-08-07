@@ -1,6 +1,6 @@
 /**
  * Добавляет в банк распространённые слова, которые в текстах пишут каной
- * (これ, です, ありがとう…), и собирает группы «Чтение» по уровням.
+ * (これ, です, ありがとう…), и собирает самостоятельные тематические группы «Чтение».
  *
  * Источник: кэш jmdict-rus + OpenJLPT vocab из build:kanji-bank.
  * Запуск: node scripts/add-reading-foundation.mjs
@@ -24,40 +24,208 @@ const HIRAGANA_RE = /^[\u3040-\u309Fーゝゞ]+$/
 const KATAKANA_RE = /^[\u30A0-\u30FFーヽヾ]+$/
 const RARE_KANJI_TAGS = new Set(['rK', 'oK', 'iK', 'sK'])
 
-/** Compact must-have for comfortable reading (writings / kana keys). */
-const MUST_HAVE_KEYS = [
-  // demonstratives / places
-  'これ', 'それ', 'あれ', 'どれ', 'この', 'その', 'あの', 'どの',
-  'ここ', 'そこ', 'あそこ', 'どこ', 'こう', 'そう', 'どう',
-  // people / questions
-  '私', 'わたし', 'あなた', '誰', 'だれ', '何', 'なに', 'いつ', 'なぜ', 'どうして',
-  // copula / endings
-  'です', 'である', 'だ', 'でした', 'じゃない', 'ではない',
-  // conjunctions / particles (as lexicon allows)
-  'から', 'まで', 'など', 'のに', 'ので', 'けど', 'けれど', 'けれども',
-  'と', 'や', 'へ', 'か', 'よ', 'ね', 'さ', 'ぞ', 'かな',
-  'だけ', 'しか', 'ばかり', 'ほど', 'くらい', 'ぐらい', 'ずつ', 'など',
-  'について', 'として', 'によって',
-  // connectors
-  'そして', 'それから', 'それで', 'しかし', 'でも', 'また', 'または',
-  // adverbs / frequency
-  'まだ', 'もう', 'いつも', 'みんな', 'みな', 'とても', 'ちょっと', 'すこし', '少し',
-  'たくさん', 'あまり', 'ぜんぜん', 'きっと', 'たぶん', 'やはり', 'やっぱり',
-  'ほんとう', '本当', 'もちろん', 'ぜひ', 'ちょうど', 'すぐ', 'ゆっくり',
-  'いろいろ', 'こんな', 'そんな', 'あんな', 'どんな',
-  // light verbs / auxiliaries
-  'ください', '下さい', 'しまう', 'いる', 'ある', 'なる', 'する', 'できる',
-  'みる', '見る', 'いく', '行く', 'くる', '来る', 'いう', '言う',
-  'くれる', 'あげる', 'もらう',
-  // nouns / frames
-  'こと', 'もの', 'とき', 'ところ', 'ため', 'よう', 'つもり', 'はず', 'わけ',
-  'まえ', '前', 'あと', '後', 'なか', '中', 'うえ', '上', 'した', '下',
-  'ばあい', '場合', 'ほう',
-  // phrases / greetings
-  'ありがとう', 'すみません', 'こんにちは', 'こんばんは', 'おはよう',
-  'おはようございます', 'さようなら', 'はい', 'いいえ', 'ええ', 'うん',
-  'もう一度', '大丈夫', 'だいじょうぶ', 'だめ', 'いい', 'よい', 'ない',
-  'おいしい', 'すごい', 'かわいい', 'おもしろい',
+/**
+ * Thematic reading groups (standalone catalog entities).
+ * Keys match writing or kana. Order = assignment priority (first match wins).
+ */
+const READING_THEMES = [
+  {
+    id: 'reading-demo',
+    label: 'Чтение · указательные',
+    description: 'これ／ここ／こう и родственники',
+    keys: [
+      'これ', 'それ', 'あれ', 'どれ', 'この', 'その', 'あの', 'どの',
+      'ここ', 'そこ', 'あそこ', 'どこ', 'こちら', 'そちら', 'あちら', 'どちら',
+      'こっち', 'そっち', 'あっち', 'どっち',
+      'こう', 'そう', 'ああ', 'どう', 'こんな', 'そんな', 'あんな', 'どんな',
+      'これから', 'これまで', 'それで', 'それなら', 'それとも',
+    ],
+  },
+  {
+    id: 'reading-questions',
+    label: 'Чтение · вопросы',
+    description: '誰／何／いつ／なぜ…',
+    keys: [
+      '誰', 'だれ', '何', 'なに', 'なん', 'いつ', 'なぜ', 'どうして', 'どうやって',
+      'いくら', 'いくつ', 'どちら', 'どっち', 'どのくらい', 'どれくらい',
+    ],
+  },
+  {
+    id: 'reading-pronouns',
+    label: 'Чтение · местоимения',
+    description: 'я／ты／люди',
+    keys: [
+      '私', 'わたし', 'あたし', 'わたくし', '僕', 'ぼく', '俺', 'おれ',
+      'あなた', '君', 'きみ', 'お前', 'おまえ', '彼', 'かれ', '彼女', 'かのじょ',
+      '私たち', 'わたしたち', 'みんな', 'みな', 'みなさん', '皆さん',
+    ],
+  },
+  {
+    id: 'reading-copula',
+    label: 'Чтение · связка',
+    description: 'です／だ／である…',
+    keys: [
+      'です', 'である', 'だ', 'でした', 'だった', 'じゃない', 'ではない',
+      'でしょう', 'だろう', 'ですよ', 'ですね',
+    ],
+  },
+  {
+    id: 'reading-particles',
+    label: 'Чтение · частицы',
+    description: 'から／まで／だけ／について…',
+    keys: [
+      'から', 'まで', 'など', 'のに', 'ので', 'けど', 'けれど', 'けれども',
+      'と', 'や', 'へ', 'か', 'よ', 'ね', 'さ', 'ぞ', 'な', 'かな', 'こそ',
+      'だけ', 'しか', 'ばかり', 'ほど', 'くらい', 'ぐらい', 'ずつ',
+      'について', 'として', 'によって', 'にとって', 'に対して', 'において',
+      'ながら', 'たり', 'とか', 'でも', 'すら', 'さえ', 'ばかりか',
+    ],
+  },
+  {
+    id: 'reading-connectors',
+    label: 'Чтение · союзы',
+    description: 'そして／しかし／でも…',
+    keys: [
+      'そして', 'それから', 'それで', 'しかし', 'でも', 'また', 'または',
+      'あるいは', 'つまり', 'たとえば', '例えば', 'したがって', 'ただし',
+      'ところで', 'ちなみに', '一方', 'そのうえ', 'おまけに', 'それに',
+      'それでも', 'それなのに', 'だから', 'なので', 'ゆえに',
+    ],
+  },
+  {
+    id: 'reading-adverbs',
+    label: 'Чтение · наречия',
+    description: 'еще／уже／очень／сразу…',
+    keys: [
+      'まだ', 'もう', 'いつも', 'とても', 'すごく', 'ちょっと', 'すこし', '少し',
+      'たくさん', 'あまり', 'ぜんぜん', '全く', 'まったく', 'きっと', 'たぶん',
+      'おそらく', 'やはり', 'やっぱり', 'ほんとう', '本当', 'ほんと',
+      'もちろん', 'ぜひ', 'ちょうど', 'すぐ', 'すぐに', 'ゆっくり', 'いろいろ',
+      'はっきり', 'しっかり', 'すっかり', 'ちょうど', 'かなり', 'ずいぶん',
+      'もっと', 'いちばん', '一番', 'まず', 'やっと', 'ついに', 'すでに',
+      'ほとんど', 'だいたい', 'たいてい', 'たまに', 'ときどき', '時々',
+      'いつも', 'ずっと', 'ぜひ', 'どうぞ', 'どうも', 'ぜひとも',
+      'きっと', 'まさか', 'ぜひ', 'ちゃんと', 'きちんと', 'ぴったり',
+      'いきなり', 'ふと', 'じっと', 'じっと', 'そっと', 'わざと', 'わざわざ',
+      'なるべく', 'できるだけ', 'できるだけ', 'ぜひ', 'きっと',
+    ],
+  },
+  {
+    id: 'reading-aux',
+    label: 'Чтение · глаголы-опоры',
+    description: 'する／いる／ください…',
+    keys: [
+      'ください', '下さい', 'しまう', 'いる', 'ある', 'なる', 'する', 'できる',
+      'みる', '見る', 'いく', '行く', 'くる', '来る', 'いう', '言う',
+      'くれる', 'あげる', 'もらう', 'おく', 'おく', 'みせる', '見せる',
+      'はじめる', '始める', 'おわる', '終わる', 'つづける', '続ける',
+    ],
+  },
+  {
+    id: 'reading-frames',
+    label: 'Чтение · рамки',
+    description: 'こと／もの／とき／ため…',
+    keys: [
+      'こと', 'もの', 'とき', '時', 'ところ', 'ため', 'よう', 'つもり', 'はず', 'わけ',
+      'まえ', '前', 'あと', '後', 'なか', '中', 'うえ', '上', 'した', '下',
+      'ばあい', '場合', 'ほう', '方', 'あいだ', '間', 'うち', 'そば', '近く',
+      'ほか', '他', 'など', 'なんか', 'なんて',
+    ],
+  },
+  {
+    id: 'reading-greetings',
+    label: 'Чтение · приветствия',
+    description: 'ありがとう／すみません…',
+    keys: [
+      'ありがとう', 'ありがとうございます', 'すみません', 'ごめんなさい',
+      'こんにちは', 'こんばんは', 'おはよう', 'おはようございます',
+      'さようなら', 'さよなら', 'じゃあ', 'じゃ', 'はい', 'いいえ', 'ええ', 'うん',
+      'ようこそ', 'いらっしゃいませ', 'いってきます', 'いってらしゃい',
+      'ただいま', 'おかえり', 'お疲れ', 'おつかれ', 'よろしく', 'お願いします',
+      'もう一度', '大丈夫', 'だいじょうぶ', 'だめ', 'いい', 'よい', 'ない',
+      'どういたしまして', 'お願い', 'お願いします',
+    ],
+  },
+  {
+    id: 'reading-adjectives',
+    label: 'Чтение · прилагательные',
+    description: 'おいしい／すごい／かわいい…',
+    keys: [
+      'おいしい', 'すごい', 'かわいい', 'おもしろい', '面白い', 'たのしい', '楽しい',
+      'うれしい', '嬉しい', 'かなしい', '悲しい', 'つらい', 'きつい', 'やばい',
+      'だめ', 'いい', 'よい', 'ない', 'すごい', 'すごい', 'かっこいい',
+      'きれい', '静か', 'しずか', '元気', 'げんき', '大丈夫', 'だいじょうぶ',
+      '大変', 'たいへん', '簡単', 'かんたん', '同じ', 'おなじ', '違う', 'ちがう',
+    ],
+  },
+]
+
+/** Meaning / form heuristics for leftover foundation words (after curated keys). */
+const THEME_HEURISTICS = [
+  {
+    id: 'reading-onomatopoeia',
+    label: 'Чтение · ономатопея',
+    description: 'звукоподражания и mimetics',
+    test: (word, gloss) => {
+      if (/ономат|подражан|звук/i.test(gloss)) return true
+      const w = word.writing
+      // Reduplication: がぶがぶ / ウロウロ / いそいそ
+      if (/^([\u3040-\u309Fぁ-ゖ]{2,3})\1$/u.test(w)) return true
+      if (/^([\u30A0-\u30FFァ-ヶ]{2,3})\1$/u.test(w)) return true
+      if (/^([\u3040-\u309Fぁ-ゖ]{2,3})っ?\1$/u.test(w)) return true
+      return false
+    },
+  },
+  {
+    id: 'reading-interjections',
+    label: 'Чтение · междометия',
+    description: 'ах!／эй!／ну…',
+    test: (word, gloss) =>
+      /межд|возглас|обращение|запинк/i.test(gloss) ||
+      ['あら', 'おや', 'おい', 'あっ', 'えっ', 'うわ', 'ええっ', 'えっと', 'ねえ', 'ほら', 'さあ', 'よし'].includes(
+        word.writing,
+      ),
+  },
+  {
+    id: 'reading-adverbs',
+    label: 'Чтение · наречия',
+    description: 'еще／уже／очень／сразу…',
+    test: (word, gloss) => {
+      if (/нареч|часто|степени|образа действия|совсем|очень|сразу|медленно|быстро|тихо|аккуратн|украдк|точно/i.test(gloss)) {
+        return true
+      }
+      // Common adverb shapes: 〜り / 〜っと (あっさり, うっかり, きっと)
+      if (HIRAGANA_RE.test(word.writing) && /(り|っと)$/u.test(word.writing) && word.writing.length >= 3) {
+        return true
+      }
+      return false
+    },
+  },
+  {
+    id: 'reading-connectors',
+    label: 'Чтение · союзы',
+    description: 'そして／しかし／でも…',
+    test: (_word, gloss) => /союз|связк|вдобавок|поэтому|однако|хотя|затем|далее/i.test(gloss),
+  },
+  {
+    id: 'reading-greetings',
+    label: 'Чтение · приветствия',
+    description: 'ありがとう／すみません…',
+    test: (_word, gloss) => /приветств|благодар|извини|пожалуйста|добро пожаловать/i.test(gloss),
+  },
+  {
+    id: 'reading-adjectives',
+    label: 'Чтение · прилагательные',
+    description: 'おいしい／すごい／かわいい…',
+    test: (_word, gloss) => /прилаг|настроен|качество|характер/i.test(gloss),
+  },
+  {
+    id: 'reading-aux',
+    label: 'Чтение · глаголы-опоры',
+    description: 'する／いる／ください…',
+    test: (word, gloss) =>
+      /гл\.|глагол/i.test(gloss) && HIRAGANA_RE.test(word.writing) && /(る|う|く|す|つ|ぬ|む|ぐ|ぶ)$/u.test(word.writing),
+  },
 ]
 
 const ROMAJI = {
@@ -180,31 +348,20 @@ function buildWord(entry, writing) {
   }
 }
 
-function loadOpenJlptVocab() {
-  /** @type {Map<string, number>} key = word or reading → best JLPT (5..1) */
-  const map = new Map()
-  for (const level of [5, 4, 3, 2, 1]) {
-    const file = path.join(CACHE, `openjlpt-vocab-n${level}.json`)
-    if (!existsSync(file)) continue
-    const list = JSON.parse(readFileSync(file, 'utf8'))
-    for (const item of list) {
-      for (const key of [item.word, item.reading].filter(Boolean)) {
-        const prev = map.get(key)
-        if (!prev || level > prev) map.set(key, level)
-      }
-    }
-  }
-  return map
-}
-
 function upsertReadingGroups(groups, readingGroups) {
-  const readingIds = new Set(readingGroups.map((g) => g.id))
-  const kept = groups.filter((g) => !readingIds.has(g.id) && g.id !== 'reading-foundation')
+  const kept = groups
+    .filter((g) => typeof g?.id === 'string' && !g.id.startsWith('reading-'))
+    .map((g) => ({
+      id: g.id,
+      label: g.label,
+      wordIds: Array.isArray(g.wordIds) ? g.wordIds : [],
+      kind: 'theme',
+      ...(typeof g.description === 'string' && g.description ? { description: g.description } : {}),
+    }))
   return [...readingGroups, ...kept]
 }
 
-function resolveMustHaveIds(words, foundationIds) {
-  const foundation = new Set(foundationIds)
+function indexWordsByKey(words) {
   const byWriting = new Map()
   const byKana = new Map()
   for (const word of words) {
@@ -214,84 +371,133 @@ function resolveMustHaveIds(words, foundationIds) {
     if (!byKana.has(word.kana)) byKana.set(word.kana, [])
     byKana.get(word.kana).push(word)
   }
+  return { byWriting, byKana }
+}
 
-  const pickBest = (candidates) => {
-    if (!candidates?.length) return null
-    return (
-      candidates.find((w) => foundation.has(w.id) && !KANJI_RE.test(w.writing)) ||
-      candidates.find((w) => foundation.has(w.id)) ||
-      candidates.find((w) => !KANJI_RE.test(w.writing)) ||
-      candidates.find((w) => w.common) ||
-      candidates[0]
-    )
-  }
+function pickBestWord(candidates, foundation) {
+  if (!candidates?.length) return null
+  return (
+    candidates.find((w) => foundation.has(w.id) && !KANJI_RE.test(w.writing)) ||
+    candidates.find((w) => foundation.has(w.id)) ||
+    candidates.find((w) => !KANJI_RE.test(w.writing)) ||
+    candidates.find((w) => w.common) ||
+    candidates[0]
+  )
+}
 
+function resolveKeysToIds(keys, words, foundationIds, assigned) {
+  const foundation = new Set(foundationIds)
+  const { byWriting, byKana } = indexWordsByKey(words)
   const ids = []
-  const seen = new Set()
-  for (const key of MUST_HAVE_KEYS) {
-    const hit =
-      pickBest(byWriting.get(key)) ||
-      pickBest(byKana.get(key))
-    if (!hit || seen.has(hit.id)) continue
-    seen.add(hit.id)
+  for (const key of keys) {
+    const hit = pickBestWord(byWriting.get(key), foundation) || pickBestWord(byKana.get(key), foundation)
+    if (!hit || assigned.has(hit.id)) continue
+    assigned.add(hit.id)
     ids.push(hit.id)
   }
   return ids
 }
 
-function buildLeveledGroups(words, foundationIds) {
+function wordGloss(word) {
+  return (word.meanings ?? []).join(' ')
+}
+
+/**
+ * Partition the kana-preferred foundation pool into standalone thematic groups.
+ * Curated keys first, then meaning heuristics, then script leftovers.
+ */
+function buildThematicReadingGroups(words, foundationIds) {
   const byId = new Map(words.map((w) => [w.id, w]))
-  const jlptMap = loadOpenJlptVocab()
+  const assigned = new Set()
+  const buckets = new Map()
 
-  const mustIds = resolveMustHaveIds(words, foundationIds)
-  const mustSet = new Set(mustIds)
+  const ensure = (theme) => {
+    if (!buckets.has(theme.id)) {
+      buckets.set(theme.id, {
+        id: theme.id,
+        label: theme.label,
+        description: theme.description,
+        kind: 'reading',
+        wordIds: [],
+      })
+    }
+    return buckets.get(theme.id)
+  }
 
-  /** @type {Record<number, string[]>} */
-  const byLevel = { 5: [], 4: [], 3: [], 2: [], 1: [] }
-  const assigned = new Set(mustSet)
+  for (const theme of READING_THEMES) {
+    const group = ensure(theme)
+    group.wordIds.push(...resolveKeysToIds(theme.keys, words, foundationIds, assigned))
+  }
 
-  // Levels only from kana-preferred foundation pool (not the whole JLPT bank).
+  // Heuristic pass for remaining foundation ids.
   for (const id of foundationIds) {
     if (assigned.has(id)) continue
     const word = byId.get(id)
     if (!word) continue
-    const level = jlptMap.get(word.writing) ?? jlptMap.get(word.kana)
-    if (!level || !byLevel[level]) continue
-    byLevel[level].push(id)
+    const gloss = wordGloss(word)
+    let matched = null
+    for (const heuristic of THEME_HEURISTICS) {
+      if (heuristic.test(word, gloss)) {
+        matched = heuristic
+        break
+      }
+    }
+    if (!matched) continue
+    const group = ensure(matched)
+    group.wordIds.push(id)
     assigned.add(id)
   }
 
-  const hiraExtra = []
-  for (const id of foundationIds) {
-    if (assigned.has(id)) continue
-    const word = byId.get(id)
-    if (!word || !HIRAGANA_RE.test(word.writing)) continue
-    hiraExtra.push(id)
-    assigned.add(id)
-  }
+  // Script leftovers for study-sized groups. Long gairaigo stay in the bank
+  // for search but are not dumped into a 2000-word «катакана» group.
+  const kataGroup = ensure({
+    id: 'reading-katakana',
+    label: 'Чтение · катакана',
+    description: 'короткие заимствования (≤3 знака)',
+  })
+  const hiraGroup = ensure({
+    id: 'reading-hiragana',
+    label: 'Чтение · прочая хирагана',
+    description: 'остальные слова хираганой',
+  })
 
-  const kataBasic = []
   for (const id of foundationIds) {
     if (assigned.has(id)) continue
     const word = byId.get(id)
-    if (!word || !KATAKANA_RE.test(word.writing)) continue
-    if (word.writing.length > 3) continue
-    kataBasic.push(id)
-    assigned.add(id)
+    if (!word) continue
+    if (KATAKANA_RE.test(word.writing) && word.writing.length <= 3) {
+      kataGroup.wordIds.push(id)
+      assigned.add(id)
+      continue
+    }
+    if (HIRAGANA_RE.test(word.writing)) {
+      hiraGroup.wordIds.push(id)
+      assigned.add(id)
+    }
   }
 
   const sortIds = (ids) => [...new Set(ids)].sort((a, b) => Number(a) - Number(b))
-
-  return [
-    { id: 'reading-must', label: 'Чтение · мастхев', wordIds: sortIds(mustIds) },
-    { id: 'reading-n5', label: 'Чтение · N5', wordIds: sortIds(byLevel[5]) },
-    { id: 'reading-n4', label: 'Чтение · N4', wordIds: sortIds(byLevel[4]) },
-    { id: 'reading-n3', label: 'Чтение · N3', wordIds: sortIds(byLevel[3]) },
-    { id: 'reading-n2', label: 'Чтение · N2', wordIds: sortIds(byLevel[2]) },
-    { id: 'reading-n1', label: 'Чтение · N1', wordIds: sortIds(byLevel[1]) },
-    { id: 'reading-hira', label: 'Чтение · хирагана+', wordIds: sortIds(hiraExtra) },
-    { id: 'reading-kata', label: 'Чтение · катакана', wordIds: sortIds(kataBasic) },
+  const order = [
+    ...READING_THEMES.map((t) => t.id),
+    'reading-onomatopoeia',
+    'reading-interjections',
+    'reading-katakana',
+    'reading-hiragana',
   ]
+
+  return order
+    .map((id) => buckets.get(id))
+    .filter(Boolean)
+    .map((group) => ({
+      ...group,
+      wordIds: sortIds(group.wordIds),
+    }))
+    .filter((group) => group.wordIds.length > 0)
+}
+
+function buildLeveledGroups(words, foundationIds) {
+  // Back-compat alias for callers / older docs.
+  return buildThematicReadingGroups(words, foundationIds)
 }
 
 function main() {
@@ -356,7 +562,7 @@ function main() {
     readingGroups.map((g) => [g.id, g.wordIds.length]),
   )
   meta.builtAt = new Date().toISOString()
-  meta.sources.readingFoundation = 'jmdict common kana-preferred + OpenJLPT levels'
+  meta.sources.readingFoundation = 'jmdict common kana-preferred, thematic reading groups'
   writeFileSync(META_PATH, `${JSON.stringify(meta, null, 2)}\n`)
 
   const groups = JSON.parse(readFileSync(GROUPS_PATH, 'utf8'))

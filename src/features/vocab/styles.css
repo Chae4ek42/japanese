@@ -176,6 +176,65 @@
   color: #fff;
 }
 
+.vocab-group-sections {
+  display: grid;
+  gap: 14px;
+}
+
+.vocab-group-section {
+  display: grid;
+  gap: 8px;
+}
+
+.vocab-group-section-label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.vocab-list-head-main {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.vocab-group-action-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.vocab-group-bulk-button {
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 10px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.vocab-group-bulk-button:hover {
+  border-color: rgba(0, 0, 0, 0.28);
+}
+
+.vocab-group-bulk-button.is-in-set {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+.control-group .vocab-group-bulk-button {
+  margin-top: 8px;
+  width: 100%;
+}
+
 .vocab-group-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));

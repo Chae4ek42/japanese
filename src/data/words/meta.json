@@ -1,12 +1,12 @@
 {
-  "builtAt": "2026-08-07T12:17:02.519Z",
+  "builtAt": "2026-08-07T14:37:31.316Z",
   "sources": {
     "kanji": "OpenJLPT N5–N1 + joyo2010",
     "vocabTags": "OpenJLPT",
     "dictionary": "jmdict-simplified 3.6.2+20260720135044 (rus)",
     "components": "Kanshudo scrape (local) + KRADFILE fallback",
     "radicals": "EDRDG KRADFILE",
-    "readingFoundation": "jmdict common kana-preferred + OpenJLPT levels"
+    "readingFoundation": "jmdict common kana-preferred, thematic reading groups"
   },
   "counts": {
     "kanji": 2383,
@@ -22,14 +22,21 @@
     "withComponents": 2319,
     "readingFoundation": 2878,
     "readingGroups": {
-      "reading-must": 128,
-      "reading-n5": 58,
-      "reading-n4": 58,
-      "reading-n3": 142,
-      "reading-n2": 161,
-      "reading-n1": 226,
-      "reading-hira": 175,
-      "reading-kata": 445
+      "reading-demo": 25,
+      "reading-questions": 9,
+      "reading-pronouns": 13,
+      "reading-copula": 4,
+      "reading-particles": 30,
+      "reading-connectors": 34,
+      "reading-adverbs": 105,
+      "reading-aux": 20,
+      "reading-frames": 26,
+      "reading-greetings": 25,
+      "reading-adjectives": 22,
+      "reading-onomatopoeia": 127,
+      "reading-interjections": 16,
+      "reading-katakana": 611,
+      "reading-hiragana": 177
     }
   }
 }

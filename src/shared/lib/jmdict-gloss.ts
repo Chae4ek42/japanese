@@ -114,8 +114,35 @@ export function cleanQuizGloss(raw: string): string | null {
   const cyrCount = (text.match(new RegExp(CYR_CHAR.source, 'gi')) || []).length
   if (jpCount > 0 && jpCount >= cyrCount) return null
 
-  // Sentence / example leftovers (punctuation + length)
-  if (/[.!?。！？]/.test(text) && text.length > 18) return null
+  // Prefer the lexical head before a parenthetical usage note (e.g. «одэн (смесь…)»).
+  // Must run before the sentence check — notes often contain «др.» / «т.п.» periods.
+  {
+    const head = text.match(/^([^()]{1,40}?)\s*\(/)
+    const candidate = head?.[1]?.trim()
+    if (
+      candidate &&
+      candidate.length <= MAX_QUIZ_GLOSS_LEN &&
+      CYR_CHAR.test(candidate) &&
+      !(candidate.match(new RegExp(JP_CHAR.source, 'g')) || []).length
+    ) {
+      text = candidate
+    }
+  }
+
+  // Interjections / multi-cry glosses: keep the first short cry («послушайте!, извините!…»).
+  if (/[!！]/.test(text) && text.length > 18) {
+    const first = text.split(/[!！]/)[0]?.replace(/[,，]\s*$/, '').trim()
+    if (first && first.length <= 28 && CYR_CHAR.test(first) && !/[.。]/.test(first)) {
+      text = first
+    }
+  }
+
+  // Sentence / example leftovers. Ignore dictionary abbreviations like «др.», «т.п.».
+  const withoutAbbrevs = text.replace(
+    /(?:^|[\s(,;；])(?:др|т\.?\s?д|т\.?\s?п|гл|обр|напр|см|ср|жен|муж|разг|уст|прост)\./gi,
+    ' ',
+  )
+  if (/[.!?。！？]/.test(withoutAbbrevs) && withoutAbbrevs.length > 18) return null
 
   // Prefer the headword when a long usage note makes the option obvious / noisy
   if (text.length > MAX_QUIZ_GLOSS_LEN) {
@@ -152,6 +179,39 @@ export function pickQuizMeaning(meanings: string[] | null | undefined): string |
   for (const meaning of meanings) {
     const cleaned = cleanQuizGloss(meaning)
     if (cleaned) return cleaned
+  }
+  return null
+}
+
+/**
+ * Softer meaning for card display / romaji drills when no quiz-grade gloss exists.
+ * Still skips pure «(см.) …» cross-references.
+ */
+export function softDisplayMeaning(meanings: string[] | null | undefined): string | null {
+  const quiz = pickQuizMeaning(meanings)
+  if (quiz) return quiz
+  if (!meanings?.length) return null
+  for (const raw of meanings) {
+    const original = String(raw ?? '').trim()
+    if (!original) continue
+    if (/^\(см\.\)/i.test(original)) continue
+    if (/^\s*\{[^}]+\}\s*$/.test(original)) continue
+    let text = original.replace(/\{[^}]*\}/g, ' ')
+    for (let i = 0; i < 6; i += 1) {
+      const next = text
+        .replace(/^\d+[).．、]\s*/, '')
+        .replace(/^:\s*/, '')
+        .replace(LEADING_DICT_LABEL, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+      if (next === text) break
+      text = next
+    }
+    if (!text || !CYR_CHAR.test(text)) continue
+    const head = text.match(/^([^()]{1,40}?)\s*\(/)
+    if (head?.[1]?.trim() && CYR_CHAR.test(head[1])) text = head[1].trim()
+    if (text.length > 80) text = `${text.slice(0, 79).replace(/\s+\S*$/, '').trim()}…`
+    if (text) return text
   }
   return null
 }
