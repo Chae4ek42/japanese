@@ -50,6 +50,7 @@ import {
   pickReviewCard,
   removeCardFromReviewSession,
   appendCardToReviewSession,
+  defaultInFlightLimit,
   resolveCardMemory,
   startReviewPracticeSession,
 } from './reviewSession'
@@ -374,8 +375,23 @@ export function VocabTrainer({
     }
 
     const cardId = liveSession.currentCardId
-    sessionRef.current = liveSession.session
-    setSession(liveSession.session)
+    let restoredSession = liveSession.session
+    // Legacy live sessions stored no inFlightLimit → stuck at K=5. Widen for drill.
+    if (
+      restoredSession.review &&
+      restoredSession.review.inFlightLimit == null &&
+      preferencesRef.current.sessionMode !== 'srs'
+    ) {
+      restoredSession = {
+        ...restoredSession,
+        review: {
+          ...restoredSession.review,
+          inFlightLimit: defaultInFlightLimit(restoredSession.poolIds.length, false),
+        },
+      }
+    }
+    sessionRef.current = restoredSession
+    setSession(restoredSession)
     setSessionStats(liveSession.sessionStats)
     setCurrentCardId(cardId)
     setView('practice')

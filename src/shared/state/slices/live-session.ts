@@ -83,6 +83,10 @@ function sanitizeReviewSession(raw: unknown): ReviewSessionState | undefined {
         ? Math.max(0, Math.round(source.targetAnswers))
         : 0,
     done: Boolean(source.done),
+    inFlightLimit:
+      typeof source.inFlightLimit === 'number' && Number.isFinite(source.inFlightLimit)
+        ? Math.max(1, Math.round(source.inFlightLimit))
+        : undefined,
   }
 }
 

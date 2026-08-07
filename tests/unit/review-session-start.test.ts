@@ -130,6 +130,28 @@ describe('startReviewPracticeSession', () => {
     assert.equal(planEmpty, false)
     assert.equal(session.poolIds.length, 12)
     assert.equal(newCount, 12)
+    assert.equal(session.review?.inFlightLimit, 12)
+  })
+
+  it('в SRS держит узкий in-flight лимит', () => {
+    const { session } = startReviewPracticeSession({
+      scope: Array.from({ length: 20 }, (_, i) => card(`w${i}`)),
+      preferences: {
+        ...DEFAULT_VOCAB_PREFERENCES,
+        sessionMode: 'srs',
+        source: 'mine',
+        newPerDay: 10,
+        sessionMinutes: 15,
+      },
+      memory: {},
+      stats: {},
+      newUsedToday: 0,
+      myWordAddedAt: Object.fromEntries(
+        Array.from({ length: 20 }, (_, i) => [`w${i}`, i + 1]),
+      ),
+      spacedRepetition: true,
+    })
+    assert.equal(session.review?.inFlightLimit, 5)
   })
 
   it('в SRS режет сессию до due + newPerDay, старые добавления раньше', () => {

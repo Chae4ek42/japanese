@@ -14,6 +14,7 @@ import {
   cardHintsFromVocab,
   clampReviewKnobs,
   createReviewSessionState,
+  defaultInFlightLimit,
   deriveGrade,
   drillModeToAspect,
   answerLengthForCard,
@@ -133,6 +134,7 @@ export function startReviewPracticeSession(input: {
     mode: even ? 'even' : 'adaptive',
     seed: sessionSeed(now),
     weightMultipliers: weights,
+    inFlightLimit: defaultInFlightLimit(poolIds.length, spaced),
   })
   review.targetAnswers = plan.targetAnswers
 
@@ -346,4 +348,4 @@ export function averageSessionShowCount(session: PracticeSession): number {
   return Math.round(total / ids.length)
 }
 
-export { drillModeToAspect, answerLengthForCard, cardHintsFromVocab }
+export { drillModeToAspect, answerLengthForCard, cardHintsFromVocab, defaultInFlightLimit }

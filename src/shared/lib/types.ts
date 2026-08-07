@@ -216,6 +216,12 @@ export interface ReviewSessionState {
   answersInSession: number
   targetAnswers: number
   done: boolean
+  /**
+   * Max cards simultaneously in the working set.
+   * Missing → `IN_FLIGHT_LIMIT` (5) for legacy live sessions / tests.
+   * Drill sets a larger value so adaptive doesn't loop on five words.
+   */
+  inFlightLimit?: number
 }
 
 /** Compact append-only review log row (IndexedDB). */

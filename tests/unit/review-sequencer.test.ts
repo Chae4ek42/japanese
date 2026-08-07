@@ -3,6 +3,7 @@ import { describe, it } from 'node:test'
 import {
   applyGradeToSequencer,
   createReviewSessionState,
+  defaultInFlightLimit,
   IN_FLIGHT_LIMIT,
   learningLag,
   pickNextCard,
@@ -11,7 +12,10 @@ import {
 
 describe('review sequencer', () => {
   it('never returns a card before its dueTurn', () => {
-    let state = createReviewSessionState(['a', 'b', 'c', 'd', 'e', 'f'], { seed: 42 })
+    let state = createReviewSessionState(['a', 'b', 'c', 'd', 'e', 'f'], {
+      seed: 42,
+      inFlightLimit: IN_FLIGHT_LIMIT,
+    })
     const seenBeforeDue: string[] = []
     for (let i = 0; i < 40; i += 1) {
       const pick = pickNextCard(state, { a: 1, b: 1, c: 1, d: 1, e: 1, f: 1 })
@@ -27,7 +31,7 @@ describe('review sequencer', () => {
   })
 
   it('keeps introduced cards until graduated or still in-flight', () => {
-    let state = createReviewSessionState(['a', 'b', 'c'], { seed: 7 })
+    let state = createReviewSessionState(['a', 'b', 'c'], { seed: 7, inFlightLimit: IN_FLIGHT_LIMIT })
     const introduced = new Set<string>()
     for (let i = 0; i < 30; i += 1) {
       const pick = pickNextCard(state)
@@ -52,7 +56,7 @@ describe('review sequencer', () => {
   it('respects in-flight gate', () => {
     let state = createReviewSessionState(
       Array.from({ length: 20 }, (_, i) => `c${i}`),
-      { seed: 1 },
+      { seed: 1, inFlightLimit: IN_FLIGHT_LIMIT },
     )
     const pick = pickNextCard(state)
     assert.equal(pick.kind, 'card')
@@ -62,7 +66,10 @@ describe('review sequencer', () => {
   })
 
   it('again schedules at least working-set size turns', () => {
-    let state = createReviewSessionState(['a', 'b', 'c', 'd', 'e'], { seed: 3 })
+    let state = createReviewSessionState(['a', 'b', 'c', 'd', 'e'], {
+      seed: 3,
+      inFlightLimit: IN_FLIGHT_LIMIT,
+    })
     // Build a fuller working set first.
     for (let i = 0; i < 4; i += 1) {
       const pick = pickNextCard(state)
@@ -82,7 +89,7 @@ describe('review sequencer', () => {
   it('does not introduce while the working set is full', () => {
     let state = createReviewSessionState(
       Array.from({ length: 12 }, (_, i) => `c${i}`),
-      { seed: 11 },
+      { seed: 11, inFlightLimit: IN_FLIGHT_LIMIT },
     )
     for (let i = 0; i < IN_FLIGHT_LIMIT; i += 1) {
       const pick = pickNextCard(state)
@@ -104,7 +111,7 @@ describe('review sequencer', () => {
   it('refills from the plan while under the in-flight limit', () => {
     let state = createReviewSessionState(
       Array.from({ length: 12 }, (_, i) => `c${i}`),
-      { seed: 19 },
+      { seed: 19, inFlightLimit: IN_FLIGHT_LIMIT },
     )
     const seen = new Set<string>()
     // Repeated again grades keep lags short — previously blocked introduce via gap gate.
@@ -116,5 +123,42 @@ describe('review sequencer', () => {
       state = applyGradeToSequencer(pick.state, pick.cardId, 1)
     }
     assert.ok(seen.size >= IN_FLIGHT_LIMIT, `expected ≥${IN_FLIGHT_LIMIT} distinct, got ${seen.size}`)
+  })
+
+  it('drill in-flight limit scales with plan size', () => {
+    assert.equal(defaultInFlightLimit(5, false), 5)
+    assert.equal(defaultInFlightLimit(10, false), 10)
+    assert.equal(defaultInFlightLimit(50, false), 20) // max(12, ceil(20)) = 20
+    assert.equal(defaultInFlightLimit(50, true), IN_FLIGHT_LIMIT)
+
+    const limit = defaultInFlightLimit(30, false)
+    assert.equal(limit, 12)
+    let state = createReviewSessionState(
+      Array.from({ length: 30 }, (_, i) => `c${i}`),
+      { seed: 2, inFlightLimit: limit },
+    )
+    const seen = new Set<string>()
+    // Fill the working set with again-grades (stay in-flight, short lag).
+    for (let i = 0; i < limit; i += 1) {
+      const pick = pickNextCard(state)
+      assert.equal(pick.kind, 'card')
+      if (pick.kind !== 'card') return
+      seen.add(pick.cardId)
+      state = applyGradeToSequencer(pick.state, pick.cardId, 1)
+    }
+    assert.equal(seen.size, limit)
+    assert.equal(state.inFlight.length, limit)
+    assert.equal(shouldIntroduce(state), false)
+  })
+
+  it('grade 2 does not wipe good streak', () => {
+    let state = createReviewSessionState(['a', 'b'], { seed: 4, inFlightLimit: 2 })
+    const pick = pickNextCard(state)
+    assert.equal(pick.kind, 'card')
+    if (pick.kind !== 'card') return
+    state = applyGradeToSequencer(pick.state, pick.cardId, 3)
+    assert.equal(state.goodStreaks[pick.cardId], 1)
+    state = applyGradeToSequencer(state, pick.cardId, 2)
+    assert.equal(state.goodStreaks[pick.cardId], 1)
   })
 })

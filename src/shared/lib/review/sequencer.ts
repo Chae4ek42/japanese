@@ -1,9 +1,29 @@
 import type { ReviewGrade, ReviewSessionState } from '../types'
 import { createSeededRng } from './rng'
 
+/** Default / SRS working-set size. Drill uses a larger limit via `inFlightLimit`. */
 export const IN_FLIGHT_LIMIT = 5
 /** Base lags after 1st / 2nd good before graduation; scaled up by working-set size. */
 export const GOOD_LAGS = [8, 16, 30] as const
+
+/**
+ * Working-set size for a session.
+ * SRS stays tight (leitner-style). Drill scales with the pool so «адаптивный»
+ * covers more than five words before anything graduates.
+ */
+export function defaultInFlightLimit(planSize: number, spaced = false): number {
+  if (spaced) return IN_FLIGHT_LIMIT
+  if (planSize <= 0) return IN_FLIGHT_LIMIT
+  return Math.min(planSize, Math.max(12, Math.ceil(planSize * 0.4)))
+}
+
+export function resolveInFlightLimit(state: ReviewSessionState): number {
+  const raw = state.inFlightLimit
+  if (typeof raw === 'number' && Number.isFinite(raw) && raw >= 1) {
+    return Math.max(1, Math.round(raw))
+  }
+  return IN_FLIGHT_LIMIT
+}
 
 export function createReviewSessionState(
   planIds: string[],
@@ -11,10 +31,12 @@ export function createReviewSessionState(
     mode = 'adaptive',
     seed = 1,
     weightMultipliers = {},
+    inFlightLimit,
   }: {
     mode?: 'adaptive' | 'even'
     seed?: number
     weightMultipliers?: Record<string, number>
+    inFlightLimit?: number
   } = {},
 ): ReviewSessionState {
   return {
@@ -31,11 +53,8 @@ export function createReviewSessionState(
     answersInSession: 0,
     targetAnswers: 0,
     done: false,
+    inFlightLimit,
   }
-}
-
-function jitter(rng: () => number, span = 0.35): number {
-  return (rng() - 0.5) * 2 * span
 }
 
 function activeInFlight(state: ReviewSessionState): string[] {
@@ -67,7 +86,7 @@ export function learningLag(inFlightCount: number, base: number): number {
 export function shouldIntroduce(state: ReviewSessionState): boolean {
   if (state.done) return false
   if (state.planIndex >= state.planIds.length) return false
-  return activeInFlight(state).length < IN_FLIGHT_LIMIT
+  return activeInFlight(state).length < resolveInFlightLimit(state)
 }
 
 /** Introduce next plan card if under the in-flight gate. */
@@ -77,15 +96,17 @@ export function introduceNext(
 ): ReviewSessionState {
   if (!shouldIntroduce(state)) return state
 
+  const limit = resolveInFlightLimit(state)
   let next = { ...state, dueTurns: { ...state.dueTurns }, inFlight: [...state.inFlight] }
-  while (activeInFlight(next).length < IN_FLIGHT_LIMIT && next.planIndex < next.planIds.length) {
+  while (activeInFlight(next).length < limit && next.planIndex < next.planIds.length) {
     const id = next.planIds[next.planIndex]!
     next.planIndex += 1
     if (next.graduatedIds.includes(id) || next.inFlight.includes(id)) continue
     const mult = next.weightMultipliers[id] ?? 1
     if (mult <= 0) continue
     next.inFlight.push(id)
-    next.dueTurns[id] = next.turn + jitter(createSeededRng(next.seed + next.planIndex), 0.2)
+    // Immediately due so the newcomer can be shown this pick (no future jitter).
+    next.dueTurns[id] = next.turn
     // Bias introduction order already encoded in plan; urgency reserved for ties.
     void urgencyById
     break
@@ -117,8 +138,10 @@ function selectDueCard(
 }
 
 /**
- * Pick the due in-flight card with lowest dueTurn.
- * Prefer spaced learners over injecting brand-new cards.
+ * Pick next card.
+ * While the working set has free slots, introduce and show the newcomer first —
+ * otherwise short again-lags recycle the first handful and never fill K.
+ * Once full, prefer the earliest-due in-flight card.
  */
 export function pickNextCard(
   state: ReviewSessionState,
@@ -126,18 +149,19 @@ export function pickNextCard(
 ): SequencerPick {
   let next = state
 
+  // Fill free slots: introduce one and show it immediately (don't let older dues steal the pick).
+  if (shouldIntroduce(next)) {
+    const before = new Set(next.inFlight)
+    next = introduceNext(next, urgencyById)
+    const added = next.inFlight.find((id) => !before.has(id))
+    if (added) {
+      return { kind: 'card', cardId: added, state: next }
+    }
+  }
+
   const dueNow = dueInFlight(next)
   if (dueNow.length) {
     return selectDueCard(next, dueNow, urgencyById)
-  }
-
-  // Nothing due — introduce only when the working set needs / can absorb a new card.
-  if (shouldIntroduce(next)) {
-    next = introduceNext(next, urgencyById)
-    const dueAfter = dueInFlight(next)
-    if (dueAfter.length) {
-      return selectDueCard(next, dueAfter, urgencyById)
-    }
   }
 
   if (!activeInFlight(next).length && next.planIndex >= next.planIds.length) {
@@ -188,7 +212,8 @@ export function applyGradeToSequencer(
   }
 
   if (grade === 2) {
-    next.goodStreaks[cardId] = 0
+    // Slow / soft typo: delay return, but keep graduation progress so a run of
+    // "correct but slow" answers cannot freeze the same small working set forever.
     next.dueTurns[cardId] = next.turn + learningLag(working, 5)
     return next
   }
