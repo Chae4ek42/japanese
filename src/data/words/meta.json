@@ -1,15 +1,16 @@
 {
-  "builtAt": "2026-07-22T15:16:09.677Z",
+  "builtAt": "2026-08-07T12:17:02.519Z",
   "sources": {
     "kanji": "OpenJLPT N5–N1 + joyo2010",
     "vocabTags": "OpenJLPT",
     "dictionary": "jmdict-simplified 3.6.2+20260720135044 (rus)",
     "components": "Kanshudo scrape (local) + KRADFILE fallback",
-    "radicals": "EDRDG KRADFILE"
+    "radicals": "EDRDG KRADFILE",
+    "readingFoundation": "jmdict common kana-preferred + OpenJLPT levels"
   },
   "counts": {
     "kanji": 2383,
-    "words": 61421,
+    "words": 64088,
     "components": 566,
     "joyo": 2136,
     "n5": 79,
@@ -18,6 +19,17 @@
     "n2": 367,
     "n1": 1232,
     "joyoOnly": 172,
-    "withComponents": 2319
+    "withComponents": 2319,
+    "readingFoundation": 2878,
+    "readingGroups": {
+      "reading-must": 128,
+      "reading-n5": 58,
+      "reading-n4": 58,
+      "reading-n3": 142,
+      "reading-n2": 161,
+      "reading-n1": 226,
+      "reading-hira": 175,
+      "reading-kata": 445
+    }
   }
 }

@@ -32,4 +32,23 @@ describe('vocab catalog', () => {
     assert.ok(first?.id)
     assert.equal(getWordById(first!.id!)?.writing, '毎日')
   })
+
+  it('группы чтения: мастхев и уровни N5–N1', () => {
+    const must = getWordsForGroup('reading-must')
+    assert.ok(must.length >= 40 && must.length <= 200, `must size ${must.length}`)
+    assert.ok(must.some((word) => word.writing === 'これ' || word.kana === 'これ'))
+    assert.ok(must.some((word) => word.writing === 'です' || word.kana === 'です'))
+
+    const n5 = getWordsForGroup('reading-n5')
+    assert.ok(n5.length >= 20, `n5 size ${n5.length}`)
+
+    const giant = getWordsForGroup('reading-foundation')
+    assert.equal(giant.length, 0, 'старая монолитная группа удалена')
+
+    for (const id of ['reading-must', 'reading-n5', 'reading-n4', 'reading-n3', 'reading-n2', 'reading-n1']) {
+      const group = getWordsForGroup(id)
+      assert.ok(group.length > 0, id)
+      assert.ok(group.every((word) => word.writing && word.kana && word.meanings.length))
+    }
+  })
 })

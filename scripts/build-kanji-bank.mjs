@@ -269,13 +269,28 @@ function hasPriority(entry) {
   return tags.some((tag) => /^(ichi|news|spec|gai)\d/.test(String(tag)))
 }
 
-function pickSurface(entry) {
-  const kanjiForms = (entry.kanji ?? []).filter((k) => !k.tags?.includes('sK'))
-  if (kanjiForms.length) {
-    return kanjiForms[0].text
-  }
+const RARE_KANJI_TAGS = new Set(['rK', 'oK', 'iK', 'sK'])
+
+function isRareKanjiForm(form) {
+  return (form.tags ?? []).some((tag) => RARE_KANJI_TAGS.has(String(tag)))
+}
+
+/**
+ * Surface as in real texts: prefer modern common kanji; otherwise kana
+ * (これ / です / ありがとう instead of rare 此れ / 有難う).
+ */
+function preferredWriting(entry) {
   const kanaForms = (entry.kana ?? []).filter((k) => !k.tags?.includes('sk'))
-  return kanaForms[0]?.text ?? null
+  const commonKana = kanaForms.find((k) => k.common) ?? kanaForms[0]
+  const kanjiForms = (entry.kanji ?? []).filter((k) => !k.tags?.includes('sK'))
+  const commonModern = kanjiForms.find((k) => k.common && !isRareKanjiForm(k))
+  if (commonModern) return commonModern.text
+  if (commonKana) return commonKana.text
+  return kanjiForms[0]?.text ?? commonKana?.text ?? null
+}
+
+function pickSurface(entry) {
+  return preferredWriting(entry)
 }
 
 function pickReading(entry, surface) {
@@ -518,8 +533,12 @@ async function main() {
     const surface = pickSurface(entry)
     if (!surface) continue
     const kanjiInWord = extractKanji(surface)
-    if (!kanjiInWord.length) continue
-    if (!kanjiInWord.some((ch) => targetKanji.has(ch))) continue
+    const kanaOnlyCommon = !kanjiInWord.length && hasPriority(entry)
+    // Keep common kana-written words (これ, です) even without target kanji.
+    if (!kanaOnlyCommon) {
+      if (!kanjiInWord.length) continue
+      if (!kanjiInWord.some((ch) => targetKanji.has(ch))) continue
+    }
 
     const reading = pickReading(entry, surface)
     if (!reading) continue
