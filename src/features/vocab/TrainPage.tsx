@@ -29,6 +29,8 @@ export function TrainPage() {
         hiddenWordIds={vocab.hiddenWordIds}
         learnedWordIds={vocab.learnedWordIds}
         trainingWordIds={vocab.trainingWordIds}
+        listTrainingWordIds={vocab.listTrainingWordIds}
+        trainingSets={vocab.trainingSets}
         problemWordIds={vocab.problemWordIds}
         liveSession={vocab.liveSession}
         onSaveLiveSession={vocab.saveLiveSession}
@@ -53,7 +55,7 @@ export function TrainPage() {
           trainingWordIds={vocab.trainingWordIds}
           onClose={() => setInfoKanji(null)}
           onToggleMyWord={vocab.toggleMyWord}
-          onToggleTrainingWord={vocab.toggleTrainingWord}
+          onToggleTrainingWord={(id) => vocab.toggleTrainingWord(id)}
         />
       ) : null}
     </main>

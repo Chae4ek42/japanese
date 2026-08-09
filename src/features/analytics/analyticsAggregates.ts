@@ -220,11 +220,6 @@ export function buildAnalyticsViewModel(state: AppState, now = Date.now()) {
     kanji,
     kana,
     numbers,
-    context: {
-      knownWords: state.context.knownWordIds.length,
-      knownGrammar: state.context.knownGrammarIds.length,
-      logEntries: state.context.trainingLog.length,
-    },
   }
 }
 

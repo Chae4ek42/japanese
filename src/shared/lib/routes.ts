@@ -14,7 +14,7 @@ export const PATHS = {
   /** @deprecated Use PATHS.train — kept for redirects/bookmarks. */
   vocabTrain: '/vocab/train',
   train: '/train',
-  context: '/context',
+  theory: '/theory',
   analytics: '/analytics',
 } as const
 
@@ -26,7 +26,7 @@ const PAGE_TITLES: Record<AppPage, string> = {
   vocab: 'Словарь — JP тренажёры',
   mine: 'Мои слова — JP тренажёры',
   train: 'Слова — JP тренажёры',
-  context: 'Контекст — JP тренажёры',
+  theory: 'Теория — JP тренажёры',
   analytics: 'Аналитика — JP тренажёры',
 }
 
@@ -57,8 +57,8 @@ export function parsePath(pathname: string): AppRoute {
     case PATHS.vocabTrain:
     case PATHS.train:
       return { page: 'train' }
-    case PATHS.context:
-      return { page: 'context' }
+    case PATHS.theory:
+      return { page: 'theory' }
     case PATHS.analytics:
       return { page: 'analytics' }
     default:
@@ -86,7 +86,7 @@ export function isKnownPath(pathname: string): boolean {
     path === PATHS.vocabMine ||
     path === PATHS.vocabTrain ||
     path === PATHS.train ||
-    path === PATHS.context ||
+    path === PATHS.theory ||
     path === PATHS.analytics
   )
 }

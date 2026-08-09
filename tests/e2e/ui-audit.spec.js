@@ -39,7 +39,7 @@ const ROUTES = [
       await page.getByTestId('vocab-current-writing').waitFor({ state: 'visible' })
     },
   },
-  { name: 'context-setup', open: async (page) => page.getByTestId('nav-context').click() },
+  { name: 'theory', open: async (page) => page.getByTestId('nav-theory').click() },
 ]
 
 async function measureOverflow(page) {

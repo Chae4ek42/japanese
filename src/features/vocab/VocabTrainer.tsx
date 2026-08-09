@@ -12,7 +12,13 @@ import type {
   VocabCard,
   VocabLevelFilter,
   VocabPreferences,
+  VocabTrainingSet,
 } from '../../shared/lib/types'
+import {
+  MAIN_TRAINING_SET_ID,
+  getTrainingSet,
+  resolveActiveTrainingSetId,
+} from '../../shared/lib/trainingSets'
 import {
   DEFAULT_HYPERPARAMS,
   createStatsRecord,
@@ -36,6 +42,7 @@ import {
   pickNextSourceCard,
   wordToVocabCard,
 } from './pool'
+import { consumeAutostartTrain } from './autostart'
 import { mergeWordsByWriting } from './mergeHomographs'
 import { buildMeaningPrompt, buildMixedPrompt, type VocabMixedPrompt } from './mixed'
 import {
@@ -71,7 +78,11 @@ export interface VocabTrainerProps {
   customWords?: Record<string, KanjiWord>
   hiddenWordIds?: string[]
   learnedWordIds?: string[]
+  /** Active set — membership for «+ В набор» from setup group bulk. */
   trainingWordIds?: string[]
+  /** Set used when preferences.source === 'list'. */
+  listTrainingWordIds?: string[]
+  trainingSets?: VocabTrainingSet[]
   problemWordIds?: string[]
   liveSession?: CardTrainerLiveSession | null
   onSaveLiveSession?: (session: CardTrainerLiveSession | null) => void
@@ -104,8 +115,8 @@ export interface VocabTrainerProps {
     countAsNewIntro?: boolean
   }) => void
   onAddMyWords?: (wordIds: string[]) => void
-  onAddTrainingWords?: (wordIds: string[]) => void
-  onRemoveTrainingWords?: (wordIds: string[]) => void
+  onAddTrainingWords?: (wordIds: string[], setId?: string) => void
+  onRemoveTrainingWords?: (wordIds: string[], setId?: string) => void
   onSaveWordEdit?: (word: KanjiWord) => void
   onHideWords?: (wordIds: string[]) => void
   onToggleLearnedWords?: (wordIds: string[]) => void
@@ -126,6 +137,8 @@ export function VocabTrainer({
   hiddenWordIds = [],
   learnedWordIds = [],
   trainingWordIds = [],
+  listTrainingWordIds,
+  trainingSets = [],
   problemWordIds = [],
   liveSession = null,
   onSaveLiveSession,
@@ -186,7 +199,11 @@ export function VocabTrainer({
   const customWordsRef = useRef(customWords)
   const hiddenWordIdsRef = useRef(hiddenWordIds)
   const learnedWordIdsRef = useRef(learnedWordIds)
-  const trainingWordIdsRef = useRef(trainingWordIds)
+  const listSetId = resolveActiveTrainingSetId(preferences.trainingSetId, trainingSets)
+  const listWordIds =
+    listTrainingWordIds ?? getTrainingSet(trainingSets, listSetId)?.wordIds ?? trainingWordIds
+  const trainingWordIdsRef = useRef(listWordIds)
+  const listSetIdRef = useRef(listSetId)
   const problemWordIdsRef = useRef(problemWordIds)
   const activeCardRef = useRef<VocabCard | null>(null)
   const currentCardIdRef = useRef<string | null>(null)
@@ -237,7 +254,12 @@ export function VocabTrainer({
     replacePoolAddedAt(next)
   }
 
-  const poolOpts = { hiddenWordIds, learnedWordIds, trainingWordIds, problemWordIds }
+  const poolOpts = {
+    hiddenWordIds,
+    learnedWordIds,
+    trainingWordIds: listWordIds,
+    problemWordIds,
+  }
   const isSetSource =
     preferences.source === 'group' ||
     preferences.source === 'kanji' ||
@@ -245,7 +267,7 @@ export function VocabTrainer({
     preferences.source === 'problem'
   const sourcePool = useMemo(
     () => buildVocabPool(preferences, myWords, customWords, { applyNewWordLimit: false, ...poolOpts }),
-    [preferences, myWords, customWords, hiddenWordIds, learnedWordIds, trainingWordIds, problemWordIds],
+    [preferences, myWords, customWords, hiddenWordIds, learnedWordIds, listWordIds, problemWordIds],
   )
   /** Limited start set (for «Слов за раз»); setup menu shows full `sourcePool`. */
   const activePool = useMemo(
@@ -330,7 +352,8 @@ export function VocabTrainer({
     customWordsRef.current = customWords
     hiddenWordIdsRef.current = hiddenWordIds
     learnedWordIdsRef.current = learnedWordIds
-    trainingWordIdsRef.current = trainingWordIds
+    trainingWordIdsRef.current = listWordIds
+    listSetIdRef.current = listSetId
     problemWordIdsRef.current = problemWordIds
   }, [
     preferences,
@@ -343,7 +366,8 @@ export function VocabTrainer({
     customWords,
     hiddenWordIds,
     learnedWordIds,
-    trainingWordIds,
+    listWordIds,
+    listSetId,
     problemWordIds,
   ])
 
@@ -459,6 +483,22 @@ export function VocabTrainer({
 
   const skipToAdjacentRef = useRef<(direction: 'prev' | 'next') => void>(() => {})
   const revealHintRef = useRef<() => void>(() => {})
+  const startPracticeRef = useRef<() => void>(() => {})
+  const autostartPendingRef = useRef<boolean | null>(null)
+  if (autostartPendingRef.current === null) {
+    autostartPendingRef.current = consumeAutostartTrain()
+  }
+
+  useEffect(() => {
+    if (!autostartPendingRef.current) return
+    if (view === 'practice') {
+      autostartPendingRef.current = false
+      return
+    }
+    if (!startPool.length) return
+    autostartPendingRef.current = false
+    startPracticeRef.current()
+  }, [view, startPool])
 
   useEffect(() => {
     const handleWindowKeyDown = (event: KeyboardEvent) => {
@@ -592,7 +632,7 @@ export function VocabTrainer({
     if (!ids.length) return
     const drop = new Set(ids)
     trainingWordIdsRef.current = trainingWordIdsRef.current.filter((id) => !drop.has(id))
-    onRemoveTrainingWords(ids)
+    onRemoveTrainingWords(ids, listSetIdRef.current || MAIN_TRAINING_SET_ID)
   }
 
   function resetSessionWeights() {
@@ -872,6 +912,8 @@ export function VocabTrainer({
     })
     advanceToNextCard(nextSession)
   }
+
+  startPracticeRef.current = startPractice
 
   function stopPractice() {
     clearPendingAdvance()
@@ -1583,8 +1625,10 @@ export function VocabTrainer({
         myWordIds={myWords}
         errorText={feedback.type === 'error' ? feedback.text : ''}
         infoText={feedback.type === 'success' ? feedback.text : ''}
-        trainingWordCount={trainingWordIds.length}
+        trainingWordCount={listWordIds.length}
         trainingWordIds={trainingWordIds}
+        listTrainingWordIds={listWordIds}
+        trainingSets={trainingSets}
         problemWordCount={problemWordIds.length}
         excludedIds={setupExcludedIds}
         memory={memory}

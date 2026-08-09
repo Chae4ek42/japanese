@@ -10,6 +10,7 @@ import { isWordSaved, wordVariantIds } from './mergeHomographs'
 import { resolveTrainingListWords } from './pool'
 import { formatWritingsForClipboard } from './copyWritings'
 import { DictionaryWordList } from './DictionaryWordList'
+import { TrainingSetPicker } from '../../shared/ui/TrainingSetPicker'
 
 const PAGE_SIZE = 40
 
@@ -32,6 +33,9 @@ export function MineWordsPage() {
   const hiddenWordIds = vocab?.hiddenWordIds ?? []
   const learnedWordIds = vocab?.learnedWordIds ?? []
   const trainingWordIds = vocab?.trainingWordIds ?? []
+  const trainingSets = vocab?.trainingSets ?? []
+  const activeTrainingSetId = vocab?.activeTrainingSetId ?? 'main'
+  const activeTrainingSet = vocab?.activeTrainingSet
   const problemWordIds = vocab?.problemWordIds ?? []
   const kanjiLearned = kanji?.learned ?? []
   const onToggleMyWord = vocab?.toggleMyWord ?? (() => {})
@@ -42,6 +46,7 @@ export function MineWordsPage() {
   const onAddTrainingWords = vocab?.addTrainingWords ?? (() => {})
   const onRemoveTrainingWords = vocab?.removeTrainingWords ?? (() => {})
   const onToggleTrainingWord = vocab?.toggleTrainingWord ?? (() => {})
+  const onSetActiveTrainingSet = vocab?.setActiveTrainingSet ?? (() => {})
   const onRemoveProblemWords = vocab?.removeProblemWords ?? (() => {})
   const onToggleKanjiLearned = kanji?.toggleLearned
 
@@ -151,7 +156,7 @@ export function MineWordsPage() {
   const listCaption = showProblemList
     ? 'Проблемные'
     : showTrainingList
-      ? 'Для тренировки'
+      ? `Набор · ${activeTrainingSet?.name ?? 'Основной'}`
       : showLearnedList
         ? 'Выученные'
         : 'Мои слова'
@@ -159,7 +164,7 @@ export function MineWordsPage() {
   const emptyMessage = showProblemList
     ? 'Пока пусто — слова появятся после ошибок или «Не помню» в тренировке.'
     : showTrainingList
-      ? 'Набор пуст — добавьте слова кнопкой «+ В набор».'
+      ? 'Набор пуст — добавьте слова кнопкой «+ В набор» (активный набор в шапке).'
       : showLearnedList
         ? 'Пока пусто — отметьте слова кнопкой «+ Выуч.».'
         : 'Пока пусто — добавьте своё слово или нажмите «+ В мои» в каталоге.'
@@ -234,6 +239,19 @@ export function MineWordsPage() {
             <span className="vocab-mine-mode-count">{problemWords.length}</span>
           </button>
         </div>
+
+        {mineView === 'training' && trainingSets.length > 1 ? (
+          <TrainingSetPicker
+            sets={trainingSets}
+            value={activeTrainingSetId}
+            testId="mine-training-set-select"
+            ariaLabel="Активный набор"
+            onChange={(setId) => {
+              onSetActiveTrainingSet(setId)
+              resetPaging()
+            }}
+          />
+        ) : null}
 
         {mineView === 'saved' && showCustomForm ? (
           <CustomWordForm

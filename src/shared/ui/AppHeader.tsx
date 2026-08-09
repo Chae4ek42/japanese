@@ -1,6 +1,7 @@
 import type { AppPage } from '../lib/types'
 import { PATHS, shouldHandleClientNav } from '../lib/routes'
 import type { RefObject, ChangeEvent } from 'react'
+import { TrainingSetsMenu } from './TrainingSetsMenu'
 
 export interface AppHeaderProps {
   currentPage: AppPage
@@ -19,7 +20,7 @@ const NAV_ITEMS = [
   { id: 'train', label: 'Слова', href: PATHS.train, testId: 'nav-train' },
   { id: 'vocab', label: 'Словарь', href: PATHS.vocab, testId: 'nav-vocab' },
   { id: 'mine', label: 'Мои слова', href: PATHS.mine, testId: 'nav-mine' },
-  { id: 'context', label: 'Контекст', href: PATHS.context, testId: 'nav-context' },
+  { id: 'theory', label: 'Теория', href: PATHS.theory, testId: 'nav-theory' },
   { id: 'analytics', label: 'Аналитика', href: PATHS.analytics, testId: 'nav-analytics' },
 ] as const
 
@@ -48,10 +49,10 @@ export function AppHeader({
           >
             JP тренажёры
           </a>
-          <p className="site-tagline">Японский · каждый день</p>
         </div>
 
         <div className="site-header-actions">
+          <TrainingSetsMenu onNavigate={onNavigate} />
           {onExportBackup ? (
             <button type="button" className="text-button" data-testid="export-backup" onClick={onExportBackup}>
               Экспорт

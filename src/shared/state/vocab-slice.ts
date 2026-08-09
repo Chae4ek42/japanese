@@ -9,8 +9,21 @@ import type {
   StatsOutcome,
   UpdateStatsContext,
   VocabPreferences,
+  VocabTrainingSet,
 } from '../lib/types'
 import { DEFAULT_HYPERPARAMS, createStatsRecord, getDayKey, updateCardStats } from '../lib/trainer'
+import {
+  MAIN_TRAINING_SET_ID,
+  addWordsToTrainingSet,
+  defaultNewSetName,
+  getTrainingSet,
+  getTrainingSetWordIds,
+  moveWordsBetweenTrainingSets,
+  newTrainingSetId,
+  removeWordsFromAllTrainingSets,
+  removeWordsFromTrainingSet,
+  resolveActiveTrainingSetId,
+} from '../lib/trainingSets'
 import {
   applyReview,
   createNewMemoryState,
@@ -201,7 +214,7 @@ export function useVocabState() {
             customWords,
             hiddenWordIds: [...new Set([...(prevState.vocab.hiddenWordIds ?? []), ...ids])],
             learnedWordIds: (prevState.vocab.learnedWordIds ?? []).filter((id) => !hide.has(id)),
-            trainingWordIds: (prevState.vocab.trainingWordIds ?? []).filter((id) => !hide.has(id)),
+            trainingSets: removeWordsFromAllTrainingSets(prevState.vocab.trainingSets ?? [], ids),
             problemWordIds: (prevState.vocab.problemWordIds ?? []).filter((id) => !hide.has(id)),
           },
         }
@@ -211,19 +224,23 @@ export function useVocabState() {
   )
 
   const addTrainingWords = useCallback(
-    (wordIds: string[]) => {
+    (wordIds: string[], setId?: string) => {
       const ids = [...new Set(wordIds.filter((id) => typeof id === 'string' && id.length > 0))]
       if (!ids.length) return
       setAppState((prevState) => {
         if (!prevState) return prevState
-        const known = new Set(prevState.vocab.trainingWordIds ?? [])
-        const toAdd = ids.filter((id) => !known.has(id))
-        if (!toAdd.length) return prevState
+        const sets = prevState.vocab.trainingSets ?? []
+        const targetId = resolveActiveTrainingSetId(
+          setId ?? prevState.vocab.activeTrainingSetId,
+          sets,
+        )
+        const nextSets = addWordsToTrainingSet(sets, targetId, ids)
+        if (nextSets === sets) return prevState
         return {
           ...prevState,
           vocab: {
             ...prevState.vocab,
-            trainingWordIds: [...(prevState.vocab.trainingWordIds ?? []), ...toAdd],
+            trainingSets: nextSets,
           },
         }
       })
@@ -232,18 +249,23 @@ export function useVocabState() {
   )
 
   const removeTrainingWords = useCallback(
-    (wordIds: string[]) => {
-      const ids = new Set(wordIds.filter((id) => typeof id === 'string' && id.length > 0))
-      if (!ids.size) return
+    (wordIds: string[], setId?: string) => {
+      const ids = wordIds.filter((id) => typeof id === 'string' && id.length > 0)
+      if (!ids.length) return
       setAppState((prevState) => {
         if (!prevState) return prevState
-        const next = (prevState.vocab.trainingWordIds ?? []).filter((id) => !ids.has(id))
-        if (next.length === (prevState.vocab.trainingWordIds ?? []).length) return prevState
+        const sets = prevState.vocab.trainingSets ?? []
+        const targetId = resolveActiveTrainingSetId(
+          setId ?? prevState.vocab.activeTrainingSetId,
+          sets,
+        )
+        const nextSets = removeWordsFromTrainingSet(sets, targetId, ids)
+        if (nextSets === sets) return prevState
         return {
           ...prevState,
           vocab: {
             ...prevState.vocab,
-            trainingWordIds: next,
+            trainingSets: nextSets,
           },
         }
       })
@@ -252,17 +274,171 @@ export function useVocabState() {
   )
 
   const toggleTrainingWord = useCallback(
-    (wordId: string) => {
+    (wordId: string, setId?: string) => {
       if (!wordId) return
       setAppState((prevState) => {
         if (!prevState) return prevState
-        const list = prevState.vocab.trainingWordIds ?? []
-        const removing = list.includes(wordId)
+        const sets = prevState.vocab.trainingSets ?? []
+        const targetId = resolveActiveTrainingSetId(
+          setId ?? prevState.vocab.activeTrainingSetId,
+          sets,
+        )
+        const list = getTrainingSetWordIds(sets, targetId)
+        const nextSets = list.includes(wordId)
+          ? removeWordsFromTrainingSet(sets, targetId, [wordId])
+          : addWordsToTrainingSet(sets, targetId, [wordId])
+        if (nextSets === sets) return prevState
         return {
           ...prevState,
           vocab: {
             ...prevState.vocab,
-            trainingWordIds: removing ? list.filter((id) => id !== wordId) : [...list, wordId],
+            trainingSets: nextSets,
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const setActiveTrainingSet = useCallback(
+    (setId: string) => {
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const sets = prevState.vocab.trainingSets ?? []
+        const nextId = resolveActiveTrainingSetId(setId, sets)
+        if (nextId === prevState.vocab.activeTrainingSetId) return prevState
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            activeTrainingSetId: nextId,
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const createTrainingSet = useCallback(
+    ({
+      name,
+      wordIds = [],
+      makeActive = false,
+      train = false,
+    }: {
+      name?: string
+      wordIds?: string[]
+      makeActive?: boolean
+      train?: boolean
+    } = {}): string | null => {
+      const id = newTrainingSetId()
+      let applied = false
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const sets = prevState.vocab.trainingSets ?? []
+        if (sets.some((set) => set.id === id)) {
+          applied = true
+          return prevState
+        }
+        applied = true
+        const now = Date.now()
+        const setName = (name?.trim() || defaultNewSetName(sets)).slice(0, 48)
+        const nextSet: VocabTrainingSet = {
+          id,
+          name: setName,
+          wordIds: [...new Set(wordIds.filter((w) => typeof w === 'string' && w.length > 0))],
+          createdAt: now,
+          updatedAt: now,
+        }
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            trainingSets: [...sets, nextSet],
+            activeTrainingSetId: makeActive ? id : prevState.vocab.activeTrainingSetId,
+            preferences: train
+              ? { ...prevState.vocab.preferences, trainingSetId: id }
+              : prevState.vocab.preferences,
+          },
+        }
+      })
+      return applied ? id : null
+    },
+    [setAppState],
+  )
+
+  const renameTrainingSet = useCallback(
+    (setId: string, name: string) => {
+      const nextName = name.trim().slice(0, 48)
+      if (!setId || !nextName) return
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const sets = prevState.vocab.trainingSets ?? []
+        if (!sets.some((set) => set.id === setId)) return prevState
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            trainingSets: sets.map((set) =>
+              set.id === setId ? { ...set, name: nextName, updatedAt: Date.now() } : set,
+            ),
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const deleteTrainingSet = useCallback(
+    (setId: string) => {
+      if (!setId || setId === MAIN_TRAINING_SET_ID) return
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const sets = prevState.vocab.trainingSets ?? []
+        if (!sets.some((set) => set.id === setId)) return prevState
+        const nextSets = sets.filter((set) => set.id !== setId)
+        const activeTrainingSetId =
+          prevState.vocab.activeTrainingSetId === setId
+            ? MAIN_TRAINING_SET_ID
+            : prevState.vocab.activeTrainingSetId
+        const trainingSetId =
+          prevState.vocab.preferences.trainingSetId === setId
+            ? MAIN_TRAINING_SET_ID
+            : prevState.vocab.preferences.trainingSetId
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            trainingSets: nextSets,
+            activeTrainingSetId,
+            preferences: { ...prevState.vocab.preferences, trainingSetId },
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const moveTrainingWords = useCallback(
+    ({
+      fromSetId,
+      toSetId,
+      wordIds,
+    }: {
+      fromSetId: string
+      toSetId: string
+      wordIds: string[]
+    }) => {
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        const sets = prevState.vocab.trainingSets ?? []
+        const nextSets = moveWordsBetweenTrainingSets(sets, { fromSetId, toSetId, wordIds })
+        if (nextSets === sets) return prevState
+        return {
+          ...prevState,
+          vocab: {
+            ...prevState.vocab,
+            trainingSets: nextSets,
           },
         }
       })
@@ -571,13 +747,33 @@ export function useVocabState() {
     return null
   }
 
+  const trainingSets = appState.vocab.trainingSets ?? []
+  const activeTrainingSetId = resolveActiveTrainingSetId(
+    appState.vocab.activeTrainingSetId,
+    trainingSets,
+  )
+  const activeTrainingSet = getTrainingSet(trainingSets, activeTrainingSetId)
+  const trainSetId = resolveActiveTrainingSetId(
+    appState.vocab.preferences.trainingSetId,
+    trainingSets,
+  )
+  const trainingWordIds = getTrainingSetWordIds(trainingSets, activeTrainingSetId)
+  const listTrainingWordIds = getTrainingSetWordIds(trainingSets, trainSetId)
+
   return {
     myWords: appState.vocab.myWords,
     customWords: appState.vocab.customWords,
     myWordAddedAt: appState.vocab.myWordAddedAt ?? {},
     hiddenWordIds: appState.vocab.hiddenWordIds ?? [],
     learnedWordIds: appState.vocab.learnedWordIds ?? [],
-    trainingWordIds: appState.vocab.trainingWordIds ?? [],
+    trainingSets,
+    activeTrainingSetId,
+    activeTrainingSet,
+    /** Words in the active set (where «+ В набор» writes). */
+    trainingWordIds,
+    /** Words in the set used for source === 'list' practice. */
+    listTrainingWordIds,
+    listTrainingSetId: trainSetId,
     problemWordIds: appState.vocab.problemWordIds ?? [],
     preferences: appState.vocab.preferences,
     stats: appState.vocab.stats,
@@ -595,6 +791,11 @@ export function useVocabState() {
     addTrainingWords,
     removeTrainingWords,
     toggleTrainingWord,
+    setActiveTrainingSet,
+    createTrainingSet,
+    renameTrainingSet,
+    deleteTrainingSet,
+    moveTrainingWords,
     addProblemWords,
     removeProblemWords,
     toggleProblemWord,

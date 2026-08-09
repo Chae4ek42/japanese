@@ -15,6 +15,7 @@ const componentById = new Map<string, KanjiComponent>(KANJI_COMPONENTS.map((item
 const wordsByKanjiMap = wordsByKanji as Record<string, number[]>
 const wordById = new Map<string, KanjiWord>()
 const wordsByWriting = new Map<string, KanjiWord[]>()
+const wordsByKana = new Map<string, KanjiWord[]>()
 for (const word of KANJI_WORDS) {
   if (word.id) {
     wordById.set(word.id, word)
@@ -22,6 +23,13 @@ for (const word of KANJI_WORDS) {
   const writingList = wordsByWriting.get(word.writing)
   if (writingList) writingList.push(word)
   else wordsByWriting.set(word.writing, [word])
+
+  const kanaKey = word.kana?.trim()
+  if (kanaKey) {
+    const kanaList = wordsByKana.get(kanaKey)
+    if (kanaList) kanaList.push(word)
+    else wordsByKana.set(kanaKey, [word])
+  }
 }
 
 const jlptWordsCache = new Map<number | 'other', KanjiWord[]>()
@@ -108,6 +116,12 @@ export function getWordById(id: string | null | undefined): KanjiWord | null {
 export function getWordsByWriting(writing: string | null | undefined): KanjiWord[] {
   if (!writing) return []
   return wordsByWriting.get(writing) ?? []
+}
+
+/** Exact kana reading lookup (JMDict often stores colloquial forms as kana of a kanji writing). */
+export function getWordsByKana(kana: string | null | undefined): KanjiWord[] {
+  if (!kana) return []
+  return wordsByKana.get(kana.trim()) ?? []
 }
 
 export function getWordsByIds(ids: string[]): KanjiWord[] {

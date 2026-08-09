@@ -1,5 +1,4 @@
 import { ALL_CARD_IDS } from '../../data/kana'
-import { STARTER_GRAMMAR_IDS } from '../../data/grammar'
 import type { AppState } from '../lib/types'
 import {
   DEFAULT_HYPERPARAMS,
@@ -10,16 +9,17 @@ import { sanitizeHistory, sanitizeKanaPreferences, sanitizeKanaStats } from './s
 import { sanitizeNumbersPreferences, sanitizeNumbersStats } from './slices/numbers'
 import { sanitizeKanjiState } from './slices/kanji'
 import { DEFAULT_VOCAB_PREFERENCES, sanitizeVocabState } from './slices/vocab'
-import { DEFAULT_CONTEXT_PREFERENCES, sanitizeContextState } from './slices/context'
 import { sanitizeCardTrainerLiveSession } from './slices/live-session'
 import { createDefaultAnalyticsState, sanitizeAnalyticsState } from './slices/analytics'
 
-export const CURRENT_VERSION = 26 as const
+import { MAIN_TRAINING_SET_ID, createMainTrainingSet } from '../lib/trainingSets'
+
+export const CURRENT_VERSION = 28 as const
 export const KNOWN_VERSIONS = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, CURRENT_VERSION,
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, CURRENT_VERSION,
 ]
 
-export { DEFAULT_VOCAB_PREFERENCES, DEFAULT_CONTEXT_PREFERENCES }
+export { DEFAULT_VOCAB_PREFERENCES }
 
 export function createDefaultAppState(): AppState {
   return {
@@ -58,7 +58,8 @@ export function createDefaultAppState(): AppState {
       myWordAddedAt: {},
       hiddenWordIds: [],
       learnedWordIds: [],
-      trainingWordIds: [],
+      trainingSets: [createMainTrainingSet()],
+      activeTrainingSetId: MAIN_TRAINING_SET_ID,
       problemWordIds: [],
       preferences: { ...DEFAULT_VOCAB_PREFERENCES },
       stats: {},
@@ -71,14 +72,6 @@ export function createDefaultAppState(): AppState {
       },
       reviewDay: { dayKey: '', newIntroduced: 0 },
       liveSession: null,
-    },
-    context: {
-      knownWordIds: [],
-      knownGrammarIds: [...STARTER_GRAMMAR_IDS],
-      preferences: { ...DEFAULT_CONTEXT_PREFERENCES },
-      generatedCache: {},
-      session: null,
-      trainingLog: [],
     },
     analytics: createDefaultAnalyticsState(),
   }
@@ -134,7 +127,6 @@ export function normalizeAppState(parsed: unknown): AppState | null {
     },
     kanji: sanitizeKanjiState(source.kanji, fallback.kanji),
     vocab,
-    context: sanitizeContextState(source.context, fallback.context),
     analytics: sanitizeAnalyticsState(source.analytics, fallback.analytics),
   }
 }

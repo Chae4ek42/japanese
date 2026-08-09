@@ -46,6 +46,415 @@
   gap: 4px 10px;
 }
 
+.set-picker {
+  position: relative;
+  width: 100%;
+  max-width: 22rem;
+}
+
+.set-picker.is-static,
+.set-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  border-radius: 12px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.set-picker-trigger {
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.set-picker-trigger:hover,
+.set-picker.is-open .set-picker-trigger {
+  border-color: rgba(17, 17, 17, 0.28);
+  background: rgba(17, 17, 17, 0.02);
+}
+
+.set-picker-copy {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.set-picker-name {
+  font-weight: 650;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.set-picker-count {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.set-picker-chevron {
+  flex-shrink: 0;
+  color: var(--muted-strong);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.set-picker-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  max-height: 14rem;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(17, 17, 17, 0.1);
+}
+
+.set-picker-option {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  min-height: 2.4rem;
+  padding: 0.45rem 0.65rem;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.set-picker-option:hover {
+  background: rgba(17, 17, 17, 0.05);
+}
+
+.set-picker-option.is-active {
+  background: rgba(17, 17, 17, 0.08);
+}
+
+.set-picker-option-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.set-picker-option-count {
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.set-picker-option-mark {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: inherit;
+}
+
+.sets-menu {
+  position: relative;
+}
+
+.sets-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sets-menu-trigger.is-open {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sets-menu-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.08);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.sets-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: min(24rem, calc(100vw - 1.5rem));
+  max-height: min(72vh, 30rem);
+  overflow: hidden;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 14px 40px rgba(17, 17, 17, 0.12);
+}
+
+.sets-menu-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 0.55rem;
+  flex-shrink: 0;
+}
+
+.sets-menu-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.sets-menu-new {
+  border: 0;
+  background: transparent;
+  color: var(--muted-strong);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.1rem;
+}
+
+.sets-menu-new:hover {
+  color: inherit;
+}
+
+.sets-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.sets-menu-item {
+  display: grid;
+  gap: 6px;
+  padding: 0.55rem 0.6rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: rgba(17, 17, 17, 0.02);
+}
+
+.sets-menu-item.is-active {
+  border-color: rgba(17, 17, 17, 0.14);
+  background: rgba(17, 17, 17, 0.04);
+}
+
+.sets-menu-item.is-expanded {
+  border-color: rgba(17, 17, 17, 0.18);
+}
+
+.sets-menu-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+
+.sets-menu-chevron {
+  width: 0.85rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.sets-menu-count {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.82rem;
+}
+
+.sets-menu-active-tag {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: var(--muted-strong);
+}
+
+.sets-menu-preview {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.sets-menu-preview.is-empty {
+  font-style: italic;
+  padding: 0.35rem 0.2rem;
+}
+
+.sets-menu-words {
+  max-height: 11.5rem;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: 10px;
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  background: #fff;
+}
+
+.sets-menu-word-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.2rem;
+  display: grid;
+  gap: 2px;
+}
+
+.sets-menu-word {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0.4rem 0.45rem;
+  border-radius: 8px;
+}
+
+.sets-menu-word:hover {
+  background: rgba(17, 17, 17, 0.04);
+}
+
+.sets-menu-word-copy {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.sets-menu-word-writing {
+  font-weight: 650;
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+
+.sets-menu-word-reading {
+  font-size: 0.75rem;
+  color: var(--muted-strong);
+}
+
+.sets-menu-word-meaning {
+  font-size: 0.74rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sets-menu-word-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem 0.55rem;
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+
+.sets-menu-word-actions button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted-strong);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.sets-menu-word-actions button:hover {
+  color: inherit;
+}
+
+.sets-menu-word-actions button.is-danger {
+  color: #b42318;
+}
+
+.sets-menu-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.sets-menu-actions button {
+  border: 0;
+  background: transparent;
+  padding: 0.15rem 0;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted-strong);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.sets-menu-actions button:hover:not(:disabled) {
+  color: inherit;
+}
+
+.sets-menu-actions button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.sets-menu-actions button.is-danger {
+  color: #b42318;
+}
+
+.sets-menu-rename {
+  width: 100%;
+}
+
+.sets-menu-rename input {
+  width: 100%;
+  min-height: 2rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font: inherit;
+}
+
 .site-header-brand {
   display: grid;
   gap: 4px;
@@ -68,12 +477,6 @@
 
 .site-logo:hover {
   opacity: 0.72;
-}
-
-.site-tagline {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.78rem;
 }
 
 .site-nav {
@@ -141,10 +544,6 @@
   .site-header {
     gap: 10px;
     padding: 8px 0 12px;
-  }
-
-  .site-tagline {
-    display: none;
   }
 
   .site-logo {
@@ -295,13 +694,11 @@
   }
 
   .shortcut-note.question-note,
-  .shortcut-note.context-keys-hint,
   .shortcut-note.kanji-word-hint {
     line-height: 1.45;
   }
 
   .practice-panel.has-mobile-swipes .practice-stage,
-  .context-drill.has-mobile-swipes,
   .kanji-trainer.has-mobile-swipes {
     touch-action: manipulation;
     user-select: none;

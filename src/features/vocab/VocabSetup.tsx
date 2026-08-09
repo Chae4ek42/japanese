@@ -5,7 +5,14 @@ import type {
   VocabLevelFilter,
   VocabPreferences,
   VocabSessionMode,
+  VocabTrainingSet,
 } from '../../shared/lib/types'
+import {
+  MAIN_TRAINING_SET_ID,
+  getTrainingSet,
+  resolveActiveTrainingSetId,
+} from '../../shared/lib/trainingSets'
+import { TrainingSetPicker } from '../../shared/ui/TrainingSetPicker'
 import { getKanjiByLevel, getPopularWordsForKanji } from '../../data/words/bank'
 import { WordJlptFilter } from '../kanji/WordJlptFilter'
 import '../kanji/styles.css'
@@ -58,7 +65,11 @@ export interface VocabSetupProps {
   myWordsCount: number
   myWordIds?: string[]
   trainingWordCount?: number
+  /** Active set (bulk «в набор» from groups). */
   trainingWordIds?: string[]
+  /** Words in the selected list-source set. */
+  listTrainingWordIds?: string[]
+  trainingSets?: VocabTrainingSet[]
   problemWordCount?: number
   excludedIds: Set<string>
   errorText?: string
@@ -84,6 +95,8 @@ export function VocabSetup({
   myWordIds = [],
   trainingWordCount = 0,
   trainingWordIds = [],
+  listTrainingWordIds,
+  trainingSets = [],
   problemWordCount = 0,
   excludedIds,
   errorText = '',
@@ -104,6 +117,9 @@ export function VocabSetup({
   const [kanjiPickLevel, setKanjiPickLevel] = useState<VocabLevelFilter>(5)
   const mySet = useMemo(() => new Set(myWordIds), [myWordIds])
   const trainingSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
+  const listSetId = resolveActiveTrainingSetId(preferences.trainingSetId, trainingSets)
+  const listSet = getTrainingSet(trainingSets, listSetId)
+  const listCount = listTrainingWordIds?.length ?? listSet?.wordIds.length ?? trainingWordCount
   const readingGroups = useMemo(() => getVocabGroupsByKind('reading'), [])
   const themeGroups = useMemo(() => getVocabGroupsByKind('theme'), [])
   const activeGroup = useMemo(
@@ -415,7 +431,7 @@ export function VocabSetup({
                   >
                     {option.label}
                     {option.id === 'mine' ? ` (${myWordsCount})` : ''}
-                    {option.id === 'list' ? ` (${trainingWordCount})` : ''}
+                    {option.id === 'list' ? ` (${listCount})` : ''}
                     {option.id === 'problem' ? ` (${problemWordCount})` : ''}
                     {option.id === 'kanji' && selectedKanji.length
                       ? ` (${selectedKanji.length})`
@@ -585,9 +601,19 @@ export function VocabSetup({
 
             {preferences.source === 'list' ? (
               <div className="control-group">
-                <span className="group-label">Ваш набор</span>
+                <span className="group-label">Набор для тренировки</span>
+                <TrainingSetPicker
+                  sets={trainingSets}
+                  value={listSetId}
+                  testId="vocab-training-set-select"
+                  onChange={(setId) =>
+                    onPatchPreferences({
+                      trainingSetId: setId || MAIN_TRAINING_SET_ID,
+                    })
+                  }
+                />
                 <p className="control-hint" data-testid="vocab-list-count">
-                  {trainingWordCount ? `${trainingWordCount} слов` : 'Набор пуст'}
+                  {listCount ? `${listCount} слов в выбранном наборе` : 'Набор пуст'}
                 </p>
               </div>
             ) : null}

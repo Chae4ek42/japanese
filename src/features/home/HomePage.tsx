@@ -8,7 +8,7 @@ export interface HomePageProps {
   onOpenVocab: () => void
   onOpenMine: () => void
   onOpenVocabTrain: () => void
-  onOpenContext: () => void
+  onOpenTheory: () => void
   onOpenAnalytics: () => void
 }
 
@@ -62,12 +62,12 @@ const ENTRIES = [
     testId: 'open-mine',
   },
   {
-    id: 'context',
-    href: PATHS.context,
-    symbol: '文',
-    title: 'Контекст',
+    id: 'theory',
+    href: PATHS.theory,
+    symbol: '理',
+    title: 'Теория',
     action: 'Открыть',
-    testId: 'open-context',
+    testId: 'open-theory',
   },
   {
     id: 'analytics',
@@ -86,7 +86,7 @@ export function HomePage({
   onOpenVocab,
   onOpenMine,
   onOpenVocabTrain,
-  onOpenContext,
+  onOpenTheory,
   onOpenAnalytics,
 }: HomePageProps) {
   const openers = {
@@ -96,7 +96,7 @@ export function HomePage({
     'vocab-train': onOpenVocabTrain,
     vocab: onOpenVocab,
     mine: onOpenMine,
-    context: onOpenContext,
+    theory: onOpenTheory,
     analytics: onOpenAnalytics,
   } as const
 

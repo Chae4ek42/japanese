@@ -15,8 +15,7 @@
     "build:kanji-bank": "node scripts/build-kanji-bank.mjs",
     "build:reading-foundation": "node scripts/add-reading-foundation.mjs",
     "scrape:kanji-components": "node scripts/scrape-kanji-components.mjs",
-    "russify:kanji": "node scripts/russify-kanji-texts.mjs",
-    "build:context-sentences": "node scripts/build-context-sentences.mjs"
+    "russify:kanji": "node scripts/russify-kanji-texts.mjs"
   },
   "dependencies": {
     "react": "^19.2.7",

@@ -6,7 +6,7 @@ import { NumbersTrainer } from '../features/numbers/NumbersTrainer'
 import { DictionaryPage } from '../features/vocab/DictionaryPage'
 import { MineWordsPage } from '../features/vocab/MineWordsPage'
 import { TrainPage } from '../features/vocab/TrainPage'
-import { ContextPage } from '../features/context/ContextPage'
+import { TheoryPage } from '../features/theory/TheoryPage'
 import { AnalyticsPage } from '../features/analytics/AnalyticsPage'
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import { useActiveTimeTracker } from '../shared/lib/useActiveTimeTracker'
@@ -52,7 +52,7 @@ function AppRoutes() {
           onOpenVocab={() => goPage('vocab')}
           onOpenMine={() => goPage('mine')}
           onOpenVocabTrain={() => goPage('train')}
-          onOpenContext={() => goPage('context')}
+          onOpenTheory={() => goPage('theory')}
           onOpenAnalytics={() => goPage('analytics')}
         />
       ) : page === 'kanji' ? (
@@ -63,8 +63,8 @@ function AppRoutes() {
         <DictionaryPage />
       ) : page === 'mine' ? (
         <MineWordsPage />
-      ) : page === 'context' ? (
-        <ContextPage />
+      ) : page === 'theory' ? (
+        <TheoryPage onOpenTrain={() => goPage('train')} />
       ) : page === 'analytics' ? (
         <AnalyticsPage />
       ) : (

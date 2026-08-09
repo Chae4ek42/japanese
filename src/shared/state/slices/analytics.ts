@@ -9,7 +9,7 @@ export const ANALYTICS_SECTIONS: AnalyticsSection[] = [
   'train',
   'vocab',
   'mine',
-  'context',
+  'theory',
 ]
 
 export const ANALYTICS_DAY_LIMIT = 90
@@ -23,7 +23,7 @@ export function emptySectionMap(): Record<AnalyticsSection, number> {
     train: 0,
     vocab: 0,
     mine: 0,
-    context: 0,
+    theory: 0,
   }
 }
 
@@ -61,6 +61,10 @@ function sanitizeDayBucket(raw: unknown): AnalyticsDayBucket | null {
   for (const key of ANALYTICS_SECTIONS) {
     const ms = clampMs(rawSections[key])
     if (ms > 0) bySection[key] = ms
+  }
+  const legacyContextMs = clampMs(rawSections.context)
+  if (legacyContextMs > 0) {
+    bySection.home = (bySection.home ?? 0) + legacyContextMs
   }
 
   const totalFromSections = ANALYTICS_SECTIONS.reduce((sum, key) => sum + (bySection[key] ?? 0), 0)
@@ -132,6 +136,8 @@ export function sanitizeAnalyticsState(raw: unknown, fallback: AnalyticsState): 
   for (const key of ANALYTICS_SECTIONS) {
     bySection[key] = clampMs(rawSections[key])
   }
+  // v27: drop Context; fold its active time into «Прочее».
+  bySection.home += clampMs(rawSections.context)
 
   const daysRaw = Array.isArray(source.days) ? source.days : []
   const days = trimAnalyticsDays(

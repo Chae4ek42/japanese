@@ -11,6 +11,12 @@ import type {
 import { DEFAULT_LATENCY_MODEL } from '../../lib/review/grade'
 import { MEMORY_MODEL_VERSION } from '../../lib/review/memory'
 import { getDayKey } from '../../lib/trainer'
+import {
+  MAIN_TRAINING_SET_ID,
+  createMainTrainingSet,
+  resolveActiveTrainingSetId,
+  sanitizeTrainingSets,
+} from '../../lib/trainingSets'
 import { sanitizeWordJlptLevels } from './kanji'
 import { sanitizeCardTrainerLiveSession } from './live-session'
 
@@ -42,6 +48,7 @@ export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
   evenBoostShows: 3,
   evenBoostFactor: 2,
   evenDecayPower: 2,
+  trainingSetId: MAIN_TRAINING_SET_ID,
 }
 
 function sanitizeSelectedKanji(raw: unknown, fallback: string[]): string[] {
@@ -139,6 +146,10 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
     evenBoostShows: clampInt(source.evenBoostShows, 0, 20, fallback.evenBoostShows),
     evenBoostFactor: clampFloat(source.evenBoostFactor, 1, 10, fallback.evenBoostFactor),
     evenDecayPower: clampFloat(source.evenDecayPower, 1, 4, fallback.evenDecayPower),
+    trainingSetId:
+      typeof source.trainingSetId === 'string' && source.trainingSetId.trim()
+        ? source.trainingSetId.trim()
+        : fallback.trainingSetId || MAIN_TRAINING_SET_ID,
   }
 }
 
@@ -322,12 +333,13 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
     ),
   ]
 
-  const trainingWordIds = [
-    ...new Set(
-      (Array.isArray(source.trainingWordIds) ? source.trainingWordIds : fallback.trainingWordIds ?? [])
-        .filter((item): item is string => typeof item === 'string' && item.length > 0),
-    ),
-  ]
+  const legacyTrainingWordIds = (source as { trainingWordIds?: unknown }).trainingWordIds
+  const trainingSets = sanitizeTrainingSets(
+    source.trainingSets,
+    legacyTrainingWordIds,
+    fallback.trainingSets?.length ? fallback.trainingSets : [createMainTrainingSet()],
+  )
+  const activeTrainingSetId = resolveActiveTrainingSetId(source.activeTrainingSetId, trainingSets)
 
   const problemWordIds = [
     ...new Set(
@@ -339,15 +351,19 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
   const stats =
     source.stats && typeof source.stats === 'object' ? { ...(source.stats as Record<string, StatsRecord>) } : {}
 
+  const preferences = sanitizeVocabPreferences(source.preferences, fallback.preferences)
+  const trainingSetId = resolveActiveTrainingSetId(preferences.trainingSetId, trainingSets)
+
   return {
     myWords,
     customWords,
     myWordAddedAt,
     hiddenWordIds,
     learnedWordIds,
-    trainingWordIds,
+    trainingSets,
+    activeTrainingSetId,
     problemWordIds,
-    preferences: sanitizeVocabPreferences(source.preferences, fallback.preferences),
+    preferences: { ...preferences, trainingSetId },
     stats,
     memory: sanitizeMemoryMap(source.memory),
     latencyModel: sanitizeLatencyModel(source.latencyModel, fallback.latencyModel ?? DEFAULT_LATENCY_MODEL),

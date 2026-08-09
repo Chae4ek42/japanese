@@ -152,24 +152,12 @@ export function AnalyticsPage() {
           </div>
         </section>
 
-        <section className="analytics-section" data-testid="analytics-numbers-context">
-          <h3>Числа и контекст</h3>
+        <section className="analytics-section" data-testid="analytics-numbers">
+          <h3>Числа</h3>
           <div className="analytics-kpi-row">
             <article className="analytics-kpi">
               <span className="analytics-kpi-label">Числа · точность</span>
               <strong>{model.numbers.accuracy == null ? '—' : `${model.numbers.accuracy}%`}</strong>
-            </article>
-            <article className="analytics-kpi">
-              <span className="analytics-kpi-label">Контекст · слова</span>
-              <strong>{model.context.knownWords}</strong>
-            </article>
-            <article className="analytics-kpi">
-              <span className="analytics-kpi-label">Контекст · грамматика</span>
-              <strong>{model.context.knownGrammar}</strong>
-            </article>
-            <article className="analytics-kpi">
-              <span className="analytics-kpi-label">Сессий контекста</span>
-              <strong>{model.context.logEntries}</strong>
             </article>
           </div>
           <NamedBars

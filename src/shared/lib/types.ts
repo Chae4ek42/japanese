@@ -12,7 +12,7 @@ export type AppPage =
   | 'vocab'
   | 'mine'
   | 'train'
-  | 'context'
+  | 'theory'
   | 'analytics'
 
 /** Sections that accumulate active-time analytics. */
@@ -24,7 +24,7 @@ export type AnalyticsSection =
   | 'train'
   | 'vocab'
   | 'mine'
-  | 'context'
+  | 'theory'
 
 export interface AnalyticsDayBucket {
   dayKey: string
@@ -373,6 +373,19 @@ export interface VocabPreferences {
   evenBoostFactor: number
   /** Even pick mode: exponent for soft decay 1/(1+shows)^power. */
   evenDecayPower: number
+  /**
+   * Which training set to practice when source === 'list'.
+   * Falls back to activeTrainingSetId when missing/invalid.
+   */
+  trainingSetId: string
+}
+
+export interface VocabTrainingSet {
+  id: string
+  name: string
+  wordIds: string[]
+  createdAt: number
+  updatedAt: number
 }
 
 export interface KanjiWordReading {
@@ -412,8 +425,10 @@ export interface VocabState {
   hiddenWordIds: string[]
   /** My-word ids marked as learned («Выученные»). */
   learnedWordIds: string[]
-  /** Words staged for source === 'list' (from kanji cards / catalog). */
-  trainingWordIds: string[]
+  /** Named training sets; «+ В набор» writes to `activeTrainingSetId`. */
+  trainingSets: VocabTrainingSet[]
+  /** Target set for add/toggle from dictionary, kanji, mine, theory words. */
+  activeTrainingSetId: string
   /** Words with recent errors:clears worse than 1:2 — source === 'problem'. */
   problemWordIds: string[]
   preferences: VocabPreferences
@@ -431,67 +446,8 @@ export interface VocabState {
   liveSession: CardTrainerLiveSession | null
 }
 
-export interface ContextPreferences {
-  groupId: string
-  /** Allow one unknown grammar tag when picking a sentence. */
-  allowOneNewGrammar: boolean
-  /** How many new words to keep in the active learning batch (1–5). */
-  batchSize: number
-  /** Max unknown (new) words allowed inside one sentence (1–batchSize). */
-  maxNewPerSentence: number
-}
-
-export interface ContextHistoryPage {
-  sentence: ContextSentence
-  revealed: boolean
-}
-
-export interface ContextSession {
-  groupId: string
-  batchIds: string[]
-  pages: ContextHistoryPage[]
-  pageIndex: number
-  recentSentenceIds: string[]
-  wordsLearnedIds: string[]
-  startedAt: number
-  status: 'active' | 'done'
-}
-
-export interface ContextTrainingLogEntry {
-  id: string
-  groupId: string
-  startedAt: number
-  endedAt?: number
-  wordsLearnedIds: string[]
-  sentencesSeen: number
-  outcome: 'active' | 'completed' | 'abandoned'
-}
-
-export interface ContextState {
-  knownWordIds: string[]
-  knownGrammarIds: string[]
-  preferences: ContextPreferences
-  /** Generated LLM sentences cached by target word id (newest last). */
-  generatedCache: Record<string, ContextSentence[]>
-  /** In-progress drill; survives navigation / remount. */
-  session: ContextSession | null
-  /** Recent finished or abandoned sessions (newest last). */
-  trainingLog: ContextTrainingLogEntry[]
-}
-
-export interface ContextSentence {
-  id: string
-  text: string
-  reading?: string
-  glossRu: string
-  wordIds: string[]
-  grammarIds: string[]
-  themeHints?: string[]
-  source?: 'seed' | 'tatoeba' | 'llm'
-}
-
 export interface AppState {
-  version: 26
+  version: 28
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>
@@ -508,7 +464,6 @@ export interface AppState {
     preferences: KanjiPreferences
   }
   vocab: VocabState
-  context: ContextState
   analytics: AnalyticsState
 }
 

@@ -20,7 +20,7 @@ export const SECTION_LABELS: Record<AnalyticsSection, string> = {
   train: 'Слова',
   vocab: 'Словарь',
   mine: 'Мои слова',
-  context: 'Контекст',
+  theory: 'Теория',
 }
 
 export const SECTION_COLORS: Record<AnalyticsSection, string> = {
@@ -31,7 +31,7 @@ export const SECTION_COLORS: Record<AnalyticsSection, string> = {
   train: '#c2410c',
   vocab: '#0891b2',
   mine: '#db2777',
-  context: '#ca8a04',
+  theory: '#0d9488',
 }
 
 export function formatDurationMs(ms: number): string {

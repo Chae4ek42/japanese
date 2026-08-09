@@ -58,13 +58,6 @@ describe('storage', () => {
     assert.deepEqual(state.kanji.learned, [])
     assert.deepEqual(state.kanji.preferences.hiddenWordsByKanji, {})
     assert.equal(state.analytics.lifetimeActiveMs, 0)
-    assert.deepEqual(state.context.knownWordIds, [])
-    assert.ok(state.context.knownGrammarIds.includes('copula_desu'))
-    assert.equal(state.context.preferences.groupId, 'family')
-    assert.equal(state.context.preferences.batchSize, 3)
-    assert.equal(state.context.preferences.maxNewPerSentence, 1)
-    assert.equal(state.context.session, null)
-    assert.deepEqual(state.context.trainingLog, [])
     assert.deepEqual(state.vocab.myWords, [])
     assert.deepEqual(state.vocab.customWords, {})
     assert.deepEqual(state.vocab.myWordAddedAt, {})
@@ -91,29 +84,6 @@ describe('storage', () => {
       },
     }
     state.vocab.preferences.drillMode = 'choice'
-    state.context.knownWordIds = ['1524720']
-    state.context.session = {
-      groupId: 'family',
-      batchIds: ['1000390'],
-      pages: [
-        {
-          sentence: {
-            id: 's1',
-            text: '父です。',
-            glossRu: 'Это отец.',
-            wordIds: ['1000390'],
-            grammarIds: ['copula_desu'],
-            source: 'seed',
-          },
-          revealed: true,
-        },
-      ],
-      pageIndex: 0,
-      recentSentenceIds: ['s1'],
-      wordsLearnedIds: [],
-      startedAt: 1,
-      status: 'active',
-    }
     await saveAppState(state)
 
     const loaded = await bootstrapAppState()
@@ -126,8 +96,6 @@ describe('storage', () => {
     assert.deepEqual(loaded.vocab.myWords, ['1524720', 'custom:test-1'])
     assert.equal(loaded.vocab.customWords['custom:test-1'].writing, '猫')
     assert.equal(loaded.vocab.preferences.drillMode, 'choice')
-    assert.deepEqual(loaded.context.knownWordIds, ['1524720'])
-    assert.equal(loaded.context.session?.pages[0]?.revealed, true)
     assert.ok(window.localStorage.getItem(STORAGE_KEY))
   })
 
