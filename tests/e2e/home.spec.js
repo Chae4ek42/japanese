@@ -1,5 +1,5 @@
 import { test } from '@playwright/test'
-import { expect, openFreshApp } from './helpers.js'
+import { expect, openFreshApp, seedActiveAccountScript } from './helpers.js'
 
 test('home screen renders landing page', async ({ page }) => {
   await openFreshApp(page)
@@ -30,9 +30,7 @@ test('header navigates to kana trainer', async ({ page }) => {
 })
 
 test('deep links open sections from URL', async ({ page }) => {
-  await page.addInitScript(() => {
-    window.localStorage.clear()
-  })
+  await page.addInitScript(seedActiveAccountScript)
   await page.goto('/vocab/train', { waitUntil: 'domcontentloaded' })
   await expect(page.getByTestId('vocab-setup')).toBeVisible()
   await expect(page).toHaveURL(/\/train$/)
@@ -43,6 +41,11 @@ test('deep links open sections from URL', async ({ page }) => {
 
   await page.goto('/numbers', { waitUntil: 'domcontentloaded' })
   await expect(page.getByTestId('start-numbers')).toBeVisible()
+
+  await page.goto('/accounts', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByTestId('account-gate')).toBeVisible()
+  await expect(page).toHaveURL(/\/accounts$/)
+  await expect(page.getByTestId('account-current')).toContainText('Тест')
 
   await page.goto('/unknown-path', { waitUntil: 'domcontentloaded' })
   await expect(page).toHaveURL(/\/$/)

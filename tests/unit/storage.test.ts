@@ -24,27 +24,38 @@ function createLocalStorageMock(): Storage {
 globalThis.window = { localStorage: createLocalStorageMock() } as Window & typeof globalThis
 
 const {
+  ACCOUNTS_META_KEY,
+  accountStateKey,
   bootstrapAppState,
+  bootstrapSession,
   createDefaultAppState,
+  loadAccountState,
   loadAppState,
   parseStoredState,
   resetStoredState,
   STORAGE_KEY,
   saveAppState,
+  saveAccountsMeta,
 } = await import('../../src/shared/lib/storage')
 const { CURRENT_VERSION } = await import('../../src/shared/state/app-state')
 const { createStatsRecord } = await import('../../src/shared/lib/trainer')
 const { ALL_CARD_IDS } = await import('../../src/data/kana')
 
+function seedActiveAccount(id = 'acc_test'): string {
+  saveAccountsMeta({
+    activeId: id,
+    accounts: [{ id, name: 'Тест', createdAt: 1 }],
+  })
+  return id
+}
+
 describe('storage', () => {
   beforeEach(() => {
     window.localStorage.clear()
-    // Simulate Vite/dev without Worker API (HTML instead of JSON).
-    globalThis.fetch = async () =>
-      new Response('<!doctype html>', {
-        status: 200,
-        headers: { 'content-type': 'text/html; charset=utf-8' },
-      })
+    // Multi-account mode must not call remote /api/state.
+    globalThis.fetch = async () => {
+      throw new Error('fetch should not be called for multi-account storage')
+    }
   })
 
   it('без сохранения возвращает дефолтное состояние', () => {
@@ -66,6 +77,7 @@ describe('storage', () => {
   })
 
   it('сохранение и загрузка через localStorage проходят круг', async () => {
+    const accountId = seedActiveAccount()
     const state = createDefaultAppState()
     state.numbers.preferences.mode = 'age'
     state.numbers.preferences.rangeId = '10'
@@ -96,18 +108,24 @@ describe('storage', () => {
     assert.deepEqual(loaded.vocab.myWords, ['1524720', 'custom:test-1'])
     assert.equal(loaded.vocab.customWords['custom:test-1'].writing, '猫')
     assert.equal(loaded.vocab.preferences.drillMode, 'choice')
-    assert.ok(window.localStorage.getItem(STORAGE_KEY))
+    assert.ok(window.localStorage.getItem(accountStateKey(accountId)))
+    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
   })
 
-  it('мигрирует legacy localStorage в новый ключ', async () => {
+  it('мигрирует legacy localStorage в аккаунт без автологина', async () => {
     const legacy = createDefaultAppState()
     legacy.kana.preferences.mode = 'even'
     window.localStorage.setItem('kana-trainer-state-v1', JSON.stringify(legacy))
 
-    const state = await bootstrapAppState()
-    assert.equal(state.kana.preferences.mode, 'even')
-    assert.equal(window.localStorage.getItem(STORAGE_KEY), JSON.stringify(state))
+    const session = await bootstrapSession()
+    assert.equal(session.status, 'needsAccount')
+    assert.equal(session.accounts.length, 1)
+    const accountId = session.accounts[0].id
+    assert.equal(loadAccountState(accountId).kana.preferences.mode, 'even')
+    assert.ok(window.localStorage.getItem(accountStateKey(accountId)))
+    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
     assert.equal(window.localStorage.getItem('kana-trainer-state-v1'), null)
+    assert.ok(window.localStorage.getItem(ACCOUNTS_META_KEY))
   })
 
   it('мигрирует v10, вкладывая kana', () => {
@@ -227,6 +245,7 @@ describe('storage', () => {
   })
 
   it('v20: явный newWordLimit 0 сохраняется как 0 новых', async () => {
+    seedActiveAccount()
     const state = createDefaultAppState()
     state.vocab.preferences.newWordLimit = 0
     await saveAppState(state)
@@ -239,54 +258,34 @@ describe('storage', () => {
     assert.equal(state.version, CURRENT_VERSION)
   })
 
-  it('reset удаляет localStorage сохранение', async () => {
-    await saveAppState(createDefaultAppState())
+  it('reset сбрасывает прогресс активного аккаунта', async () => {
+    const accountId = seedActiveAccount()
+    const dirty = createDefaultAppState()
+    dirty.vocab.myWords = ['1524720']
+    await saveAppState(dirty)
     await resetStoredState()
-    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
+    const loaded = await bootstrapAppState()
+    assert.deepEqual(loaded.vocab.myWords, [])
+    assert.ok(window.localStorage.getItem(accountStateKey(accountId)))
   })
 
-  it('читает и пишет состояние через /api/state', async () => {
-    let remoteRaw: string | null = null
-    globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-      const url = String(input)
-      assert.match(url, /\/api\/state$/)
-      const method = (init?.method ?? 'GET').toUpperCase()
-      if (method === 'GET') {
-        if (!remoteRaw) {
-          return new Response(null, { status: 404 })
-        }
-        return new Response(remoteRaw, {
-          status: 200,
-          headers: { 'content-type': 'application/json; charset=utf-8' },
-        })
-      }
-      if (method === 'PUT') {
-        remoteRaw = String(init?.body ?? '')
-        return new Response(null, { status: 204 })
-      }
-      if (method === 'DELETE') {
-        remoteRaw = null
-        return new Response(null, { status: 204 })
-      }
-      return new Response('Method Not Allowed', { status: 405 })
+  it('не ходит в /api/state при multi-account', async () => {
+    let fetchCalls = 0
+    globalThis.fetch = async () => {
+      fetchCalls += 1
+      return new Response(null, { status: 404 })
     }
 
-    const empty = await bootstrapAppState()
-    assert.deepEqual(empty.vocab.myWords, [])
-    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
+    const session = await bootstrapSession()
+    assert.equal(session.status, 'needsAccount')
 
+    seedActiveAccount()
     const state = createDefaultAppState()
     state.vocab.myWords = ['1524720']
     await saveAppState(state)
-    assert.ok(remoteRaw, 'expected PUT /api/state to store payload')
-    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
-
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(createDefaultAppState()))
-    const loaded = await bootstrapAppState()
-    assert.deepEqual(loaded.vocab.myWords, ['1524720'])
-    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
-
+    await bootstrapSession()
     await resetStoredState()
-    assert.equal(remoteRaw, null)
+
+    assert.equal(fetchCalls, 0)
   })
 })

@@ -170,6 +170,34 @@
   color: inherit;
 }
 
+.accounts-menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.accounts-menu-trigger {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  text-decoration: none;
+}
+
+.accounts-menu-trigger:hover .accounts-menu-hint {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.accounts-menu-name-label {
+  font-weight: 650;
+}
+
+.accounts-menu-hint {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted-strong);
+}
+
 .sets-menu {
   position: relative;
 }

@@ -1,4 +1,4 @@
-export { AppStateProvider, useAppState, useAppStateContext } from './core'
+export { AppStateProvider, useAppState, useAppStateContext, useAccounts } from './core'
 export type { AppStateContextValue } from './core'
 export { useKanaState } from './kana-slice'
 export type { KanaPracticePatch, KanaPracticeSlice } from './kana-slice'

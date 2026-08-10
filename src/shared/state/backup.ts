@@ -14,7 +14,7 @@ function downloadJson(filename: string, data: unknown) {
 }
 
 export function useBackupApp() {
-  const { appState, setAppState } = useAppStateContext()
+  const { appState, setAppState, activeAccountId } = useAppStateContext()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const exportBackup = useCallback(() => {
@@ -23,31 +23,38 @@ export function useBackupApp() {
     downloadJson(`jp-backup-${stamp}.json`, appState)
   }, [appState])
 
-  const importBackup = useCallback(async (file: File) => {
-    const text = await file.text()
-    let parsed: unknown
-    try {
-      parsed = JSON.parse(text)
-    } catch {
-      window.alert('Не удалось прочитать файл: это не JSON.')
-      return
-    }
-    const next = normalizeAppState(parsed)
-    if (!next) {
-      window.alert('Файл не похож на сохранённые данные приложения.')
-      return
-    }
-    const mineCount = next.vocab.myWords.length
-    if (
-      !window.confirm(
-        `Импортировать данные? «Мои слова»: ${mineCount}. Текущие данные на сервере будут заменены.`,
-      )
-    ) {
-      return
-    }
-    await saveAppState(next)
-    setAppState(next)
-  }, [setAppState])
+  const importBackup = useCallback(
+    async (file: File) => {
+      if (!activeAccountId) {
+        window.alert('Сначала войдите в аккаунт.')
+        return
+      }
+      const text = await file.text()
+      let parsed: unknown
+      try {
+        parsed = JSON.parse(text)
+      } catch {
+        window.alert('Не удалось прочитать файл: это не JSON.')
+        return
+      }
+      const next = normalizeAppState(parsed)
+      if (!next) {
+        window.alert('Файл не похож на сохранённые данные приложения.')
+        return
+      }
+      const mineCount = next.vocab.myWords.length
+      if (
+        !window.confirm(
+          `Импортировать данные в текущий аккаунт? «Мои слова»: ${mineCount}. Текущий прогресс будет заменён.`,
+        )
+      ) {
+        return
+      }
+      await saveAppState(next, activeAccountId)
+      setAppState(next)
+    },
+    [activeAccountId, setAppState],
+  )
 
   const openImportPicker = useCallback(() => {
     fileInputRef.current?.click()
@@ -67,6 +74,6 @@ export function useBackupApp() {
     openImportPicker,
     fileInputRef,
     onImportFileChange,
-    canExport: Boolean(appState),
+    canExport: Boolean(appState && activeAccountId),
   }
 }

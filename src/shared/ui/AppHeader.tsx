@@ -2,6 +2,7 @@ import type { AppPage } from '../lib/types'
 import { PATHS, shouldHandleClientNav } from '../lib/routes'
 import type { RefObject, ChangeEvent } from 'react'
 import { TrainingSetsMenu } from './TrainingSetsMenu'
+import { AccountsMenu } from './AccountsMenu'
 
 export interface AppHeaderProps {
   currentPage: AppPage
@@ -52,6 +53,7 @@ export function AppHeader({
         </div>
 
         <div className="site-header-actions">
+          <AccountsMenu onNavigate={onNavigate} />
           <TrainingSetsMenu onNavigate={onNavigate} />
           {onExportBackup ? (
             <button type="button" className="text-button" data-testid="export-backup" onClick={onExportBackup}>

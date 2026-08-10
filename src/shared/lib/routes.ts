@@ -16,6 +16,7 @@ export const PATHS = {
   train: '/train',
   theory: '/theory',
   analytics: '/analytics',
+  accounts: '/accounts',
 } as const
 
 const PAGE_TITLES: Record<AppPage, string> = {
@@ -28,6 +29,7 @@ const PAGE_TITLES: Record<AppPage, string> = {
   train: 'Слова — JP тренажёры',
   theory: 'Теория — JP тренажёры',
   analytics: 'Аналитика — JP тренажёры',
+  accounts: 'Аккаунты — JP тренажёры',
 }
 
 export function normalizePath(pathname: string): string {
@@ -61,6 +63,8 @@ export function parsePath(pathname: string): AppRoute {
       return { page: 'theory' }
     case PATHS.analytics:
       return { page: 'analytics' }
+    case PATHS.accounts:
+      return { page: 'accounts' }
     default:
       return { page: 'home' }
   }
@@ -87,7 +91,8 @@ export function isKnownPath(pathname: string): boolean {
     path === PATHS.vocabTrain ||
     path === PATHS.train ||
     path === PATHS.theory ||
-    path === PATHS.analytics
+    path === PATHS.analytics ||
+    path === PATHS.accounts
   )
 }
 

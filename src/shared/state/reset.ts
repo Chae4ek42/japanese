@@ -1,13 +1,15 @@
 import { useCallback } from 'react'
 import { createDefaultAppState } from './app-state'
-import { resetStoredState } from '../lib/storage'
+import { saveAppState } from '../lib/storage'
 import { useAppStateContext } from './core'
 
 export function useResetApp() {
-  const { setAppState } = useAppStateContext()
+  const { setAppState, activeAccountId } = useAppStateContext()
 
   return useCallback(async () => {
-    await resetStoredState()
-    setAppState(createDefaultAppState())
-  }, [setAppState])
+    if (!activeAccountId) return
+    const next = createDefaultAppState()
+    await saveAppState(next, activeAccountId)
+    setAppState(next)
+  }, [activeAccountId, setAppState])
 }

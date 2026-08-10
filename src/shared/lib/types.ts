@@ -14,6 +14,7 @@ export type AppPage =
   | 'train'
   | 'theory'
   | 'analytics'
+  | 'accounts'
 
 /** Sections that accumulate active-time analytics. */
 export type AnalyticsSection =

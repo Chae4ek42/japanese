@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { AppHeader } from '../shared/ui/AppHeader'
 import { HomePage } from '../features/home/HomePage'
 import { KanaTrainer } from '../features/kana/KanaTrainer'
@@ -8,27 +9,60 @@ import { MineWordsPage } from '../features/vocab/MineWordsPage'
 import { TrainPage } from '../features/vocab/TrainPage'
 import { TheoryPage } from '../features/theory/TheoryPage'
 import { AnalyticsPage } from '../features/analytics/AnalyticsPage'
+import { AccountGate } from '../features/accounts/AccountGate'
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import { useActiveTimeTracker } from '../shared/lib/useActiveTimeTracker'
-import { AppStateProvider, useAnalyticsState, useAppState } from '../shared/state/AppStateContext'
+import {
+  AppStateProvider,
+  useAccounts,
+  useAnalyticsState,
+  useAppState,
+} from '../shared/state/AppStateContext'
 import { useBackupApp } from '../shared/state/backup'
 
 function AppRoutes() {
   const appState = useAppState()
+  const { storageReady, needsAccount } = useAccounts()
   const { page, goPage } = useAppRouter()
   const { exportBackup, openImportPicker, fileInputRef, onImportFileChange, canExport } = useBackupApp()
   const { applyActiveDeltas } = useAnalyticsState()
 
   useActiveTimeTracker({
     page,
-    enabled: Boolean(appState),
+    enabled: Boolean(appState) && page !== 'accounts',
     onFlush: applyActiveDeltas,
   })
 
-  if (!appState) {
+  useEffect(() => {
+    if (!storageReady) return
+    if (needsAccount && page !== 'accounts') {
+      goPage('accounts', { replace: true })
+    }
+  }, [storageReady, needsAccount, page, goPage])
+
+  if (!storageReady) {
     return (
       <div className="app-shell app-loading">
         <p>Загрузка…</p>
+      </div>
+    )
+  }
+
+  if (needsAccount || page === 'accounts') {
+    return (
+      <div className="app-shell">
+        <AccountGate
+          onEntered={() => goPage('home')}
+          onCancel={needsAccount ? undefined : () => goPage('home')}
+        />
+      </div>
+    )
+  }
+
+  if (!appState) {
+    return (
+      <div className="app-shell">
+        <AccountGate onEntered={() => goPage('home')} />
       </div>
     )
   }

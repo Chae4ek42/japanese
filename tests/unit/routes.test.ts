@@ -28,6 +28,7 @@ describe('routes', () => {
     assert.deepEqual(parsePath('/vocab/mine'), { page: 'mine' })
     assert.deepEqual(parsePath('/analytics'), { page: 'analytics' })
     assert.deepEqual(parsePath('/theory'), { page: 'theory' })
+    assert.deepEqual(parsePath('/accounts'), { page: 'accounts' })
   })
 
   it('неизвестный путь отдаёт home при парсинге', () => {
@@ -37,6 +38,7 @@ describe('routes', () => {
     assert.equal(isKnownPath('/train'), true)
     assert.equal(isKnownPath('/mine'), true)
     assert.equal(isKnownPath('/theory'), true)
+    assert.equal(isKnownPath('/accounts'), true)
   })
 
   it('строит пути из маршрута и страницы', () => {
@@ -44,10 +46,12 @@ describe('routes', () => {
     assert.equal(pathForRoute({ page: 'train' }), '/train')
     assert.equal(pathForRoute({ page: 'mine' }), '/mine')
     assert.equal(pathForRoute({ page: 'theory' }), '/theory')
+    assert.equal(pathForRoute({ page: 'accounts' }), '/accounts')
     assert.equal(pathForPage('train'), '/train')
     assert.equal(pathForPage('home'), '/')
     assert.equal(pathForPage('mine'), '/mine')
     assert.equal(pathForPage('theory'), '/theory')
+    assert.equal(pathForPage('accounts'), '/accounts')
   })
 
   it('shouldHandleClientNav пропускает модификаторы', () => {
