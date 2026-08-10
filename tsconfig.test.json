@@ -5,5 +5,5 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },
-  "include": ["tests/unit"]
+  "include": ["tests/unit", "src/vite-env.d.ts", "worker/types.d.ts", "worker/**/*.ts"]
 }

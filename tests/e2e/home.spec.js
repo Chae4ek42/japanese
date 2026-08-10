@@ -1,5 +1,5 @@
 import { test } from '@playwright/test'
-import { expect, openFreshApp, seedActiveAccountScript } from './helpers.js'
+import { expect, mockAccountsApi, openFreshApp, seedActiveAccountScript } from './helpers.js'
 
 test('home screen renders landing page', async ({ page }) => {
   await openFreshApp(page)
@@ -30,6 +30,7 @@ test('header navigates to kana trainer', async ({ page }) => {
 })
 
 test('deep links open sections from URL', async ({ page }) => {
+  await mockAccountsApi(page)
   await page.addInitScript(seedActiveAccountScript)
   await page.goto('/vocab/train', { waitUntil: 'domcontentloaded' })
   await expect(page.getByTestId('vocab-setup')).toBeVisible()

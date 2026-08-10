@@ -10,28 +10,28 @@ import {
   type SetStateAction,
 } from 'react'
 import type { AppState } from '../lib/types'
+import { AuthError, validatePassword } from '../lib/account-auth'
 import {
   accountHasPassword,
-  AuthError,
-  hashPassword,
-  validatePassword,
-  verifyPassword,
-} from '../lib/account-auth'
-import {
-  createAccountRecord,
   defaultAccountName,
-  loadAccountState,
-  loadAccountsMeta,
-  saveAccountState,
-  saveAccountsMeta,
   sanitizeAccountName,
-  updateAccountPassword,
   type AccountRecord,
 } from '../lib/accounts'
 import {
+  createAccountRemote,
+  deleteAccountRemote,
+  fetchAccountState,
+  listAccounts,
+  loginAccountRemote,
+  logoutRemote,
+  renameAccountRemote,
+  setPasswordRemote,
+} from '../lib/accounts-api'
+import { clearClientSession, loadClientSession } from '../lib/session'
+import {
   bootstrapSession,
   createDefaultAppState,
-  removeAccountCompletely,
+  parseStoredState,
   saveAppState,
 } from '../lib/storage'
 
@@ -43,9 +43,10 @@ export interface AppStateContextValue {
   accounts: AccountRecord[]
   activeAccountId: string | null
   activeAccount: AccountRecord | null
+  bootstrapError: string | null
   createAccount: (name: string, password: string) => Promise<void>
   switchAccount: (accountId: string, password: string) => Promise<void>
-  renameAccount: (accountId: string, name: string) => void
+  renameAccount: (accountId: string, name: string) => Promise<void>
   deleteAccount: (accountId: string, password: string) => Promise<void>
   setAccountPassword: (
     accountId: string,
@@ -53,6 +54,7 @@ export interface AppStateContextValue {
     newPassword: string,
   ) => Promise<void>
   signOut: () => Promise<void>
+  refreshAccounts: () => Promise<void>
 }
 
 const AppStateContext = createContext<AppStateContextValue | null>(null)
@@ -63,6 +65,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   const [needsAccount, setNeedsAccount] = useState(false)
   const [accounts, setAccounts] = useState<AccountRecord[]>([])
   const [activeAccountId, setActiveAccountId] = useState<string | null>(null)
+  const [bootstrapError, setBootstrapError] = useState<string | null>(null)
   const appStateRef = useRef<AppState | null>(null)
   const activeIdRef = useRef<string | null>(null)
   const saveTimerRef = useRef<number | null>(null)
@@ -94,11 +97,13 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         setActiveAccountId(session.accountId)
         setAppState(session.state)
         setNeedsAccount(false)
+        setBootstrapError(null)
       } else {
         setAccounts(session.accounts)
         setActiveAccountId(null)
         setAppState(null)
         setNeedsAccount(true)
+        setBootstrapError(session.error ?? null)
       }
       setStorageReady(true)
     })
@@ -124,112 +129,85 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     }
   }, [appState, activeAccountId, storageReady])
 
-  const activateAccount = useCallback((accountId: string, metaAccounts: AccountRecord[]) => {
-    const state = loadAccountState(accountId)
-    const nextMeta = { activeId: accountId, accounts: metaAccounts }
-    saveAccountsMeta(nextMeta)
-    setAccounts(metaAccounts)
+  const activateFromAuth = useCallback(async (accountId: string, nextAccounts: AccountRecord[]) => {
+    let state = createDefaultAppState()
+    try {
+      const raw = await fetchAccountState(accountId)
+      state = parseStoredState(raw)
+    } catch {
+      state = createDefaultAppState()
+    }
+    setAccounts(nextAccounts)
     setActiveAccountId(accountId)
     setAppState(state)
     setNeedsAccount(false)
+    setBootstrapError(null)
   }, [])
 
   const createAccount = useCallback(
     async (name: string, password: string) => {
       validatePassword(password)
-      const meta = loadAccountsMeta()
-      const { salt, hash } = await hashPassword(password)
-      const account = createAccountRecord(
-        name?.trim() || defaultAccountName(meta.accounts),
-        meta.accounts,
-        { passwordSalt: salt, passwordHash: hash },
+      const result = await createAccountRemote(
+        name?.trim() || defaultAccountName(accounts),
+        password,
       )
       const state = createDefaultAppState()
-      saveAccountState(account.id, state)
-      const accountsNext = [...meta.accounts, account]
-      activateAccount(account.id, accountsNext)
+      await saveAppState(state, result.session.accountId)
+      setAccounts(result.accounts)
+      setActiveAccountId(result.session.accountId)
+      setAppState(state)
+      setNeedsAccount(false)
+      setBootstrapError(null)
     },
-    [activateAccount],
+    [accounts],
   )
 
   const switchAccount = useCallback(
     async (accountId: string, password: string) => {
-      const meta = loadAccountsMeta()
-      const account = meta.accounts.find((item) => item.id === accountId)
+      const account = accounts.find((item) => item.id === accountId)
       if (!account) throw new AuthError('Аккаунт не найден', 'invalid')
       if (!accountHasPassword(account)) {
         throw new AuthError('Сначала задайте пароль для этого аккаунта', 'missing')
       }
-      const ok = await verifyPassword(password, account.passwordSalt!, account.passwordHash!)
-      if (!ok) throw new AuthError('Неверный пароль', 'invalid')
       await flushSave()
-      activateAccount(accountId, meta.accounts)
+      const prev = loadClientSession()
+      if (prev && prev.accountId !== accountId) {
+        await logoutRemote()
+      }
+      const result = await loginAccountRemote(accountId, password)
+      await activateFromAuth(result.session.accountId, result.accounts)
     },
-    [activateAccount, flushSave],
+    [accounts, activateFromAuth, flushSave],
   )
 
   const setAccountPassword = useCallback(
     async (accountId: string, currentPassword: string | null, newPassword: string) => {
       validatePassword(newPassword)
-      const meta = loadAccountsMeta()
-      const account = meta.accounts.find((item) => item.id === accountId)
-      if (!account) throw new AuthError('Аккаунт не найден', 'invalid')
-
-      if (accountHasPassword(account)) {
-        if (currentPassword == null) {
-          throw new AuthError('Введите текущий пароль', 'missing')
-        }
-        const ok = await verifyPassword(
-          currentPassword,
-          account.passwordSalt!,
-          account.passwordHash!,
-        )
-        if (!ok) throw new AuthError('Неверный пароль', 'invalid')
-      }
-
-      const { salt, hash } = await hashPassword(newPassword)
-      const next = updateAccountPassword(accountId, {
-        passwordSalt: salt,
-        passwordHash: hash,
-      })
-      setAccounts(next.accounts)
+      await flushSave()
+      const result = await setPasswordRemote(accountId, currentPassword, newPassword)
+      await activateFromAuth(result.session.accountId, result.accounts)
     },
-    [],
+    [activateFromAuth, flushSave],
   )
 
-  const renameAccount = useCallback((accountId: string, name: string) => {
-    const meta = loadAccountsMeta()
+  const renameAccount = useCallback(async (accountId: string, name: string) => {
     const nextName = sanitizeAccountName(name)
     if (!nextName) return
-    const accountsNext = meta.accounts.map((item) =>
-      item.id === accountId ? { ...item, name: nextName } : item,
-    )
-    const nextMeta = { ...meta, accounts: accountsNext }
-    saveAccountsMeta(nextMeta)
-    setAccounts(accountsNext)
+    const next = await renameAccountRemote(accountId, nextName)
+    setAccounts(next)
   }, [])
 
   const deleteAccount = useCallback(
     async (accountId: string, password: string) => {
-      const meta = loadAccountsMeta()
-      const account = meta.accounts.find((item) => item.id === accountId)
-      if (!account) throw new AuthError('Аккаунт не найден', 'invalid')
-
-      if (accountHasPassword(account)) {
-        const ok = await verifyPassword(password, account.passwordSalt!, account.passwordHash!)
-        if (!ok) throw new AuthError('Неверный пароль', 'invalid')
-      }
-
       const wasActive = activeIdRef.current === accountId
       if (wasActive) await flushSave()
-      const nextMeta = removeAccountCompletely(accountId)
-      setAccounts(nextMeta.accounts)
-      if (wasActive || !nextMeta.activeId) {
+      const next = await deleteAccountRemote(accountId, password)
+      setAccounts(next)
+      if (wasActive) {
+        clearClientSession()
         setActiveAccountId(null)
         setAppState(null)
         setNeedsAccount(true)
-      } else {
-        setActiveAccountId(nextMeta.activeId)
       }
     },
     [flushSave],
@@ -237,12 +215,21 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     await flushSave()
-    const meta = loadAccountsMeta()
-    saveAccountsMeta({ ...meta, activeId: null })
+    await logoutRemote()
     setActiveAccountId(null)
     setAppState(null)
     setNeedsAccount(true)
   }, [flushSave])
+
+  const refreshAccounts = useCallback(async () => {
+    try {
+      const next = await listAccounts()
+      setAccounts(next)
+      setBootstrapError(null)
+    } catch (error) {
+      setBootstrapError(error instanceof Error ? error.message : 'Ошибка загрузки')
+    }
+  }, [])
 
   const activeAccount = accounts.find((item) => item.id === activeAccountId) ?? null
 
@@ -256,12 +243,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         accounts,
         activeAccountId,
         activeAccount,
+        bootstrapError,
         createAccount,
         switchAccount,
         renameAccount,
         deleteAccount,
         setAccountPassword,
         signOut,
+        refreshAccounts,
       }}
     >
       {children}
@@ -289,11 +278,13 @@ export function useAccounts() {
     accounts: ctx.accounts,
     activeAccountId: ctx.activeAccountId,
     activeAccount: ctx.activeAccount,
+    bootstrapError: ctx.bootstrapError,
     createAccount: ctx.createAccount,
     switchAccount: ctx.switchAccount,
     renameAccount: ctx.renameAccount,
     deleteAccount: ctx.deleteAccount,
     setAccountPassword: ctx.setAccountPassword,
     signOut: ctx.signOut,
+    refreshAccounts: ctx.refreshAccounts,
   }
 }

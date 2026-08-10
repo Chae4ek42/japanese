@@ -1,32 +1,79 @@
 import { expect } from '@playwright/test'
 
-/** Fixed PBKDF2 fixture for password "test" (100k iterations, SHA-256). */
-export const E2E_ACCOUNT_PASSWORD = 'test'
-export const E2E_PASSWORD_SALT = 'AAAAAAAAAAAAAAAAAAAAAA=='
-export const E2E_PASSWORD_HASH = '2jonN7v33cMAvv/2Z6Uu0R+V95oP9S8k1wiQ1sdSPD0='
+const E2E_ACCOUNT = {
+  id: 'acc_e2e_default',
+  name: 'Тест',
+  createdAt: 1,
+  hasPassword: true,
+}
 
-/** Seed a signed-in local account so e2e can skip AccountGate. */
+/** Mock server accounts API for e2e (shared registry). */
+export async function mockAccountsApi(page) {
+  let remoteState = null
+  const accounts = [structuredClone(E2E_ACCOUNT)]
+
+  await page.route('**/api/**', async (route) => {
+    const request = route.request()
+    const url = new URL(request.url())
+    const path = url.pathname
+    const method = request.method().toUpperCase()
+
+    if (path === '/api/accounts' && method === 'GET') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ accounts }),
+      })
+      return
+    }
+
+    if (path === `/api/accounts/${E2E_ACCOUNT.id}/state`) {
+      if (method === 'GET') {
+        if (!remoteState) {
+          await route.fulfill({ status: 404, body: '' })
+          return
+        }
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: remoteState,
+        })
+        return
+      }
+      if (method === 'PUT') {
+        remoteState = request.postData() ?? ''
+        await route.fulfill({ status: 204, body: '' })
+        return
+      }
+    }
+
+    if (path === '/api/session/logout' && method === 'POST') {
+      await route.fulfill({ status: 204, body: '' })
+      return
+    }
+
+    await route.fulfill({
+      status: 404,
+      contentType: 'application/json',
+      body: JSON.stringify({ error: `unmocked ${method} ${path}` }),
+    })
+  })
+}
+
 export function seedActiveAccountScript() {
-  const id = 'acc_e2e_default'
   window.localStorage.clear()
   window.localStorage.setItem(
-    'jp-accounts-meta-v1',
+    'jp-account-session-v1',
     JSON.stringify({
-      activeId: id,
-      accounts: [
-        {
-          id,
-          name: 'Тест',
-          createdAt: 1,
-          passwordSalt: 'AAAAAAAAAAAAAAAAAAAAAA==',
-          passwordHash: '2jonN7v33cMAvv/2Z6Uu0R+V95oP9S8k1wiQ1sdSPD0=',
-        },
-      ],
+      token: 'e2e-token',
+      accountId: 'acc_e2e_default',
+      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
     }),
   )
 }
 
 export async function openFreshApp(page) {
+  await mockAccountsApi(page)
   await page.addInitScript(seedActiveAccountScript)
   await page.goto('/', { waitUntil: 'domcontentloaded' })
   await page.getByTestId('nav-home').waitFor({ state: 'visible' })

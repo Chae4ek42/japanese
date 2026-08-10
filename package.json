@@ -9,7 +9,7 @@
     "build": "tsc --noEmit && vite build",
     "lint": "oxlint",
     "preview": "vite preview --host",
-    "test:unit": "node --import tsx --test \"tests/unit/**/*.test.ts\"",
+    "test:unit": "node --import tsx --test --test-concurrency=1 \"tests/unit/**/*.test.ts\"",
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run test:e2e",
     "build:kanji-bank": "node scripts/build-kanji-bank.mjs",

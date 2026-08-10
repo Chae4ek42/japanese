@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { useAccounts } from '../../shared/state/AppStateContext'
-import { accountHasPassword, AuthError, MIN_PASSWORD_LENGTH } from '../../shared/lib/account-auth'
-import { defaultAccountName, type AccountRecord } from '../../shared/lib/accounts'
+import { AuthError, MIN_PASSWORD_LENGTH } from '../../shared/lib/account-auth'
+import {
+  accountHasPassword,
+  defaultAccountName,
+  type AccountRecord,
+} from '../../shared/lib/accounts'
 import './styles.css'
 
 export interface AccountGateProps {
@@ -29,6 +33,8 @@ export function AccountGate({ onEntered, onCancel }: AccountGateProps) {
     setAccountPassword,
     storageReady,
     needsAccount,
+    bootstrapError,
+    refreshAccounts,
   } = useAccounts()
 
   const [creating, setCreating] = useState(false)
@@ -84,8 +90,12 @@ export function AccountGate({ onEntered, onCancel }: AccountGateProps) {
 
   function commitRename() {
     if (!renameId) return
-    renameAccount(renameId, renameDraft)
+    const id = renameId
+    const name = renameDraft
     setRenameId(null)
+    void renameAccount(id, name).catch((error) => {
+      setPanelError(errorMessage(error))
+    })
   }
 
   async function submitCreate(event: React.FormEvent) {
@@ -123,7 +133,6 @@ export function AccountGate({ onEntered, onCancel }: AccountGateProps) {
           throw new AuthError('Пароли не совпадают', 'mismatch')
         }
         await setAccountPassword(selected.id, null, passwordDraft)
-        await switchAccount(selected.id, passwordDraft)
         onEntered?.()
         return
       }
@@ -186,6 +195,19 @@ export function AccountGate({ onEntered, onCancel }: AccountGateProps) {
         </p>
       ) : null}
 
+      {bootstrapError ? (
+        <div className="account-gate-section" data-testid="account-bootstrap-error">
+          <p className="account-gate-error">{bootstrapError}</p>
+          <button
+            type="button"
+            className="account-gate-secondary"
+            onClick={() => void refreshAccounts()}
+          >
+            Повторить
+          </button>
+        </div>
+      ) : null}
+
       <section className="account-gate-section" aria-label="Список аккаунтов">
         <h2 className="account-gate-section-title">
           {switching ? 'Переключить на' : 'Войти'}
@@ -246,14 +268,16 @@ export function AccountGate({ onEntered, onCancel }: AccountGateProps) {
                     </button>
                   )}
                   <div className="account-gate-item-actions">
-                    <button
-                      type="button"
-                      className="account-gate-rename-btn"
-                      data-testid={`account-rename-${account.id}`}
-                      onClick={() => beginRename(account.id, account.name)}
-                    >
-                      Имя
-                    </button>
+                    {isActive ? (
+                      <button
+                        type="button"
+                        className="account-gate-rename-btn"
+                        data-testid={`account-rename-${account.id}`}
+                        onClick={() => beginRename(account.id, account.name)}
+                      >
+                        Имя
+                      </button>
+                    ) : null}
                     {accountHasPassword(account) || isActive ? (
                       <button
                         type="button"

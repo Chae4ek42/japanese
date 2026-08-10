@@ -4,36 +4,19 @@ import {
   normalizeAppState,
 } from '../state/app-state'
 import type { AppState } from './types'
+import type { AccountRecord } from './accounts'
 import {
-  ACCOUNTS_META_KEY,
-  LEGACY_APP_STATE_KEY,
-  type AccountRecord,
-  type AccountsMeta,
-  accountStateKey,
-  deleteAccountState,
-  ensureAccountsMigrated,
-  loadAccountState,
-  loadAccountsMeta,
-  saveAccountState,
-  saveAccountsMeta,
-} from './accounts'
+  fetchAccountState,
+  listAccounts,
+  putAccountState,
+} from './accounts-api'
+import { clearClientSession, loadClientSession } from './session'
 
 export { createDefaultAppState, normalizeAppState, CURRENT_VERSION }
-export {
-  ACCOUNTS_META_KEY,
-  LEGACY_APP_STATE_KEY,
-  accountStateKey,
-  ensureAccountsMigrated,
-  loadAccountState,
-  loadAccountsMeta,
-  saveAccountState,
-  saveAccountsMeta,
-}
-export type { AccountRecord, AccountsMeta }
+export type { AccountRecord }
+export { defaultAccountName, sanitizeAccountName, accountHasPassword } from './accounts'
 
-/** @deprecated Legacy single-blob key — prefer accountStateKey(id). */
-export const STORAGE_KEY = LEGACY_APP_STATE_KEY
-export const STATE_API_PATH = '/api/state'
+export const STATE_API_PATH = '/api/accounts'
 
 /** Parse raw JSON into AppState (used by persistence helpers + tests). */
 export function parseStoredState(
@@ -58,32 +41,43 @@ export type BootstrapResult =
   | {
       status: 'needsAccount'
       accounts: AccountRecord[]
+      error?: string
     }
 
 /**
- * Local multi-account bootstrap. Migrates legacy single-blob into «Основной».
- * Remote `/api/state` is not used (would overwrite per-account stores).
+ * Server multi-account bootstrap. Session in localStorage; accounts/state in KV.
  */
 export async function bootstrapSession(): Promise<BootstrapResult> {
   try {
-    const meta = ensureAccountsMigrated()
-    if (!meta.activeId) {
-      return { status: 'needsAccount', accounts: meta.accounts }
+    const accounts = await listAccounts()
+    const session = loadClientSession()
+    if (!session || !accounts.some((item) => item.id === session.accountId)) {
+      if (session) clearClientSession()
+      return { status: 'needsAccount', accounts }
     }
-    const state = loadAccountState(meta.activeId)
-    return {
-      status: 'ready',
-      accountId: meta.activeId,
-      state,
-      accounts: meta.accounts,
+    try {
+      const raw = await fetchAccountState(session.accountId)
+      const state = parseStoredState(raw)
+      return {
+        status: 'ready',
+        accountId: session.accountId,
+        state,
+        accounts,
+      }
+    } catch (error) {
+      console.warn('[storage] session state failed', error)
+      clearClientSession()
+      return { status: 'needsAccount', accounts }
     }
   } catch (error) {
     console.warn('[storage] account bootstrap failed', error)
-    return { status: 'needsAccount', accounts: [] }
+    const message =
+      error instanceof Error ? error.message : 'Нет связи с сервером аккаунтов'
+    return { status: 'needsAccount', accounts: [], error: message }
   }
 }
 
-/** @deprecated Prefer bootstrapSession — returns defaults only when no active account. */
+/** @deprecated Prefer bootstrapSession */
 export async function bootstrapAppState(): Promise<AppState> {
   const session = await bootstrapSession()
   if (session.status === 'ready') return session.state
@@ -91,24 +85,24 @@ export async function bootstrapAppState(): Promise<AppState> {
 }
 
 export async function saveAppState(state: AppState, accountId?: string | null): Promise<void> {
-  const id = accountId ?? loadAccountsMeta().activeId
-  if (!id) {
-    console.warn('[storage] skip save: no active account')
+  const session = loadClientSession()
+  const id = accountId ?? session?.accountId
+  if (!id || !session || session.accountId !== id) {
+    console.warn('[storage] skip save: no active session')
     return
   }
-  saveAccountState(id, state)
+  await putAccountState(id, JSON.stringify(state))
 }
 
 /** Reset only the active account's progress (keeps the account). */
 export async function resetStoredState(): Promise<void> {
-  const meta = loadAccountsMeta()
-  if (!meta.activeId) return
-  saveAccountState(meta.activeId, createDefaultAppState())
+  const session = loadClientSession()
+  if (!session) return
+  await putAccountState(session.accountId, JSON.stringify(createDefaultAppState()))
 }
 
 /**
- * Sync helper for unit tests / tooling. Prefer bootstrapSession in the app.
- * When `raw` is passed, parses it; otherwise returns defaults.
+ * Sync helper for unit tests / tooling.
  */
 export function loadAppState(
   factory: () => AppState = createDefaultAppState,
@@ -118,14 +112,4 @@ export function loadAppState(
     return parseStoredState(raw, factory)
   }
   return factory()
-}
-
-export function removeAccountCompletely(accountId: string): AccountsMeta {
-  deleteAccountState(accountId)
-  const meta = loadAccountsMeta()
-  const accounts = meta.accounts.filter((item) => item.id !== accountId)
-  const activeId = meta.activeId === accountId ? null : meta.activeId
-  const next = { activeId, accounts }
-  saveAccountsMeta(next)
-  return next
 }

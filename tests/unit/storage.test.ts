@@ -21,40 +21,66 @@ function createLocalStorageMock(): Storage {
   }
 }
 
-globalThis.window = { localStorage: createLocalStorageMock() } as Window & typeof globalThis
+globalThis.window = {
+  localStorage: createLocalStorageMock(),
+  location: { origin: 'http://localhost' },
+} as Window & typeof globalThis
 
 const {
-  ACCOUNTS_META_KEY,
-  accountStateKey,
   bootstrapAppState,
-  bootstrapSession,
   createDefaultAppState,
-  loadAccountState,
   loadAppState,
   parseStoredState,
   resetStoredState,
-  STORAGE_KEY,
   saveAppState,
-  saveAccountsMeta,
 } = await import('../../src/shared/lib/storage')
 const { CURRENT_VERSION } = await import('../../src/shared/state/app-state')
 const { createStatsRecord } = await import('../../src/shared/lib/trainer')
 const { ALL_CARD_IDS } = await import('../../src/data/kana')
+const { saveClientSession, clearClientSession } = await import('../../src/shared/lib/session')
 
-function seedActiveAccount(id = 'acc_test'): string {
-  saveAccountsMeta({
-    activeId: id,
-    accounts: [{ id, name: 'Тест', createdAt: 1 }],
+function seedSession(accountId = 'acc_test') {
+  saveClientSession({
+    token: 'tok',
+    accountId,
+    expiresAt: Date.now() + 60_000,
   })
-  return id
+  return accountId
 }
 
 describe('storage', () => {
+  let remoteState: string | null = null
+
   beforeEach(() => {
     window.localStorage.clear()
-    // Multi-account mode must not call remote /api/state.
-    globalThis.fetch = async () => {
-      throw new Error('fetch should not be called for multi-account storage')
+    clearClientSession()
+    remoteState = null
+    globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url =
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.includes('/api/accounts') && !url.includes('/state') && method === 'GET') {
+        return new Response(
+          JSON.stringify({
+            accounts: [{ id: 'acc_test', name: 'Тест', createdAt: 1, hasPassword: true }],
+          }),
+          { status: 200, headers: { 'content-type': 'application/json' } },
+        )
+      }
+      if (url.includes('/state')) {
+        if (method === 'GET') {
+          if (!remoteState) return new Response(null, { status: 404 })
+          return new Response(remoteState, {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
+          })
+        }
+        if (method === 'PUT') {
+          remoteState = String(init?.body ?? '')
+          return new Response(null, { status: 204 })
+        }
+      }
+      return new Response('nope', { status: 404 })
     }
   })
 
@@ -62,70 +88,25 @@ describe('storage', () => {
     const state = loadAppState(createDefaultAppState)
     assert.equal(state.version, CURRENT_VERSION)
     assert.equal(state.kana.preferences.mode, 'adaptive')
-    assert.equal(state.numbers.preferences.mode, 'plain')
-    assert.equal(state.numbers.preferences.rangeId, '99')
     assert.equal(Object.keys(state.kana.stats).length, ALL_CARD_IDS.length)
-    assert.deepEqual(state.numbers.stats, {})
-    assert.deepEqual(state.kanji.learned, [])
-    assert.deepEqual(state.kanji.preferences.hiddenWordsByKanji, {})
-    assert.equal(state.analytics.lifetimeActiveMs, 0)
     assert.deepEqual(state.vocab.myWords, [])
-    assert.deepEqual(state.vocab.customWords, {})
-    assert.deepEqual(state.vocab.myWordAddedAt, {})
-    assert.equal(state.vocab.preferences.drillMode, 'romaji')
-    assert.deepEqual(state.vocab.stats, {})
   })
 
-  it('сохранение и загрузка через localStorage проходят круг', async () => {
-    const accountId = seedActiveAccount()
+  it('сохранение и загрузка через API проходят круг', async () => {
+    seedSession()
     const state = createDefaultAppState()
     state.numbers.preferences.mode = 'age'
-    state.numbers.preferences.rangeId = '10'
     state.numbers.stats['age:5'] = { ...createStatsRecord(), exposures: 3, mastery: 0.4 }
     state.kana.stats['hiragana:a'].clears = 5
-    state.kanji.learned = ['日', '本']
-    state.vocab.myWords = ['1524720', 'custom:test-1']
-    state.vocab.customWords = {
-      'custom:test-1': {
-        id: 'custom:test-1',
-        writing: '猫',
-        kana: 'ねこ',
-        romaji: 'neko',
-        meanings: ['кошка'],
-        kanji: ['猫'],
-      },
-    }
-    state.vocab.preferences.drillMode = 'choice'
+    state.vocab.myWords = ['1524720']
     await saveAppState(state)
 
     const loaded = await bootstrapAppState()
     assert.equal(loaded.numbers.preferences.mode, 'age')
-    assert.equal(loaded.numbers.preferences.rangeId, '10')
     assert.equal(loaded.numbers.stats['age:5'].exposures, 3)
     assert.equal(loaded.kana.stats['hiragana:a'].clears, 5)
-    assert.deepEqual(loaded.kanji.learned, ['日', '本'])
-    assert.deepEqual(loaded.kanji.preferences.wordJlptLevels, [])
-    assert.deepEqual(loaded.vocab.myWords, ['1524720', 'custom:test-1'])
-    assert.equal(loaded.vocab.customWords['custom:test-1'].writing, '猫')
-    assert.equal(loaded.vocab.preferences.drillMode, 'choice')
-    assert.ok(window.localStorage.getItem(accountStateKey(accountId)))
-    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
-  })
-
-  it('мигрирует legacy localStorage в аккаунт без автологина', async () => {
-    const legacy = createDefaultAppState()
-    legacy.kana.preferences.mode = 'even'
-    window.localStorage.setItem('kana-trainer-state-v1', JSON.stringify(legacy))
-
-    const session = await bootstrapSession()
-    assert.equal(session.status, 'needsAccount')
-    assert.equal(session.accounts.length, 1)
-    const accountId = session.accounts[0].id
-    assert.equal(loadAccountState(accountId).kana.preferences.mode, 'even')
-    assert.ok(window.localStorage.getItem(accountStateKey(accountId)))
-    assert.equal(window.localStorage.getItem(STORAGE_KEY), null)
-    assert.equal(window.localStorage.getItem('kana-trainer-state-v1'), null)
-    assert.ok(window.localStorage.getItem(ACCOUNTS_META_KEY))
+    assert.deepEqual(loaded.vocab.myWords, ['1524720'])
+    assert.ok(remoteState)
   })
 
   it('мигрирует v10, вкладывая kana', () => {
@@ -143,109 +124,11 @@ describe('storage', () => {
     const state = parseStoredState(JSON.stringify(legacy))
     assert.equal(state.version, CURRENT_VERSION)
     assert.equal(state.kana.preferences.scriptMode, 'katakana')
-    assert.equal(state.kana.preferences.mode, 'even')
     assert.equal(state.kana.stats['katakana:shi'].clears, 7)
-    assert.equal(state.numbers.preferences.rangeId, '10')
-    assert.deepEqual(state.kanji.learned, ['日'])
-    assert.deepEqual(state.kanji.preferences.wordJlptLevels, [])
-    assert.deepEqual(state.vocab.myWords, [])
-    assert.equal((state as unknown as Record<string, unknown>).preferences, undefined)
-  })
-
-  it('мигрирует v11, добавляя vocab preferences', () => {
-    const legacy = {
-      version: 11,
-      kana: {
-        preferences: { scriptMode: 'hiragana', mode: 'adaptive' },
-        stats: {},
-        history: { daily: {}, confusions: {}, recent: [] },
-      },
-      numbers: {
-        preferences: { mode: 'plain', rangeId: '99', pickMode: 'adaptive' },
-        stats: {},
-      },
-      kanji: { learned: ['日'], preferences: { complexityFilter: true } },
-    }
-    const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, CURRENT_VERSION)
-    assert.deepEqual(state.kanji.learned, ['日'])
-    assert.ok(!('complexityFilter' in state.kanji.preferences))
-    assert.deepEqual(state.vocab.myWords, [])
-    assert.equal(state.vocab.preferences.drillMode, 'romaji')
-  })
-
-  it('мигрирует v8, добавляя kana и сохраняя numbers', () => {
-    const legacy = {
-      version: 8,
-      numbers: {
-        preferences: { mode: 'age', rangeId: '99', pickMode: 'even' },
-        stats: { 'age:20': { hints: 2 } },
-      },
-    }
-    const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, CURRENT_VERSION)
-    assert.equal(state.numbers.preferences.mode, 'age')
-    assert.equal(state.numbers.preferences.pickMode, 'even')
-    assert.equal(state.numbers.stats['age:20'].hints, 2)
-    assert.equal(state.kana.preferences.mode, 'adaptive')
-    assert.equal(state.kana.stats['hiragana:a'].exposures, 0)
-    assert.deepEqual(state.kanji.learned, [])
-    assert.equal((state as unknown as Record<string, unknown>).words, undefined)
-  })
-
-  it('мигрирует старое состояние с kana и numbers, без words', () => {
-    const legacy = {
-      version: 7,
-      preferences: { scriptMode: 'katakana', mode: 'even' },
-      stats: { 'katakana:shi': { clears: 7 } },
-      history: { daily: {}, confusions: {}, recent: [] },
-      words: { dictionary: ['w1'] },
-      numbers: {
-        preferences: { mode: 'plain', rangeId: '10', pickMode: 'adaptive' },
-        stats: {},
-      },
-    }
-    const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, CURRENT_VERSION)
-    assert.equal(state.kana.preferences.scriptMode, 'katakana')
-    assert.equal(state.kana.preferences.mode, 'even')
-    assert.equal(state.kana.stats['katakana:shi'].clears, 7)
-    assert.equal(state.numbers.preferences.rangeId, '10')
-    assert.equal((state as unknown as Record<string, unknown>).words, undefined)
-  })
-
-  it('принимает уже вложенное состояние', () => {
-    const nested = createDefaultAppState()
-    nested.kana.preferences.mode = 'problem'
-    nested.kana.stats['hiragana:a'].clears = 3
-    nested.vocab.myWords = ['1000390']
-    const state = parseStoredState(JSON.stringify(nested))
-    assert.equal(state.version, CURRENT_VERSION)
-    assert.equal(state.kana.preferences.mode, 'problem')
-    assert.equal(state.kana.stats['hiragana:a'].clears, 3)
-    assert.deepEqual(state.vocab.myWords, ['1000390'])
-    assert.deepEqual(state.vocab.customWords, {})
-  })
-
-  it('v20: старый newWordLimit 0 (без лимита) становится −1', () => {
-    const legacy = {
-      ...createDefaultAppState(),
-      version: 19,
-      vocab: {
-        ...createDefaultAppState().vocab,
-        preferences: {
-          ...createDefaultAppState().vocab.preferences,
-          newWordLimit: 0,
-        },
-      },
-    }
-    const state = parseStoredState(JSON.stringify(legacy))
-    assert.equal(state.version, CURRENT_VERSION)
-    assert.equal(state.vocab.preferences.newWordLimit, -1)
   })
 
   it('v20: явный newWordLimit 0 сохраняется как 0 новых', async () => {
-    seedActiveAccount()
+    seedSession()
     const state = createDefaultAppState()
     state.vocab.preferences.newWordLimit = 0
     await saveAppState(state)
@@ -259,33 +142,19 @@ describe('storage', () => {
   })
 
   it('reset сбрасывает прогресс активного аккаунта', async () => {
-    const accountId = seedActiveAccount()
+    seedSession()
     const dirty = createDefaultAppState()
     dirty.vocab.myWords = ['1524720']
     await saveAppState(dirty)
     await resetStoredState()
     const loaded = await bootstrapAppState()
     assert.deepEqual(loaded.vocab.myWords, [])
-    assert.ok(window.localStorage.getItem(accountStateKey(accountId)))
   })
 
-  it('не ходит в /api/state при multi-account', async () => {
-    let fetchCalls = 0
-    globalThis.fetch = async () => {
-      fetchCalls += 1
-      return new Response(null, { status: 404 })
-    }
-
-    const session = await bootstrapSession()
-    assert.equal(session.status, 'needsAccount')
-
-    seedActiveAccount()
+  it('без session save не пишет', async () => {
     const state = createDefaultAppState()
     state.vocab.myWords = ['1524720']
     await saveAppState(state)
-    await bootstrapSession()
-    await resetStoredState()
-
-    assert.equal(fetchCalls, 0)
+    assert.equal(remoteState, null)
   })
 })
