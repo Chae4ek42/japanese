@@ -271,6 +271,13 @@ function hasPriority(entry) {
 
 const RARE_KANJI_TAGS = new Set(['rK', 'oK', 'iK', 'sK'])
 
+/** JMDict seqs that are common in kana in modern text (何処→どこ, …). */
+const KANA_PREFERRED_IDS = new Set(
+  JSON.parse(
+    readFileSync(new URL('../src/data/words/kana-preferred-ids.json', import.meta.url), 'utf8'),
+  ),
+)
+
 function isRareKanjiForm(form) {
   return (form.tags ?? []).some((tag) => RARE_KANJI_TAGS.has(String(tag)))
 }
@@ -278,10 +285,14 @@ function isRareKanjiForm(form) {
 /**
  * Surface as in real texts: prefer modern common kanji; otherwise kana
  * (これ / です / ありがとう instead of rare 此れ / 有難う).
+ * Also force kana for curated ids (interrogatives often written in kana).
  */
 function preferredWriting(entry) {
   const kanaForms = (entry.kana ?? []).filter((k) => !k.tags?.includes('sk'))
   const commonKana = kanaForms.find((k) => k.common) ?? kanaForms[0]
+  if (KANA_PREFERRED_IDS.has(String(entry.id)) && commonKana) {
+    return commonKana.text
+  }
   const kanjiForms = (entry.kanji ?? []).filter((k) => !k.tags?.includes('sK'))
   const commonModern = kanjiForms.find((k) => k.common && !isRareKanjiForm(k))
   if (commonModern) return commonModern.text

@@ -122,6 +122,7 @@ export const THEORY_UNITS: TheoryUnit[] = [
         heading: 'Базовый набор',
         paragraphs: [
           'Вопросы в японском часто держатся на одном слове + частица か (или интонация). Запомните ядро — и большинство простых вопросов соберутся сами.',
+          'Многие вопросительные слова в обычных текстах пишут каной (どこ, なぜ, いくら). Кандзи вроде 何処 / 何故 встречаются редко — в тренажёре для них показывается кана.',
         ],
         examples: [
           { writing: '誰', kana: 'だれ', romaji: 'dare', meaning: 'кто?' },
@@ -182,7 +183,7 @@ export const THEORY_UNITS: TheoryUnit[] = [
           'あなた — универсально, но к старшим/незнакомцам лучше имя + さん. きみ / おまえ — ближе или грубее. 彼 / 彼女 — «он / она», также «парень / девушка».',
         ],
         examples: [
-          { writing: '貴方', kana: 'あなた', romaji: 'anata', meaning: 'ты / вы' },
+          { writing: 'あなた', romaji: 'anata', meaning: 'ты / вы' },
           { writing: '君', kana: 'きみ', romaji: 'kimi', meaning: 'ты (близко)' },
           { writing: 'お前', kana: 'おまえ', romaji: 'omae', meaning: 'ты (грубо)' },
           { writing: '彼', kana: 'かれ', romaji: 'kare', meaning: 'он / парень' },

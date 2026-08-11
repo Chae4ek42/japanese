@@ -23,6 +23,9 @@ const LATIN_RE = /[A-Za-zＡ-Ｚａ-ｚ0-9０-９]/
 const HIRAGANA_RE = /^[\u3040-\u309Fーゝゞ]+$/
 const KATAKANA_RE = /^[\u30A0-\u30FFーヽヾ]+$/
 const RARE_KANJI_TAGS = new Set(['rK', 'oK', 'iK', 'sK'])
+const KANA_PREFERRED_IDS = new Set(
+  JSON.parse(readFileSync(path.join(ROOT, 'src/data/words/kana-preferred-ids.json'), 'utf8')),
+)
 
 /**
  * Thematic reading groups (standalone catalog entities).
@@ -46,7 +49,7 @@ const READING_THEMES = [
     label: 'Чтение · вопросы',
     description: '誰／何／いつ／なぜ…',
     keys: [
-      '誰', 'だれ', '何', 'なに', 'なん', 'いつ', 'なぜ', 'どうして', 'どうやって',
+      '誰', 'だれ', '何', 'なに', 'いつ', 'どこ', 'なぜ', 'どうして', 'どう', 'どれ',
       'いくら', 'いくつ', 'どちら', 'どっち', 'どのくらい', 'どれくらい',
     ],
   },
@@ -298,6 +301,9 @@ function isRareKanjiForm(form) {
 function preferredWriting(entry) {
   const kanaForms = (entry.kana ?? []).filter((k) => !k.tags?.includes('sk'))
   const commonKana = kanaForms.find((k) => k.common) ?? kanaForms[0]
+  if (KANA_PREFERRED_IDS.has(String(entry.id)) && commonKana) {
+    return commonKana.text
+  }
   const kanjiForms = (entry.kanji ?? []).filter((k) => !k.tags?.includes('sK'))
   const commonModern = kanjiForms.find((k) => k.common && !isRareKanjiForm(k))
   if (commonModern) return commonModern.text
