@@ -32,6 +32,8 @@ import {
   bootstrapSession,
   createDefaultAppState,
   parseStoredState,
+  readLocalDraft,
+  SAVE_MIN_INTERVAL_MS,
   saveAppState,
 } from '../lib/storage'
 
@@ -59,6 +61,9 @@ export interface AppStateContextValue {
 
 const AppStateContext = createContext<AppStateContextValue | null>(null)
 
+/** Debounce before attempting a server sync (also gated by SAVE_MIN_INTERVAL_MS). */
+const SAVE_DEBOUNCE_MS = 15_000
+
 export function AppStateProvider({ children }: { children: ReactNode }) {
   const [appState, setAppState] = useState<AppState | null>(null)
   const [storageReady, setStorageReady] = useState(false)
@@ -73,20 +78,34 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   appStateRef.current = appState
   activeIdRef.current = activeAccountId
 
-  const flushSave = useCallback(async () => {
-    if (saveTimerRef.current != null) {
-      window.clearTimeout(saveTimerRef.current)
-      saveTimerRef.current = null
-    }
+  const runSave = useCallback(async (force = false) => {
     const state = appStateRef.current
     const id = activeIdRef.current
     if (!state || !id) return
     try {
-      await saveAppState(state, id)
+      const result = await saveAppState(state, id, force ? { force: true } : undefined)
+      if (result === 'draft-only') {
+        if (saveTimerRef.current != null) window.clearTimeout(saveTimerRef.current)
+        saveTimerRef.current = window.setTimeout(() => {
+          saveTimerRef.current = null
+          void runSave(false)
+        }, SAVE_MIN_INTERVAL_MS)
+      }
     } catch (error) {
       console.warn('[storage] failed to flush app state', error)
     }
   }, [])
+
+  const flushSave = useCallback(
+    async (force = false) => {
+      if (saveTimerRef.current != null) {
+        window.clearTimeout(saveTimerRef.current)
+        saveTimerRef.current = null
+      }
+      await runSave(force)
+    },
+    [runSave],
+  )
 
   useEffect(() => {
     let cancelled = false
@@ -117,23 +136,37 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     if (saveTimerRef.current != null) window.clearTimeout(saveTimerRef.current)
     saveTimerRef.current = window.setTimeout(() => {
       saveTimerRef.current = null
-      void saveAppState(appState, activeAccountId).catch((error) => {
-        console.warn('[storage] failed to save app state', error)
-      })
-    }, 250)
+      void runSave(false)
+    }, SAVE_DEBOUNCE_MS)
     return () => {
       if (saveTimerRef.current != null) {
         window.clearTimeout(saveTimerRef.current)
         saveTimerRef.current = null
       }
     }
-  }, [appState, activeAccountId, storageReady])
+  }, [appState, activeAccountId, storageReady, runSave])
+
+  useEffect(() => {
+    const onHide = () => {
+      void flushSave(true)
+    }
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') onHide()
+    }
+    window.addEventListener('pagehide', onHide)
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => {
+      window.removeEventListener('pagehide', onHide)
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
+  }, [flushSave])
 
   const activateFromAuth = useCallback(async (accountId: string, nextAccounts: AccountRecord[]) => {
     let state = createDefaultAppState()
     try {
       const raw = await fetchAccountState(accountId)
-      state = parseStoredState(raw)
+      const draft = readLocalDraft(accountId)
+      state = parseStoredState(draft ?? raw)
     } catch {
       state = createDefaultAppState()
     }

@@ -8,25 +8,31 @@ import {
 } from './auth'
 import {
   MAX_STATE_BYTES,
-  accountStateKey,
   createSession,
   defaultAccountName,
+  deleteAccount,
   deleteSession,
-  ensureLegacyMigrated,
-  loadMeta,
+  ensureSchema,
+  getAccount,
+  getAccountState,
+  insertAccount,
+  listAccounts,
+  migrateFromKvIfNeeded,
   publicAccount,
+  putAccountState,
   readSession,
   sanitizeName,
-  saveMeta,
-  touchSession,
+  updateAccount,
   type StoredAccount,
 } from './store'
 
 interface Env {
-  APP_STATE: KVNamespace
+  DB: D1Database
   ASSETS: Fetcher
   /** Optional shared secret. When set, require `Authorization: Bearer <token>`. */
   STATE_AUTH?: string
+  /** Legacy KV — used only for one-time import into D1 if still bound. */
+  APP_STATE?: KVNamespace
 }
 
 function json(data: unknown, status = 200): Response {
@@ -61,10 +67,9 @@ async function requireAccountSession(
 ): Promise<{ token: string } | Response> {
   const token = request.headers.get('X-Account-Session')?.trim() || null
   if (!token) return errorJson('Нужна сессия аккаунта', 401)
-  const session = await readSession(env.APP_STATE, token)
+  const session = await readSession(env.DB, token)
   if (!session) return errorJson('Сессия истекла, войдите снова', 401)
   if (session.accountId !== accountId) return errorJson('Чужой аккаунт', 403)
-  await touchSession(env.APP_STATE, token, session)
   return { token }
 }
 
@@ -74,6 +79,11 @@ async function parseJson(request: Request): Promise<unknown | Response> {
   } catch {
     return errorJson('Invalid JSON', 400)
   }
+}
+
+async function prepareDb(env: Env): Promise<void> {
+  await ensureSchema(env.DB)
+  await migrateFromKvIfNeeded(env.DB, env.APP_STATE)
 }
 
 async function handleApi(request: Request, env: Env, url: URL): Promise<Response> {
@@ -91,19 +101,19 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
     return errorJson('Нет доступа к API (проверьте STATE_AUTH)', 401)
   }
 
-  await ensureLegacyMigrated(env.APP_STATE)
+  await prepareDb(env)
   const parts = url.pathname.split('/').filter(Boolean)
 
   if (url.pathname === '/api/session/logout' && request.method === 'POST') {
-    await deleteSession(env.APP_STATE, request.headers.get('X-Account-Session'))
+    await deleteSession(env.DB, request.headers.get('X-Account-Session'))
     return new Response(null, { status: 204 })
   }
 
   // GET/POST /api/accounts
   if (parts.length === 2 && parts[0] === 'api' && parts[1] === 'accounts') {
     if (request.method === 'GET') {
-      const meta = await loadMeta(env.APP_STATE)
-      return json({ accounts: meta.accounts.map(publicAccount) })
+      const accounts = await listAccounts(env.DB)
+      return json({ accounts: accounts.map(publicAccount) })
     }
     if (request.method === 'POST') {
       const body = await parseJson(request)
@@ -112,10 +122,10 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
       const password = typeof data.password === 'string' ? data.password : ''
       const pwErr = validatePassword(password)
       if (pwErr) return json({ error: pwErr }, 400)
-      const meta = await loadMeta(env.APP_STATE)
+      const accounts = await listAccounts(env.DB)
       const name = sanitizeName(
         typeof data.name === 'string' ? data.name : '',
-        defaultAccountName(meta.accounts),
+        defaultAccountName(accounts),
       )
       const { salt, hash } = await hashPassword(password)
       const account: StoredAccount = {
@@ -125,14 +135,14 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
         passwordSalt: salt,
         passwordHash: hash,
       }
-      meta.accounts.push(account)
-      await saveMeta(env.APP_STATE, meta)
+      await insertAccount(env.DB, account)
       const token = newSessionToken()
-      const session = await createSession(env.APP_STATE, account.id, token)
+      const session = await createSession(env.DB, account.id, token)
+      const nextAccounts = await listAccounts(env.DB)
       return json(
         {
           account: publicAccount(account),
-          accounts: meta.accounts.map(publicAccount),
+          accounts: nextAccounts.map(publicAccount),
           session: { token, accountId: account.id, expiresAt: session.expiresAt },
         },
         201,
@@ -152,8 +162,7 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
         typeof (body as { password?: string }).password === 'string'
           ? (body as { password: string }).password
           : ''
-      const meta = await loadMeta(env.APP_STATE)
-      const account = meta.accounts.find((item) => item.id === accountId)
+      const account = await getAccount(env.DB, accountId)
       if (!account) return json({ error: 'Аккаунт не найден' }, 404)
       if (!accountHasPassword(account)) {
         return json({ error: 'Сначала задайте пароль', code: 'needs_password' }, 400)
@@ -161,10 +170,11 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
       const ok = await verifyPassword(password, account.passwordSalt!, account.passwordHash!)
       if (!ok) return json({ error: 'Неверный пароль' }, 401)
       const token = newSessionToken()
-      const session = await createSession(env.APP_STATE, account.id, token)
+      const session = await createSession(env.DB, account.id, token)
+      const accounts = await listAccounts(env.DB)
       return json({
         account: publicAccount(account),
-        accounts: meta.accounts.map(publicAccount),
+        accounts: accounts.map(publicAccount),
         session: { token, accountId: account.id, expiresAt: session.expiresAt },
       })
     }
@@ -176,8 +186,7 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
       const newPassword = typeof data.newPassword === 'string' ? data.newPassword : ''
       const pwErr = validatePassword(newPassword)
       if (pwErr) return json({ error: pwErr }, 400)
-      const meta = await loadMeta(env.APP_STATE)
-      const account = meta.accounts.find((item) => item.id === accountId)
+      const account = await getAccount(env.DB, accountId)
       if (!account) return json({ error: 'Аккаунт не найден' }, 404)
 
       if (accountHasPassword(account)) {
@@ -189,13 +198,14 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
       const { salt, hash } = await hashPassword(newPassword)
       account.passwordSalt = salt
       account.passwordHash = hash
-      await saveMeta(env.APP_STATE, meta)
+      await updateAccount(env.DB, account)
 
       const token = newSessionToken()
-      const session = await createSession(env.APP_STATE, account.id, token)
+      const session = await createSession(env.DB, account.id, token)
+      const accounts = await listAccounts(env.DB)
       return json({
         account: publicAccount(account),
-        accounts: meta.accounts.map(publicAccount),
+        accounts: accounts.map(publicAccount),
         session: { token, accountId: account.id, expiresAt: session.expiresAt },
       })
     }
@@ -205,7 +215,7 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
       if (auth instanceof Response) return auth
 
       if (request.method === 'GET') {
-        const raw = await env.APP_STATE.get(accountStateKey(accountId))
+        const raw = await getAccountState(env.DB, accountId)
         if (!raw) return json(null, 404)
         return new Response(raw, {
           status: 200,
@@ -224,7 +234,9 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
         } catch {
           return errorJson('Invalid JSON', 400)
         }
-        await env.APP_STATE.put(accountStateKey(accountId), body)
+        const account = await getAccount(env.DB, accountId)
+        if (!account) return json({ error: 'Аккаунт не найден' }, 404)
+        await putAccountState(env.DB, accountId, body)
         return new Response(null, { status: 204 })
       }
       return errorJson('Method Not Allowed', 405)
@@ -241,14 +253,14 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
             ? (body as { name: string }).name
             : '',
         )
-        const meta = await loadMeta(env.APP_STATE)
-        const account = meta.accounts.find((item) => item.id === accountId)
+        const account = await getAccount(env.DB, accountId)
         if (!account) return json({ error: 'Аккаунт не найден' }, 404)
         account.name = name
-        await saveMeta(env.APP_STATE, meta)
+        await updateAccount(env.DB, account)
+        const accounts = await listAccounts(env.DB)
         return json({
           account: publicAccount(account),
-          accounts: meta.accounts.map(publicAccount),
+          accounts: accounts.map(publicAccount),
         })
       }
 
@@ -259,18 +271,16 @@ async function handleApiInner(request: Request, env: Env, url: URL): Promise<Res
           typeof (body as { password?: string }).password === 'string'
             ? (body as { password: string }).password
             : ''
-        const meta = await loadMeta(env.APP_STATE)
-        const account = meta.accounts.find((item) => item.id === accountId)
+        const account = await getAccount(env.DB, accountId)
         if (!account) return json({ error: 'Аккаунт не найден' }, 404)
         if (accountHasPassword(account)) {
           const ok = await verifyPassword(password, account.passwordSalt!, account.passwordHash!)
           if (!ok) return json({ error: 'Неверный пароль' }, 401)
         }
-        meta.accounts = meta.accounts.filter((item) => item.id !== accountId)
-        await saveMeta(env.APP_STATE, meta)
-        await env.APP_STATE.delete(accountStateKey(accountId))
-        await deleteSession(env.APP_STATE, request.headers.get('X-Account-Session'))
-        return json({ accounts: meta.accounts.map(publicAccount) })
+        await deleteAccount(env.DB, accountId)
+        await deleteSession(env.DB, request.headers.get('X-Account-Session'))
+        const accounts = await listAccounts(env.DB)
+        return json({ accounts: accounts.map(publicAccount) })
       }
 
       return errorJson('Method Not Allowed', 405)

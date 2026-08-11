@@ -1,9 +1,11 @@
 import { accountHasPassword, newId } from './auth'
 
-export const META_KEY = 'accounts-meta'
-export const LEGACY_STATE_KEY = 'app-state'
 export const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000
 export const MAX_STATE_BYTES = 20_000_000
+
+/** Legacy KV keys — only used when migrating into D1. */
+const META_KEY = 'accounts-meta'
+const LEGACY_STATE_KEY = 'app-state'
 
 export interface StoredAccount {
   id: string
@@ -22,13 +24,21 @@ export interface SessionRecord {
   expiresAt: number
 }
 
-export function accountStateKey(accountId: string): string {
-  return `account:${accountId}`
+interface AccountRow {
+  id: string
+  name: string
+  created_at: number
+  password_salt: string | null
+  password_hash: string | null
 }
 
-export function sessionKey(token: string): string {
-  return `session:${token}`
+interface SessionRow {
+  token: string
+  account_id: string
+  expires_at: number
 }
+
+let schemaReady: Promise<void> | null = null
 
 export function sanitizeName(raw: string, fallback = 'Аккаунт'): string {
   const name = raw.trim().slice(0, 32)
@@ -52,8 +62,198 @@ export function publicAccount(account: StoredAccount) {
   }
 }
 
-export async function loadMeta(kv: KVNamespace): Promise<AccountsMeta> {
-  const raw = await kv.get(META_KEY)
+function rowToAccount(row: AccountRow): StoredAccount {
+  const account: StoredAccount = {
+    id: row.id,
+    name: sanitizeName(row.name),
+    createdAt:
+      typeof row.created_at === 'number' && Number.isFinite(row.created_at)
+        ? row.created_at
+        : Date.now(),
+  }
+  if (row.password_salt && row.password_hash) {
+    account.passwordSalt = row.password_salt
+    account.passwordHash = row.password_hash
+  }
+  return account
+}
+
+/** Idempotent DDL so first request works even before `wrangler d1 migrations apply`. */
+export async function ensureSchema(db: D1Database): Promise<void> {
+  if (!schemaReady) {
+    schemaReady = (async () => {
+      await db.exec(`
+CREATE TABLE IF NOT EXISTS accounts (
+  id TEXT PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  password_salt TEXT,
+  password_hash TEXT
+);
+CREATE TABLE IF NOT EXISTS account_state (
+  account_id TEXT PRIMARY KEY NOT NULL,
+  body TEXT NOT NULL,
+  updated_at INTEGER NOT NULL,
+  FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS sessions (
+  token TEXT PRIMARY KEY NOT NULL,
+  account_id TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions (expires_at);
+CREATE INDEX IF NOT EXISTS idx_sessions_account ON sessions (account_id);
+`)
+    })().catch((error) => {
+      schemaReady = null
+      throw error
+    })
+  }
+  await schemaReady
+}
+
+export async function listAccounts(db: D1Database): Promise<StoredAccount[]> {
+  const result = await db
+    .prepare(
+      `SELECT id, name, created_at, password_salt, password_hash
+       FROM accounts ORDER BY created_at ASC`,
+    )
+    .all<AccountRow>()
+  return (result.results ?? []).map(rowToAccount)
+}
+
+export async function loadMeta(db: D1Database): Promise<AccountsMeta> {
+  return { accounts: await listAccounts(db) }
+}
+
+export async function getAccount(
+  db: D1Database,
+  accountId: string,
+): Promise<StoredAccount | null> {
+  const row = await db
+    .prepare(
+      `SELECT id, name, created_at, password_salt, password_hash
+       FROM accounts WHERE id = ?`,
+    )
+    .bind(accountId)
+    .first<AccountRow>()
+  return row ? rowToAccount(row) : null
+}
+
+export async function insertAccount(db: D1Database, account: StoredAccount): Promise<void> {
+  await db
+    .prepare(
+      `INSERT INTO accounts (id, name, created_at, password_salt, password_hash)
+       VALUES (?, ?, ?, ?, ?)`,
+    )
+    .bind(
+      account.id,
+      account.name,
+      account.createdAt,
+      account.passwordSalt ?? null,
+      account.passwordHash ?? null,
+    )
+    .run()
+}
+
+export async function updateAccount(db: D1Database, account: StoredAccount): Promise<void> {
+  await db
+    .prepare(
+      `UPDATE accounts
+       SET name = ?, password_salt = ?, password_hash = ?
+       WHERE id = ?`,
+    )
+    .bind(
+      account.name,
+      account.passwordSalt ?? null,
+      account.passwordHash ?? null,
+      account.id,
+    )
+    .run()
+}
+
+export async function deleteAccount(db: D1Database, accountId: string): Promise<void> {
+  await db.batch([
+    db.prepare(`DELETE FROM sessions WHERE account_id = ?`).bind(accountId),
+    db.prepare(`DELETE FROM account_state WHERE account_id = ?`).bind(accountId),
+    db.prepare(`DELETE FROM accounts WHERE id = ?`).bind(accountId),
+  ])
+}
+
+export async function getAccountState(
+  db: D1Database,
+  accountId: string,
+): Promise<string | null> {
+  const row = await db
+    .prepare(`SELECT body FROM account_state WHERE account_id = ?`)
+    .bind(accountId)
+    .first<{ body: string }>()
+  return row?.body ?? null
+}
+
+export async function putAccountState(
+  db: D1Database,
+  accountId: string,
+  body: string,
+): Promise<void> {
+  await db
+    .prepare(
+      `INSERT INTO account_state (account_id, body, updated_at)
+       VALUES (?, ?, ?)
+       ON CONFLICT(account_id) DO UPDATE SET
+         body = excluded.body,
+         updated_at = excluded.updated_at`,
+    )
+    .bind(accountId, body, Date.now())
+    .run()
+}
+
+export async function createSession(
+  db: D1Database,
+  accountId: string,
+  token: string,
+): Promise<SessionRecord> {
+  const record: SessionRecord = {
+    accountId,
+    expiresAt: Date.now() + SESSION_TTL_MS,
+  }
+  await db
+    .prepare(
+      `INSERT INTO sessions (token, account_id, expires_at)
+       VALUES (?, ?, ?)
+       ON CONFLICT(token) DO UPDATE SET
+         account_id = excluded.account_id,
+         expires_at = excluded.expires_at`,
+    )
+    .bind(token, accountId, record.expiresAt)
+    .run()
+  return record
+}
+
+export async function readSession(
+  db: D1Database,
+  token: string | null,
+): Promise<SessionRecord | null> {
+  if (!token) return null
+  const row = await db
+    .prepare(`SELECT token, account_id, expires_at FROM sessions WHERE token = ?`)
+    .bind(token)
+    .first<SessionRow>()
+  if (!row) return null
+  if (row.expires_at < Date.now()) {
+    await db.prepare(`DELETE FROM sessions WHERE token = ?`).bind(token).run()
+    return null
+  }
+  return { accountId: row.account_id, expiresAt: row.expires_at }
+}
+
+export async function deleteSession(db: D1Database, token: string | null): Promise<void> {
+  if (!token) return
+  await db.prepare(`DELETE FROM sessions WHERE token = ?`).bind(token).run()
+}
+
+function parseKvMeta(raw: string | null): AccountsMeta {
   if (!raw) return { accounts: [] }
   try {
     const parsed = JSON.parse(raw) as Partial<AccountsMeta>
@@ -93,86 +293,40 @@ export async function loadMeta(kv: KVNamespace): Promise<AccountsMeta> {
   }
 }
 
-export async function saveMeta(kv: KVNamespace, meta: AccountsMeta): Promise<void> {
-  await kv.put(META_KEY, JSON.stringify({ accounts: meta.accounts }))
-}
+/**
+ * One-time: copy KV accounts/state into empty D1 (if legacy APP_STATE binding exists).
+ * Also handles old single `app-state` key → account «Основной».
+ */
+export async function migrateFromKvIfNeeded(
+  db: D1Database,
+  kv: KVNamespace | undefined,
+): Promise<void> {
+  const existing = await listAccounts(db)
+  if (existing.length > 0) return
 
-/** One-time: legacy single app-state → account «Основной» without password. */
-export async function ensureLegacyMigrated(kv: KVNamespace): Promise<AccountsMeta> {
-  let meta = await loadMeta(kv)
-  if (meta.accounts.length > 0) {
-    await kv.delete(LEGACY_STATE_KEY)
-    return meta
-  }
-  const legacy = await kv.get(LEGACY_STATE_KEY)
-  if (!legacy) return meta
-  try {
-    JSON.parse(legacy)
-  } catch {
-    await kv.delete(LEGACY_STATE_KEY)
-    return meta
-  }
-  const id = newId('acc')
-  const account: StoredAccount = {
-    id,
-    name: 'Основной',
-    createdAt: Date.now(),
-  }
-  await kv.put(accountStateKey(id), legacy)
-  meta = { accounts: [account] }
-  await saveMeta(kv, meta)
-  await kv.delete(LEGACY_STATE_KEY)
-  return meta
-}
-
-export async function createSession(
-  kv: KVNamespace,
-  accountId: string,
-  token: string,
-): Promise<SessionRecord> {
-  const record: SessionRecord = {
-    accountId,
-    expiresAt: Date.now() + SESSION_TTL_MS,
-  }
-  await kv.put(sessionKey(token), JSON.stringify(record), {
-    expirationTtl: Math.ceil(SESSION_TTL_MS / 1000),
-  })
-  return record
-}
-
-export async function readSession(
-  kv: KVNamespace,
-  token: string | null,
-): Promise<SessionRecord | null> {
-  if (!token) return null
-  const raw = await kv.get(sessionKey(token))
-  if (!raw) return null
-  try {
-    const parsed = JSON.parse(raw) as SessionRecord
-    if (!parsed.accountId || typeof parsed.expiresAt !== 'number') return null
-    if (parsed.expiresAt < Date.now()) {
-      await kv.delete(sessionKey(token))
-      return null
+  if (kv) {
+    const meta = parseKvMeta(await kv.get(META_KEY))
+    if (meta.accounts.length > 0) {
+      for (const account of meta.accounts) {
+        await insertAccount(db, account)
+        const state = await kv.get(`account:${account.id}`)
+        if (state) await putAccountState(db, account.id, state)
+      }
+      return
     }
-    return parsed
-  } catch {
-    return null
+
+    const legacy = await kv.get(LEGACY_STATE_KEY)
+    if (legacy) {
+      try {
+        JSON.parse(legacy)
+        const id = newId('acc')
+        await insertAccount(db, { id, name: 'Основной', createdAt: Date.now() })
+        await putAccountState(db, id, legacy)
+        await kv.delete(LEGACY_STATE_KEY)
+        return
+      } catch {
+        await kv.delete(LEGACY_STATE_KEY)
+      }
+    }
   }
-}
-
-export async function touchSession(
-  kv: KVNamespace,
-  token: string,
-  session: SessionRecord,
-): Promise<SessionRecord> {
-  const next = { ...session, expiresAt: Date.now() + SESSION_TTL_MS }
-  await kv.put(sessionKey(token), JSON.stringify(next), {
-    expirationTtl: Math.ceil(SESSION_TTL_MS / 1000),
-  })
-  return next
-}
-
-export async function deleteSession(kv: KVNamespace, token: string | null): Promise<void> {
-  if (!token) return
-  await kv.delete(sessionKey(token))
 }

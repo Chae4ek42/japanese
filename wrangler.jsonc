@@ -8,7 +8,14 @@
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
   },
-  // Auto-provisioned on first deploy (Workers Builds / wrangler deploy).
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "japanese",
+      "migrations_dir": "worker/migrations"
+    }
+  ],
+  // Optional: keep until one-time KV→D1 import runs on first API request, then remove.
   "kv_namespaces": [
     {
       "binding": "APP_STATE"

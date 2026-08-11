@@ -157,4 +157,22 @@ describe('storage', () => {
     await saveAppState(state)
     assert.equal(remoteState, null)
   })
+
+  it('повторное сохранение без изменений не делает PUT', async () => {
+    const accountId = seedSession('acc_dedupe')
+    let putCount = 0
+    const prevFetch = globalThis.fetch
+    globalThis.fetch = async (input, init) => {
+      const url =
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+      const method = (init?.method ?? 'GET').toUpperCase()
+      if (url.includes('/state') && method === 'PUT') putCount += 1
+      return prevFetch(input, init)
+    }
+    const state = createDefaultAppState()
+    state.vocab.myWords = ['1']
+    await saveAppState(state, accountId, { force: true })
+    await saveAppState(state, accountId)
+    assert.equal(putCount, 1)
+  })
 })

@@ -12,6 +12,8 @@
     "test:unit": "node --import tsx --test --test-concurrency=1 \"tests/unit/**/*.test.ts\"",
     "test:e2e": "playwright test",
     "test": "npm run test:unit && npm run test:e2e",
+    "d1:migrate:local": "npx wrangler d1 migrations apply japanese --local",
+    "d1:migrate:remote": "npx wrangler d1 migrations apply japanese --remote",
     "build:kanji-bank": "node scripts/build-kanji-bank.mjs",
     "build:reading-foundation": "node scripts/add-reading-foundation.mjs",
     "apply:kana-preferred": "node scripts/apply-kana-preferred-surfaces.mjs",

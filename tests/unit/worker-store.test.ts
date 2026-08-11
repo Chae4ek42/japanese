@@ -1,9 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
-  LEGACY_STATE_KEY,
-  META_KEY,
-  accountStateKey,
   defaultAccountName,
   publicAccount,
   sanitizeName,
@@ -36,11 +33,5 @@ describe('worker store helpers', () => {
       hasPassword: true,
     })
     assert.equal(accountHasPassword({ passwordSalt: 's', passwordHash: 'h' }), true)
-  })
-
-  it('ключи KV стабильны', () => {
-    assert.equal(META_KEY, 'accounts-meta')
-    assert.equal(LEGACY_STATE_KEY, 'app-state')
-    assert.equal(accountStateKey('acc_1'), 'account:acc_1')
   })
 })

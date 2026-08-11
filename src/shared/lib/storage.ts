@@ -18,6 +18,55 @@ export { defaultAccountName, sanitizeAccountName, accountHasPassword } from './a
 
 export const STATE_API_PATH = '/api/accounts'
 
+/** Min gap between server state writes for the same account. */
+export const SAVE_MIN_INTERVAL_MS = 30_000
+
+const lastPushedJson = new Map<string, string>()
+const lastPushAt = new Map<string, number>()
+
+function draftKey(accountId: string): string {
+  return `jp-state-draft-v1:${accountId}`
+}
+
+function getLocalStorage(): Storage | null {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return null
+    return window.localStorage
+  } catch {
+    return null
+  }
+}
+
+export function writeLocalDraft(accountId: string, rawJson: string): void {
+  const storage = getLocalStorage()
+  if (!storage) return
+  try {
+    storage.setItem(draftKey(accountId), rawJson)
+  } catch {
+    // quota
+  }
+}
+
+export function readLocalDraft(accountId: string): string | null {
+  const storage = getLocalStorage()
+  if (!storage) return null
+  try {
+    return storage.getItem(draftKey(accountId))
+  } catch {
+    return null
+  }
+}
+
+export function clearLocalDraft(accountId: string): void {
+  const storage = getLocalStorage()
+  if (!storage) return
+  try {
+    storage.removeItem(draftKey(accountId))
+  } catch {
+    // ignore
+  }
+}
+
 /** Parse raw JSON into AppState (used by persistence helpers + tests). */
 export function parseStoredState(
   raw: string | null | undefined,
@@ -45,7 +94,8 @@ export type BootstrapResult =
     }
 
 /**
- * Server multi-account bootstrap. Session in localStorage; accounts/state in KV.
+ * Server multi-account bootstrap. Session in localStorage; accounts/state in D1.
+ * Prefers a newer local draft when present (written between rare server syncs).
  */
 export async function bootstrapSession(): Promise<BootstrapResult> {
   try {
@@ -57,7 +107,9 @@ export async function bootstrapSession(): Promise<BootstrapResult> {
     }
     try {
       const raw = await fetchAccountState(session.accountId)
-      const state = parseStoredState(raw)
+      const draft = readLocalDraft(session.accountId)
+      const state = parseStoredState(draft ?? raw)
+      if (raw) lastPushedJson.set(session.accountId, raw)
       return {
         status: 'ready',
         accountId: session.accountId,
@@ -66,6 +118,15 @@ export async function bootstrapSession(): Promise<BootstrapResult> {
       }
     } catch (error) {
       console.warn('[storage] session state failed', error)
+      const draft = readLocalDraft(session.accountId)
+      if (draft) {
+        return {
+          status: 'ready',
+          accountId: session.accountId,
+          state: parseStoredState(draft),
+          accounts,
+        }
+      }
       clearClientSession()
       return { status: 'needsAccount', accounts }
     }
@@ -84,21 +145,41 @@ export async function bootstrapAppState(): Promise<AppState> {
   return createDefaultAppState()
 }
 
-export async function saveAppState(state: AppState, accountId?: string | null): Promise<void> {
+export type SaveResult = 'pushed' | 'unchanged' | 'draft-only' | 'skipped'
+
+export async function saveAppState(
+  state: AppState,
+  accountId?: string | null,
+  options?: { force?: boolean },
+): Promise<SaveResult> {
   const session = loadClientSession()
   const id = accountId ?? session?.accountId
   if (!id || !session || session.accountId !== id) {
     console.warn('[storage] skip save: no active session')
-    return
+    return 'skipped'
   }
-  await putAccountState(id, JSON.stringify(state))
+  const raw = JSON.stringify(state)
+  writeLocalDraft(id, raw)
+
+  if (raw === lastPushedJson.get(id)) return 'unchanged'
+
+  const lastAt = lastPushAt.get(id) ?? 0
+  if (!options?.force && Date.now() - lastAt < SAVE_MIN_INTERVAL_MS) {
+    return 'draft-only'
+  }
+
+  await putAccountState(id, raw)
+  lastPushedJson.set(id, raw)
+  lastPushAt.set(id, Date.now())
+  return 'pushed'
 }
 
 /** Reset only the active account's progress (keeps the account). */
 export async function resetStoredState(): Promise<void> {
   const session = loadClientSession()
   if (!session) return
-  await putAccountState(session.accountId, JSON.stringify(createDefaultAppState()))
+  const next = createDefaultAppState()
+  await saveAppState(next, session.accountId, { force: true })
 }
 
 /**
