@@ -39,8 +39,8 @@ function json(data: unknown, status = 200): Response {
   })
 }
 
-function text(body: string, status: number): Response {
-  return new Response(body, { status })
+function errorJson(message: string, status: number, code?: string): Response {
+  return json(code ? { error: message, code } : { error: message }, status)
 }
 
 function getBearer(request: Request): string | null {
@@ -60,10 +60,10 @@ async function requireAccountSession(
   accountId: string,
 ): Promise<{ token: string } | Response> {
   const token = request.headers.get('X-Account-Session')?.trim() || null
-  if (!token) return text('Unauthorized', 401)
+  if (!token) return errorJson('Нужна сессия аккаунта', 401)
   const session = await readSession(env.APP_STATE, token)
-  if (!session) return text('Unauthorized', 401)
-  if (session.accountId !== accountId) return text('Forbidden', 403)
+  if (!session) return errorJson('Сессия истекла, войдите снова', 401)
+  if (session.accountId !== accountId) return errorJson('Чужой аккаунт', 403)
   await touchSession(env.APP_STATE, token, session)
   return { token }
 }
@@ -72,13 +72,23 @@ async function parseJson(request: Request): Promise<unknown | Response> {
   try {
     return await request.json()
   } catch {
-    return text('Invalid JSON', 400)
+    return errorJson('Invalid JSON', 400)
   }
 }
 
 async function handleApi(request: Request, env: Env, url: URL): Promise<Response> {
+  try {
+    return await handleApiInner(request, env, url)
+  } catch (error) {
+    console.error('[api]', error)
+    const message = error instanceof Error ? error.message : 'Ошибка сервера'
+    return errorJson(message, 500)
+  }
+}
+
+async function handleApiInner(request: Request, env: Env, url: URL): Promise<Response> {
   if (!deployAuthorized(request, env)) {
-    return text('Unauthorized', 401)
+    return errorJson('Нет доступа к API (проверьте STATE_AUTH)', 401)
   }
 
   await ensureLegacyMigrated(env.APP_STATE)
@@ -128,7 +138,7 @@ async function handleApi(request: Request, env: Env, url: URL): Promise<Response
         201,
       )
     }
-    return text('Method Not Allowed', 405)
+    return errorJson('Method Not Allowed', 405)
   }
 
   if (parts.length >= 3 && parts[0] === 'api' && parts[1] === 'accounts') {
@@ -208,16 +218,16 @@ async function handleApi(request: Request, env: Env, url: URL): Promise<Response
 
       if (request.method === 'PUT') {
         const body = await request.text()
-        if (body.length > MAX_STATE_BYTES) return text('Payload too large', 413)
+        if (body.length > MAX_STATE_BYTES) return errorJson('Payload too large', 413)
         try {
           JSON.parse(body)
         } catch {
-          return text('Invalid JSON', 400)
+          return errorJson('Invalid JSON', 400)
         }
         await env.APP_STATE.put(accountStateKey(accountId), body)
         return new Response(null, { status: 204 })
       }
-      return text('Method Not Allowed', 405)
+      return errorJson('Method Not Allowed', 405)
     }
 
     if (!action) {
@@ -263,11 +273,11 @@ async function handleApi(request: Request, env: Env, url: URL): Promise<Response
         return json({ accounts: meta.accounts.map(publicAccount) })
       }
 
-      return text('Method Not Allowed', 405)
+      return errorJson('Method Not Allowed', 405)
     }
   }
 
-  return text('Not Found', 404)
+  return errorJson('Not Found', 404)
 }
 
 export default {

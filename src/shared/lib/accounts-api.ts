@@ -42,12 +42,26 @@ function authHeaders(sessionToken?: string | null): HeadersInit {
 }
 
 async function readError(response: Response): Promise<ApiError> {
+  const status = response.status
+  const raw = await response.text().catch(() => '')
   try {
-    const data = (await response.json()) as { error?: string; code?: string }
-    return new ApiError(data.error || response.statusText || 'Ошибка API', response.status, data.code)
+    const data = JSON.parse(raw) as { error?: string; code?: string }
+    if (data.error) return new ApiError(data.error, status, data.code)
   } catch {
-    return new ApiError(response.statusText || 'Ошибка API', response.status)
+    // not JSON
   }
+  const trimmed = raw.trim().slice(0, 160)
+  const fallback =
+    trimmed ||
+    response.statusText ||
+    (status === 401
+      ? 'Нет доступа к API'
+      : status === 404
+        ? 'API аккаунтов не найдено (нужен деплой worker)'
+        : status >= 500
+          ? 'Ошибка сервера'
+          : 'Ошибка API')
+  return new ApiError(status ? `${fallback} (${status})` : fallback, status)
 }
 
 function toAuthError(error: unknown): never {

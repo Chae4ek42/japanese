@@ -182,11 +182,11 @@ export function AccountGate({ onEntered, onCancel }: AccountGateProps) {
       <header className="account-gate-hero">
         <p className="account-gate-kicker">JP тренажёры</p>
         <h1 className="account-gate-title">{switching ? 'Смена аккаунта' : 'Аккаунты'}</h1>
-        <p className="account-gate-lead">
-          {switching
-            ? 'Чтобы переключиться, введите пароль выбранного аккаунта.'
-            : 'У каждого аккаунта свой прогресс и свой пароль. Пароль хранится только на этом устройстве.'}
-        </p>
+        {switching ? (
+          <p className="account-gate-lead">
+            Чтобы переключиться, введите пароль выбранного аккаунта.
+          </p>
+        ) : null}
       </header>
 
       {activeAccount ? (
