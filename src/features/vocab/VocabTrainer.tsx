@@ -626,15 +626,6 @@ export function VocabTrainer({
     return resolveFullPool(true)
   }
 
-  function removeFromTrainingSet(wordIds: string[]) {
-    if (!onRemoveTrainingWords || preferencesRef.current.source !== 'list') return
-    const ids = [...new Set(wordIds.filter(Boolean))]
-    if (!ids.length) return
-    const drop = new Set(ids)
-    trainingWordIdsRef.current = trainingWordIdsRef.current.filter((id) => !drop.has(id))
-    onRemoveTrainingWords(ids, listSetIdRef.current || MAIN_TRAINING_SET_ID)
-  }
-
   function resetSessionWeights() {
     sessionWeightMultipliersRef.current = {}
     setSessionWeightMultipliers({})
@@ -1298,42 +1289,35 @@ export function VocabTrainer({
     if (!onAddMyWords || !card?.id) return
     const variantIds = card.variantIds?.length ? card.variantIds : [card.id]
     const alreadyMine = variantIds.some((id) => myWordsRef.current.includes(id))
-    const fromList = preferencesRef.current.source === 'list'
-    // Outside «Набор», button only adds new mine words; for list it also moves out of the set.
-    if (alreadyMine && !fromList) return
+    if (alreadyMine) return
 
     clearPendingAdvance()
-    const removeId = card.id
     const writing = card.writing
+    myWordsRef.current = [...new Set([...myWordsRef.current, ...variantIds])]
+    onAddMyWords(variantIds)
 
-    if (!alreadyMine) {
-      myWordsRef.current = [...new Set([...myWordsRef.current, ...variantIds])]
-      onAddMyWords(variantIds)
+    const prefs = preferencesRef.current
+    // Group/kanji without «весь набор»: слово уходит из пула — убрать из сессии.
+    // «Набор» (list) независим от «Мои слова» — оставляем в наборе и в сессии.
+    const leavesPool =
+      (prefs.source === 'group' || prefs.source === 'kanji') && !prefs.trainFullGroup
+
+    if (leavesPool) {
+      const nextSession = dropCardFromSession(card.id)
+      if (!nextSession.poolIds.length || !getPracticePool().length) {
+        stopPractice()
+        setFeedback({
+          type: 'success',
+          text: `«${writing}» добавлено в мои слова. Других слов в наборе не осталось.`,
+        })
+        return
+      }
+      advanceToNextCard(nextSession)
     }
-    removeFromTrainingSet(variantIds)
 
-    const nextSession = dropCardFromSession(removeId)
-    if (!nextSession.poolIds.length || !getPracticePool().length) {
-      stopPractice()
-      setFeedback({
-        type: 'success',
-        text: fromList
-          ? alreadyMine
-            ? `«${writing}» убрано из набора. Других слов не осталось.`
-            : `«${writing}» перенесено в «Мои слова» и убрано из набора. Других слов не осталось.`
-          : `«${writing}» добавлено в мои слова. Других слов в наборе не осталось.`,
-      })
-      return
-    }
-
-    advanceToNextCard(nextSession)
     setFeedback({
       type: 'success',
-      text: fromList
-        ? alreadyMine
-          ? `«${writing}» убрано из набора`
-          : `«${writing}» перенесено в «Мои слова» и убрано из набора`
-        : `«${writing}» добавлено в мои слова`,
+      text: `«${writing}» добавлено в мои слова`,
     })
   }
 
@@ -1351,23 +1335,19 @@ export function VocabTrainer({
     const toAdd = ids.filter((id) => !before.has(id))
     myWordsRef.current = [...myWordsRef.current, ...toAdd]
     onAddMyWords(ids)
-    const fromList = preferences.source === 'list'
-    if (fromList) removeFromTrainingSet(ids)
 
-    // Group/kanji without trainFullGroup: mine words leave the pool → stop.
-    // List: words leave the staged set → stop.
-    if (fromList || !preferences.trainFullGroup) {
+    const leavesPool =
+      (preferences.source === 'group' || preferences.source === 'kanji') &&
+      !preferences.trainFullGroup
+
+    if (leavesPool) {
       clearPendingAdvance()
       stopPractice()
       setFeedback({
         type: 'success',
-        text: fromList
-          ? toAdd.length
-            ? `В «Мои слова» перенесено: ${toAdd.length}. Слова убраны из набора.`
-            : 'Слова убраны из набора (уже были в «Моих словах»).'
-          : toAdd.length
-            ? `В «Мои слова» добавлено: ${toAdd.length}. Тренировка завершена.`
-            : 'Все слова набора уже в «Моих словах».',
+        text: toAdd.length
+          ? `В «Мои слова» добавлено: ${toAdd.length}. Тренировка завершена.`
+          : 'Все слова набора уже в «Моих словах».',
       })
       return
     }
@@ -1375,7 +1355,7 @@ export function VocabTrainer({
     setFeedback({
       type: 'success',
       text: toAdd.length
-        ? `В «Мои слова» добавлено из набора: ${toAdd.length}`
+        ? `В «Мои слова» добавлено: ${toAdd.length}`
         : 'Все слова набора уже в «Моих словах»',
     })
   }
