@@ -90,6 +90,44 @@ export async function ensureSchema(db: D1Database): Promise<void> {
   await schemaReady
 }
 
+export function sanitizeName(raw: string, fallback = 'Аккаунт'): string {
+  const name = raw.trim().slice(0, 32)
+  return name || fallback
+}
+
+export function defaultAccountName(accounts: StoredAccount[], base = 'Аккаунт'): string {
+  const used = new Set(accounts.map((item) => item.name))
+  if (!used.has(base)) return base
+  let n = 2
+  while (used.has(`${base} ${n}`)) n += 1
+  return `${base} ${n}`
+}
+
+export function publicAccount(account: StoredAccount) {
+  return {
+    id: account.id,
+    name: account.name,
+    createdAt: account.createdAt,
+    hasPassword: accountHasPassword(account),
+  }
+}
+
+function rowToAccount(row: AccountRow): StoredAccount {
+  const account: StoredAccount = {
+    id: row.id,
+    name: sanitizeName(row.name),
+    createdAt:
+      typeof row.created_at === 'number' && Number.isFinite(row.created_at)
+        ? row.created_at
+        : Date.now(),
+  }
+  if (row.password_salt && row.password_hash) {
+    account.passwordSalt = row.password_salt
+    account.passwordHash = row.password_hash
+  }
+  return account
+}
+
 export async function listAccounts(db: D1Database): Promise<StoredAccount[]> {
   const result = await db
     .prepare(
