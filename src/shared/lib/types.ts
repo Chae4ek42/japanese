@@ -313,6 +313,8 @@ export interface ParticlesPreferences {
   pickMode: ParticlesPickMode
   /** Which particle set to drill. */
   focus: ParticlesFocus
+  /** Only cards whose content words are already in «Мои слова». */
+  mineOnly: boolean
 }
 
 /** JLPT levels for filtering practice words (5 = N5 … 1 = N1). Empty = all levels. */

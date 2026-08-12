@@ -116,7 +116,7 @@ export const PARTICLE_CLOZE_CARDS: ParticleClozeCard[] = [
   { id: 'p-wo-04', prompt: '映画___見ます。', answer: 'を', glossRu: 'Смотрю фильм.', kana: 'えいが___みます。', romaji: 'eiga ___ mimasu' },
   { id: 'p-wo-05', prompt: '手紙___書きます。', answer: 'を', glossRu: 'Пишу письмо.', kana: 'てがみ___かきます。', romaji: 'tegami ___ kakimasu' },
   { id: 'p-wo-06', prompt: '窓___開けてください。', answer: 'を', glossRu: 'Откройте окно.', kana: 'まど___あけてください。', romaji: 'mado ___ akete kudasai' },
-  { id: 'p-wo-07', prompt: '鍵___なくしました。', answer: 'を', glossRu: 'Потерял ключ.', kana: 'かぎ___なくしました。', romaji: 'kagi ___ nakushimashita' },
+  { id: 'p-wo-07', prompt: '鍵___忘れました。', answer: 'を', glossRu: 'Забыл ключ.', kana: 'かぎ___わすれました。', romaji: 'kagi ___ wasuremashita' },
   { id: 'p-wo-08', prompt: '公園___歩きます。', answer: 'を', glossRu: 'Иду через парк.', kana: 'こうえん___あるきます。', romaji: 'kouen ___ arukimasu' },
 
   // に
@@ -212,6 +212,10 @@ export function getParticleCard(id: string): ParticleClozeCard | null {
 export function particlesForFocus(focus: ParticlesFocus = 'all'): readonly CoreParticle[] {
   if (focus === 'all') return CORE_PARTICLES
   return PARTICLE_GROUPS[focus].particles
+}
+
+export function particleCardSurface(card: ParticleClozeCard): string {
+  return formatParticlePrompt(card.prompt, card.answer)
 }
 
 export function buildParticlePool(focus: ParticlesFocus = 'all'): ParticleClozeCard[] {

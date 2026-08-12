@@ -17,6 +17,7 @@ import {
   formatParticlePrompt,
   getParticleCard,
   particleBlankFill,
+  particleCardSurface,
   particleChoiceOptions,
   splitParticlePrompt,
   type CoreParticle,
@@ -30,20 +31,40 @@ import {
   setCardCooldown,
   successCooldownTurns,
 } from '../../shared/lib/trainer'
+import {
+  contentTokens,
+  isTokenInMyWords,
+  sentenceKnownByMine,
+  tokenizeJapanese,
+  tokenWordIds,
+} from '../../shared/lib/jp-tokenize'
+import { useIsMobileTouch } from '../../shared/lib/media'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
-import { useAnalyticsState, useParticlesState } from '../../shared/state/AppStateContext'
+import {
+  useAnalyticsState,
+  useParticlesState,
+  useVocabState,
+} from '../../shared/state/AppStateContext'
 import { CheatSheetPopup, CheatSheetTrigger } from '../../shared/ui/CheatSheetPopup'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { ShortcutNote } from '../../shared/ui/ShortcutNote'
+import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
+import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
 
 export function ParticlesTrainer() {
   const particles = useParticlesState()
+  const vocab = useVocabState()
   if (!particles) return null
   return (
     <ParticlesTrainerView
       particlesState={{ preferences: particles.preferences, stats: particles.stats }}
       onPatchPreferences={particles.patchPreferences}
       onUpdateStats={particles.updateStats}
+      myWords={vocab?.myWords ?? []}
+      trainingWordIds={vocab?.trainingWordIds ?? []}
+      onToggleMyWord={vocab?.toggleMyWord}
+      onAddMyWords={vocab?.addMyWords}
+      onToggleTrainingWord={vocab?.toggleTrainingWord}
     />
   )
 }
@@ -62,6 +83,11 @@ interface ParticlesTrainerViewProps {
       inputMode?: 'instant' | 'submit'
     },
   ) => void
+  myWords: string[]
+  trainingWordIds: string[]
+  onToggleMyWord?: (wordId: string) => void
+  onAddMyWords?: (wordIds: string[]) => void
+  onToggleTrainingWord?: (wordId: string) => void
 }
 
 type ChoiceFlash = { pick: CoreParticle; correct: boolean } | null
@@ -73,6 +99,8 @@ function ParticleClozeLine({
   className,
   blankClassName,
   testId,
+  kanjiInfo,
+  onOpenKanjiInfo,
 }: {
   text: string
   fill: string | null
@@ -80,15 +108,112 @@ function ParticleClozeLine({
   className: string
   blankClassName?: string
   testId?: string
+  kanjiInfo?: boolean
+  onOpenKanjiInfo?: (character: string) => void
 }) {
   const parts = splitParticlePrompt(text)
+  const renderText = (segment: string, key: string) => {
+    if (kanjiInfo && onOpenKanjiInfo) {
+      return (
+        <KanjiWritingHotspots
+          key={key}
+          writing={segment}
+          className="particles-sentence-text"
+          onOpenInfo={onOpenKanjiInfo}
+        />
+      )
+    }
+    return (
+      <span key={key} className="particles-sentence-text">
+        {segment}
+      </span>
+    )
+  }
+
   return (
     <div className={className} data-testid={testId}>
-      <span className="particles-sentence-text">{parts.before}</span>
+      {renderText(parts.before, 'before')}
       <span className={`particles-blank ${fill ? 'is-filled' : ''} ${blankClassName ?? ''}`.trim()}>
         {fill ?? emptyLabel}
       </span>
-      <span className="particles-sentence-text">{parts.after}</span>
+      {renderText(parts.after, 'after')}
+    </div>
+  )
+}
+
+function ParticleSentenceWords({
+  surface,
+  myWordIds,
+  onToggleMyWord,
+  onAddMyWords,
+}: {
+  surface: string
+  myWordIds: Set<string>
+  onToggleMyWord?: (wordId: string) => void
+  onAddMyWords?: (wordIds: string[]) => void
+}) {
+  const words = useMemo(() => contentTokens(tokenizeJapanese(surface)), [surface])
+  if (!words.length || (!onToggleMyWord && !onAddMyWords)) return null
+
+  const missingIds = words.flatMap((token) => {
+    if (isTokenInMyWords(token, myWordIds)) return []
+    return tokenWordIds(token)
+  })
+
+  function toggleToken(token: (typeof words)[number]) {
+    const ids = tokenWordIds(token)
+    const primary = ids[0]
+    if (!primary) return
+    const inMine = isTokenInMyWords(token, myWordIds)
+    if (inMine) {
+      onToggleMyWord?.(primary)
+      return
+    }
+    if (onAddMyWords) {
+      onAddMyWords(ids)
+      return
+    }
+    onToggleMyWord?.(primary)
+  }
+
+  return (
+    <div className="particles-words" data-testid="particles-sentence-words">
+      <div className="particles-words-head">
+        <span className="particles-words-label">Слова предложения</span>
+        {missingIds.length && onAddMyWords ? (
+          <button
+            type="button"
+            className="text-button particles-words-add-all"
+            data-testid="particles-add-all-words"
+            onClick={() => onAddMyWords(missingIds)}
+          >
+            + Все в мои
+          </button>
+        ) : null}
+      </div>
+      <div className="particles-words-chips" role="list">
+        {words.map((token, index) => {
+          const ids = tokenWordIds(token)
+          const primary = ids[0] ?? `${token.surface}-${index}`
+          const inMine = isTokenInMyWords(token, myWordIds)
+          const writing = token.word?.writing ?? token.surface
+          const meaning = token.word?.meanings?.[0]
+          return (
+            <button
+              key={`${primary}-${index}`}
+              type="button"
+              role="listitem"
+              className={inMine ? 'particles-word-chip is-mine' : 'particles-word-chip'}
+              data-testid={`particles-word-chip-${writing}`}
+              title={meaning ? `${writing} — ${meaning}` : writing}
+              onClick={() => toggleToken(token)}
+            >
+              <span className="particles-word-chip-writing">{writing}</span>
+              <span className="particles-word-chip-action">{inMine ? 'В моих' : '+ В мои'}</span>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -97,6 +222,11 @@ function ParticlesTrainerView({
   particlesState,
   onPatchPreferences,
   onUpdateStats,
+  myWords,
+  trainingWordIds,
+  onToggleMyWord,
+  onAddMyWords,
+  onToggleTrainingWord,
 }: ParticlesTrainerViewProps) {
   const pickModeOptions = [
     { id: 'adaptive', label: 'Адаптивный' },
@@ -111,6 +241,8 @@ function ParticlesTrainerView({
 
   const { preferences, stats } = particlesState
   const focus = preferences.focus ?? 'all'
+  const mineOnly = preferences.mineOnly === true
+  const myWordSet = useMemo(() => new Set(myWords), [myWords])
   const {
     view,
     setSession,
@@ -129,21 +261,34 @@ function ParticlesTrainerView({
     sessionAccuracy,
   } = usePracticeSession()
   const { recordAnswer } = useAnalyticsState()
+  const isMobile = useIsMobileTouch()
 
   const [currentCardId, setCurrentCardId] = useState<string | null>(null)
   const [choices, setChoices] = useState<CoreParticle[]>(() => particleChoiceOptions(focus))
   const [locked, setLocked] = useState(false)
   const [choiceFlash, setChoiceFlash] = useState<ChoiceFlash>(null)
   const [filledParticle, setFilledParticle] = useState<CoreParticle | null>(null)
+  const [showTranscript, setShowTranscript] = useState(false)
   const [canGoPrev, setCanGoPrev] = useState(false)
   const [cheatOpen, setCheatOpen] = useState(false)
+  const [infoKanji, setInfoKanji] = useState<string | null>(null)
   const navHistoryRef = useRef<string[]>([])
   const navIndexRef = useRef(-1)
   const skipToAdjacentRef = useRef<(direction: 'prev' | 'next') => void>(() => {})
+  const toggleTranscriptRef = useRef<() => void>(() => {})
   const cheatOpenRef = useRef(false)
+  const infoKanjiRef = useRef<string | null>(null)
   cheatOpenRef.current = cheatOpen
+  infoKanjiRef.current = infoKanji
 
-  const pool = useMemo(() => buildParticlePool(focus), [focus])
+  const pool = useMemo(() => {
+    let cards = buildParticlePool(focus)
+    if (mineOnly) {
+      cards = cards.filter((card) => sentenceKnownByMine(particleCardSurface(card), myWordSet))
+    }
+    return cards
+  }, [focus, mineOnly, myWordSet])
+
   const statsMap = useMemo(() => {
     const map = { ...stats }
     for (const card of pool) {
@@ -155,6 +300,8 @@ function ParticlesTrainerView({
   const activeCard: ParticleClozeCard | null = currentCardId
     ? getParticleCard(currentCardId)
     : null
+
+  const activeSurface = activeCard ? particleCardSurface(activeCard) : ''
 
   const practiceRef = useRef<{ view: PracticeView; activeCard: ParticleClozeCard | null }>({
     view: 'setup',
@@ -180,6 +327,7 @@ function ParticlesTrainerView({
     setLocked(false)
     setChoiceFlash(null)
     setFilledParticle(null)
+    setShowTranscript(false)
     setFeedback({ type: 'idle', text: '' })
     if (countPresentation) {
       onUpdateStats(cardId, 'seen', { now })
@@ -223,7 +371,12 @@ function ParticlesTrainerView({
 
   function startPractice() {
     if (!pool.length) {
-      setFeedback({ type: 'error', text: 'В этом наборе нет карточек.' })
+      setFeedback({
+        type: 'error',
+        text: mineOnly
+          ? 'Нет карточек только из ваших слов. Добавьте слова в «Мои» или снимите фильтр.'
+          : 'В этом наборе нет карточек.',
+      })
       return
     }
     clearPendingAdvance()
@@ -244,7 +397,14 @@ function ParticlesTrainerView({
     setLocked(false)
     setChoiceFlash(null)
     setFilledParticle(null)
+    setShowTranscript(false)
   }
+
+  function toggleTranscript() {
+    setShowTranscript((prev) => !prev)
+  }
+
+  toggleTranscriptRef.current = toggleTranscript
 
   function handleChoice(particle: CoreParticle) {
     if (!activeCard || view !== 'practice' || locked || pendingAdvanceRef.current) return
@@ -357,9 +517,14 @@ function ParticlesTrainerView({
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (cheatOpenRef.current) return
+      if (cheatOpenRef.current || infoKanjiRef.current) return
       const ctx = practiceRef.current
       if (ctx.view !== 'practice' || !ctx.activeCard) return
+      if (event.code === 'Space' && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        event.preventDefault()
+        toggleTranscriptRef.current()
+        return
+      }
       if (event.code === 'ArrowLeft' && !event.metaKey && !event.ctrlKey && !event.altKey) {
         event.preventDefault()
         skipToAdjacentRef.current('prev')
@@ -389,6 +554,17 @@ function ParticlesTrainerView({
     <CheatSheetPopup doc={PARTICLES_CHEAT_SHEET} onClose={() => setCheatOpen(false)} />
   ) : null
 
+  const kanjiInfoPopup = infoKanji ? (
+    <KanjiInfoCard
+      character={infoKanji}
+      myWords={myWords}
+      trainingWordIds={trainingWordIds}
+      onClose={() => setInfoKanji(null)}
+      onToggleMyWord={onToggleMyWord}
+      onToggleTrainingWord={onToggleTrainingWord}
+    />
+  ) : null
+
   if (view === 'setup') {
     return (
       <main className="particles-page" data-testid="particles-page">
@@ -397,7 +573,8 @@ function ParticlesTrainerView({
             <p className="particles-kicker">Тренажёр</p>
             <h2 className="particles-title">Частицы</h2>
             <p className="particles-lead">
-              Вставьте частицу в предложение. В паде — все 12 основных: каркас и связки.
+              Вставьте частицу в предложение. В паде — все 12 основных: каркас и связки. Колёсико по
+              кандзи — карточка знака; слова предложения можно добавить в «Мои».
             </p>
           </div>
           <CheatSheetTrigger
@@ -429,6 +606,34 @@ function ParticlesTrainerView({
             </div>
 
             <div className="control-group">
+              <span className="group-label">Слова</span>
+              <div className="segmented-control" role="group" aria-label="Фильтр по моим словам">
+                <button
+                  type="button"
+                  className={!mineOnly ? 'segmented-button is-active' : 'segmented-button'}
+                  data-testid="particles-mine-only-off"
+                  onClick={() => onPatchPreferences({ mineOnly: false })}
+                >
+                  Все предложения
+                </button>
+                <button
+                  type="button"
+                  className={mineOnly ? 'segmented-button is-active' : 'segmented-button'}
+                  data-testid="particles-mine-only-on"
+                  onClick={() => onPatchPreferences({ mineOnly: true })}
+                >
+                  Только по моим словам
+                </button>
+              </div>
+              {mineOnly ? (
+                <p className="control-hint">
+                  В предложениях не будет незнакомых слов — только из «Моих» (частицы и служебные не
+                  считаются).
+                </p>
+              ) : null}
+            </div>
+
+            <div className="control-group">
               <span className="group-label">Подбор</span>
               <div className="segmented-control">
                 {pickModeOptions.map((mode) => (
@@ -451,6 +656,7 @@ function ParticlesTrainerView({
             <p className="control-hint" data-testid="particles-pool-count">
               {pool.length} карточек · {choices.length || particleChoiceOptions(focus).length} в
               паде
+              {mineOnly ? ` · из ${myWords.length} моих слов` : ''}
             </p>
 
             <div className="primary-actions">
@@ -459,12 +665,18 @@ function ParticlesTrainerView({
                 className="primary-button"
                 data-testid="start-particles"
                 onClick={startPractice}
+                disabled={!pool.length}
               >
                 Начать
               </button>
             </div>
 
             {feedback.type === 'error' ? <p className="feedback is-error">{feedback.text}</p> : null}
+            {!pool.length && mineOnly ? (
+              <p className="feedback is-error" data-testid="particles-mine-empty">
+                Нет подходящих карточек. Добавьте слова в «Мои» или выберите «Все предложения».
+              </p>
+            ) : null}
           </div>
 
           <aside className="particles-roster" aria-label="Двенадцать частиц">
@@ -490,6 +702,7 @@ function ParticlesTrainerView({
           </aside>
         </section>
         {cheatSheetPopup}
+        {kanjiInfoPopup}
       </main>
     )
   }
@@ -521,24 +734,53 @@ function ParticlesTrainerView({
                   emptyLabel="＿"
                   className="particles-sentence"
                   testId="particle-prompt"
+                  kanjiInfo
+                  onOpenKanjiInfo={setInfoKanji}
                 />
-                <ParticleClozeLine
-                  text={activeCard.kana}
-                  fill={filledParticle ? particleBlankFill(filledParticle, 'kana') : null}
-                  emptyLabel="＿"
-                  className="particles-kana"
-                  testId="particle-kana"
-                />
-                <ParticleClozeLine
-                  text={activeCard.romaji}
-                  fill={filledParticle ? particleBlankFill(filledParticle, 'romaji') : null}
-                  emptyLabel="···"
-                  className="particles-romaji"
-                  blankClassName="is-romaji"
-                  testId="particle-romaji"
-                />
+                {showTranscript ? (
+                  <>
+                    <ParticleClozeLine
+                      text={activeCard.kana}
+                      fill={filledParticle ? particleBlankFill(filledParticle, 'kana') : null}
+                      emptyLabel="＿"
+                      className="particles-kana"
+                      testId="particle-kana"
+                    />
+                    <ParticleClozeLine
+                      text={activeCard.romaji}
+                      fill={filledParticle ? particleBlankFill(filledParticle, 'romaji') : null}
+                      emptyLabel="···"
+                      className="particles-romaji"
+                      blankClassName="is-romaji"
+                      testId="particle-romaji"
+                    />
+                  </>
+                ) : null}
               </div>
+              {isMobile ? (
+                <div className="particles-transcript-actions">
+                  <button
+                    type="button"
+                    className={
+                      showTranscript
+                        ? 'hint-button particles-transcript-button is-on'
+                        : 'hint-button particles-transcript-button'
+                    }
+                    data-testid="particles-transcript-button"
+                    aria-pressed={showTranscript}
+                    onClick={toggleTranscript}
+                  >
+                    {showTranscript ? 'Скрыть транскрипцию' : 'Транскрипция'}
+                  </button>
+                </div>
+              ) : null}
               <p className="particles-gloss">{activeCard.glossRu}</p>
+              <ParticleSentenceWords
+                surface={activeSurface}
+                myWordIds={myWordSet}
+                onToggleMyWord={onToggleMyWord}
+                onAddMyWords={onAddMyWords}
+              />
             </div>
 
             <div className="particles-pad" role="group" aria-label="Выбор частицы">
@@ -559,7 +801,10 @@ function ParticlesTrainerView({
 
             <div className="particles-footer">
               <p className={`particles-feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>
-                {feedback.text || 'Выберите частицу из пада'}
+                {feedback.text ||
+                  (isMobile
+                    ? 'Выберите частицу · кнопка «Транскрипция» — кана и ромадзи'
+                    : 'Выберите частицу · Space — транскрипция · колёсико — карточка знака')}
               </p>
               <div className="particles-footer-actions">
                 <CheatSheetTrigger
@@ -589,16 +834,17 @@ function ParticlesTrainerView({
               <ShortcutNote
                 keyboard={
                   <>
-                    <kbd>←</kbd>/<kbd>→</kbd> — назад/дальше
+                    <kbd>Space</kbd> — транскрипция · <kbd>←</kbd>/<kbd>→</kbd> — назад/дальше
                   </>
                 }
-                swipe={<>Свайп ←/→ — назад/дальше</>}
+                swipe={<>Свайп ←/→ — назад/дальше · кнопка «Транскрипция»</>}
               />
             </div>
           </>
         ) : null}
       </PracticeShell>
       {cheatSheetPopup}
+      {kanjiInfoPopup}
     </>
   )
 }
