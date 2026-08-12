@@ -17,6 +17,7 @@ import {
 import { applyLocalWordEdits, compareVocabStudyOrder, resolveMyWords } from './customWords'
 import { getWordsForGroup } from './groups'
 import { mergeWordsByWriting, wordReadings, wordVariantIds } from './mergeHomographs'
+import { isColloquialWord } from '../../shared/lib/colloquial'
 
 export function isVocabWordLearned(
   word: KanjiWord | { id?: string; variantIds?: string[]; readings?: { id?: string }[] },
@@ -296,6 +297,11 @@ export function buildVocabPool(
     preferences.wordJlptLevels?.length
   ) {
     words = filterWordsByJlpt(words, preferences.wordJlptLevels)
+  }
+
+  // Opt-out of colloquial / plain-speech senses (разг./прост.).
+  if (preferences.includeColloquial === false) {
+    words = words.filter((word) => !isColloquialWord(word))
   }
 
   if (!preserveOrder) {

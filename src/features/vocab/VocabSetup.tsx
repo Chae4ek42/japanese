@@ -282,6 +282,37 @@ export function VocabSetup({
               </div>
             ) : null}
 
+            <div className="control-group">
+              <span className="group-label">Разговорные</span>
+              <div className="segmented-control" role="group" aria-label="Тренировать разговорные слова">
+                <button
+                  type="button"
+                  data-testid="vocab-include-colloquial-on"
+                  className={
+                    preferences.includeColloquial !== false
+                      ? 'segmented-button is-active'
+                      : 'segmented-button'
+                  }
+                  onClick={() => onPatchPreferences({ includeColloquial: true })}
+                >
+                  Включать
+                </button>
+                <button
+                  type="button"
+                  data-testid="vocab-include-colloquial-off"
+                  className={
+                    preferences.includeColloquial === false
+                      ? 'segmented-button is-active'
+                      : 'segmented-button'
+                  }
+                  onClick={() => onPatchPreferences({ includeColloquial: false })}
+                >
+                  Исключать
+                </button>
+              </div>
+              <span className="control-hint">слова с пометой (разг.) / (прост.)</span>
+            </div>
+
             <div className="vocab-srs-settings" data-testid="vocab-srs-settings">
               <span className="group-label">Сессия</span>
               <div className="vocab-srs-settings-grid">
@@ -687,6 +718,37 @@ export function VocabSetup({
                 />
               </div>
             ) : null}
+
+            <div className="control-group">
+              <span className="group-label">Разговорные</span>
+              <div className="segmented-control" role="group" aria-label="Тренировать разговорные слова">
+                <button
+                  type="button"
+                  data-testid="vocab-include-colloquial-on"
+                  className={
+                    preferences.includeColloquial !== false
+                      ? 'segmented-button is-active'
+                      : 'segmented-button'
+                  }
+                  onClick={() => onPatchPreferences({ includeColloquial: true })}
+                >
+                  Включать
+                </button>
+                <button
+                  type="button"
+                  data-testid="vocab-include-colloquial-off"
+                  className={
+                    preferences.includeColloquial === false
+                      ? 'segmented-button is-active'
+                      : 'segmented-button'
+                  }
+                  onClick={() => onPatchPreferences({ includeColloquial: false })}
+                >
+                  Исключать
+                </button>
+              </div>
+              <span className="control-hint">слова с пометой (разг.) / (прост.)</span>
+            </div>
 
             {showNewWordLimit ? (
               <div className="control-group">

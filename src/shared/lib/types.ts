@@ -379,6 +379,17 @@ export interface VocabPreferences {
    * Falls back to activeTrainingSetId when missing/invalid.
    */
   trainingSetId: string
+  /**
+   * When false, words tagged (разг.)/(прост.) are excluded from the train pool.
+   * Default true (include).
+   */
+  includeColloquial: boolean
+  /**
+   * When false, colloquial words are hidden in the dictionary catalog/search
+   * (except the dedicated «Разговорные» category).
+   * Default true (show).
+   */
+  showColloquial: boolean
 }
 
 export interface VocabTrainingSet {

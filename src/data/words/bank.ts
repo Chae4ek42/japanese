@@ -1,4 +1,5 @@
 import type { KanjiBankMeta, KanjiComponent, KanjiInfo, KanjiWord } from '../../shared/lib/types'
+import { isColloquialWord } from '../../shared/lib/colloquial'
 import kanjiList from './kanji-list.json' with { type: 'json' }
 import words from './words.json' with { type: 'json' }
 import wordsByKanji from './words-by-kanji.json' with { type: 'json' }
@@ -140,6 +141,15 @@ export function getJlptWords(level: 5 | 4 | 3 | 2 | 1 | 'other'): KanjiWord[] {
   const sorted = sortWords(list)
   jlptWordsCache.set(level, sorted)
   return sorted
+}
+
+let colloquialWordsCache: KanjiWord[] | null = null
+
+/** Words with at least one (разг.)/(прост.) sense. */
+export function getColloquialWords(): KanjiWord[] {
+  if (colloquialWordsCache) return colloquialWordsCache
+  colloquialWordsCache = sortWords(KANJI_WORDS.filter((word) => isColloquialWord(word)))
+  return colloquialWordsCache
 }
 
 export function searchWords(query: string, { limit = 80 }: { limit?: number } = {}): KanjiWord[] {

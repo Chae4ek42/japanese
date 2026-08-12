@@ -49,6 +49,8 @@ export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
   evenBoostFactor: 2,
   evenDecayPower: 2,
   trainingSetId: MAIN_TRAINING_SET_ID,
+  includeColloquial: true,
+  showColloquial: true,
 }
 
 function sanitizeSelectedKanji(raw: unknown, fallback: string[]): string[] {
@@ -150,6 +152,12 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
       typeof source.trainingSetId === 'string' && source.trainingSetId.trim()
         ? source.trainingSetId.trim()
         : fallback.trainingSetId || MAIN_TRAINING_SET_ID,
+    includeColloquial:
+      typeof source.includeColloquial === 'boolean'
+        ? source.includeColloquial
+        : fallback.includeColloquial,
+    showColloquial:
+      typeof source.showColloquial === 'boolean' ? source.showColloquial : fallback.showColloquial,
   }
 }
 
