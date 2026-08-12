@@ -28,6 +28,10 @@
   max-width: 42ch;
 }
 
+.theory-hero-copy .cheat-sheet-actions {
+  margin-top: 0.45rem;
+}
+
 .theory-kicker {
   margin: 0;
   font-size: 0.72rem;

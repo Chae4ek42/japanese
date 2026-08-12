@@ -18,6 +18,7 @@ const NAV_ITEMS = [
   { id: 'kana', label: 'Кана', href: PATHS.kana, testId: 'nav-kana' },
   { id: 'kanji', label: 'Кандзи', href: PATHS.kanji, testId: 'nav-kanji' },
   { id: 'numbers', label: 'Числа', href: PATHS.numbers, testId: 'nav-numbers' },
+  { id: 'particles', label: 'Частицы', href: PATHS.particles, testId: 'nav-particles' },
   { id: 'train', label: 'Слова', href: PATHS.train, testId: 'nav-train' },
   { id: 'vocab', label: 'Словарь', href: PATHS.vocab, testId: 'nav-vocab' },
   { id: 'mine', label: 'Мои слова', href: PATHS.mine, testId: 'nav-mine' },

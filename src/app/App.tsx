@@ -4,6 +4,7 @@ import { HomePage } from '../features/home/HomePage'
 import { KanaTrainer } from '../features/kana/KanaTrainer'
 import { KanjiPage } from '../features/kanji/KanjiPage'
 import { NumbersTrainer } from '../features/numbers/NumbersTrainer'
+import { ParticlesTrainer } from '../features/particles/ParticlesTrainer'
 import { DictionaryPage } from '../features/vocab/DictionaryPage'
 import { MineWordsPage } from '../features/vocab/MineWordsPage'
 import { TrainPage } from '../features/vocab/TrainPage'
@@ -83,6 +84,7 @@ function AppRoutes() {
           onOpenKana={() => goPage('kana')}
           onOpenKanji={() => goPage('kanji')}
           onOpenNumbers={() => goPage('numbers')}
+          onOpenParticles={() => goPage('particles')}
           onOpenVocab={() => goPage('vocab')}
           onOpenMine={() => goPage('mine')}
           onOpenVocabTrain={() => goPage('train')}
@@ -101,6 +103,10 @@ function AppRoutes() {
         <TheoryPage onOpenTrain={() => goPage('train')} />
       ) : page === 'analytics' ? (
         <AnalyticsPage />
+      ) : page === 'particles' ? (
+        <main className="trainer-layout">
+          <ParticlesTrainer />
+        </main>
       ) : (
         <main className="trainer-layout">
           {page === 'kana' ? <KanaTrainer /> : <NumbersTrainer />}

@@ -70,6 +70,9 @@ export function useVocabState() {
             learnedWordIds: removing
               ? (prevState.vocab.learnedWordIds ?? []).filter((id) => id !== wordId)
               : prevState.vocab.learnedWordIds ?? [],
+            trainingSets: removing
+              ? prevState.vocab.trainingSets
+              : removeWordsFromAllTrainingSets(prevState.vocab.trainingSets ?? [], [wordId]),
           },
         }
       })
@@ -85,7 +88,9 @@ export function useVocabState() {
         if (!prevState) return prevState
         const known = new Set(prevState.vocab.myWords)
         const toAdd = ids.filter((id) => !known.has(id))
-        if (!toAdd.length) return prevState
+        const sets = prevState.vocab.trainingSets ?? []
+        const nextSets = removeWordsFromAllTrainingSets(sets, ids)
+        if (!toAdd.length && nextSets === sets) return prevState
         const now = Date.now()
         const myWordAddedAt = { ...(prevState.vocab.myWordAddedAt ?? {}) }
         for (const id of toAdd) {
@@ -95,8 +100,10 @@ export function useVocabState() {
           ...prevState,
           vocab: {
             ...prevState.vocab,
-            myWords: [...prevState.vocab.myWords, ...toAdd],
+            myWords: toAdd.length ? [...prevState.vocab.myWords, ...toAdd] : prevState.vocab.myWords,
             myWordAddedAt,
+            // «Мои слова» и наборы взаимоисключающие: при добавлении убираем из всех наборов.
+            trainingSets: nextSets,
           },
         }
       })

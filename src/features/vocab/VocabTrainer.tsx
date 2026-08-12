@@ -1293,13 +1293,17 @@ export function VocabTrainer({
     clearPendingAdvance()
     const writing = card.writing
     myWordsRef.current = [...new Set([...myWordsRef.current, ...variantIds])]
+    // addMyWords also strips these ids from every training set.
     onAddMyWords(variantIds)
+    const drop = new Set(variantIds)
+    trainingWordIdsRef.current = trainingWordIdsRef.current.filter((id) => !drop.has(id))
 
     const prefs = preferencesRef.current
-    // Group/kanji without «весь набор»: слово уходит из пула — убрать из сессии.
-    // «Набор» (list) независим от «Мои слова» — оставляем в наборе и в сессии.
+    const fromList = prefs.source === 'list'
+    // Group/kanji without «весь набор», or list: слово уходит из текущего пула.
     const leavesPool =
-      (prefs.source === 'group' || prefs.source === 'kanji') && !prefs.trainFullGroup
+      fromList ||
+      ((prefs.source === 'group' || prefs.source === 'kanji') && !prefs.trainFullGroup)
 
     if (leavesPool) {
       const nextSession = dropCardFromSession(card.id)
@@ -1307,11 +1311,20 @@ export function VocabTrainer({
         stopPractice()
         setFeedback({
           type: 'success',
-          text: `«${writing}» добавлено в мои слова. Других слов в наборе не осталось.`,
+          text: fromList
+            ? `«${writing}» в «Мои слова», убрано из наборов. Других слов не осталось.`
+            : `«${writing}» добавлено в мои слова. Других слов в наборе не осталось.`,
         })
         return
       }
       advanceToNextCard(nextSession)
+      setFeedback({
+        type: 'success',
+        text: fromList
+          ? `«${writing}» в «Мои слова» и убрано из наборов`
+          : `«${writing}» добавлено в мои слова`,
+      })
+      return
     }
 
     setFeedback({
@@ -1334,19 +1347,27 @@ export function VocabTrainer({
     const toAdd = ids.filter((id) => !before.has(id))
     myWordsRef.current = [...myWordsRef.current, ...toAdd]
     onAddMyWords(ids)
+    const drop = new Set(ids)
+    trainingWordIdsRef.current = trainingWordIdsRef.current.filter((id) => !drop.has(id))
 
+    const fromList = preferences.source === 'list'
     const leavesPool =
-      (preferences.source === 'group' || preferences.source === 'kanji') &&
-      !preferences.trainFullGroup
+      fromList ||
+      ((preferences.source === 'group' || preferences.source === 'kanji') &&
+        !preferences.trainFullGroup)
 
     if (leavesPool) {
       clearPendingAdvance()
       stopPractice()
       setFeedback({
         type: 'success',
-        text: toAdd.length
-          ? `В «Мои слова» добавлено: ${toAdd.length}. Тренировка завершена.`
-          : 'Все слова набора уже в «Моих словах».',
+        text: fromList
+          ? toAdd.length
+            ? `В «Мои слова»: ${toAdd.length}. Слова убраны из всех наборов.`
+            : 'Слова убраны из всех наборов (уже были в «Моих словах»).'
+          : toAdd.length
+            ? `В «Мои слова» добавлено: ${toAdd.length}. Тренировка завершена.`
+            : 'Все слова набора уже в «Моих словах».',
       })
       return
     }

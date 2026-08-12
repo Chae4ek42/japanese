@@ -16,6 +16,7 @@ dist-ssr
 .data/
 test-results/
 playwright-report/
+.wrangler/
 
 # Editor directories and files
 .vscode/*

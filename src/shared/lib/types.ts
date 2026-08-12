@@ -4,11 +4,13 @@ export type InputMode = 'instant' | 'submit'
 export type NumberMode = 'plain' | 'age'
 export type NumberRangeId = '10' | '99' | '999'
 export type NumbersPickMode = 'adaptive' | 'even'
+export type ParticlesPickMode = 'adaptive' | 'even'
 export type AppPage =
   | 'home'
   | 'kana'
   | 'kanji'
   | 'numbers'
+  | 'particles'
   | 'vocab'
   | 'mine'
   | 'train'
@@ -22,6 +24,7 @@ export type AnalyticsSection =
   | 'kana'
   | 'kanji'
   | 'numbers'
+  | 'particles'
   | 'train'
   | 'vocab'
   | 'mine'
@@ -304,6 +307,14 @@ export interface NumbersPreferences {
   pickMode: NumbersPickMode
 }
 
+export type ParticlesFocus = 'all' | 'frame' | 'connect'
+
+export interface ParticlesPreferences {
+  pickMode: ParticlesPickMode
+  /** Which particle set to drill. */
+  focus: ParticlesFocus
+}
+
 /** JLPT levels for filtering practice words (5 = N5 … 1 = N1). Empty = all levels. */
 export type KanjiWordJlptLevel = 5 | 4 | 3 | 2 | 1
 
@@ -459,7 +470,7 @@ export interface VocabState {
 }
 
 export interface AppState {
-  version: 28
+  version: 29
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>
@@ -469,6 +480,10 @@ export interface AppState {
   }
   numbers: {
     preferences: NumbersPreferences
+    stats: Record<string, StatsRecord>
+  }
+  particles: {
+    preferences: ParticlesPreferences
     stats: Record<string, StatsRecord>
   }
   kanji: {

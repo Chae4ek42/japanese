@@ -5,6 +5,7 @@ export interface HomePageProps {
   onOpenKana: () => void
   onOpenKanji: () => void
   onOpenNumbers: () => void
+  onOpenParticles: () => void
   onOpenVocab: () => void
   onOpenMine: () => void
   onOpenVocabTrain: () => void
@@ -36,6 +37,14 @@ const ENTRIES = [
     title: 'Числа и возраст',
     action: 'Начать',
     testId: 'open-numbers',
+  },
+  {
+    id: 'particles',
+    href: PATHS.particles,
+    symbol: 'は',
+    title: 'Частицы',
+    action: 'Начать',
+    testId: 'open-particles',
   },
   {
     id: 'vocab-train',
@@ -83,6 +92,7 @@ export function HomePage({
   onOpenKana,
   onOpenKanji,
   onOpenNumbers,
+  onOpenParticles,
   onOpenVocab,
   onOpenMine,
   onOpenVocabTrain,
@@ -93,6 +103,7 @@ export function HomePage({
     kana: onOpenKana,
     kanji: onOpenKanji,
     numbers: onOpenNumbers,
+    particles: onOpenParticles,
     'vocab-train': onOpenVocabTrain,
     vocab: onOpenVocab,
     mine: onOpenMine,
