@@ -10,7 +10,7 @@
 }
 
 .cheat-sheet-popup {
-  width: min(720px, calc(100vw - 40px));
+  width: min(760px, calc(100vw - 40px));
   max-height: min(880px, calc(100vh - 40px));
   overflow: auto;
   display: grid;
@@ -108,6 +108,99 @@
   white-space: nowrap;
 }
 
+.cheat-row-clickable {
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.cheat-row-clickable:hover,
+.cheat-row-clickable:focus-visible {
+  background: color-mix(in srgb, var(--accent, #1f4f7a) 10%, transparent);
+  outline: none;
+}
+
+.cheat-row-key {
+  color: var(--accent, #1f4f7a);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.cheat-topic {
+  display: grid;
+  gap: 1rem;
+}
+
+.cheat-topic-back {
+  justify-self: start;
+  font-size: 0.88rem;
+}
+
+.cheat-topic-head {
+  display: grid;
+  gap: 0.35rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.cheat-topic-badge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 0.75rem;
+  margin: 0;
+}
+
+.cheat-topic-surface {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(2rem, 5vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.cheat-topic-reading {
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cheat-topic-title {
+  margin: 0;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.cheat-topic-lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  max-width: 52ch;
+}
+
+.cheat-topic-senses {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.cheat-topic-sense {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.cheat-topic-sense-title {
+  margin: 0;
+  font-size: 0.98rem;
+}
+
+.cheat-topic-tips {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--border);
+}
+
 @media (max-width: 640px) {
   .cheat-sheet-overlay {
     padding: 12px;
@@ -124,5 +217,9 @@
   .cheat-sheet-popup .cheat-table {
     min-width: 24rem;
     font-size: 0.86rem;
+  }
+
+  .cheat-topic-surface {
+    font-size: 2.1rem;
   }
 }

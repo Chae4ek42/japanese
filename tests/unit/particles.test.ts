@@ -28,7 +28,8 @@ describe('particles cloze bank', () => {
       assert.ok((CORE_PARTICLES as readonly string[]).includes(card.answer), card.id)
       assert.equal(getParticleCard(card.id)?.id, card.id)
     }
-    assert.ok(PARTICLE_CLOZE_CARDS.length >= 80, `bank size ${PARTICLE_CLOZE_CARDS.length}`)
+    assert.ok(PARTICLE_CLOZE_CARDS.length >= 400, `bank size ${PARTICLE_CLOZE_CARDS.length}`)
+    assert.equal(PARTICLE_CLOZE_CARDS.length, 432)
     assert.equal(buildParticlePool().length, PARTICLE_CLOZE_CARDS.length)
   })
 

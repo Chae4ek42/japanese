@@ -40,6 +40,14 @@ describe('vocab catalog', () => {
     assert.equal(getWordById(first!.id!)?.writing, '毎日')
   })
 
+  it('поиск по ромадзи ставит точное чтение выше подстрок', () => {
+    const hits = searchWords('sora', { limit: 10 })
+    assert.ok(hits.length > 0)
+    assert.equal(hits[0]?.writing, '空')
+    assert.equal(hits[0]?.kana, 'そら')
+    assert.ok(hits[0]?.romaji.toLowerCase() === 'sora')
+  })
+
   it('группы чтения тематические и самостоятельные', () => {
     const reading = getVocabGroupsByKind('reading')
     assert.ok(reading.length >= 8, `reading groups ${reading.length}`)

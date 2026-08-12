@@ -1,10 +1,13 @@
 import type { CheatSheetDoc } from './types'
+import { VERB_FORM_TOPICS } from './verb-topics'
 
 /** Verb conjugation reference for the popup cheat sheet. */
 export const VERB_FORMS_CHEAT_SHEET: CheatSheetDoc = {
   id: 'verb-forms',
   title: 'Шпаргалка: формы глагола',
-  lead: 'Группы глаголов, как строить основы и ключевые формы: вежливая, て/た, отрицание, желание, потенциал.',
+  lead:
+    'Группы, основы и ключевые формы. Нажмите на форму в таблице «Что даёт форма» — откроются примеры с переводом.',
+  topics: VERB_FORM_TOPICS,
   sections: [
     {
       id: 'groups',
@@ -38,7 +41,7 @@ export const VERB_FORMS_CHEAT_SHEET: CheatSheetDoc = {
     {
       id: 'te-godan',
       title: 'て-форма · I группа (う)',
-      lead: 'Запомните «звуковые семьи» окончания словарной формы.',
+      lead: 'Запомните «звуковые семьи» окончания словарной формы. Подробные примеры — в карточке て.',
       headers: ['Окончание', 'て-форма', 'Пример'],
       rows: [
         ['-う / -つ / -る', 'って', '買う→買って、待つ→待って、帰る→帰って'],
@@ -78,6 +81,16 @@ export const VERB_FORMS_CHEAT_SHEET: CheatSheetDoc = {
       title: 'Сводная таблица',
       lead: 'Один глагол из каждой группы — все ключевые формы рядом.',
       headers: ['Форма', '書く (I)', '食べる (II)', 'する', '来る'],
+      topicByCell: {
+        ます: 'masu',
+        て: 'te',
+        た: 'ta',
+        ない: 'nai',
+        なかった: 'nai',
+        たい: 'tai',
+        可能: 'potential',
+        意向: 'volitional',
+      },
       rows: [
         ['словарь', '書く', '食べる', 'する', '来る'],
         ['ます', '書きます', '食べます', 'します', '来ます'],
@@ -93,7 +106,18 @@ export const VERB_FORMS_CHEAT_SHEET: CheatSheetDoc = {
     {
       id: 'uses',
       title: 'Что даёт форма',
+      lead: 'Клик по строке — страница с японскими примерами и русским переводом.',
       headers: ['Форма', 'Типичное использование'],
+      topicByCell: {
+        '〜ます': 'masu',
+        '〜ました': 'masu',
+        'て-форма': 'te',
+        'た-форма': 'ta',
+        ない: 'nai',
+        たい: 'tai',
+        可能形: 'potential',
+        意向形: 'volitional',
+      },
       rows: [
         ['〜ます', 'вежливое настоящее / будущее'],
         ['〜ました', 'вежливое прошедшее'],

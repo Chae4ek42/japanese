@@ -3,7 +3,7 @@ import type { KanjiWord } from '../../shared/lib/types'
 import { speakJapanese } from '../../shared/lib/speech'
 import { HighlightedReading } from '../kanji/HighlightedReading'
 import { isCustomWordId } from './customWords'
-import { wordReadings, wordVariantIds } from './mergeHomographs'
+import { preferLexicalMeanings, wordReadings, wordVariantIds } from './mergeHomographs'
 
 const NARROW_QUERY = '(max-width: 900px)'
 
@@ -75,7 +75,7 @@ export function DictionaryWordList({
     const expanded = expandedId === wordId
     const primary = readings[0]
     const meaningLine =
-      (primary?.meanings.length ? primary.meanings : word.meanings)
+      preferLexicalMeanings(primary?.meanings.length ? primary.meanings : word.meanings)
         .slice(0, 2)
         .map((meaning) => meaning.replace(/^\d+\)\s*/, ''))
         .join(' · ') || '—'

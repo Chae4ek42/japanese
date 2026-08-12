@@ -40,6 +40,7 @@ const ROUTES = [
     },
   },
   { name: 'theory', open: async (page) => page.getByTestId('nav-theory').click() },
+  { name: 'reader', open: async (page) => page.getByTestId('nav-reader').click() },
 ]
 
 async function measureOverflow(page) {

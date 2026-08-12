@@ -156,15 +156,40 @@ export function searchWords(query: string, { limit = 80 }: { limit?: number } = 
   const normalized = query.trim().toLowerCase()
   if (!normalized) return []
 
-  const results: KanjiWord[] = []
+  const scored: Array<{ word: KanjiWord; score: number }> = []
   for (const word of KANJI_WORDS) {
-    const haystack = [word.writing, word.kana, word.romaji, ...(word.meanings ?? [])].join(' ').toLowerCase()
-    if (haystack.includes(normalized)) {
-      results.push(word)
-      if (results.length >= limit) break
-    }
+    const score = scoreWordSearchMatch(word, normalized, query.trim())
+    if (score <= 0) continue
+    scored.push({ word, score })
   }
-  return results
+
+  scored.sort((left, right) => {
+    if (right.score !== left.score) return right.score - left.score
+    const popularity = wordPopularityScore(right.word) - wordPopularityScore(left.word)
+    if (popularity) return popularity
+    return left.word.writing.localeCompare(right.word.writing, 'ja')
+  })
+
+  return scored.slice(0, Math.max(0, limit)).map((entry) => entry.word)
+}
+
+/** Higher is better. Exact writing/kana/romaji beat substring noise (sora → 恐らく). */
+function scoreWordSearchMatch(word: KanjiWord, normalized: string, rawQuery: string): number {
+  const writing = word.writing ?? ''
+  const kana = (word.kana ?? '').trim()
+  const romaji = (word.romaji ?? '').trim().toLowerCase()
+  const meanings = (word.meanings ?? []).join(' ').toLowerCase()
+
+  if (writing === rawQuery) return 1_000
+  if (kana === rawQuery || kana === normalized) return 950
+  if (romaji === normalized) return 900
+  if (kana.startsWith(rawQuery) || kana.startsWith(normalized)) return 700
+  if (romaji.startsWith(normalized)) return 650
+  if (writing.includes(rawQuery)) return 500
+  if (kana.includes(rawQuery) || kana.includes(normalized)) return 400
+  if (romaji.includes(normalized)) return 350
+  if (meanings.includes(normalized)) return 200
+  return 0
 }
 
 export function getTopWordsForKanji(

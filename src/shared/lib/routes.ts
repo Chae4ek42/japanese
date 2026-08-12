@@ -8,6 +8,7 @@ export const PATHS = {
   kanji: '/kanji',
   numbers: '/numbers',
   particles: '/particles',
+  reader: '/reader',
   vocab: '/vocab',
   mine: '/mine',
   /** @deprecated Use PATHS.mine — kept for redirects/bookmarks. */
@@ -26,6 +27,7 @@ const PAGE_TITLES: Record<AppPage, string> = {
   kanji: 'Кандзи — JP тренажёры',
   numbers: 'Числа — JP тренажёры',
   particles: 'Частицы — JP тренажёры',
+  reader: 'Текст — JP тренажёры',
   vocab: 'Словарь — JP тренажёры',
   mine: 'Мои слова — JP тренажёры',
   train: 'Слова — JP тренажёры',
@@ -55,6 +57,8 @@ export function parsePath(pathname: string): AppRoute {
       return { page: 'numbers' }
     case PATHS.particles:
       return { page: 'particles' }
+    case PATHS.reader:
+      return { page: 'reader' }
     case PATHS.vocab:
       return { page: 'vocab' }
     case PATHS.vocabMine:
@@ -90,6 +94,7 @@ export function isKnownPath(pathname: string): boolean {
     path === PATHS.kanji ||
     path === PATHS.numbers ||
     path === PATHS.particles ||
+    path === PATHS.reader ||
     path === PATHS.vocab ||
     path === PATHS.mine ||
     path === PATHS.vocabMine ||

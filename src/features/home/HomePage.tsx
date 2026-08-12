@@ -6,6 +6,7 @@ export interface HomePageProps {
   onOpenKanji: () => void
   onOpenNumbers: () => void
   onOpenParticles: () => void
+  onOpenReader: () => void
   onOpenVocab: () => void
   onOpenMine: () => void
   onOpenVocabTrain: () => void
@@ -45,6 +46,14 @@ const ENTRIES = [
     title: 'Частицы',
     action: 'Начать',
     testId: 'open-particles',
+  },
+  {
+    id: 'reader',
+    href: PATHS.reader,
+    symbol: '文',
+    title: 'Текст',
+    action: 'Открыть',
+    testId: 'open-reader',
   },
   {
     id: 'vocab-train',
@@ -93,6 +102,7 @@ export function HomePage({
   onOpenKanji,
   onOpenNumbers,
   onOpenParticles,
+  onOpenReader,
   onOpenVocab,
   onOpenMine,
   onOpenVocabTrain,
@@ -104,6 +114,7 @@ export function HomePage({
     kanji: onOpenKanji,
     numbers: onOpenNumbers,
     particles: onOpenParticles,
+    reader: onOpenReader,
     'vocab-train': onOpenVocabTrain,
     vocab: onOpenVocab,
     mine: onOpenMine,

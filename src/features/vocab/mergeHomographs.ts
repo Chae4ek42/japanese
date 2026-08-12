@@ -12,6 +12,26 @@ function uniqueStrings(values: string[]): string[] {
   return out
 }
 
+/** Prefer plain glosses over grammar-marked senses (`: {～で} …`). */
+export function preferLexicalMeanings(meanings: string[]): string[] {
+  const plain: string[] = []
+  const marked: string[] = []
+  for (const meaning of meanings) {
+    const trimmed = meaning.trim()
+    if (
+      trimmed.startsWith(':') ||
+      trimmed.startsWith('{') ||
+      trimmed.startsWith('(ср.)') ||
+      trimmed.startsWith('(см.)')
+    ) {
+      marked.push(meaning)
+    } else {
+      plain.push(meaning)
+    }
+  }
+  return plain.length ? [...plain, ...marked] : [...meanings]
+}
+
 export function wordReadings(word: KanjiWord): KanjiWordReading[] {
   if (word.readings?.length) {
     return word.readings.map((reading) => ({
@@ -88,7 +108,9 @@ function mergeReadingGroup(words: KanjiWord[]): KanjiWord {
 
   const readings = [...readingsByKey.values()]
   const variantIds = uniqueStrings(sorted.flatMap((word) => wordVariantIds(word)))
-  const meanings = uniqueStrings(readings.flatMap((reading) => reading.meanings))
+  const meanings = preferLexicalMeanings(
+    uniqueStrings(readings.flatMap((reading) => reading.meanings)),
+  )
   const jlpt = readings.reduce<number | undefined>((best, reading) => {
     if (typeof reading.jlpt !== 'number') return best
     if (typeof best !== 'number') return reading.jlpt
@@ -101,8 +123,11 @@ function mergeReadingGroup(words: KanjiWord[]): KanjiWord {
     id: primary.id ?? first.id,
     kana: readings.map((reading) => reading.kana).filter(Boolean).join(' / ') || primary.kana,
     romaji: readings.map((reading) => reading.romaji).filter(Boolean).join(' / ') || primary.romaji,
-    meanings: meanings.length ? meanings : primary.meanings,
-    readings,
+    meanings: meanings.length ? meanings : preferLexicalMeanings(primary.meanings),
+    readings: readings.map((reading) => ({
+      ...reading,
+      meanings: preferLexicalMeanings(reading.meanings),
+    })),
     variantIds,
     jlpt,
     common: sorted.some((word) => word.common) || undefined,
