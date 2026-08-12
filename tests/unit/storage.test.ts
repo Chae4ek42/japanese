@@ -175,4 +175,15 @@ describe('storage', () => {
     await saveAppState(state, accountId)
     assert.equal(putCount, 1)
   })
+
+  it('pickRicherStateJson выбирает прогресс с большим весом', async () => {
+    const { pickRicherStateJson, estimateStateWeight } = await import('../../src/shared/lib/storage')
+    const empty = JSON.stringify(createDefaultAppState())
+    const richState = createDefaultAppState()
+    richState.vocab.myWords = ['1', '2', '3']
+    const rich = JSON.stringify(richState)
+    assert.ok(estimateStateWeight(rich) > estimateStateWeight(empty))
+    assert.equal(pickRicherStateJson(empty, rich), rich)
+    assert.equal(pickRicherStateJson(rich, empty), rich)
+  })
 })

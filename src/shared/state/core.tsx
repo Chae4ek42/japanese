@@ -32,6 +32,7 @@ import {
   bootstrapSession,
   createDefaultAppState,
   parseStoredState,
+  pickRicherStateJson,
   readLocalDraft,
   SAVE_MIN_INTERVAL_MS,
   saveAppState,
@@ -166,9 +167,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     try {
       const raw = await fetchAccountState(accountId)
       const draft = readLocalDraft(accountId)
-      state = parseStoredState(draft ?? raw)
+      state = parseStoredState(pickRicherStateJson(raw, draft))
     } catch {
-      state = createDefaultAppState()
+      const draft = readLocalDraft(accountId)
+      state = draft ? parseStoredState(draft) : createDefaultAppState()
     }
     setAccounts(nextAccounts)
     setActiveAccountId(accountId)

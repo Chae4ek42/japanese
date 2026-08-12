@@ -67,6 +67,51 @@ export function clearLocalDraft(accountId: string): void {
   }
 }
 
+/** Rough progress score so an empty local draft cannot hide richer server state. */
+export function estimateStateWeight(raw: string | null | undefined): number {
+  if (!raw) return -1
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>
+    const vocab =
+      parsed.vocab && typeof parsed.vocab === 'object'
+        ? (parsed.vocab as Record<string, unknown>)
+        : {}
+    const kana =
+      parsed.kana && typeof parsed.kana === 'object'
+        ? (parsed.kana as Record<string, unknown>)
+        : parsed
+    const kanji =
+      parsed.kanji && typeof parsed.kanji === 'object'
+        ? (parsed.kanji as Record<string, unknown>)
+        : {}
+    const myWords = Array.isArray(vocab.myWords) ? vocab.myWords.length : 0
+    const vocabStats =
+      vocab.stats && typeof vocab.stats === 'object' ? Object.keys(vocab.stats as object).length : 0
+    const vocabMemory =
+      vocab.memory && typeof vocab.memory === 'object'
+        ? Object.keys(vocab.memory as object).length
+        : 0
+    const kanaStats =
+      kana.stats && typeof kana.stats === 'object' ? Object.keys(kana.stats as object).length : 0
+    const learned = Array.isArray(kanji.learned) ? kanji.learned.length : 0
+    return myWords * 20 + vocabStats * 2 + vocabMemory * 2 + kanaStats + learned * 5
+  } catch {
+    return 0
+  }
+}
+
+/** Prefer the JSON blob that carries more learning progress. */
+export function pickRicherStateJson(
+  primary: string | null | undefined,
+  secondary: string | null | undefined,
+): string | null {
+  const a = primary ?? null
+  const b = secondary ?? null
+  if (!a) return b
+  if (!b) return a
+  return estimateStateWeight(a) >= estimateStateWeight(b) ? a : b
+}
+
 /** Parse raw JSON into AppState (used by persistence helpers + tests). */
 export function parseStoredState(
   raw: string | null | undefined,
@@ -95,7 +140,7 @@ export type BootstrapResult =
 
 /**
  * Server multi-account bootstrap. Session in localStorage; accounts/state in D1.
- * Prefers a newer local draft when present (written between rare server syncs).
+ * Picks the richer of server state vs local draft (empty draft must not wipe progress).
  */
 export async function bootstrapSession(): Promise<BootstrapResult> {
   try {
@@ -108,8 +153,13 @@ export async function bootstrapSession(): Promise<BootstrapResult> {
     try {
       const raw = await fetchAccountState(session.accountId)
       const draft = readLocalDraft(session.accountId)
-      const state = parseStoredState(draft ?? raw)
+      const chosen = pickRicherStateJson(raw, draft)
+      const state = parseStoredState(chosen)
       if (raw) lastPushedJson.set(session.accountId, raw)
+      // If draft won, push it soon so server catches up.
+      if (chosen && draft && chosen === draft && draft !== raw) {
+        lastPushedJson.delete(session.accountId)
+      }
       return {
         status: 'ready',
         accountId: session.accountId,

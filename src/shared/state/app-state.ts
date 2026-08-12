@@ -82,9 +82,19 @@ export function normalizeAppState(parsed: unknown): AppState | null {
     return null
   }
 
-  const source = parsed as Record<string, unknown>
+  const source = { ...(parsed as Record<string, unknown>) }
   if (!KNOWN_VERSIONS.includes(source.version as number)) {
-    return null
+    // Backups sometimes omit version; accept shapes that look like app state.
+    const looksLikeState =
+      (source.vocab && typeof source.vocab === 'object') ||
+      (source.kana && typeof source.kana === 'object') ||
+      (source.preferences && typeof source.preferences === 'object') ||
+      (source.stats && typeof source.stats === 'object')
+    if (!looksLikeState) return null
+    source.version = typeof source.version === 'number' ? source.version : 10
+    if (!KNOWN_VERSIONS.includes(source.version as number)) {
+      source.version = 10
+    }
   }
 
   const fallback = createDefaultAppState()

@@ -308,40 +308,98 @@ function parseKvMeta(raw: string | null): AccountsMeta {
   }
 }
 
+/** Prefer the JSON with more learning progress (my words / stats). */
+function estimateStateWeight(raw: string | null | undefined): number {
+  if (!raw) return -1
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>
+    const vocab =
+      parsed.vocab && typeof parsed.vocab === 'object'
+        ? (parsed.vocab as Record<string, unknown>)
+        : {}
+    const kana =
+      parsed.kana && typeof parsed.kana === 'object'
+        ? (parsed.kana as Record<string, unknown>)
+        : parsed
+    const kanji =
+      parsed.kanji && typeof parsed.kanji === 'object'
+        ? (parsed.kanji as Record<string, unknown>)
+        : {}
+    const myWords = Array.isArray(vocab.myWords) ? vocab.myWords.length : 0
+    const vocabStats =
+      vocab.stats && typeof vocab.stats === 'object' ? Object.keys(vocab.stats as object).length : 0
+    const vocabMemory =
+      vocab.memory && typeof vocab.memory === 'object'
+        ? Object.keys(vocab.memory as object).length
+        : 0
+    const kanaStats =
+      kana.stats && typeof kana.stats === 'object' ? Object.keys(kana.stats as object).length : 0
+    const learned = Array.isArray(kanji.learned) ? kanji.learned.length : 0
+    return myWords * 20 + vocabStats * 2 + vocabMemory * 2 + kanaStats + learned * 5
+  } catch {
+    return 0
+  }
+}
+
 /**
- * One-time: copy KV accounts/state into empty D1 (if legacy APP_STATE binding exists).
- * Also handles old single `app-state` key → account «Основной».
+ * Merge KV accounts/state into D1 even if D1 already has newer empty accounts.
+ * Idempotent; marked done in KV as `d1-import-v2`.
  */
 export async function migrateFromKvIfNeeded(
   db: D1Database,
   kv: KVNamespace | undefined,
 ): Promise<void> {
-  const existing = await listAccounts(db)
-  if (existing.length > 0) return
+  if (!kv) return
+  if ((await kv.get('d1-import-v2')) === 'done') return
 
-  if (kv) {
-    const meta = parseKvMeta(await kv.get(META_KEY))
-    if (meta.accounts.length > 0) {
-      for (const account of meta.accounts) {
-        await insertAccount(db, account)
-        const state = await kv.get(`account:${account.id}`)
-        if (state) await putAccountState(db, account.id, state)
-      }
-      return
+  const meta = parseKvMeta(await kv.get(META_KEY))
+  for (const account of meta.accounts) {
+    const existing = await getAccount(db, account.id)
+    if (!existing) {
+      await insertAccount(db, account)
+    } else if (
+      account.passwordSalt &&
+      account.passwordHash &&
+      (!existing.passwordSalt || !existing.passwordHash)
+    ) {
+      existing.passwordSalt = account.passwordSalt
+      existing.passwordHash = account.passwordHash
+      existing.name = account.name || existing.name
+      await updateAccount(db, existing)
     }
 
+    const kvState = await kv.get(`account:${account.id}`)
+    if (!kvState) continue
+    const d1State = await getAccountState(db, account.id)
+    if (!d1State || estimateStateWeight(kvState) > estimateStateWeight(d1State)) {
+      await putAccountState(db, account.id, kvState)
+    }
+  }
+
+  if (meta.accounts.length === 0) {
     const legacy = await kv.get(LEGACY_STATE_KEY)
     if (legacy) {
       try {
         JSON.parse(legacy)
-        const id = newId('acc')
-        await insertAccount(db, { id, name: 'Основной', createdAt: Date.now() })
-        await putAccountState(db, id, legacy)
+        const accounts = await listAccounts(db)
+        if (accounts.length === 0) {
+          const id = newId('acc')
+          await insertAccount(db, { id, name: 'Основной', createdAt: Date.now() })
+          await putAccountState(db, id, legacy)
+        } else {
+          const target = accounts[0]!
+          const d1State = await getAccountState(db, target.id)
+          if (!d1State || estimateStateWeight(legacy) > estimateStateWeight(d1State)) {
+            await putAccountState(db, target.id, legacy)
+          }
+        }
         await kv.delete(LEGACY_STATE_KEY)
-        return
       } catch {
         await kv.delete(LEGACY_STATE_KEY)
       }
     }
   }
+
+  await kv.put('d1-import-v2', 'done')
 }
+

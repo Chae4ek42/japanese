@@ -50,8 +50,21 @@ export function useBackupApp() {
       ) {
         return
       }
-      await saveAppState(next, activeAccountId)
+      // Apply locally first so UI updates even if the server write fails.
       setAppState(next)
+      try {
+        const result = await saveAppState(next, activeAccountId, { force: true })
+        if (result === 'skipped') {
+          window.alert('Данные открыты в приложении, но сессия неактивна — войдите снова, чтобы сохранить на сервер.')
+          return
+        }
+        window.alert('Импорт выполнен.')
+      } catch (error) {
+        console.warn('[backup] import save failed', error)
+        window.alert(
+          'Данные подставлены в приложение, но сервер не принял сохранение. Не закрывайте вкладку и попробуйте Экспорт, затем Импорт ещё раз позже.',
+        )
+      }
     },
     [activeAccountId, setAppState],
   )
