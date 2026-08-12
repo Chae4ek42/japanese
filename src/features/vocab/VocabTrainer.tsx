@@ -15,7 +15,6 @@ import type {
   VocabTrainingSet,
 } from '../../shared/lib/types'
 import {
-  MAIN_TRAINING_SET_ID,
   getTrainingSet,
   resolveActiveTrainingSetId,
 } from '../../shared/lib/trainingSets'
