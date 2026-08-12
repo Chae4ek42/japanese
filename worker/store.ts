@@ -40,63 +40,42 @@ interface SessionRow {
 
 let schemaReady: Promise<void> | null = null
 
-/**
- * Single-statement DDL only.
- * Multiline `db.exec()` often fails on D1 with incomplete input / table create errors.
- */
+/** Built with join(' ') so formatters cannot put newlines inside DDL. */
 const SCHEMA_STATEMENTS = [
-  `CREATE TABLE IF NOT EXISTS accounts (id TEXT PRIMARY KEY NOT NULL, name TEXT NOT NULL, created_at INTEGER NOT NULL, password_salt TEXT, password_hash TEXT)`,
-  `CREATE TABLE IF NOT EXISTS account_state (account_id TEXT PRIMARY KEY NOT NULL, body TEXT NOT NULL, updated_at INTEGER NOT NULL)`,
-  `CREATE TABLE IF NOT EXISTS sessions (token TEXT PRIMARY KEY NOT NULL, account_id TEXT NOT NULL, expires_at INTEGER NOT NULL)`,
-  `CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions (expires_at)`,
-  `CREATE INDEX IF NOT EXISTS idx_sessions_account ON sessions (account_id)`,
-] as const
+  [
+    'CREATE TABLE IF NOT EXISTS accounts (',
+    'id TEXT PRIMARY KEY NOT NULL,',
+    'name TEXT NOT NULL,',
+    'created_at INTEGER NOT NULL,',
+    'password_salt TEXT,',
+    'password_hash TEXT',
+    ')',
+  ].join(' '),
+  [
+    'CREATE TABLE IF NOT EXISTS account_state (',
+    'account_id TEXT PRIMARY KEY NOT NULL,',
+    'body TEXT NOT NULL,',
+    'updated_at INTEGER NOT NULL',
+    ')',
+  ].join(' '),
+  [
+    'CREATE TABLE IF NOT EXISTS sessions (',
+    'token TEXT PRIMARY KEY NOT NULL,',
+    'account_id TEXT NOT NULL,',
+    'expires_at INTEGER NOT NULL',
+    ')',
+  ].join(' '),
+  'CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions (expires_at)',
+  'CREATE INDEX IF NOT EXISTS idx_sessions_account ON sessions (account_id)',
+]
 
-export function sanitizeName(raw: string, fallback = 'Аккаунт'): string {
-  const name = raw.trim().slice(0, 32)
-  return name || fallback
-}
-
-export function defaultAccountName(accounts: StoredAccount[], base = 'Аккаунт'): string {
-  const used = new Set(accounts.map((item) => item.name))
-  if (!used.has(base)) return base
-  let n = 2
-  while (used.has(`${base} ${n}`)) n += 1
-  return `${base} ${n}`
-}
-
-export function publicAccount(account: StoredAccount) {
-  return {
-    id: account.id,
-    name: account.name,
-    createdAt: account.createdAt,
-    hasPassword: accountHasPassword(account),
-  }
-}
-
-function rowToAccount(row: AccountRow): StoredAccount {
-  const account: StoredAccount = {
-    id: row.id,
-    name: sanitizeName(row.name),
-    createdAt:
-      typeof row.created_at === 'number' && Number.isFinite(row.created_at)
-        ? row.created_at
-        : Date.now(),
-  }
-  if (row.password_salt && row.password_hash) {
-    account.passwordSalt = row.password_salt
-    account.passwordHash = row.password_hash
-  }
-  return account
-}
-
-/** Idempotent DDL so first request works even before `wrangler d1 migrations apply`. */
+/** Never use db.exec() — it splits SQL on newlines and breaks CREATE TABLE. */
 export async function ensureSchema(db: D1Database): Promise<void> {
   if (!schemaReady) {
     schemaReady = (async () => {
       const existing = await db
         .prepare(
-          `SELECT 1 AS ok FROM sqlite_master WHERE type = 'table' AND name = 'accounts' LIMIT 1`,
+          "SELECT 1 AS ok FROM sqlite_master WHERE type = 'table' AND name = 'accounts' LIMIT 1",
         )
         .first<{ ok: number }>()
       if (existing) return

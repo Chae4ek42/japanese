@@ -92,6 +92,13 @@ async function handleApi(request: Request, env: Env, url: URL): Promise<Response
   } catch (error) {
     console.error('[api]', error)
     const message = error instanceof Error ? error.message : 'Ошибка сервера'
+    if (message.includes('D1_EXEC_ERROR') || message.includes('incomplete input')) {
+      return errorJson(
+        'Схема D1 не создалась (устаревший worker с db.exec). Дождитесь деплоя свежего main или выполните CREATE TABLE однострочными SQL в консоли D1.',
+        500,
+        'd1_schema',
+      )
+    }
     return errorJson(message, 500)
   }
 }
