@@ -4,6 +4,7 @@ import {
   CORE_PARTICLES,
   PARTICLE_CLOZE_CARDS,
   buildParticlePool,
+  countCardsByParticle,
   formatParticlePrompt,
   getParticleCard,
   particleChoiceOptions,
@@ -28,9 +29,13 @@ describe('particles cloze bank', () => {
       assert.ok((CORE_PARTICLES as readonly string[]).includes(card.answer), card.id)
       assert.equal(getParticleCard(card.id)?.id, card.id)
     }
-    assert.ok(PARTICLE_CLOZE_CARDS.length >= 400, `bank size ${PARTICLE_CLOZE_CARDS.length}`)
-    assert.equal(PARTICLE_CLOZE_CARDS.length, 432)
+    assert.ok(PARTICLE_CLOZE_CARDS.length >= 800, `bank size ${PARTICLE_CLOZE_CARDS.length}`)
+    assert.equal(PARTICLE_CLOZE_CARDS.length, 864)
     assert.equal(buildParticlePool().length, PARTICLE_CLOZE_CARDS.length)
+    const byParticle = countCardsByParticle(PARTICLE_CLOZE_CARDS)
+    for (const particle of CORE_PARTICLES) {
+      assert.equal(byParticle[particle], 72, particle)
+    }
   })
 
   it('фильтрует набор по фокусу', () => {

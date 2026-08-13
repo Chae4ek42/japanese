@@ -1,6 +1,7 @@
 import type { Hyperparams, ParticlesFocus, ParticlesPickMode, StatsRecord } from '../shared/lib/types'
 import { DEFAULT_HYPERPARAMS, createStatsRecord } from '../shared/lib/trainer'
 import { PARTICLE_CLOZE_MORE } from './particles-cloze-more'
+import { PARTICLE_CLOZE_BATCH3 } from './particles-cloze-batch3'
 
 /**
  * Twelve core beginner particles:
@@ -333,10 +334,11 @@ const PARTICLE_CLOZE_BASE: ParticleClozeCard[] = [
   { id: 'p-ya-18', prompt: '自転車___車で行きます。', answer: 'や', glossRu: 'Езжу на велосипеде, машине и т.п.', kana: 'じてんしゃ___くるまでいきます。', romaji: 'jitensha ___ kuruma de ikimasu' },
 ]
 
-/** Full cloze bank: batch 1 + batch 2 (36 per particle). */
+/** Full cloze bank: batches 1–3 (72 per particle). */
 export const PARTICLE_CLOZE_CARDS: ParticleClozeCard[] = [
   ...PARTICLE_CLOZE_BASE,
   ...(PARTICLE_CLOZE_MORE as ParticleClozeCard[]),
+  ...(PARTICLE_CLOZE_BATCH3 as ParticleClozeCard[]),
 ]
 
 const cardById = new Map(PARTICLE_CLOZE_CARDS.map((card) => [card.id, card]))
