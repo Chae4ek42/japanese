@@ -1,6 +1,6 @@
 import type { AppPage } from './types'
 
-export type NavGroup = 'primary' | 'more' | 'none'
+export type NavGroup = 'primary' | 'none'
 export type HomeGroup = 'practice' | 'reference'
 
 export interface HomeEntryMeta {
@@ -174,7 +174,7 @@ export const PAGE_META: PageMeta[] = [
     documentTitle: 'Словарь — JP тренажёры',
     navLabel: 'Словарь',
     navTestId: 'nav-vocab',
-    navGroup: 'more',
+    navGroup: 'primary',
     home: {
       symbol: '語',
       title: 'Словарь',
@@ -189,7 +189,7 @@ export const PAGE_META: PageMeta[] = [
     documentTitle: 'Мои слова — JP тренажёры',
     navLabel: 'Мои слова',
     navTestId: 'nav-mine',
-    navGroup: 'more',
+    navGroup: 'primary',
     home: {
       symbol: '私',
       title: 'Мои слова',
@@ -204,7 +204,7 @@ export const PAGE_META: PageMeta[] = [
     documentTitle: 'Теория — JP тренажёры',
     navLabel: 'Теория',
     navTestId: 'nav-theory',
-    navGroup: 'more',
+    navGroup: 'primary',
     home: {
       symbol: '理',
       title: 'Теория',
@@ -219,7 +219,7 @@ export const PAGE_META: PageMeta[] = [
     documentTitle: 'Аналитика — JP тренажёры',
     navLabel: 'Аналитика',
     navTestId: 'nav-analytics',
-    navGroup: 'more',
+    navGroup: 'primary',
     home: {
       symbol: '統',
       title: 'Аналитика',

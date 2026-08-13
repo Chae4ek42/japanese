@@ -544,33 +544,6 @@
   color: #fff;
 }
 
-.site-nav-more {
-  position: relative;
-}
-
-.site-nav-more > .site-nav-link {
-  width: 100%;
-}
-
-.site-nav-more-panel {
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  z-index: 40;
-  display: grid;
-  gap: 2px;
-  min-width: 160px;
-  padding: 6px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: #fff;
-}
-
-.site-nav-more-panel .site-nav-link {
-  width: 100%;
-  justify-content: flex-start;
-}
-
 .site-reset {
   flex-shrink: 0;
   white-space: nowrap;

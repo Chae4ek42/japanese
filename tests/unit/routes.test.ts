@@ -69,7 +69,10 @@ describe('routes', () => {
   it('реестр страниц покрывает все пути навбара', async () => {
     const { PAGE_META, navItems, homeEntries } = await import('../../src/shared/lib/pages.ts')
     assert.equal(navItems('primary').length > 0, true)
-    assert.equal(navItems('more').some((page) => page.id === 'vocab'), true)
+    assert.equal(navItems('primary').some((page) => page.id === 'vocab'), true)
+    assert.equal(navItems('primary').some((page) => page.id === 'mine'), true)
+    assert.equal(navItems('primary').some((page) => page.id === 'theory'), true)
+    assert.equal(navItems('primary').some((page) => page.id === 'analytics'), true)
     assert.equal(homeEntries('practice').some((page) => page.home.testId === 'open-kana'), true)
     assert.equal(homeEntries('practice').some((page) => page.id === 'verbs'), true)
     assert.equal(navItems('primary').some((page) => page.id === 'verbs'), true)

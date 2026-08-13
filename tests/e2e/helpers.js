@@ -80,10 +80,6 @@ export async function openFreshApp(page) {
 }
 
 export async function clickNav(page, testId) {
-  const link = page.getByTestId(testId)
-  if (!(await link.isVisible())) {
-    await page.getByTestId('nav-more').click()
-  }
   await page.getByTestId(testId).click()
 }
 
