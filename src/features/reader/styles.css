@@ -263,7 +263,7 @@
 
 .reader-translate-button,
 .reader-copy-button,
-.reader-train-button {
+.reader-romaji-button {
   font-size: 0.78rem;
   color: var(--reader-accent);
   opacity: 0.75;
@@ -273,8 +273,8 @@
 .reader-sentence:hover .reader-translate-button,
 .reader-sentence.is-active .reader-copy-button,
 .reader-sentence:hover .reader-copy-button,
-.reader-sentence.is-active .reader-train-button,
-.reader-sentence:hover .reader-train-button {
+.reader-sentence.is-active .reader-romaji-button,
+.reader-sentence:hover .reader-romaji-button {
   opacity: 1;
 }
 
@@ -565,7 +565,7 @@
 
   .reader-translate-button,
   .reader-copy-button,
-  .reader-train-button {
+  .reader-romaji-button {
     opacity: 1;
     min-height: 36px;
   }

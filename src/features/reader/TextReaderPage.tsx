@@ -66,6 +66,7 @@ export function TextReaderPage() {
   const [cheatSheet, setCheatSheet] = useState<'particles' | 'verbs' | null>(null)
   const [cheatTopicId, setCheatTopicId] = useState<string | null>(null)
   const [translations, setTranslations] = useState<Record<string, TranslateState>>({})
+  const [shownRomaji, setShownRomaji] = useState<Record<string, boolean>>({})
   const [copiedSentenceId, setCopiedSentenceId] = useState<string | null>(null)
   const analyzeSeqRef = useRef(0)
   const selectedIdRef = useRef<string | null>(null)
@@ -130,6 +131,7 @@ export function TextReaderPage() {
       setSelectedId(null)
       setActiveSentenceId(null)
       setTranslations({})
+      setShownRomaji({})
       setError('')
       setStatus('idle')
       return
@@ -210,13 +212,9 @@ export function TextReaderPage() {
     vocab.addTrainingWords(primaryVariantIds(missingTraining))
   }
 
-  function addSentenceToTraining(sentence: ReaderSentence) {
-    if (!vocab) return
-    const missing = contentReaderTokens(sentence.tokens).filter(
-      (token) => !tokenInWordSet(token, trainingWordSet),
-    )
-    if (!missing.length) return
-    vocab.addTrainingWords(primaryVariantIds(missing))
+  function toggleSentenceRomaji(sentence: ReaderSentence) {
+    setActiveSentenceId(sentence.id)
+    setShownRomaji((prev) => ({ ...prev, [sentence.id]: !prev[sentence.id] }))
   }
 
   async function translateSentence(sentence: ReaderSentence) {
@@ -311,8 +309,8 @@ export function TextReaderPage() {
           <p className="reader-kicker">Чтение</p>
           <h2 className="reader-title">Текст</h2>
           <p className="reader-lead">
-            Клик по слову — значение, форма и «+ В набор»; под предложением — ромадзи.
-            «Перевести» / «Копировать» — предложение. Тексты можно сохранить и открыть снова.
+            Клик по слову — значение, форма и «+ В набор».
+            «Ромадзи» / «Перевести» / «Копировать» — предложение. Тексты можно сохранить и открыть снова.
           </p>
           <CheatSheetActions>
             <CheatSheetTrigger
@@ -348,9 +346,7 @@ export function TextReaderPage() {
               const translation = translations[sentence.id]
               const isActive = activeSentenceId === sentence.id
               const romaji = sentenceRomaji(sentence.tokens)
-              const sentenceMissingTraining = contentReaderTokens(sentence.tokens).some(
-                (token) => !tokenInWordSet(token, trainingWordSet),
-              )
+              const romajiOpen = Boolean(shownRomaji[sentence.id] && romaji)
               return (
                 <article
                   key={sentence.id}
@@ -372,12 +368,17 @@ export function TextReaderPage() {
                       />
                     ))}
                   </p>
-                  {romaji ? (
-                    <p className="reader-sentence-romaji" data-testid="reader-sentence-romaji">
-                      {romaji}
-                    </p>
-                  ) : null}
                   <div className="reader-sentence-tools">
+                    {romaji ? (
+                      <button
+                        type="button"
+                        className="text-button reader-romaji-button"
+                        data-testid={`reader-romaji-${sentence.id}`}
+                        onClick={() => toggleSentenceRomaji(sentence)}
+                      >
+                        {romajiOpen ? 'Скрыть ромадзи' : 'Ромадзи'}
+                      </button>
+                    ) : null}
                     <button
                       type="button"
                       className="text-button reader-translate-button"
@@ -399,17 +400,12 @@ export function TextReaderPage() {
                     >
                       {copiedSentenceId === sentence.id ? 'Скопировано' : 'Копировать'}
                     </button>
-                    {sentenceMissingTraining ? (
-                      <button
-                        type="button"
-                        className="text-button reader-train-button"
-                        data-testid={`reader-sentence-train-${sentence.id}`}
-                        onClick={() => addSentenceToTraining(sentence)}
-                      >
-                        + В набор
-                      </button>
-                    ) : null}
                   </div>
+                  {romajiOpen ? (
+                    <p className="reader-sentence-romaji" data-testid="reader-sentence-romaji">
+                      {romaji}
+                    </p>
+                  ) : null}
                   {translation?.status === 'ready' && translation.text ? (
                     <p className="reader-sentence-translation" data-testid="reader-translation">
                       {translation.text}
