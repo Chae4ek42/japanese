@@ -64,6 +64,8 @@ export function ParticlesTrainer() {
       trainingWordIds={vocab?.trainingWordIds ?? []}
       onToggleMyWord={vocab?.toggleMyWord}
       onAddMyWords={vocab?.addMyWords}
+      onAddTrainingWords={vocab?.addTrainingWords}
+      onRemoveTrainingWords={vocab?.removeTrainingWords}
       onToggleTrainingWord={vocab?.toggleTrainingWord}
     />
   )
@@ -87,6 +89,8 @@ interface ParticlesTrainerViewProps {
   trainingWordIds: string[]
   onToggleMyWord?: (wordId: string) => void
   onAddMyWords?: (wordIds: string[]) => void
+  onAddTrainingWords?: (wordIds: string[]) => void
+  onRemoveTrainingWords?: (wordIds: string[]) => void
   onToggleTrainingWord?: (wordId: string) => void
 }
 
@@ -144,23 +148,33 @@ function ParticleClozeLine({
 function ParticleSentenceWords({
   surface,
   myWordIds,
+  trainingWordIds,
   onToggleMyWord,
   onAddMyWords,
+  onAddTrainingWords,
+  onRemoveTrainingWords,
 }: {
   surface: string
   myWordIds: Set<string>
+  trainingWordIds: Set<string>
   onToggleMyWord?: (wordId: string) => void
   onAddMyWords?: (wordIds: string[]) => void
+  onAddTrainingWords?: (wordIds: string[]) => void
+  onRemoveTrainingWords?: (wordIds: string[]) => void
 }) {
   const words = useMemo(() => contentTokens(tokenizeJapanese(surface)), [surface])
-  if (!words.length || (!onToggleMyWord && !onAddMyWords)) return null
+  if (!words.length || (!onToggleMyWord && !onAddMyWords && !onAddTrainingWords)) return null
 
-  const missingIds = words.flatMap((token) => {
+  const missingMineIds = words.flatMap((token) => {
     if (isTokenInMyWords(token, myWordIds)) return []
     return tokenWordIds(token)
   })
+  const missingTrainingIds = words.flatMap((token) => {
+    if (isTokenInMyWords(token, trainingWordIds)) return []
+    return tokenWordIds(token)
+  })
 
-  function toggleToken(token: (typeof words)[number]) {
+  function toggleMine(token: (typeof words)[number]) {
     const ids = tokenWordIds(token)
     const primary = ids[0]
     if (!primary) return
@@ -176,41 +190,83 @@ function ParticleSentenceWords({
     onToggleMyWord?.(primary)
   }
 
+  function toggleTraining(token: (typeof words)[number]) {
+    const ids = tokenWordIds(token)
+    if (!ids.length) return
+    if (isTokenInMyWords(token, trainingWordIds)) {
+      onRemoveTrainingWords?.(ids)
+      return
+    }
+    onAddTrainingWords?.(ids)
+  }
+
   return (
     <div className="particles-words" data-testid="particles-sentence-words">
       <div className="particles-words-head">
         <span className="particles-words-label">Слова предложения</span>
-        {missingIds.length && onAddMyWords ? (
-          <button
-            type="button"
-            className="text-button particles-words-add-all"
-            data-testid="particles-add-all-words"
-            onClick={() => onAddMyWords(missingIds)}
-          >
-            + Все в мои
-          </button>
-        ) : null}
+        <span className="particles-words-head-actions">
+          {missingMineIds.length && onAddMyWords ? (
+            <button
+              type="button"
+              className="text-button particles-words-add-all"
+              data-testid="particles-add-all-words"
+              onClick={() => onAddMyWords(missingMineIds)}
+            >
+              + Все в мои
+            </button>
+          ) : null}
+          {missingTrainingIds.length && onAddTrainingWords ? (
+            <button
+              type="button"
+              className="text-button particles-words-add-all"
+              data-testid="particles-add-all-training"
+              onClick={() => onAddTrainingWords(missingTrainingIds)}
+            >
+              + Все в набор
+            </button>
+          ) : null}
+        </span>
       </div>
       <div className="particles-words-chips" role="list">
         {words.map((token, index) => {
           const ids = tokenWordIds(token)
           const primary = ids[0] ?? `${token.surface}-${index}`
           const inMine = isTokenInMyWords(token, myWordIds)
+          const inTraining = isTokenInMyWords(token, trainingWordIds)
           const writing = token.word?.writing ?? token.surface
           const meaning = token.word?.meanings?.[0]
+          const chipClass = [
+            'particles-word-chip',
+            inMine ? 'is-mine' : '',
+            inTraining ? 'is-training' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')
           return (
-            <button
+            <div
               key={`${primary}-${index}`}
-              type="button"
               role="listitem"
-              className={inMine ? 'particles-word-chip is-mine' : 'particles-word-chip'}
+              className={chipClass}
               data-testid={`particles-word-chip-${writing}`}
               title={meaning ? `${writing} — ${meaning}` : writing}
-              onClick={() => toggleToken(token)}
             >
               <span className="particles-word-chip-writing">{writing}</span>
-              <span className="particles-word-chip-action">{inMine ? 'В моих' : '+ В мои'}</span>
-            </button>
+              <span className="particles-word-chip-actions">
+                <button type="button" className="text-button" onClick={() => toggleMine(token)}>
+                  {inMine ? 'В моих' : '+ В мои'}
+                </button>
+                {onAddTrainingWords ? (
+                  <button
+                    type="button"
+                    className="text-button"
+                    data-testid={`particles-word-train-${writing}`}
+                    onClick={() => toggleTraining(token)}
+                  >
+                    {inTraining ? 'В наборе' : '+ В набор'}
+                  </button>
+                ) : null}
+              </span>
+            </div>
           )
         })}
       </div>
@@ -226,6 +282,8 @@ function ParticlesTrainerView({
   trainingWordIds,
   onToggleMyWord,
   onAddMyWords,
+  onAddTrainingWords,
+  onRemoveTrainingWords,
   onToggleTrainingWord,
 }: ParticlesTrainerViewProps) {
   const pickModeOptions = [
@@ -243,6 +301,7 @@ function ParticlesTrainerView({
   const focus = preferences.focus ?? 'all'
   const mineOnly = preferences.mineOnly === true
   const myWordSet = useMemo(() => new Set(myWords), [myWords])
+  const trainingWordSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
   const {
     view,
     setSession,
@@ -759,9 +818,6 @@ function ParticlesTrainerView({
                       blankClassName="is-romaji"
                       testId="particle-romaji"
                     />
-                    <p className="particles-gloss" data-testid="particles-gloss">
-                      {activeCard.glossRu}
-                    </p>
                   </>
                 ) : null}
               </div>
@@ -782,11 +838,17 @@ function ParticlesTrainerView({
                   </button>
                 </div>
               ) : null}
+              <p className="particles-gloss" data-testid="particles-gloss">
+                {activeCard.glossRu}
+              </p>
               <ParticleSentenceWords
                 surface={activeSurface}
                 myWordIds={myWordSet}
+                trainingWordIds={trainingWordSet}
                 onToggleMyWord={onToggleMyWord}
                 onAddMyWords={onAddMyWords}
+                onAddTrainingWords={onAddTrainingWords}
+                onRemoveTrainingWords={onRemoveTrainingWords}
               />
             </div>
 
@@ -810,8 +872,8 @@ function ParticlesTrainerView({
               <p className={`particles-feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>
                 {feedback.text ||
                   (isMobile
-                    ? 'Выберите частицу · кнопка «Подсказка» — чтение, перевод и ответ'
-                    : 'Выберите частицу · Space — чтение, перевод и ответ · колёсико — карточка знака')}
+                    ? 'Выберите частицу · кнопка «Подсказка» — чтение и ответ'
+                    : 'Выберите частицу · Space — чтение и ответ · колёсико — карточка знака')}
               </p>
               <div className="particles-footer-actions">
                 <CheatSheetTrigger
@@ -841,7 +903,7 @@ function ParticlesTrainerView({
               <ShortcutNote
                 keyboard={
                   <>
-                    <kbd>Space</kbd> — чтение, перевод и ответ · <kbd>←</kbd>/<kbd>→</kbd> — назад/дальше
+                    <kbd>Space</kbd> — чтение и ответ · <kbd>←</kbd>/<kbd>→</kbd> — назад/дальше
                   </>
                 }
                 swipe={<>Свайп ←/→ — назад/дальше · кнопка «Подсказка»</>}

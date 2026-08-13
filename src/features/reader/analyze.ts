@@ -75,14 +75,11 @@ function lookupLemma(lemma: string, readingKatakana?: string): KanjiWord[] {
     return pickBestWord(writingHits)
   }
 
-  if (readingHiragana) {
-    const kanaHits = getWordsByKana(readingHiragana)
-    if (kanaHits.length) return pickBestWord(kanaHits)
-  }
-
-  const lemmaKana = toHiragana(lemma)
-  if (lemmaKana && lemmaKana !== lemma) {
-    const kanaHits = getWordsByKana(lemmaKana)
+  const kanaKeys = [readingHiragana, lemma, toHiragana(lemma)].filter(
+    (key, index, all) => Boolean(key) && all.indexOf(key) === index,
+  )
+  for (const key of kanaKeys) {
+    const kanaHits = getWordsByKana(key)
     if (kanaHits.length) return pickBestWord(kanaHits)
   }
   return []

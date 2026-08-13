@@ -33,6 +33,14 @@ describe('jp-tokenize', () => {
     )
   })
 
+  it('узнаёт слова на кане и катакане', () => {
+    const content = contentTokens(tokenizeJapanese('コーヒーは好きです。パンもください。'))
+    const writings = content.map((token) => token.word?.writing)
+    assert.ok(writings.includes('コーヒー'), writings.join(','))
+    assert.ok(writings.includes('好き') || writings.includes('すき'), writings.join(','))
+    assert.ok(writings.includes('パン'), writings.join(','))
+  })
+
   it('sentenceKnownByMine требует все знаменательные слова из моих', () => {
     const surface = '私は学生です。'
     const content = contentTokens(tokenizeJapanese(surface))

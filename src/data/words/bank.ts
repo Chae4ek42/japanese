@@ -1,6 +1,6 @@
 import type { KanjiBankMeta, KanjiComponent, KanjiInfo, KanjiWord } from '../../shared/lib/types'
 import { isColloquialWord } from '../../shared/lib/colloquial'
-import { isKanjiChar } from '../../shared/lib/kana'
+import { isKanjiChar, toHiragana } from '../../shared/lib/kana'
 import kanjiList from './kanji-list.json' with { type: 'json' }
 import words from './words.json' with { type: 'json' }
 import wordsByKanji from './words-by-kanji.json' with { type: 'json' }
@@ -44,19 +44,29 @@ const wordsByKanjiMap = wordsByKanji as Record<string, number[]>
 const wordById = new Map<string, KanjiWord>()
 const wordsByWriting = new Map<string, KanjiWord[]>()
 const wordsByKana = new Map<string, KanjiWord[]>()
+
+function pushWordIndex(map: Map<string, KanjiWord[]>, key: string, word: KanjiWord) {
+  const trimmed = key.trim()
+  if (!trimmed) return
+  const list = map.get(trimmed)
+  if (!list) {
+    map.set(trimmed, [word])
+    return
+  }
+  if (!list.includes(word)) list.push(word)
+}
+
 for (const word of KANJI_WORDS) {
   if (word.id) {
     wordById.set(word.id, word)
   }
-  const writingList = wordsByWriting.get(word.writing)
-  if (writingList) writingList.push(word)
-  else wordsByWriting.set(word.writing, [word])
+  pushWordIndex(wordsByWriting, word.writing, word)
 
-  const kanaKey = word.kana?.trim()
+  const kanaKey = word.kana?.trim() ?? ''
   if (kanaKey) {
-    const kanaList = wordsByKana.get(kanaKey)
-    if (kanaList) kanaList.push(word)
-    else wordsByKana.set(kanaKey, [word])
+    pushWordIndex(wordsByKana, kanaKey, word)
+    const kanaHiragana = toHiragana(kanaKey)
+    if (kanaHiragana !== kanaKey) pushWordIndex(wordsByKana, kanaHiragana, word)
   }
 }
 
@@ -149,7 +159,13 @@ export function getWordsByWriting(writing: string | null | undefined): KanjiWord
 /** Exact kana reading lookup (JMDict often stores colloquial forms as kana of a kanji writing). */
 export function getWordsByKana(kana: string | null | undefined): KanjiWord[] {
   if (!kana) return []
-  return wordsByKana.get(kana.trim()) ?? []
+  const key = kana.trim()
+  if (!key) return []
+  const direct = wordsByKana.get(key)
+  if (direct?.length) return direct
+  const hiragana = toHiragana(key)
+  if (hiragana !== key) return wordsByKana.get(hiragana) ?? []
+  return []
 }
 
 export function getWordsByIds(ids: string[]): KanjiWord[] {

@@ -6,6 +6,7 @@ import {
   wordPopularityScore,
 } from '../../data/words/bank'
 import { CORE_PARTICLES } from '../../data/particles'
+import { toHiragana } from './kana'
 
 const PUNCT_RE = /[。、！？!?…・「」『』（）()\[\]【】\s]/
 const MAX_SURFACE_LEN = (() => {
@@ -167,6 +168,11 @@ function lookupSurface(surface: string, remainder = ''): KanjiWord | null {
 
   const byKana = getWordsByKana(surface)
   if (byKana.length) return pickBestWord(byKana)
+  const hiragana = toHiragana(surface)
+  if (hiragana && hiragana !== surface) {
+    const byHiragana = getWordsByKana(hiragana)
+    if (byHiragana.length) return pickBestWord(byHiragana)
+  }
   return null
 }
 
