@@ -258,6 +258,7 @@ function ParticlesTrainerView({
     beginPractice,
     endPractice,
     recordAnswered,
+    patchRound,
     sessionAccuracy,
   } = usePracticeSession()
   const { recordAnswer } = useAnalyticsState()
@@ -302,6 +303,8 @@ function ParticlesTrainerView({
     : null
 
   const activeSurface = activeCard ? particleCardSurface(activeCard) : ''
+  const revealedParticle =
+    filledParticle ?? (showTranscript && activeCard ? activeCard.answer : null)
 
   const practiceRef = useRef<{ view: PracticeView; activeCard: ParticleClozeCard | null }>({
     view: 'setup',
@@ -401,6 +404,8 @@ function ParticlesTrainerView({
   }
 
   function toggleTranscript() {
+    if (!activeCard || view !== 'practice') return
+    if (!showTranscript) patchRound({ hintUsed: true })
     setShowTranscript((prev) => !prev)
   }
 
@@ -730,7 +735,7 @@ function ParticlesTrainerView({
               >
                 <ParticleClozeLine
                   text={activeCard.prompt}
-                  fill={filledParticle}
+                  fill={revealedParticle}
                   emptyLabel="＿"
                   className="particles-sentence"
                   testId="particle-prompt"
@@ -741,19 +746,22 @@ function ParticlesTrainerView({
                   <>
                     <ParticleClozeLine
                       text={activeCard.kana}
-                      fill={filledParticle ? particleBlankFill(filledParticle, 'kana') : null}
+                      fill={revealedParticle ? particleBlankFill(revealedParticle, 'kana') : null}
                       emptyLabel="＿"
                       className="particles-kana"
                       testId="particle-kana"
                     />
                     <ParticleClozeLine
                       text={activeCard.romaji}
-                      fill={filledParticle ? particleBlankFill(filledParticle, 'romaji') : null}
+                      fill={revealedParticle ? particleBlankFill(revealedParticle, 'romaji') : null}
                       emptyLabel="···"
                       className="particles-romaji"
                       blankClassName="is-romaji"
                       testId="particle-romaji"
                     />
+                    <p className="particles-gloss" data-testid="particles-gloss">
+                      {activeCard.glossRu}
+                    </p>
                   </>
                 ) : null}
               </div>
@@ -770,11 +778,10 @@ function ParticlesTrainerView({
                     aria-pressed={showTranscript}
                     onClick={toggleTranscript}
                   >
-                    {showTranscript ? 'Скрыть транскрипцию' : 'Транскрипция'}
+                    {showTranscript ? 'Скрыть подсказку' : 'Подсказка'}
                   </button>
                 </div>
               ) : null}
-              <p className="particles-gloss">{activeCard.glossRu}</p>
               <ParticleSentenceWords
                 surface={activeSurface}
                 myWordIds={myWordSet}
@@ -803,8 +810,8 @@ function ParticlesTrainerView({
               <p className={`particles-feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>
                 {feedback.text ||
                   (isMobile
-                    ? 'Выберите частицу · кнопка «Транскрипция» — кана и ромадзи'
-                    : 'Выберите частицу · Space — транскрипция · колёсико — карточка знака')}
+                    ? 'Выберите частицу · кнопка «Подсказка» — чтение, перевод и ответ'
+                    : 'Выберите частицу · Space — чтение, перевод и ответ · колёсико — карточка знака')}
               </p>
               <div className="particles-footer-actions">
                 <CheatSheetTrigger
@@ -834,10 +841,10 @@ function ParticlesTrainerView({
               <ShortcutNote
                 keyboard={
                   <>
-                    <kbd>Space</kbd> — транскрипция · <kbd>←</kbd>/<kbd>→</kbd> — назад/дальше
+                    <kbd>Space</kbd> — чтение, перевод и ответ · <kbd>←</kbd>/<kbd>→</kbd> — назад/дальше
                   </>
                 }
-                swipe={<>Свайп ←/→ — назад/дальше · кнопка «Транскрипция»</>}
+                swipe={<>Свайп ←/→ — назад/дальше · кнопка «Подсказка»</>}
               />
             </div>
           </>
