@@ -262,7 +262,8 @@
 }
 
 .reader-translate-button,
-.reader-copy-button {
+.reader-copy-button,
+.reader-train-button {
   font-size: 0.78rem;
   color: var(--reader-accent);
   opacity: 0.75;
@@ -271,8 +272,18 @@
 .reader-sentence.is-active .reader-translate-button,
 .reader-sentence:hover .reader-translate-button,
 .reader-sentence.is-active .reader-copy-button,
-.reader-sentence:hover .reader-copy-button {
+.reader-sentence:hover .reader-copy-button,
+.reader-sentence.is-active .reader-train-button,
+.reader-sentence:hover .reader-train-button {
   opacity: 1;
+}
+
+.reader-sentence-romaji {
+  margin: 0;
+  color: var(--reader-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
 }
 
 .reader-sentence-translation {
@@ -522,6 +533,17 @@
   align-items: baseline;
 }
 
+.reader-word-alt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+}
+
+.reader-add-all-group {
+  display: grid;
+  gap: 0.4rem;
+}
+
 .reader-add-all {
   justify-self: start;
 }
@@ -542,7 +564,8 @@
   }
 
   .reader-translate-button,
-  .reader-copy-button {
+  .reader-copy-button,
+  .reader-train-button {
     opacity: 1;
     min-height: 36px;
   }

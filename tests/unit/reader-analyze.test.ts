@@ -7,6 +7,9 @@ import {
   analyzeMorphGroups,
   groupTokensIntoSentences,
   mergeMorphTokens,
+  sentenceRomaji,
+  tokenDisplayRomaji,
+  type ReaderToken,
 } from '../../src/features/reader/analyze.ts'
 
 describe('reader kuromoji analyze', () => {
@@ -47,6 +50,12 @@ describe('reader kuromoji analyze', () => {
     assert.ok(sentences[0]!.text.endsWith('。'))
     assert.ok(sentences[1]!.text.includes('電車'))
 
+    const firstRomaji = sentenceRomaji(sentences[0]!.tokens)
+    assert.ok(firstRomaji.includes('to'))
+    assert.ok(firstRomaji.includes('de'))
+    assert.match(firstRomaji, /\bo\b/)
+    assert.ok(firstRomaji.endsWith('.'))
+
     assert.equal(taberu!.formLabel.includes('прошедш'), true)
   })
 
@@ -80,5 +89,41 @@ describe('reader kuromoji analyze', () => {
     const mirareru = tokens.find((token) => token.surface === '見られる')
     assert.ok(mirareru)
     assert.equal(mirareru!.lemma, '見る')
+  })
+})
+
+function stubToken(partial: Partial<ReaderToken> & Pick<ReaderToken, 'surface' | 'kind'>): ReaderToken {
+  return {
+    id: partial.id ?? `t-${partial.surface}`,
+    lemma: partial.lemma ?? partial.surface,
+    reading: partial.reading ?? '',
+    romaji: partial.romaji ?? '',
+    pos: partial.pos ?? '',
+    posLabel: partial.posLabel ?? '',
+    words: partial.words ?? [],
+    hasKanji: partial.hasKanji ?? false,
+    formLabel: partial.formLabel ?? '',
+    ...partial,
+  }
+}
+
+describe('sentenceRomaji', () => {
+  it('ставит wa/o для частиц и точку после 。', () => {
+    const romaji = sentenceRomaji([
+      stubToken({ surface: '私', romaji: 'watashi', kind: 'content' }),
+      stubToken({ surface: 'は', lemma: 'は', romaji: 'ha', kind: 'particle' }),
+      stubToken({ surface: '寿司', romaji: 'sushi', kind: 'content' }),
+      stubToken({ surface: 'を', lemma: 'を', romaji: 'wo', kind: 'particle' }),
+      stubToken({ surface: '食べます', romaji: 'tabemasu', kind: 'content' }),
+      stubToken({ surface: '。', kind: 'punct' }),
+    ])
+    assert.equal(romaji, 'watashi wa sushi o tabemasu.')
+  })
+
+  it('пишет wa для は в tokenDisplayRomaji', () => {
+    assert.equal(
+      tokenDisplayRomaji(stubToken({ surface: 'は', lemma: 'は', romaji: 'ha', kind: 'particle' })),
+      'wa',
+    )
   })
 })

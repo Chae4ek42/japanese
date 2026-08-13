@@ -7,6 +7,7 @@ import {
   wordPopularityScore,
 } from '../../data/words/bank'
 import { describeMorphForm, posLabelRu } from './form-label'
+import { lookupParticleInfo } from './particle-info'
 
 const AUX_VERBS = new Set([
   'いる',
@@ -215,6 +216,54 @@ export function contentReaderTokens(tokens: ReaderToken[]): ReaderToken[] {
 }
 
 const SENTENCE_END = /^[。．！？!?…]+$/
+
+const PUNCT_ROMAJI: Record<string, string> = {
+  '。': '.',
+  '．': '.',
+  '！': '!',
+  '!': '!',
+  '？': '?',
+  '?': '?',
+  '…': '...',
+  '、': ',',
+  '，': ',',
+  '・': '·',
+}
+
+/** Romaji for a token: particle は/を/へ as wa/o/e, punctuation as Latin. */
+export function tokenDisplayRomaji(token: ReaderToken): string {
+  if (token.kind === 'punct') {
+    if (token.surface in PUNCT_ROMAJI) return PUNCT_ROMAJI[token.surface]!
+    if (SENTENCE_END.test(token.surface)) {
+      return Array.from(token.surface)
+        .map((char) => PUNCT_ROMAJI[char] ?? '')
+        .join('')
+    }
+    return ''
+  }
+  if (token.kind === 'particle') {
+    const info = lookupParticleInfo(token.surface) ?? lookupParticleInfo(token.lemma)
+    if (info?.reading) return info.reading
+  }
+  return token.romaji.trim()
+}
+
+/** Space-separated sentence reading; punctuation is attached to the previous word. */
+export function sentenceRomaji(tokens: ReaderToken[]): string {
+  let out = ''
+  for (const token of tokens) {
+    const piece = tokenDisplayRomaji(token)
+    if (!piece) continue
+    if (!out) {
+      out = piece
+    } else if (token.kind === 'punct') {
+      out += piece
+    } else {
+      out += ` ${piece}`
+    }
+  }
+  return out
+}
 
 export interface ReaderSentence {
   id: string

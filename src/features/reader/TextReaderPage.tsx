@@ -17,6 +17,8 @@ import {
   analyzeMorphGroups,
   contentReaderTokens,
   groupTokensIntoSentences,
+  sentenceRomaji,
+  tokenDisplayRomaji,
   type ReaderSentence,
   type ReaderToken,
 } from './analyze'
@@ -26,6 +28,25 @@ import { MAX_SAVED_READER_TEXTS } from '../../shared/state/slices/reader'
 
 const ANALYZE_DEBOUNCE_MS = 280
 const DRAFT_SAVE_MS = 600
+
+function tokenInWordSet(token: ReaderToken, set: Set<string>): boolean {
+  return token.words.some((word) => wordVariantIds(word).some((id) => set.has(id)))
+}
+
+function primaryVariantIds(tokens: ReaderToken[]): string[] {
+  const seen = new Set<string>()
+  const ids: string[] = []
+  for (const token of contentReaderTokens(tokens)) {
+    const word = token.words[0]
+    if (!word) continue
+    for (const id of wordVariantIds(word)) {
+      if (seen.has(id)) continue
+      seen.add(id)
+      ids.push(id)
+    }
+  }
+  return ids
+}
 
 type TranslateState = { status: 'idle' | 'loading' | 'ready' | 'error'; text?: string }
 
@@ -54,11 +75,18 @@ export function TextReaderPage() {
   const translationCacheRef = useRef<Map<string, string>>(new Map())
 
   const myWordSet = useMemo(() => new Set(vocab?.myWords ?? []), [vocab?.myWords])
+  const trainingWordSet = useMemo(
+    () => new Set(vocab?.trainingWordIds ?? []),
+    [vocab?.trainingWordIds],
+  )
   const sentences = useMemo(() => groupTokensIntoSentences(tokens), [tokens])
   const selected = tokens.find((token) => token.id === selectedId) ?? null
   const knownCount = contentReaderTokens(tokens).length
   const missingMine = contentReaderTokens(tokens).filter(
-    (token) => !token.words.some((word) => wordVariantIds(word).some((id) => myWordSet.has(id))),
+    (token) => !tokenInWordSet(token, myWordSet),
+  )
+  const missingTraining = contentReaderTokens(tokens).filter(
+    (token) => !tokenInWordSet(token, trainingWordSet),
   )
 
   useEffect(() => {
@@ -163,10 +191,32 @@ export function TextReaderPage() {
 
   function addAllMissing() {
     if (!vocab || !missingMine.length) return
-    const ids = missingMine.flatMap((token) =>
-      token.words[0] ? wordVariantIds(token.words[0]) : [],
+    vocab.addMyWords(primaryVariantIds(missingMine))
+  }
+
+  function toggleTraining(word: KanjiWord) {
+    if (!vocab) return
+    const ids = wordVariantIds(word)
+    if (!ids.length) return
+    if (ids.some((id) => trainingWordSet.has(id))) {
+      vocab.removeTrainingWords(ids)
+      return
+    }
+    vocab.addTrainingWords(ids)
+  }
+
+  function addAllMissingTraining() {
+    if (!vocab || !missingTraining.length) return
+    vocab.addTrainingWords(primaryVariantIds(missingTraining))
+  }
+
+  function addSentenceToTraining(sentence: ReaderSentence) {
+    if (!vocab) return
+    const missing = contentReaderTokens(sentence.tokens).filter(
+      (token) => !tokenInWordSet(token, trainingWordSet),
     )
-    vocab.addMyWords(ids)
+    if (!missing.length) return
+    vocab.addTrainingWords(primaryVariantIds(missing))
   }
 
   async function translateSentence(sentence: ReaderSentence) {
@@ -261,8 +311,8 @@ export function TextReaderPage() {
           <p className="reader-kicker">Чтение</p>
           <h2 className="reader-title">Текст</h2>
           <p className="reader-lead">
-            Клик по слову — значение и форма; частица — её роль; «Перевести» / «Копировать» — предложение.
-            Тексты можно сохранить и открыть снова.
+            Клик по слову — значение, форма и «+ В набор»; под предложением — ромадзи.
+            «Перевести» / «Копировать» — предложение. Тексты можно сохранить и открыть снова.
           </p>
           <CheatSheetActions>
             <CheatSheetTrigger
@@ -297,6 +347,10 @@ export function TextReaderPage() {
             sentences.map((sentence) => {
               const translation = translations[sentence.id]
               const isActive = activeSentenceId === sentence.id
+              const romaji = sentenceRomaji(sentence.tokens)
+              const sentenceMissingTraining = contentReaderTokens(sentence.tokens).some(
+                (token) => !tokenInWordSet(token, trainingWordSet),
+              )
               return (
                 <article
                   key={sentence.id}
@@ -318,6 +372,11 @@ export function TextReaderPage() {
                       />
                     ))}
                   </p>
+                  {romaji ? (
+                    <p className="reader-sentence-romaji" data-testid="reader-sentence-romaji">
+                      {romaji}
+                    </p>
+                  ) : null}
                   <div className="reader-sentence-tools">
                     <button
                       type="button"
@@ -340,6 +399,16 @@ export function TextReaderPage() {
                     >
                       {copiedSentenceId === sentence.id ? 'Скопировано' : 'Копировать'}
                     </button>
+                    {sentenceMissingTraining ? (
+                      <button
+                        type="button"
+                        className="text-button reader-train-button"
+                        data-testid={`reader-sentence-train-${sentence.id}`}
+                        onClick={() => addSentenceToTraining(sentence)}
+                      >
+                        + В набор
+                      </button>
+                    ) : null}
                   </div>
                   {translation?.status === 'ready' && translation.text ? (
                     <p className="reader-sentence-translation" data-testid="reader-translation">
@@ -366,7 +435,9 @@ export function TextReaderPage() {
             <ReaderWordPanel
               token={selected}
               myWordSet={myWordSet}
+              trainingWordSet={trainingWordSet}
               onToggleWord={toggleWord}
+              onToggleTraining={toggleTraining}
               onOpenKanji={setInfoKanji}
               onOpenParticleTopic={openParticleCheat}
             />
@@ -374,15 +445,29 @@ export function TextReaderPage() {
             <p className="reader-panel-empty">Выберите слово в разборе</p>
           )}
 
-          {missingMine.length ? (
-            <button
-              type="button"
-              className="ghost-button reader-add-all"
-              data-testid="reader-add-all-mine"
-              onClick={addAllMissing}
-            >
-              + Все найденные в «Мои» ({missingMine.length})
-            </button>
+          {missingMine.length || missingTraining.length ? (
+            <div className="reader-add-all-group">
+              {missingMine.length ? (
+                <button
+                  type="button"
+                  className="ghost-button reader-add-all"
+                  data-testid="reader-add-all-mine"
+                  onClick={addAllMissing}
+                >
+                  + Все найденные в «Мои» ({missingMine.length})
+                </button>
+              ) : null}
+              {missingTraining.length ? (
+                <button
+                  type="button"
+                  className="ghost-button reader-add-all"
+                  data-testid="reader-add-all-training"
+                  onClick={addAllMissingTraining}
+                >
+                  + Все найденные в набор ({missingTraining.length})
+                </button>
+              ) : null}
+            </div>
           ) : null}
         </aside>
       </section>
@@ -556,22 +641,28 @@ function ReaderTokenView({
 function ReaderWordPanel({
   token,
   myWordSet,
+  trainingWordSet,
   onToggleWord,
+  onToggleTraining,
   onOpenKanji,
   onOpenParticleTopic,
 }: {
   token: ReaderToken
   myWordSet: Set<string>
+  trainingWordSet: Set<string>
   onToggleWord: (word: KanjiWord) => void
+  onToggleTraining: (word: KanjiWord) => void
   onOpenKanji: (character: string) => void
   onOpenParticleTopic: (topicId: string) => void
 }) {
   const primary = token.words[0] ?? null
   const ids = primary ? wordVariantIds(primary) : []
   const inMine = ids.some((id) => myWordSet.has(id))
+  const inTraining = ids.some((id) => trainingWordSet.has(id))
   const showLemma = token.lemma && token.lemma !== token.surface && token.lemma !== '*'
   const particleInfo =
     token.kind === 'particle' ? lookupParticleInfo(token.surface) || lookupParticleInfo(token.lemma) : null
+  const displayRomaji = tokenDisplayRomaji(token)
 
   return (
     <div className="reader-word">
@@ -620,8 +711,7 @@ function ReaderWordPanel({
 
       <p className="reader-word-meta">
         {token.reading ? <span>{token.reading}</span> : null}
-        {token.romaji ? <span>{token.romaji}</span> : null}
-        {particleInfo?.reading && !token.romaji ? <span>{particleInfo.reading}</span> : null}
+        {displayRomaji ? <span>{displayRomaji}</span> : null}
       </p>
 
       {particleInfo ? (
@@ -674,12 +764,21 @@ function ReaderWordPanel({
             >
               {inMine ? 'В моих' : '+ В мои'}
             </button>
+            <button
+              type="button"
+              className={inTraining ? 'ghost-button is-saved' : 'ghost-button'}
+              data-testid="reader-toggle-training"
+              onClick={() => onToggleTraining(primary)}
+            >
+              {inTraining ? 'В наборе' : '+ В набор'}
+            </button>
           </div>
           {token.words.length > 1 ? (
             <ul className="reader-word-alts" data-testid="reader-word-alts">
               {token.words.slice(1, 5).map((word) => {
                 const altIds = wordVariantIds(word)
                 const altMine = altIds.some((id) => myWordSet.has(id))
+                const altTraining = altIds.some((id) => trainingWordSet.has(id))
                 return (
                   <li key={word.id ?? `${word.writing}-${word.kana}`}>
                     <span>
@@ -687,13 +786,22 @@ function ReaderWordPanel({
                       {word.kana ? ` (${word.kana})` : ''} —{' '}
                       {(word.meanings[0] || '—').slice(0, 60)}
                     </span>
-                    <button
-                      type="button"
-                      className="text-button"
-                      onClick={() => onToggleWord(word)}
-                    >
-                      {altMine ? 'В моих' : '+ В мои'}
-                    </button>
+                    <span className="reader-word-alt-actions">
+                      <button
+                        type="button"
+                        className="text-button"
+                        onClick={() => onToggleWord(word)}
+                      >
+                        {altMine ? 'В моих' : '+ В мои'}
+                      </button>
+                      <button
+                        type="button"
+                        className="text-button"
+                        onClick={() => onToggleTraining(word)}
+                      >
+                        {altTraining ? 'В наборе' : '+ В набор'}
+                      </button>
+                    </span>
                   </li>
                 )
               })}
