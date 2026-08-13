@@ -3,7 +3,7 @@ import './styles.css'
 import type { KanjiWord } from '../../shared/lib/types'
 import { speakJapanese } from '../../shared/lib/speech'
 import { tokenizeWithKuromoji } from '../../shared/lib/kuromoji-tokenizer'
-import { useVocabState } from '../../shared/state/AppStateContext'
+import { useVocabState, useReaderState } from '../../shared/state/AppStateContext'
 import { PARTICLES_CHEAT_SHEET, VERB_FORMS_CHEAT_SHEET } from '../../data/cheatSheets'
 import {
   CheatSheetActions,
@@ -22,14 +22,18 @@ import {
 } from './analyze'
 import { lookupParticleInfo } from './particle-info'
 import { translateJaToRu } from './translate'
+import { MAX_SAVED_READER_TEXTS } from '../../shared/state/slices/reader'
 
 const ANALYZE_DEBOUNCE_MS = 280
+const DRAFT_SAVE_MS = 600
 
 type TranslateState = { status: 'idle' | 'loading' | 'ready' | 'error'; text?: string }
 
 export function TextReaderPage() {
   const vocab = useVocabState()
+  const reader = useReaderState()
   const [text, setText] = useState('')
+  const [draftReady, setDraftReady] = useState(false)
   const [tokens, setTokens] = useState<ReaderToken[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeSentenceId, setActiveSentenceId] = useState<string | null>(null)
@@ -64,6 +68,31 @@ export function TextReaderPage() {
     const next = Math.min(el.scrollHeight, Math.round(window.innerHeight * 0.45))
     el.style.height = `${Math.max(next, 44)}px`
   }, [text])
+
+  useEffect(() => {
+    if (!reader || draftReady) return
+    setText(reader.draft)
+    setDraftReady(true)
+  }, [reader, draftReady])
+
+  const setDraft = reader?.setDraft
+  const storedDraft = reader?.draft
+
+  useEffect(() => {
+    if (!setDraft || !draftReady) return
+    if (storedDraft === text) return
+    const timer = window.setTimeout(() => setDraft(text), DRAFT_SAVE_MS)
+    return () => window.clearTimeout(timer)
+  }, [text, draftReady, setDraft, storedDraft])
+
+  const savedTexts = useMemo(
+    () => [...(reader?.texts ?? [])].sort((a, b) => b.updatedAt - a.updatedAt),
+    [reader?.texts],
+  )
+  const activeSaved = savedTexts.find((item) => item.id === reader?.activeTextId) ?? null
+  const textTrimmed = text.trim()
+  const savedUnchanged = Boolean(activeSaved && activeSaved.text === text)
+  const atLimit = savedTexts.length >= MAX_SAVED_READER_TEXTS
 
   useEffect(() => {
     const trimmed = text.trim()
@@ -198,6 +227,22 @@ export function TextReaderPage() {
     setCheatTopicId(null)
   }
 
+  function loadSavedText(id: string) {
+    const item = reader?.texts.find((entry) => entry.id === id)
+    if (!item || !reader) return
+    setText(item.text)
+    reader.setDraft(item.text, item.id)
+  }
+
+  function handleSave(asNew = false) {
+    if (!reader || !textTrimmed) return
+    reader.saveText({
+      id: asNew ? null : reader.activeTextId,
+      title: asNew ? undefined : activeSaved?.title,
+      text,
+    })
+  }
+
   const statusLabel =
     status === 'loading-dict'
       ? 'Загрузка словаря…'
@@ -217,6 +262,7 @@ export function TextReaderPage() {
           <h2 className="reader-title">Текст</h2>
           <p className="reader-lead">
             Клик по слову — значение и форма; частица — её роль; «Перевести» / «Копировать» — предложение.
+            Тексты можно сохранить и открыть снова.
           </p>
           <CheatSheetActions>
             <CheatSheetTrigger
@@ -342,9 +388,33 @@ export function TextReaderPage() {
       </section>
 
       <section className="reader-compose">
-        <label className="reader-label" htmlFor="reader-input">
-          Исходный текст
-        </label>
+        <div className="reader-compose-head">
+          <label className="reader-label" htmlFor="reader-input">
+            Исходный текст
+          </label>
+          <div className="reader-save-actions">
+            <button
+              type="button"
+              className="ghost-button reader-save-button"
+              data-testid="reader-save-text"
+              disabled={!textTrimmed || savedUnchanged || (!activeSaved && atLimit)}
+              onClick={() => handleSave(false)}
+            >
+              {savedUnchanged ? 'Сохранено' : activeSaved ? 'Сохранить' : 'Сохранить текст'}
+            </button>
+            {activeSaved ? (
+              <button
+                type="button"
+                className="text-button"
+                data-testid="reader-save-text-as-new"
+                disabled={!textTrimmed || atLimit}
+                onClick={() => handleSave(true)}
+              >
+                Как новый
+              </button>
+            ) : null}
+          </div>
+        </div>
         <textarea
           id="reader-input"
           ref={inputRef}
@@ -355,6 +425,56 @@ export function TextReaderPage() {
           onChange={(event) => setText(event.target.value)}
           placeholder="日本語の文章を貼り付け…"
         />
+        {atLimit && !activeSaved ? (
+          <p className="reader-library-note">Лимит сохранённых текстов ({MAX_SAVED_READER_TEXTS}). Удалите лишние.</p>
+        ) : null}
+
+        {savedTexts.length ? (
+          <ul className="reader-library" data-testid="reader-library">
+            {savedTexts.map((item) => {
+              const active = item.id === reader?.activeTextId
+              return (
+                <li key={item.id} className={active ? 'reader-library-item is-active' : 'reader-library-item'}>
+                  {active ? (
+                    <input
+                      className="reader-library-rename"
+                      data-testid="reader-library-rename"
+                      value={item.title}
+                      aria-label="Название текста"
+                      onChange={(event) => reader?.renameText(item.id, event.target.value)}
+                    />
+                  ) : (
+                    <button
+                      type="button"
+                      className="reader-library-open"
+                      data-testid={`reader-library-open-${item.id}`}
+                      onClick={() => loadSavedText(item.id)}
+                    >
+                      <span className="reader-library-title">{item.title}</span>
+                      <span className="reader-library-date">
+                        {new Date(item.updatedAt).toLocaleDateString('ru-RU', {
+                          day: 'numeric',
+                          month: 'short',
+                        })}
+                      </span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="text-button reader-library-delete"
+                    data-testid={`reader-library-delete-${item.id}`}
+                    aria-label={`Удалить «${item.title}»`}
+                    onClick={() => reader?.deleteText(item.id)}
+                  >
+                    Удалить
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        ) : (
+          <p className="reader-library-empty">Сохранённые тексты появятся здесь</p>
+        )}
       </section>
 
       {infoKanji ? (

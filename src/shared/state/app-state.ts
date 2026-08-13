@@ -16,12 +16,13 @@ import {
   sanitizeParticlesPreferences,
   sanitizeParticlesStats,
 } from './slices/particles'
+import { DEFAULT_READER_STATE, sanitizeReaderState } from './slices/reader'
 
 import { MAIN_TRAINING_SET_ID, createMainTrainingSet } from '../lib/trainingSets'
 
-export const CURRENT_VERSION = 29 as const
+export const CURRENT_VERSION = 30 as const
 export const KNOWN_VERSIONS = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, CURRENT_VERSION,
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, CURRENT_VERSION,
 ]
 
 export { DEFAULT_VOCAB_PREFERENCES }
@@ -83,6 +84,7 @@ export function createDefaultAppState(): AppState {
       liveSession: null,
     },
     analytics: createDefaultAnalyticsState(),
+    reader: { ...DEFAULT_READER_STATE, texts: [] },
   }
 }
 
@@ -160,5 +162,6 @@ export function normalizeAppState(parsed: unknown): AppState | null {
     kanji: sanitizeKanjiState(source.kanji, fallback.kanji),
     vocab,
     analytics: sanitizeAnalyticsState(source.analytics, fallback.analytics),
+    reader: sanitizeReaderState(source.reader, fallback.reader),
   }
 }

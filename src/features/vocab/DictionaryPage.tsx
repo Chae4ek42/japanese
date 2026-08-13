@@ -1,7 +1,7 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import type { KanjiWord } from '../../shared/lib/types'
 import './styles.css'
-import { getColloquialWords, getJlptWords, searchWords } from '../../data/words/bank'
+import { getColloquialWords, getJlptWords, getKanaWords, searchWords } from '../../data/words/bank'
 import { useLoadMoreOnScroll } from '../../shared/lib/useLoadMoreOnScroll'
 import { useKanjiState, useVocabState } from '../../shared/state/AppStateContext'
 import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
@@ -17,8 +17,9 @@ import { isColloquialWord } from '../../shared/lib/colloquial'
 
 const PAGE_SIZE = 40
 
-type CatalogMode = 'level' | 'group' | 'colloquial'
+type CatalogMode = 'level' | 'group' | 'colloquial' | 'kana'
 type LevelFilter = 5 | 4 | 3 | 2 | 1 | 'other'
+type KanaScriptFilter = 'all' | 'hiragana' | 'katakana'
 
 const LEVEL_OPTIONS: Array<{ id: LevelFilter; label: string }> = [
   { id: 5, label: 'N5' },
@@ -35,6 +36,7 @@ export function DictionaryPage() {
   const [catalogMode, setCatalogMode] = useState<CatalogMode>('level')
   const [level, setLevel] = useState<LevelFilter>(5)
   const [groupId, setGroupId] = useState(VOCAB_GROUPS[0]?.id ?? 'family')
+  const [kanaScript, setKanaScript] = useState<KanaScriptFilter>('all')
   const [query, setQuery] = useState('')
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [infoKanji, setInfoKanji] = useState<string | null>(null)
@@ -70,7 +72,7 @@ export function DictionaryPage() {
     setVisibleCount(PAGE_SIZE)
     setInfoKanji(null)
     setGroupActionNote('')
-  }, [catalogMode, level, groupId, deferredQuery])
+  }, [catalogMode, level, groupId, kanaScript, deferredQuery])
 
   const catalogWords = useMemo(() => {
     const raw = deferredQuery
@@ -79,15 +81,17 @@ export function DictionaryPage() {
         ? getWordsForGroup(groupId)
         : catalogMode === 'colloquial'
           ? getColloquialWords()
-          : getJlptWords(level)
+          : catalogMode === 'kana'
+            ? getKanaWords(kanaScript)
+            : getJlptWords(level)
     return mergeWordsByWriting(raw)
       .filter((word) => !wordVariantIds(word).some((id) => hiddenSet.has(id)))
       .filter((word) => {
-        if (catalogMode === 'colloquial') return true
+        if (catalogMode === 'colloquial' || catalogMode === 'kana') return true
         if (showColloquial) return true
         return !isColloquialWord(word)
       })
-  }, [catalogMode, deferredQuery, groupId, level, hiddenSet, showColloquial])
+  }, [catalogMode, deferredQuery, groupId, kanaScript, level, hiddenSet, showColloquial])
 
   const list = catalogWords
   const visible = list.slice(0, visibleCount)
@@ -164,7 +168,13 @@ export function DictionaryPage() {
       ? (activeGroup?.label ?? 'Группа')
       : catalogMode === 'colloquial'
         ? 'Разговорные'
-        : level === 'other'
+        : catalogMode === 'kana'
+          ? kanaScript === 'hiragana'
+            ? 'Хирагана'
+            : kanaScript === 'katakana'
+              ? 'Катакана'
+              : 'Слова на кане'
+          : level === 'other'
           ? 'Вне JLPT'
           : `JLPT N${level}`
 
@@ -246,6 +256,17 @@ export function DictionaryPage() {
               </button>
               <button
                 type="button"
+                data-testid="vocab-mode-kana"
+                className={catalogMode === 'kana' ? 'vocab-mode-link is-active' : 'vocab-mode-link'}
+                onClick={() => {
+                  setCatalogMode('kana')
+                  resetPaging()
+                }}
+              >
+                Кана
+              </button>
+              <button
+                type="button"
                 data-testid="vocab-mode-colloquial"
                 className={catalogMode === 'colloquial' ? 'vocab-mode-link is-active' : 'vocab-mode-link'}
                 onClick={() => {
@@ -257,7 +278,7 @@ export function DictionaryPage() {
               </button>
             </div>
 
-            {catalogMode !== 'colloquial' ? (
+            {catalogMode !== 'colloquial' && catalogMode !== 'kana' ? (
               <div className="control-group">
                 <span className="group-label">Разговорные в списках</span>
                 <div className="segmented-control" role="group" aria-label="Показ разговорных слов">
@@ -303,6 +324,32 @@ export function DictionaryPage() {
                 {renderGroupSection('Чтение', readingGroups)}
                 {renderGroupSection('Темы', themeGroups)}
               </div>
+            ) : catalogMode === 'kana' ? (
+              <>
+                <div className="vocab-level-row" aria-label="Письмо">
+                  {(
+                    [
+                      { id: 'all', label: 'Все' },
+                      { id: 'hiragana', label: 'Хирагана' },
+                      { id: 'katakana', label: 'Катакана' },
+                    ] as const
+                  ).map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      data-testid={`vocab-kana-${item.id}`}
+                      className={kanaScript === item.id ? 'vocab-level-chip is-active' : 'vocab-level-chip'}
+                      onClick={() => {
+                        setKanaScript(item.id)
+                        resetPaging()
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="control-hint">Слова, которые в текстах пишут хираганой или катаканой — これ, です, コーヒー.</p>
+              </>
             ) : (
               <p className="control-hint">Слова с пометой (разг.) или (прост.) в словаре.</p>
             )}

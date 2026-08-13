@@ -1,15 +1,42 @@
 import type { KanjiBankMeta, KanjiComponent, KanjiInfo, KanjiWord } from '../../shared/lib/types'
 import { isColloquialWord } from '../../shared/lib/colloquial'
+import { isKanjiChar } from '../../shared/lib/kana'
 import kanjiList from './kanji-list.json' with { type: 'json' }
 import words from './words.json' with { type: 'json' }
 import wordsByKanji from './words-by-kanji.json' with { type: 'json' }
 import components from './components.json' with { type: 'json' }
 import meta from './meta.json' with { type: 'json' }
+import kanaCatalog from './kana-catalog.json' with { type: 'json' }
 
 export const KANJI_BANK_META = meta as KanjiBankMeta
 export const KANJI_LIST = kanjiList as KanjiInfo[]
-export const KANJI_WORDS = words as KanjiWord[]
 export const KANJI_COMPONENTS = components as KanjiComponent[]
+
+interface KanaCatalogFile {
+  jlpt?: Record<string, number>
+  extra?: KanjiWord[]
+}
+
+function applyKanaCatalog(base: KanjiWord[]): KanjiWord[] {
+  const catalog = kanaCatalog as KanaCatalogFile
+  const jlptOverlay = catalog.jlpt ?? {}
+  const patched = base.map((word) => {
+    const overlay = word.id ? jlptOverlay[word.id] : undefined
+    if (overlay && (!word.jlpt || overlay > word.jlpt)) {
+      return { ...word, jlpt: overlay }
+    }
+    return word
+  })
+  const seen = new Set(patched.map((word) => word.id).filter(Boolean))
+  for (const word of catalog.extra ?? []) {
+    if (word.id && seen.has(word.id)) continue
+    if (word.id) seen.add(word.id)
+    patched.push(word)
+  }
+  return patched
+}
+
+export const KANJI_WORDS = applyKanaCatalog(words as KanjiWord[])
 
 const kanjiById: Record<string, KanjiInfo> = Object.fromEntries(KANJI_LIST.map((item) => [item.character, item]))
 const componentById = new Map<string, KanjiComponent>(KANJI_COMPONENTS.map((item) => [item.id, item]))
@@ -150,6 +177,36 @@ export function getColloquialWords(): KanjiWord[] {
   if (colloquialWordsCache) return colloquialWordsCache
   colloquialWordsCache = sortWords(KANJI_WORDS.filter((word) => isColloquialWord(word)))
   return colloquialWordsCache
+}
+
+const HIRAGANA_WRITING = /^[\u3040-\u309Fーゝゞ]+$/u
+const KATAKANA_WRITING = /^[\u30A0-\u30FFーヽヾ]+$/u
+
+export type KanaScriptFilter = 'all' | 'hiragana' | 'katakana'
+
+export function isKanaOnlyWriting(writing: string | null | undefined): boolean {
+  const text = writing?.trim() ?? ''
+  if (!text) return false
+  if ([...text].some((ch) => isKanjiChar(ch))) return false
+  return /[\u3040-\u309f\u30a0-\u30ff]/u.test(text)
+}
+
+const kanaWordsCache = new Map<KanaScriptFilter, KanjiWord[]>()
+
+/** Headwords written in hiragana/katakana (これ, です, コーヒー). */
+export function getKanaWords(script: KanaScriptFilter = 'all'): KanjiWord[] {
+  const cached = kanaWordsCache.get(script)
+  if (cached) return cached
+  const list = sortWords(
+    KANJI_WORDS.filter((word) => {
+      if (!isKanaOnlyWriting(word.writing)) return false
+      if (script === 'hiragana') return HIRAGANA_WRITING.test(word.writing)
+      if (script === 'katakana') return KATAKANA_WRITING.test(word.writing)
+      return true
+    }),
+  )
+  kanaWordsCache.set(script, list)
+  return list
 }
 
 export function searchWords(query: string, { limit = 80 }: { limit?: number } = {}): KanjiWord[] {

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { getJlptWords, getWordById, searchWords } from '../../src/data/words/bank'
+import { getJlptWords, getKanaWords, getWordById, searchWords } from '../../src/data/words/bank'
 import {
   VOCAB_GROUPS,
   collectGroupTrainingIds,
@@ -30,6 +30,7 @@ describe('vocab catalog', () => {
     const n5 = getJlptWords(5)
     assert.ok(n5.length >= 400)
     assert.ok(n5.every((word) => word.jlpt === 5))
+    assert.ok(n5.some((word) => word.writing === 'これ'))
   })
 
   it('поиск находит слово по написанию', () => {
@@ -79,5 +80,18 @@ describe('vocab catalog', () => {
     const ids = collectGroupTrainingIds(group!)
     assert.ok(ids.length >= group!.wordIds.length)
     assert.ok(group!.wordIds.every((id) => ids.includes(id)))
+  })
+
+  it('каталог на кане содержит これ / です и заимствования', () => {
+    const kana = getKanaWords()
+    assert.ok(kana.length >= 400)
+    assert.ok(kana.every((word) => word.writing && !/[\u4e00-\u9fff]/u.test(word.writing)))
+    assert.ok(kana.some((word) => word.writing === 'これ'))
+    assert.ok(kana.some((word) => word.writing === 'です'))
+    const hira = getKanaWords('hiragana')
+    const kata = getKanaWords('katakana')
+    assert.ok(hira.some((word) => word.writing === 'これ'))
+    assert.ok(kata.length >= 50)
+    assert.ok(kana.some((word) => word.writing === 'バス' || word.writing === 'アルバイト'))
   })
 })

@@ -59,10 +59,102 @@
 
 .reader-compose {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.45rem;
   order: 3;
   padding-top: 0.15rem;
-  opacity: 0.92;
+}
+
+.reader-compose-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem 0.75rem;
+}
+
+.reader-save-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.65rem;
+}
+
+.reader-save-button {
+  min-height: 34px;
+}
+
+.reader-library-note,
+.reader-library-empty {
+  margin: 0;
+  color: var(--reader-muted);
+  font-size: 0.78rem;
+}
+
+.reader-library {
+  list-style: none;
+  margin: 0.15rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.reader-library-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.35rem 0.5rem;
+  align-items: center;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid var(--reader-line);
+  border-radius: 0.55rem;
+  background: #fff;
+}
+
+.reader-library-item.is-active {
+  border-color: color-mix(in srgb, var(--reader-accent) 35%, var(--reader-line));
+  background: var(--reader-accent-soft);
+}
+
+.reader-library-open {
+  appearance: none;
+  display: grid;
+  gap: 0.1rem;
+  margin: 0;
+  padding: 0.15rem 0.1rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.reader-library-title {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.reader-library-date {
+  color: var(--reader-muted);
+  font-size: 0.72rem;
+}
+
+.reader-library-rename {
+  width: 100%;
+  min-height: 34px;
+  padding: 0.25rem 0.45rem;
+  border: 1px solid var(--reader-line);
+  border-radius: 0.4rem;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+.reader-library-delete {
+  font-size: 0.78rem;
+  color: var(--reader-muted);
 }
 
 .reader-label {

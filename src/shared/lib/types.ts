@@ -473,8 +473,23 @@ export interface VocabState {
   liveSession: CardTrainerLiveSession | null
 }
 
+export interface ReaderSavedText {
+  id: string
+  title: string
+  text: string
+  createdAt: number
+  updatedAt: number
+}
+
+export interface ReaderState {
+  texts: ReaderSavedText[]
+  activeTextId: string | null
+  /** Last textarea contents; restored when opening the reader. */
+  draft: string
+}
+
 export interface AppState {
-  version: 29
+  version: 30
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>
@@ -496,6 +511,7 @@ export interface AppState {
   }
   vocab: VocabState
   analytics: AnalyticsState
+  reader: ReaderState
 }
 
 /** @deprecated Use AppState — kept as alias during migration. */
