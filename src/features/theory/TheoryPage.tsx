@@ -1,13 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useVocabState } from '../../shared/state/AppStateContext'
-import { PARTICLES_CHEAT_SHEET, VERB_FORMS_CHEAT_SHEET } from '../../data/cheatSheets'
-import {
-  CheatSheetActions,
-  CheatSheetPopup,
-  CheatSheetTrigger,
-} from '../../shared/ui/CheatSheetPopup'
+import { CheatSheetsBar } from '../../shared/ui/CheatSheetsBar'
 import { getVocabGroup } from '../vocab/groups'
 import { AUTOSTART_TRAIN_KEY } from '../vocab/autostart'
+import type { AppPage } from '../../shared/lib/types'
 import { THEORY_LOOKUP, exampleKey, sectionKey } from './resolveTheoryWords'
 import {
   THEORY_UNITS,
@@ -37,12 +33,17 @@ function unitGlyph(unit: TheoryUnit): string {
   return fromExample || '語'
 }
 
-export function TheoryPage({ onOpenTrain }: { onOpenTrain: () => void }) {
+export function TheoryPage({
+  onOpenTrain,
+  onOpenPage,
+}: {
+  onOpenTrain: () => void
+  onOpenPage?: (page: AppPage) => void
+}) {
   const vocab = useVocabState()
   const [unitId, setUnitId] = useState(THEORY_UNITS[0]?.id ?? '')
   const [note, setNote] = useState('')
   const [chooser, setChooser] = useState<SetChooser | null>(null)
-  const [cheatSheet, setCheatSheet] = useState<'particles' | 'verbs' | null>(null)
   const contentRef = useRef<HTMLElement | null>(null)
   const noteTimer = useRef<number | null>(null)
 
@@ -252,18 +253,7 @@ export function TheoryPage({ onOpenTrain }: { onOpenTrain: () => void }) {
           <p className="theory-lead">
             Сетки и формулы, на которых держится текст. Слова из урока — в активный набор или в новый.
           </p>
-          <CheatSheetActions>
-            <CheatSheetTrigger
-              label="Шпаргалка: частицы"
-              testId="theory-open-particles-cheatsheet"
-              onClick={() => setCheatSheet('particles')}
-            />
-            <CheatSheetTrigger
-              label="Шпаргалка: глаголы"
-              testId="theory-open-verbs-cheatsheet"
-              onClick={() => setCheatSheet('verbs')}
-            />
-          </CheatSheetActions>
+          <CheatSheetsBar testIdPrefix="theory" />
         </div>
         <div className="theory-hero-stat" aria-label="Прогресс текущего урока">
           <div
@@ -337,6 +327,16 @@ export function TheoryPage({ onOpenTrain }: { onOpenTrain: () => void }) {
               </div>
 
               <div className="theory-toolbar" role="group" aria-label="Действия урока">
+                {unit.trainerPage && onOpenPage ? (
+                  <button
+                    type="button"
+                    className="theory-btn theory-btn-ghost"
+                    data-testid={`theory-open-${unit.trainerPage}`}
+                    onClick={() => onOpenPage(unit.trainerPage!)}
+                  >
+                    Тренажёр
+                  </button>
+                ) : null}
                 <button
                   type="button"
                   className="theory-btn theory-btn-primary"
@@ -547,13 +547,6 @@ export function TheoryPage({ onOpenTrain }: { onOpenTrain: () => void }) {
       >
         {note}
       </div>
-
-      {cheatSheet === 'particles' ? (
-        <CheatSheetPopup doc={PARTICLES_CHEAT_SHEET} onClose={() => setCheatSheet(null)} />
-      ) : null}
-      {cheatSheet === 'verbs' ? (
-        <CheatSheetPopup doc={VERB_FORMS_CHEAT_SHEET} onClose={() => setCheatSheet(null)} />
-      ) : null}
     </main>
   )
 }

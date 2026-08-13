@@ -22,6 +22,7 @@ import {
   updateCardStats,
 } from '../../shared/lib/trainer'
 import { afterSuccessfulCard, enqueueMistake, prepareShownCard } from '../../shared/lib/trainerCore'
+import { useLiveTrainerSession } from '../../shared/lib/useLiveTrainerSession'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { SetupPanel } from './SetupPanel'
 import { PracticePanel } from './PracticePanel'
@@ -96,7 +97,6 @@ function KanaTrainerView({
   const activeCardRef = useRef<KanaCard | null>(null)
   const preferencesRef = useRef(preferences)
   const statsRef = useRef(stats)
-  const didRestoreLiveSessionRef = useRef(false)
 
   const activePool = useMemo(
     () => buildPool(preferences.scriptMode, preferences.selectedGroups),
@@ -113,38 +113,22 @@ function KanaTrainerView({
     statsRef.current = stats
   }, [preferences, stats])
 
-  useEffect(() => {
-    if (didRestoreLiveSessionRef.current) return
-    didRestoreLiveSessionRef.current = true
-    if (
-      !liveSession ||
-      liveSession.view !== 'practice' ||
-      !liveSession.currentCardId ||
-      !liveSession.session.poolIds.includes(liveSession.currentCardId)
-    ) {
-      return
-    }
-
-    sessionRef.current = liveSession.session
-    setSession(liveSession.session)
-    setSessionStats(liveSession.sessionStats)
-    setCurrentCardId(liveSession.currentCardId)
-    setPracticeState('practice')
-    resetRound(Date.now())
-    setInputValue('')
-    setFeedback({ type: 'idle', text: '' })
-  }, [liveSession, setSession, setSessionStats, setPracticeState, sessionRef, resetRound, setFeedback])
-
-  useEffect(() => {
-    if (!onSaveLiveSession) return
-    if (practiceState !== 'practice' || !currentCardId) return
-    onSaveLiveSession({
-      session,
-      currentCardId,
-      view: practiceState,
-      sessionStats,
-    })
-  }, [practiceState, currentCardId, session, sessionStats, onSaveLiveSession])
+  useLiveTrainerSession({
+    liveSession,
+    view: practiceState,
+    currentCardId,
+    session,
+    sessionStats,
+    setView: setPracticeState,
+    setSession,
+    sessionRef,
+    setSessionStats,
+    resetRound,
+    setFeedback,
+    setCurrentCardId,
+    onSaveLiveSession,
+    onRestore: () => setInputValue(''),
+  })
 
   useEffect(() => {
     if (practiceState === 'practice') {

@@ -1,4 +1,5 @@
 import type {
+  CardTrainerLiveSession,
   InputMode,
   NumberCard,
   NumberMode,
@@ -16,8 +17,11 @@ import {
   NUMBER_RANGES,
   buildNumberPool,
   ensureNumberStats,
+  numberModeUsesRange,
 } from '../../data/numbers'
-import { bumpSessionShow, pickNextCardId, pushRecentCard, setCardCooldown, successCooldownTurns } from '../../shared/lib/trainer'
+import { pickNextCardId, pushRecentCard } from '../../shared/lib/trainer'
+import { afterSuccessfulCard, prepareShownCard } from '../../shared/lib/trainerCore'
+import { useLiveTrainerSession } from '../../shared/lib/useLiveTrainerSession'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { useAnalyticsState, useNumbersState } from '../../shared/state/AppStateContext'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
@@ -30,6 +34,9 @@ export function NumbersTrainer() {
   return (
     <NumbersTrainerView
       numbersState={{ preferences: numbers.preferences, stats: numbers.stats }}
+      liveSession={numbers.liveSession}
+      onSaveLiveSession={numbers.saveLiveSession}
+      onClearLiveSession={numbers.clearLiveSession}
       onPatchPreferences={numbers.patchPreferences}
       onUpdateStats={numbers.updateStats}
     />
@@ -38,6 +45,9 @@ export function NumbersTrainer() {
 
 interface NumbersTrainerViewProps {
   numbersState: { preferences: NumbersPreferences; stats: Record<string, StatsRecord> }
+  liveSession?: CardTrainerLiveSession | null
+  onSaveLiveSession?: (session: CardTrainerLiveSession | null) => void
+  onClearLiveSession?: () => void
   onPatchPreferences: (patch: Partial<NumbersPreferences>) => void
   onUpdateStats: (
     cardId: string,
@@ -48,6 +58,9 @@ interface NumbersTrainerViewProps {
 
 function NumbersTrainerView({
   numbersState,
+  liveSession = null,
+  onSaveLiveSession,
+  onClearLiveSession,
   onPatchPreferences,
   onUpdateStats,
 }: NumbersTrainerViewProps) {
@@ -59,12 +72,14 @@ function NumbersTrainerView({
   const { preferences, stats } = numbersState
   const {
     view,
+    setView,
     session,
     setSession,
     sessionRef,
     roundRef,
     resetRound,
     sessionStats,
+    setSessionStats,
     feedback,
     setFeedback,
     pendingAdvanceRef,
@@ -124,6 +139,31 @@ function NumbersTrainerView({
     return map
   }, [activePool, stats])
 
+  useLiveTrainerSession({
+    liveSession,
+    view,
+    currentCardId,
+    session,
+    sessionStats,
+    setView,
+    setSession,
+    sessionRef,
+    setSessionStats,
+    resetRound,
+    setFeedback,
+    setCurrentCardId,
+    onSaveLiveSession,
+    extra: {
+      navHistory: navHistoryRef.current,
+      navIndex: navIndexRef.current,
+    },
+    onRestore: (live) => {
+      setRevealed(false)
+      if (live.navHistory) navHistoryRef.current = live.navHistory
+      if (typeof live.navIndex === 'number') navIndexRef.current = live.navIndex
+    },
+  })
+
   const modeLabel = NUMBER_MODES.find((mode) => mode.id === preferences.mode)?.label ?? 'Числа'
 
   function rememberNavCard(cardId: string) {
@@ -140,7 +180,7 @@ function NumbersTrainerView({
   ) {
     const now = Date.now()
     const base = baseSession ?? sessionRef.current
-    const shownSession = countPresentation ? bumpSessionShow(base, cardId) : base
+    const shownSession = countPresentation ? prepareShownCard(base, cardId) : base
     sessionRef.current = shownSession
     setSession(shownSession)
     resetRound(now)
@@ -195,6 +235,7 @@ function NumbersTrainerView({
     navIndexRef.current = -1
     setCurrentCardId(null)
     setRevealed(false)
+    onClearLiveSession?.()
   }
 
   function revealAnswer() {
@@ -219,16 +260,12 @@ function NumbersTrainerView({
     const now = Date.now()
     const activeRound = roundRef.current
     const poolSize = activePool.length || session.poolIds.length || 1
-    let nextSession = {
-      ...pushRecentCard(session, activeCard.id),
-      mistakeQueue: session.mistakeQueue.filter((id) => id !== activeCard.id),
-    }
-
-    if (activeRound.hintUsed) {
-      nextSession.mistakeQueue = [activeCard.id, ...nextSession.mistakeQueue].slice(0, NUMBER_HYPERPARAMS.queueSize)
-    } else {
-      nextSession = setCardCooldown(nextSession, activeCard.id, successCooldownTurns(poolSize, true))
-    }
+    const nextSession = afterSuccessfulCard(session, activeCard.id, {
+      kind: activeRound.hintUsed ? 'hint' : 'correct',
+      poolSize,
+      clean: !activeRound.hintUsed,
+      queueSize: NUMBER_HYPERPARAMS.queueSize,
+    })
 
     const clean = !activeRound.hintUsed
     recordAnswered(clean ? 1 : 0)
@@ -368,6 +405,7 @@ function NumbersTrainerView({
             </div>
           </div>
 
+          {numberModeUsesRange(preferences.mode) ? (
           <div className="control-group">
             <span className="group-label">Диапазон</span>
             <div className="segmented">
@@ -387,6 +425,11 @@ function NumbersTrainerView({
               {activePool.length} чисел в наборе
             </p>
           </div>
+          ) : (
+            <p className="control-hint" data-testid="numbers-pool-count">
+              {activePool.length} карточек в наборе
+            </p>
+          )}
 
           <div className="control-group">
             <span className="group-label">Подбор</span>

@@ -1,16 +1,21 @@
 export type ScriptMode = 'hiragana' | 'katakana' | 'both'
 export type KanaPickMode = 'adaptive' | 'even' | 'problem'
 export type InputMode = 'instant' | 'submit'
-export type NumberMode = 'plain' | 'age'
+export type NumberMode = 'plain' | 'age' | 'counter' | 'clock'
 export type NumberRangeId = '10' | '99' | '999'
 export type NumbersPickMode = 'adaptive' | 'even'
 export type ParticlesPickMode = 'adaptive' | 'even'
+export type VerbsPickMode = 'adaptive' | 'even'
+export type VerbFormId = 'te' | 'ta' | 'nai' | 'masu' | 'potential'
+export type VerbGroup = 'godan' | 'ichidan' | 'irregular'
+export type VerbsFocus = 'all' | VerbFormId
 export type AppPage =
   | 'home'
   | 'kana'
   | 'kanji'
   | 'numbers'
   | 'particles'
+  | 'verbs'
   | 'reader'
   | 'vocab'
   | 'mine'
@@ -26,6 +31,7 @@ export type AnalyticsSection =
   | 'kanji'
   | 'numbers'
   | 'particles'
+  | 'verbs'
   | 'reader'
   | 'train'
   | 'vocab'
@@ -319,6 +325,12 @@ export interface ParticlesPreferences {
   mineOnly: boolean
 }
 
+export interface VerbsPreferences {
+  pickMode: VerbsPickMode
+  /** Which conjugation to drill. */
+  focus: VerbsFocus
+}
+
 /** JLPT levels for filtering practice words (5 = N5 … 1 = N1). Empty = all levels. */
 export type KanjiWordJlptLevel = 5 | 4 | 3 | 2 | 1
 
@@ -489,7 +501,7 @@ export interface ReaderState {
 }
 
 export interface AppState {
-  version: 30
+  version: 32
   kana: {
     preferences: KanaPreferences
     stats: Record<string, StatsRecord>
@@ -500,10 +512,17 @@ export interface AppState {
   numbers: {
     preferences: NumbersPreferences
     stats: Record<string, StatsRecord>
+    liveSession: CardTrainerLiveSession | null
   }
   particles: {
     preferences: ParticlesPreferences
     stats: Record<string, StatsRecord>
+    liveSession: CardTrainerLiveSession | null
+  }
+  verbs: {
+    preferences: VerbsPreferences
+    stats: Record<string, StatsRecord>
+    liveSession: CardTrainerLiveSession | null
   }
   kanji: {
     learned: string[]

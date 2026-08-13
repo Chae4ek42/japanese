@@ -1,5 +1,5 @@
 import { test } from '@playwright/test'
-import { expect, openFreshApp } from './helpers.js'
+import { expect, openFreshApp, clickNav } from './helpers.js'
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -30,7 +30,7 @@ const ROUTES = [
       await page.getByTestId('kanji-trainer').waitFor({ state: 'visible' })
     },
   },
-  { name: 'vocab-setup', open: async (page) => page.getByTestId('nav-vocab').click() },
+  { name: 'vocab-setup', open: async (page) => clickNav(page, 'nav-vocab') },
   {
     name: 'vocab-practice',
     open: async (page) => {
@@ -39,7 +39,7 @@ const ROUTES = [
       await page.getByTestId('vocab-current-writing').waitFor({ state: 'visible' })
     },
   },
-  { name: 'theory', open: async (page) => page.getByTestId('nav-theory').click() },
+  { name: 'theory', open: async (page) => clickNav(page, 'nav-theory') },
   { name: 'reader', open: async (page) => page.getByTestId('nav-reader').click() },
 ]
 

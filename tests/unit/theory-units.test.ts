@@ -31,4 +31,10 @@ describe('theory units', () => {
     )
     assert.ok(withExamples.length >= 6)
   })
+
+  it('урок глаголов ведёт в тренажёр спряжения', () => {
+    const unit = getTheoryUnit('verbs')
+    assert.ok(unit)
+    assert.equal(unit!.trainerPage, 'verbs')
+  })
 })

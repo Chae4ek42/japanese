@@ -1,6 +1,8 @@
 import {
 
   AGE_SPECIAL_CASES,
+  CHEAT_SHEET_CLOCK,
+  CHEAT_SHEET_COUNTERS,
   CHEAT_SHEET_DIGITS,
   CHEAT_SHEET_EXAMPLES,
   CHEAT_SHEET_HUNDREDS,
@@ -40,7 +42,7 @@ export function NumbersCheatSheet() {
     <section className="setup-surface numbers-cheat-sheet" data-testid="numbers-cheat-sheet">
       <div className="cheat-sheet-head">
         <h2 className="cheat-sheet-title">Шпаргалка</h2>
-        <p className="cheat-sheet-lead">Кандзи, чтения и частые исключения для чисел и возраста.</p>
+        <p className="cheat-sheet-lead">Кандзи, чтения и частые исключения для чисел, возраста, счётчиков и часов.</p>
       </div>
 
       <div className="cheat-section">
@@ -98,6 +100,32 @@ export function NumbersCheatSheet() {
           rows={CHEAT_SHEET_EXAMPLES.filter((row) => row.value >= 20).map((row) => ({
             key: `age-${row.value}`,
             cells: [row.agePrompt, row.age.kanji, row.age.kana],
+          }))}
+        />
+      </div>
+
+      <div className="cheat-section">
+        <h3 className="cheat-section-title">Счётчики 1–10</h3>
+        <p className="cheat-note">本 (длинные), 人 (люди), つ (универсальный). 1人＝ひとり, 2人＝ふたり, 3本＝さんぼん.</p>
+        <CheatTable
+          testId="cheat-counters"
+          headers={['Промпт', 'Кандзи', 'Чтение']}
+          rows={CHEAT_SHEET_COUNTERS.map((row) => ({
+            key: row.id,
+            cells: [row.symbol, row.kanji, row.kana],
+          }))}
+        />
+      </div>
+
+      <div className="cheat-section">
+        <h3 className="cheat-section-title">Часы</h3>
+        <p className="cheat-note">4時＝よじ, 7時＝しちじ, 9時＝くじ. Половина — 半 (はん).</p>
+        <CheatTable
+          testId="cheat-clock"
+          headers={['Время', 'Кандзи', 'Чтение']}
+          rows={CHEAT_SHEET_CLOCK.map((row) => ({
+            key: row.id,
+            cells: [row.symbol, row.kanji, row.kana],
           }))}
         />
       </div>

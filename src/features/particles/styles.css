@@ -301,6 +301,7 @@
   opacity: 0.85;
 }
 
+.cloze-blank,
 .particles-blank {
   display: inline-grid;
   place-items: center;
@@ -319,11 +320,13 @@
     color 160ms ease;
 }
 
+.cloze-blank.is-romaji,
 .particles-blank.is-romaji {
   min-width: 3.2ch;
   font-weight: 650;
 }
 
+.cloze-blank.is-filled,
 .particles-blank.is-filled {
   background: transparent;
   border-bottom-color: transparent;

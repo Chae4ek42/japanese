@@ -1,3 +1,5 @@
+import type { AppPage } from '../../shared/lib/types'
+
 export interface TheoryExample {
   writing: string
   kana?: string
@@ -25,6 +27,8 @@ export interface TheoryUnit {
   subtitle: string
   /** Linked vocab catalog group for «тренировать». */
   readingGroupId?: string
+  /** Skill trainer opened from the lesson (e.g. verb conjugation). */
+  trainerPage?: AppPage
   sections: TheorySection[]
 }
 
@@ -287,6 +291,60 @@ export const THEORY_UNITS: TheoryUnit[] = [
           { writing: 'よ', romaji: 'yo', meaning: 'слушай / утверждаю' },
           { writing: 'な', romaji: 'na', meaning: 'ну… / запрет (с глаг.)' },
           { writing: 'かな', romaji: 'kana', meaning: 'интересно, …?' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'verbs',
+    title: 'Спряжение глаголов',
+    subtitle: 'Три группы и формы て / た / ない / ます / возможная',
+    trainerPage: 'verbs',
+    sections: [
+      {
+        heading: 'Три группы',
+        paragraphs: [
+          'I группа (godan, う-глаголы): словарная на -u, но не «чистый» -iru/-eru. Меняется гласная ряда: 書く→書きます, 飲む→飲みます.',
+          'II группа (ichidan, る-глаголы): словарная на -iru / -eru. Отрезаем る: 食べる→食べます, 見る→見ます.',
+          'III — только する и 来る (и сложные на する: 勉強する).',
+        ],
+        table: {
+          caption: 'Ориентир',
+          headers: ['Группа', 'Словарная', 'ます', 'て'],
+          rows: [
+            ['I · う', '書く / 飲む / 待つ', '書きます / 飲みます / 待ちます', '書いて / 飲んで / 待って'],
+            ['II · る', '食べる / 見る', '食べます / 見ます', '食べて / 見て'],
+            ['III', 'する / 来る', 'します / 来ます', 'して / 来て'],
+          ],
+        },
+      },
+      {
+        heading: 'て и た',
+        paragraphs: [
+          'た-форма строится как て, только с た/だ: 書いて→書いた, 飲んで→飲んだ, 食べて→食べた. Исключение I группы: 行く→行って / 行った, не いいて.',
+        ],
+        examples: [
+          { writing: '書いて', kana: 'かいて', romaji: 'kaite', meaning: 'писать (て)' },
+          { writing: '飲んで', kana: 'のんで', romaji: 'nonde', meaning: 'пить (て)' },
+          { writing: '食べて', kana: 'たべて', romaji: 'tabete', meaning: 'есть (て)' },
+          { writing: 'して', romaji: 'shite', meaning: 'делать (て)' },
+          { writing: '来て', kana: 'きて', romaji: 'kite', meaning: 'приходить (て)' },
+          { writing: '行って', kana: 'いって', romaji: 'itte', meaning: 'идти (て, исключение)' },
+        ],
+      },
+      {
+        heading: 'ない, ます, возможная',
+        paragraphs: [
+          'ない: I — a-основа + ない (買う→買わない); II — отрезать る; する→しない, 来る→来ない.',
+          'ます: I — i-основа + ます; II — отрезать る; する→します, 来る→来ます.',
+          'Возможная: I — e-основа + る (書く→書ける); II — られる (食べられる); する→できる, 来る→来られる.',
+        ],
+        examples: [
+          { writing: '書かない', kana: 'かかない', romaji: 'kakanai', meaning: 'не писать' },
+          { writing: '書きます', kana: 'かきます', romaji: 'kakimasu', meaning: 'писать (вежл.)' },
+          { writing: '書ける', kana: 'かける', romaji: 'kakeru', meaning: 'мочь писать' },
+          { writing: '食べられる', kana: 'たべられる', romaji: 'taberareru', meaning: 'мочь есть' },
+          { writing: 'できる', romaji: 'dekiru', meaning: 'мочь (от する)' },
         ],
       },
     ],

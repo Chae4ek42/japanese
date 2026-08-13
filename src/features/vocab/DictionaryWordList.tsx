@@ -1,9 +1,9 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import type { KanjiWord } from '../../shared/lib/types'
-import { speakJapanese } from '../../shared/lib/speech'
 import { HighlightedReading } from '../kanji/HighlightedReading'
 import { isCustomWordId } from './customWords'
 import { preferLexicalMeanings, wordReadings, wordVariantIds } from './mergeHomographs'
+import { WordActions } from './WordActions'
 
 const NARROW_QUERY = '(max-width: 900px)'
 
@@ -124,53 +124,17 @@ export function DictionaryWordList({
             </span>
           </button>
 
-          <div className="vocab-dict-row-actions">
-            <button
-              type="button"
-              className="vocab-icon-button"
-              data-testid={`vocab-speak-${word.writing}`}
-              aria-label={`Озвучить ${word.writing}`}
-              onClick={() => speakJapanese(speakKana)}
-            >
-              ▶︎
-            </button>
-            {onToggleTraining ? (
-              <button
-                type="button"
-                className={training ? 'vocab-save-button is-saved' : 'vocab-save-button'}
-                data-testid={`vocab-training-${wordId}`}
-                aria-pressed={training}
-                aria-label={training ? `Убрать ${word.writing} из набора` : `Добавить ${word.writing} в набор`}
-                onClick={() => onToggleTraining(word)}
-              >
-                {training ? 'В наборе' : '+ В набор'}
-              </button>
-            ) : null}
-            {wordId ? (
-              <button
-                type="button"
-                className={saved ? 'vocab-save-button is-saved' : 'vocab-save-button'}
-                data-testid={`vocab-toggle-${wordId}`}
-                onClick={() => onToggleSaved(word)}
-              >
-                {custom ? 'Удалить' : saved ? 'В моих' : '+ В мои'}
-              </button>
-            ) : null}
-            {onToggleLearned ? (
-              <button
-                type="button"
-                className={learned ? 'vocab-save-button is-saved' : 'vocab-save-button'}
-                data-testid={`vocab-learned-${wordId}`}
-                aria-pressed={learned}
-                aria-label={
-                  learned ? `Убрать ${word.writing} из выученных` : `Добавить ${word.writing} в выученные`
-                }
-                onClick={() => onToggleLearned(word)}
-              >
-                {learned ? 'Выучено' : '+ Выуч.'}
-              </button>
-            ) : null}
-          </div>
+          <WordActions
+            word={word}
+            isSaved={saved}
+            onToggleSaved={onToggleSaved}
+            inTrainingList={training}
+            onToggleTraining={onToggleTraining}
+            isLearned={learned}
+            onToggleLearned={onToggleLearned}
+            speakKana={speakKana}
+            className="vocab-dict-row-actions"
+          />
         </div>
 
         {expanded ? (

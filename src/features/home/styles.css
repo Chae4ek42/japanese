@@ -90,6 +90,70 @@
   white-space: nowrap;
 }
 
+.home-group-title {
+  margin: 0;
+  padding: 4px 0 8px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-now {
+  display: grid;
+  gap: 10px;
+}
+
+.home-continue {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #111;
+  color: #fff;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.home-continue.is-secondary {
+  background: #fff;
+  color: inherit;
+}
+
+.home-continue-kicker {
+  color: inherit;
+  opacity: 0.62;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.home-continue.is-secondary .home-continue-kicker {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.home-continue-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.home-continue-meta {
+  font-size: 0.82rem;
+  opacity: 0.72;
+}
+
+.home-continue.is-secondary .home-continue-meta {
+  color: var(--muted);
+  opacity: 1;
+}
+
 @media (max-width: 720px) {
   .home-page {
     gap: 28px;

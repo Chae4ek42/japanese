@@ -1,6 +1,11 @@
 import { useCallback } from 'react'
 import { PARTICLE_HYPERPARAMS, ensureParticleStats } from '../../data/particles'
-import type { ParticlesPreferences, StatsOutcome, UpdateStatsContext } from '../lib/types'
+import type {
+  CardTrainerLiveSession,
+  ParticlesPreferences,
+  StatsOutcome,
+  UpdateStatsContext,
+} from '../lib/types'
 import { updateCardStats } from '../lib/trainer'
 import { useAppStateContext } from './core'
 
@@ -50,6 +55,26 @@ export function useParticlesState() {
     [setAppState],
   )
 
+  const saveLiveSession = useCallback(
+    (liveSession: CardTrainerLiveSession | null) => {
+      setAppState((prevState) => {
+        if (!prevState) return prevState
+        return {
+          ...prevState,
+          particles: {
+            ...prevState.particles,
+            liveSession,
+          },
+        }
+      })
+    },
+    [setAppState],
+  )
+
+  const clearLiveSession = useCallback(() => {
+    saveLiveSession(null)
+  }, [saveLiveSession])
+
   if (!appState?.particles) {
     return null
   }
@@ -57,7 +82,10 @@ export function useParticlesState() {
   return {
     preferences: appState.particles.preferences,
     stats: appState.particles.stats,
+    liveSession: appState.particles.liveSession ?? null,
     patchPreferences,
     updateStats,
+    saveLiveSession,
+    clearLiveSession,
   }
 }

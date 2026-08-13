@@ -1,10 +1,10 @@
 import { test } from '@playwright/test'
-import { expect, openFreshApp } from './helpers.js'
+import { expect, openFreshApp, clickNav } from './helpers.js'
 
 test('dictionary: catalog, groups and my words', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Dictionary flow covered on desktop.')
   await openFreshApp(page)
-  await page.getByTestId('nav-vocab').click()
+  await clickNav(page, 'nav-vocab')
   await expect(page.getByTestId('vocab-page')).toBeVisible()
   await expect(page.getByTestId('vocab-list')).toBeVisible()
 
@@ -15,7 +15,7 @@ test('dictionary: catalog, groups and my words', async ({ page }, testInfo) => {
   const toggle = page.locator('[data-testid^="vocab-toggle-"]').first()
   const toggleId = await toggle.getAttribute('data-testid')
   await toggle.click()
-  await page.getByTestId('nav-mine').click()
+  await clickNav(page, 'nav-mine')
   await expect(page.getByTestId('mine-page')).toBeVisible()
   await expect(page.getByTestId('vocab-list').locator('[data-testid^="vocab-word-"]')).toHaveCount(1)
 
@@ -38,6 +38,7 @@ test('vocab setup: drill vs srs mode switch', async ({ page }, testInfo) => {
   await expect(page.getByTestId('vocab-srs-settings')).toBeVisible()
   await expect(page.getByTestId('vocab-source-kanji')).toHaveCount(0)
   await expect(page.getByTestId('vocab-new-per-day')).toBeVisible()
+  await page.getByTestId('vocab-setup-more-toggle').click()
   await expect(page.getByTestId('vocab-retention-90')).toBeVisible()
   await page.getByTestId('vocab-retention-95').click()
   await expect(page.getByTestId('vocab-target-retention-value')).toHaveText('95%')
@@ -181,12 +182,12 @@ test('vocab trainer: in-session panel changes pick mode and shows word stats', a
 test('mine page nav and legacy redirect', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Mine URL covered on desktop.')
   await openFreshApp(page)
-  await page.getByTestId('nav-vocab').click()
+  await clickNav(page, 'nav-vocab')
   await expect(page).toHaveURL(/\/vocab$/)
   await expect(page.getByTestId('vocab-page')).toBeVisible()
   await expect(page.getByTestId('vocab-tab-mine')).toHaveCount(0)
 
-  await page.getByTestId('nav-mine').click()
+  await clickNav(page, 'nav-mine')
   await expect(page).toHaveURL(/\/mine$/)
   await expect(page.getByTestId('mine-page')).toBeVisible()
 
@@ -202,7 +203,7 @@ test('mine page nav and legacy redirect', async ({ page }, testInfo) => {
 test('dictionary: add and edit custom word', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Custom word flow covered on desktop.')
   await openFreshApp(page)
-  await page.getByTestId('nav-mine').click()
+  await clickNav(page, 'nav-mine')
   await expect(page.getByTestId('custom-word-open')).toBeVisible()
   await expect(page.getByTestId('custom-word-form')).toHaveCount(0)
   await page.getByTestId('custom-word-open').click()

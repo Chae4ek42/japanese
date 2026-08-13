@@ -1,6 +1,8 @@
 import type { AppPage } from '../lib/types'
 import { PATHS, shouldHandleClientNav } from '../lib/routes'
+import { navItems } from '../lib/pages'
 import type { RefObject, ChangeEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { TrainingSetsMenu } from './TrainingSetsMenu'
 import { AccountsMenu } from './AccountsMenu'
 
@@ -13,19 +15,8 @@ export interface AppHeaderProps {
   onImportFileChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
-const NAV_ITEMS = [
-  { id: 'home', label: 'Главная', href: PATHS.home, testId: 'nav-main' },
-  { id: 'kana', label: 'Кана', href: PATHS.kana, testId: 'nav-kana' },
-  { id: 'kanji', label: 'Кандзи', href: PATHS.kanji, testId: 'nav-kanji' },
-  { id: 'numbers', label: 'Числа', href: PATHS.numbers, testId: 'nav-numbers' },
-  { id: 'particles', label: 'Частицы', href: PATHS.particles, testId: 'nav-particles' },
-  { id: 'reader', label: 'Текст', href: PATHS.reader, testId: 'nav-reader' },
-  { id: 'train', label: 'Слова', href: PATHS.train, testId: 'nav-train' },
-  { id: 'vocab', label: 'Словарь', href: PATHS.vocab, testId: 'nav-vocab' },
-  { id: 'mine', label: 'Мои слова', href: PATHS.mine, testId: 'nav-mine' },
-  { id: 'theory', label: 'Теория', href: PATHS.theory, testId: 'nav-theory' },
-  { id: 'analytics', label: 'Аналитика', href: PATHS.analytics, testId: 'nav-analytics' },
-] as const
+const PRIMARY_NAV = navItems('primary')
+const MORE_NAV = navItems('more')
 
 export function AppHeader({
   currentPage,
@@ -35,6 +26,32 @@ export function AppHeader({
   importInputRef,
   onImportFileChange,
 }: AppHeaderProps) {
+  const [moreOpen, setMoreOpen] = useState(false)
+  const moreRef = useRef<HTMLDivElement>(null)
+  const moreActive = MORE_NAV.some((item) => item.id === currentPage)
+
+  useEffect(() => {
+    setMoreOpen(false)
+  }, [currentPage])
+
+  useEffect(() => {
+    if (!moreOpen) return
+    function onPointerDown(event: PointerEvent) {
+      if (moreRef.current && !moreRef.current.contains(event.target as Node)) {
+        setMoreOpen(false)
+      }
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setMoreOpen(false)
+    }
+    window.addEventListener('pointerdown', onPointerDown)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [moreOpen])
+
   return (
     <header className="site-header">
       <div className="site-header-top">
@@ -81,11 +98,11 @@ export function AppHeader({
       </div>
 
       <nav className="site-nav" aria-label="Основная навигация">
-        {NAV_ITEMS.map((item) => (
+        {PRIMARY_NAV.map((item) => (
           <a
             key={item.id}
-            href={item.href}
-            data-testid={item.testId}
+            href={item.path}
+            data-testid={item.navTestId}
             className={currentPage === item.id ? 'site-nav-link is-active' : 'site-nav-link'}
             onClick={(event) => {
               if (shouldHandleClientNav(event)) {
@@ -94,9 +111,43 @@ export function AppHeader({
               }
             }}
           >
-            {item.label}
+            {item.navLabel}
           </a>
         ))}
+
+        <div className="site-nav-more" ref={moreRef}>
+          <button
+            type="button"
+            className={moreActive || moreOpen ? 'site-nav-link is-active' : 'site-nav-link'}
+            data-testid="nav-more"
+            aria-expanded={moreOpen}
+            aria-haspopup="true"
+            onClick={() => setMoreOpen((open) => !open)}
+          >
+            Ещё
+          </button>
+          {moreOpen ? (
+            <div className="site-nav-more-panel" role="menu" data-testid="nav-more-panel">
+              {MORE_NAV.map((item) => (
+                <a
+                  key={item.id}
+                  href={item.path}
+                  role="menuitem"
+                  data-testid={item.navTestId}
+                  className={currentPage === item.id ? 'site-nav-link is-active' : 'site-nav-link'}
+                  onClick={(event) => {
+                    if (shouldHandleClientNav(event)) {
+                      event.preventDefault()
+                      onNavigate(item.id)
+                    }
+                  }}
+                >
+                  {item.navLabel}
+                </a>
+              ))}
+            </div>
+          ) : null}
+        </div>
       </nav>
     </header>
   )

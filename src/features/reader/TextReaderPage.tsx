@@ -4,12 +4,9 @@ import type { KanjiWord } from '../../shared/lib/types'
 import { speakJapanese } from '../../shared/lib/speech'
 import { tokenizeWithKuromoji } from '../../shared/lib/kuromoji-tokenizer'
 import { useVocabState, useReaderState } from '../../shared/state/AppStateContext'
-import { PARTICLES_CHEAT_SHEET, VERB_FORMS_CHEAT_SHEET } from '../../data/cheatSheets'
-import {
-  CheatSheetActions,
-  CheatSheetPopup,
-  CheatSheetTrigger,
-} from '../../shared/ui/CheatSheetPopup'
+import { useAppRouter } from '../../shared/lib/useAppRouter'
+import { markAutostartTrain } from '../vocab/autostart'
+import { CheatSheetPopups, CheatSheetTriggers, useCheatSheets } from '../../shared/ui/CheatSheetsBar'
 import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
 import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
 import { preferLexicalMeanings, wordVariantIds } from '../vocab/mergeHomographs'
@@ -53,6 +50,7 @@ type TranslateState = { status: 'idle' | 'loading' | 'ready' | 'error'; text?: s
 export function TextReaderPage() {
   const vocab = useVocabState()
   const reader = useReaderState()
+  const { goPage } = useAppRouter()
   const [text, setText] = useState('')
   const [draftReady, setDraftReady] = useState(false)
   const [tokens, setTokens] = useState<ReaderToken[]>([])
@@ -63,8 +61,7 @@ export function TextReaderPage() {
   )
   const [error, setError] = useState('')
   const [infoKanji, setInfoKanji] = useState<string | null>(null)
-  const [cheatSheet, setCheatSheet] = useState<'particles' | 'verbs' | null>(null)
-  const [cheatTopicId, setCheatTopicId] = useState<string | null>(null)
+  const cheats = useCheatSheets()
   const [translations, setTranslations] = useState<Record<string, TranslateState>>({})
   const [shownRomaji, setShownRomaji] = useState<Record<string, boolean>>({})
   const [copiedSentenceId, setCopiedSentenceId] = useState<string | null>(null)
@@ -212,6 +209,20 @@ export function TextReaderPage() {
     vocab.addTrainingWords(primaryVariantIds(missingTraining))
   }
 
+  function startTrainUnknown() {
+    if (!vocab || !missingMine.length) return
+    const ids = primaryVariantIds(missingMine)
+    vocab.addTrainingWords(ids)
+    vocab.patchPreferences({
+      sessionMode: 'drill',
+      source: 'list',
+      trainFullGroup: false,
+      trainingSetId: vocab.activeTrainingSetId,
+    })
+    markAutostartTrain()
+    goPage('train')
+  }
+
   function toggleSentenceRomaji(sentence: ReaderSentence) {
     setActiveSentenceId(sentence.id)
     setShownRomaji((prev) => ({ ...prev, [sentence.id]: !prev[sentence.id] }))
@@ -266,13 +277,7 @@ export function TextReaderPage() {
   }
 
   function openParticleCheat(topicId: string) {
-    setCheatTopicId(topicId)
-    setCheatSheet('particles')
-  }
-
-  function closeCheatSheet() {
-    setCheatSheet(null)
-    setCheatTopicId(null)
+    cheats.open('particles', topicId)
   }
 
   function loadSavedText(id: string) {
@@ -312,24 +317,7 @@ export function TextReaderPage() {
             Клик по слову — значение, форма и «+ В набор».
             «Ромадзи» / «Перевести» / «Копировать» — предложение. Тексты можно сохранить и открыть снова.
           </p>
-          <CheatSheetActions>
-            <CheatSheetTrigger
-              label="Шпаргалка: частицы"
-              testId="reader-open-particles-cheatsheet"
-              onClick={() => {
-                setCheatTopicId(null)
-                setCheatSheet('particles')
-              }}
-            />
-            <CheatSheetTrigger
-              label="Шпаргалка: глаголы"
-              testId="reader-open-verbs-cheatsheet"
-              onClick={() => {
-                setCheatTopicId(null)
-                setCheatSheet('verbs')
-              }}
-            />
-          </CheatSheetActions>
+          <CheatSheetTriggers state={cheats} testIdPrefix="reader" />
         </div>
         <p
           className={`reader-status ${status === 'error' ? 'is-error' : ''}`}
@@ -463,6 +451,16 @@ export function TextReaderPage() {
                   + Все найденные в набор ({missingTraining.length})
                 </button>
               ) : null}
+              {missingMine.length ? (
+                <button
+                  type="button"
+                  className="primary-button reader-add-all"
+                  data-testid="reader-train-unknown"
+                  onClick={startTrainUnknown}
+                >
+                  Тренировать неизвестные ({missingMine.length})
+                </button>
+              ) : null}
             </div>
           ) : null}
         </aside>
@@ -569,16 +567,7 @@ export function TextReaderPage() {
         />
       ) : null}
 
-      {cheatSheet === 'particles' ? (
-        <CheatSheetPopup
-          doc={PARTICLES_CHEAT_SHEET}
-          initialTopicId={cheatTopicId}
-          onClose={closeCheatSheet}
-        />
-      ) : null}
-      {cheatSheet === 'verbs' ? (
-        <CheatSheetPopup doc={VERB_FORMS_CHEAT_SHEET} onClose={closeCheatSheet} />
-      ) : null}
+      <CheatSheetPopups state={cheats} />
     </main>
   )
 }

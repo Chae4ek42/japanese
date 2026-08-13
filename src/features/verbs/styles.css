@@ -1,0 +1,50 @@
+@import '../particles/styles.css';
+
+.verbs-prompt {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.verbs-writing {
+  margin: 0;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: clamp(2.4rem, 8vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.verbs-kana {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--particles-muted);
+}
+
+.verbs-meaning {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.verbs-form-label {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--particles-accent);
+}
+
+.verbs-pad {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.verbs-choice-glyph {
+  font-size: 1.25rem;
+}
+
+@media (min-width: 720px) {
+  .verbs-pad {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

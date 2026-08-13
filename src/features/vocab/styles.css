@@ -890,6 +890,30 @@
   gap: 18px;
 }
 
+.vocab-setup-more {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 4px 14px 12px;
+  background: rgba(17, 17, 17, 0.02);
+}
+
+.vocab-setup-more > summary {
+  cursor: pointer;
+  font-weight: 650;
+  font-size: 0.92rem;
+  padding: 10px 0;
+  list-style: none;
+}
+
+.vocab-setup-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.vocab-setup-more[open] > summary {
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
 .vocab-srs-settings {
   display: grid;
   gap: 14px;

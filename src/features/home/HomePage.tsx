@@ -1,157 +1,142 @@
-import { PATHS, shouldHandleClientNav } from '../../shared/lib/routes'
+import { pathForPage, shouldHandleClientNav } from '../../shared/lib/routes'
+import { homeEntries } from '../../shared/lib/pages'
+import type { AppPage } from '../../shared/lib/types'
+import {
+  useKanaState,
+  useNumbersState,
+  useParticlesState,
+  useVerbsState,
+  useVocabState,
+} from '../../shared/state/AppStateContext'
+import { collectContinueItems, countHomeVocabDue } from './dashboard'
 import './styles.css'
 
 export interface HomePageProps {
-  onOpenKana: () => void
-  onOpenKanji: () => void
-  onOpenNumbers: () => void
-  onOpenParticles: () => void
-  onOpenReader: () => void
-  onOpenVocab: () => void
-  onOpenMine: () => void
-  onOpenVocabTrain: () => void
-  onOpenTheory: () => void
-  onOpenAnalytics: () => void
+  onNavigate: (page: AppPage) => void
 }
 
-const ENTRIES = [
-  {
-    id: 'kana',
-    href: PATHS.kana,
-    symbol: 'あ',
-    title: 'Кана',
-    action: 'Начать',
-    testId: 'open-kana',
-  },
-  {
-    id: 'kanji',
-    href: PATHS.kanji,
-    symbol: '字',
-    title: 'Кандзи',
-    action: 'Открыть',
-    testId: 'open-kanji',
-  },
-  {
-    id: 'numbers',
-    href: PATHS.numbers,
-    symbol: '十',
-    title: 'Числа и возраст',
-    action: 'Начать',
-    testId: 'open-numbers',
-  },
-  {
-    id: 'particles',
-    href: PATHS.particles,
-    symbol: 'は',
-    title: 'Частицы',
-    action: 'Начать',
-    testId: 'open-particles',
-  },
-  {
-    id: 'reader',
-    href: PATHS.reader,
-    symbol: '文',
-    title: 'Текст',
-    action: 'Открыть',
-    testId: 'open-reader',
-  },
-  {
-    id: 'vocab-train',
-    href: PATHS.train,
-    symbol: '練',
-    title: 'Слова',
-    action: 'Начать',
-    testId: 'open-vocab-train',
-  },
-  {
-    id: 'vocab',
-    href: PATHS.vocab,
-    symbol: '語',
-    title: 'Словарь',
-    action: 'Открыть',
-    testId: 'open-vocab',
-  },
-  {
-    id: 'mine',
-    href: PATHS.mine,
-    symbol: '私',
-    title: 'Мои слова',
-    action: 'Открыть',
-    testId: 'open-mine',
-  },
-  {
-    id: 'theory',
-    href: PATHS.theory,
-    symbol: '理',
-    title: 'Теория',
-    action: 'Открыть',
-    testId: 'open-theory',
-  },
-  {
-    id: 'analytics',
-    href: PATHS.analytics,
-    symbol: '統',
-    title: 'Аналитика',
-    action: 'Открыть',
-    testId: 'open-analytics',
-  },
-] as const
+const PRACTICE = homeEntries('practice')
+const REFERENCE = homeEntries('reference')
 
-export function HomePage({
-  onOpenKana,
-  onOpenKanji,
-  onOpenNumbers,
-  onOpenParticles,
-  onOpenReader,
-  onOpenVocab,
-  onOpenMine,
-  onOpenVocabTrain,
-  onOpenTheory,
-  onOpenAnalytics,
-}: HomePageProps) {
-  const openers = {
-    kana: onOpenKana,
-    kanji: onOpenKanji,
-    numbers: onOpenNumbers,
-    particles: onOpenParticles,
-    reader: onOpenReader,
-    'vocab-train': onOpenVocabTrain,
-    vocab: onOpenVocab,
-    mine: onOpenMine,
-    theory: onOpenTheory,
-    analytics: onOpenAnalytics,
-  } as const
+export function HomePage({ onNavigate }: HomePageProps) {
+  const kana = useKanaState()
+  const numbers = useNumbersState()
+  const particles = useParticlesState()
+  const verbs = useVerbsState()
+  const vocab = useVocabState()
+
+  const continues = collectContinueItems({
+    train: vocab?.liveSession,
+    kana: kana?.liveSession,
+    particles: particles?.liveSession,
+    verbs: verbs?.liveSession,
+    numbers: numbers?.liveSession,
+  })
+  const due = countHomeVocabDue({
+    myWords: vocab?.myWords ?? [],
+    memory: vocab?.memory ?? {},
+    targetRetention: vocab?.preferences.targetRetention ?? 0.9,
+  })
+
+  function openDueReview() {
+    vocab?.patchPreferences({ sessionMode: 'srs', source: 'mine' })
+    onNavigate('train')
+  }
 
   return (
     <main className="home-page">
       <section className="home-hero">
         <h1 className="home-title">JP тренажёры</h1>
+        <p className="home-lead">Продолжите сессию или откройте раздел.</p>
       </section>
 
-      <section className="home-entries" aria-label="Разделы">
-        {ENTRIES.map((entry) => (
-          <a
-            key={entry.id}
-            href={entry.href}
-            className="home-entry"
-            data-testid={entry.testId}
-            onClick={(event) => {
-              if (shouldHandleClientNav(event)) {
-                event.preventDefault()
-                openers[entry.id]()
-              }
-            }}
+      {continues.length ? (
+        <section className="home-now" aria-label="Продолжить">
+          {continues.map((item) => (
+            <button
+              key={item.page}
+              type="button"
+              className="home-continue"
+              data-testid={item.testId}
+              onClick={() => onNavigate(item.page)}
+            >
+              <span className="home-continue-kicker">Продолжить</span>
+              <span className="home-continue-title">{item.title}</span>
+              <span className="home-continue-meta">
+                {item.answered ? `${item.answered} в этой сессии` : 'Сессия открыта'}
+              </span>
+            </button>
+          ))}
+        </section>
+      ) : null}
+
+      {due.due > 0 || due.newCards > 0 ? (
+        <section className="home-now" aria-label="Повторение">
+          <button
+            type="button"
+            className="home-continue is-secondary"
+            data-testid="home-open-srs"
+            onClick={openDueReview}
           >
-            <span className="home-entry-symbol" aria-hidden="true">
-              {entry.symbol}
+            <span className="home-continue-kicker">Интервальные</span>
+            <span className="home-continue-title">Повторить слова</span>
+            <span className="home-continue-meta">
+              {due.due ? `${due.due} к повторению` : null}
+              {due.due && due.newCards ? ' · ' : null}
+              {due.newCards ? `${due.newCards} новых` : null}
             </span>
-            <span className="home-entry-body">
-              <span className="home-entry-title">{entry.title}</span>
-            </span>
-            <span className="home-entry-action">{entry.action}</span>
-          </a>
-        ))}
-      </section>
+          </button>
+        </section>
+      ) : null}
+
+      <HomeCatalog
+        label="Практика"
+        entries={PRACTICE}
+        onNavigate={onNavigate}
+      />
+      <HomeCatalog
+        label="Справочник"
+        entries={REFERENCE}
+        onNavigate={onNavigate}
+      />
     </main>
+  )
+}
+
+function HomeCatalog({
+  label,
+  entries,
+  onNavigate,
+}: {
+  label: string
+  entries: ReturnType<typeof homeEntries>
+  onNavigate: (page: AppPage) => void
+}) {
+  return (
+    <section className="home-entries" aria-label={label}>
+      <h2 className="home-group-title">{label}</h2>
+      {entries.map((entry) => (
+        <a
+          key={entry.id}
+          href={pathForPage(entry.id)}
+          className="home-entry"
+          data-testid={entry.home.testId}
+          onClick={(event) => {
+            if (shouldHandleClientNav(event)) {
+              event.preventDefault()
+              onNavigate(entry.id)
+            }
+          }}
+        >
+          <span className="home-entry-symbol" aria-hidden="true">
+            {entry.home.symbol}
+          </span>
+          <span className="home-entry-body">
+            <span className="home-entry-title">{entry.home.title}</span>
+          </span>
+          <span className="home-entry-action">{entry.home.action}</span>
+        </a>
+      ))}
+    </section>
   )
 }

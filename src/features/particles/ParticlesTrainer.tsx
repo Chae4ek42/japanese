@@ -1,8 +1,7 @@
 import type {
+  CardTrainerLiveSession,
   ParticlesPickMode,
   ParticlesPreferences,
-  PracticeSession,
-  PracticeView,
   StatsRecord,
 } from '../../shared/lib/types'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -19,18 +18,10 @@ import {
   particleBlankFill,
   particleCardSurface,
   particleChoiceOptions,
-  splitParticlePrompt,
   type CoreParticle,
   type ParticleClozeCard,
 } from '../../data/particles'
-import { PARTICLES_CHEAT_SHEET } from '../../data/cheatSheets'
-import {
-  bumpSessionShow,
-  pickNextCardId,
-  pushRecentCard,
-  setCardCooldown,
-  successCooldownTurns,
-} from '../../shared/lib/trainer'
+import { choiceItemClass } from '../../shared/lib/choiceDrill'
 import {
   contentTokens,
   isTokenInMyWords,
@@ -39,13 +30,15 @@ import {
   tokenWordIds,
 } from '../../shared/lib/jp-tokenize'
 import { useIsMobileTouch } from '../../shared/lib/media'
-import { usePracticeSession } from '../../shared/lib/usePracticeSession'
+import { useChoiceDrill } from '../../shared/lib/useChoiceDrill'
 import {
   useAnalyticsState,
   useParticlesState,
   useVocabState,
 } from '../../shared/state/AppStateContext'
-import { CheatSheetPopup, CheatSheetTrigger } from '../../shared/ui/CheatSheetPopup'
+import { CheatSheetTriggers, CheatSheetPopups, useCheatSheets } from '../../shared/ui/CheatSheetsBar'
+import { ClozeLine } from '../../shared/ui/ClozeLine'
+import { ChoicePad } from '../../shared/ui/ChoicePad'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
@@ -58,6 +51,9 @@ export function ParticlesTrainer() {
   return (
     <ParticlesTrainerView
       particlesState={{ preferences: particles.preferences, stats: particles.stats }}
+      liveSession={particles.liveSession}
+      onSaveLiveSession={particles.saveLiveSession}
+      onClearLiveSession={particles.clearLiveSession}
       onPatchPreferences={particles.patchPreferences}
       onUpdateStats={particles.updateStats}
       myWords={vocab?.myWords ?? []}
@@ -73,6 +69,9 @@ export function ParticlesTrainer() {
 
 interface ParticlesTrainerViewProps {
   particlesState: { preferences: ParticlesPreferences; stats: Record<string, StatsRecord> }
+  liveSession?: CardTrainerLiveSession | null
+  onSaveLiveSession?: (session: CardTrainerLiveSession | null) => void
+  onClearLiveSession?: () => void
   onPatchPreferences: (patch: Partial<ParticlesPreferences>) => void
   onUpdateStats: (
     cardId: string,
@@ -92,57 +91,6 @@ interface ParticlesTrainerViewProps {
   onAddTrainingWords?: (wordIds: string[]) => void
   onRemoveTrainingWords?: (wordIds: string[]) => void
   onToggleTrainingWord?: (wordId: string) => void
-}
-
-type ChoiceFlash = { pick: CoreParticle; correct: boolean } | null
-
-function ParticleClozeLine({
-  text,
-  fill,
-  emptyLabel,
-  className,
-  blankClassName,
-  testId,
-  kanjiInfo,
-  onOpenKanjiInfo,
-}: {
-  text: string
-  fill: string | null
-  emptyLabel: string
-  className: string
-  blankClassName?: string
-  testId?: string
-  kanjiInfo?: boolean
-  onOpenKanjiInfo?: (character: string) => void
-}) {
-  const parts = splitParticlePrompt(text)
-  const renderText = (segment: string, key: string) => {
-    if (kanjiInfo && onOpenKanjiInfo) {
-      return (
-        <KanjiWritingHotspots
-          key={key}
-          writing={segment}
-          className="particles-sentence-text"
-          onOpenInfo={onOpenKanjiInfo}
-        />
-      )
-    }
-    return (
-      <span key={key} className="particles-sentence-text">
-        {segment}
-      </span>
-    )
-  }
-
-  return (
-    <div className={className} data-testid={testId}>
-      {renderText(parts.before, 'before')}
-      <span className={`particles-blank ${fill ? 'is-filled' : ''} ${blankClassName ?? ''}`.trim()}>
-        {fill ?? emptyLabel}
-      </span>
-      {renderText(parts.after, 'after')}
-    </div>
-  )
 }
 
 function ParticleSentenceWords({
@@ -276,6 +224,9 @@ function ParticleSentenceWords({
 
 function ParticlesTrainerView({
   particlesState,
+  liveSession = null,
+  onSaveLiveSession,
+  onClearLiveSession,
   onPatchPreferences,
   onUpdateStats,
   myWords,
@@ -302,43 +253,18 @@ function ParticlesTrainerView({
   const mineOnly = preferences.mineOnly === true
   const myWordSet = useMemo(() => new Set(myWords), [myWords])
   const trainingWordSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
-  const {
-    view,
-    setSession,
-    sessionRef,
-    roundRef,
-    resetRound,
-    sessionStats,
-    feedback,
-    setFeedback,
-    pendingAdvanceRef,
-    queueAdvance,
-    clearPendingAdvance,
-    beginPractice,
-    endPractice,
-    recordAnswered,
-    patchRound,
-    sessionAccuracy,
-  } = usePracticeSession()
   const { recordAnswer } = useAnalyticsState()
   const isMobile = useIsMobileTouch()
 
-  const [currentCardId, setCurrentCardId] = useState<string | null>(null)
   const [choices, setChoices] = useState<CoreParticle[]>(() => particleChoiceOptions(focus))
-  const [locked, setLocked] = useState(false)
-  const [choiceFlash, setChoiceFlash] = useState<ChoiceFlash>(null)
   const [filledParticle, setFilledParticle] = useState<CoreParticle | null>(null)
   const [showTranscript, setShowTranscript] = useState(false)
-  const [canGoPrev, setCanGoPrev] = useState(false)
-  const [cheatOpen, setCheatOpen] = useState(false)
+  const cheats = useCheatSheets()
   const [infoKanji, setInfoKanji] = useState<string | null>(null)
-  const navHistoryRef = useRef<string[]>([])
-  const navIndexRef = useRef(-1)
-  const skipToAdjacentRef = useRef<(direction: 'prev' | 'next') => void>(() => {})
   const toggleTranscriptRef = useRef<() => void>(() => {})
   const cheatOpenRef = useRef(false)
   const infoKanjiRef = useRef<string | null>(null)
-  cheatOpenRef.current = cheatOpen
+  cheatOpenRef.current = cheats.sheet !== null
   infoKanjiRef.current = infoKanji
 
   const pool = useMemo(() => {
@@ -357,6 +283,43 @@ function ParticlesTrainerView({
     return map
   }, [pool, stats])
 
+  const drill = useChoiceDrill({
+    pool,
+    statsMap,
+    pickMode: preferences.pickMode,
+    hyperparams: PARTICLE_HYPERPARAMS,
+    liveSession,
+    onSaveLiveSession,
+    onClearLiveSession,
+    onUpdateStats,
+    recordAnswer,
+    emptyPoolMessage: mineOnly
+      ? 'Нет карточек только из ваших слов. Добавьте слова в «Мои» или снимите фильтр.'
+      : 'В этом наборе нет карточек.',
+    onShowCard: () => {
+      setChoices(particleChoiceOptions(focus))
+      setFilledParticle(null)
+      setShowTranscript(false)
+    },
+  })
+
+  const {
+    view,
+    sessionStats,
+    feedback,
+    sessionAccuracy,
+    currentCardId,
+    locked,
+    choiceFlash,
+    canGoPrev,
+    patchRound,
+    startPractice,
+    stopPractice,
+    skipToAdjacent,
+    handlePick,
+    skipToAdjacentRef,
+  } = drill
+
   const activeCard: ParticleClozeCard | null = currentCardId
     ? getParticleCard(currentCardId)
     : null
@@ -365,102 +328,11 @@ function ParticlesTrainerView({
   const revealedParticle =
     filledParticle ?? (showTranscript && activeCard ? activeCard.answer : null)
 
-  const practiceRef = useRef<{ view: PracticeView; activeCard: ParticleClozeCard | null }>({
+  const practiceRef = useRef<{ view: typeof view; activeCard: ParticleClozeCard | null }>({
     view: 'setup',
     activeCard: null,
   })
   practiceRef.current = { view, activeCard }
-
-  function showCard(
-    cardId: string,
-    baseSession?: PracticeSession,
-    { countPresentation = true }: { countPresentation?: boolean } = {},
-  ) {
-    const card = getParticleCard(cardId)
-    if (!card) return
-    const now = Date.now()
-    const base = baseSession ?? sessionRef.current
-    const shownSession = countPresentation ? bumpSessionShow(base, cardId) : base
-    sessionRef.current = shownSession
-    setSession(shownSession)
-    resetRound(now)
-    setCurrentCardId(cardId)
-    setChoices(particleChoiceOptions(focus))
-    setLocked(false)
-    setChoiceFlash(null)
-    setFilledParticle(null)
-    setShowTranscript(false)
-    setFeedback({ type: 'idle', text: '' })
-    if (countPresentation) {
-      onUpdateStats(cardId, 'seen', { now })
-    }
-  }
-
-  function rememberNavCard(cardId: string) {
-    const trimmed = navHistoryRef.current.slice(0, navIndexRef.current + 1)
-    trimmed.push(cardId)
-    navHistoryRef.current = trimmed
-    navIndexRef.current = trimmed.length - 1
-    setCanGoPrev(navIndexRef.current > 0)
-  }
-
-  function advanceToNextCard(nextSessionOverride?: PracticeSession) {
-    const nextSession = nextSessionOverride ?? sessionRef.current
-    if (!pool.length) {
-      stopPractice()
-      return
-    }
-
-    const nextId = pickNextCardId(
-      pool,
-      statsMap,
-      nextSession,
-      preferences.pickMode,
-      PARTICLE_HYPERPARAMS,
-    )
-    if (!nextId) {
-      setFeedback({ type: 'error', text: 'Нет карточек для тренировки.' })
-      return
-    }
-
-    const pickedFromQueue = nextSession.mistakeQueue.includes(nextId)
-    rememberNavCard(nextId)
-    showCard(nextId, {
-      ...nextSession,
-      sinceQueuePick: pickedFromQueue ? 0 : (nextSession.sinceQueuePick ?? 0) + 1,
-    })
-  }
-
-  function startPractice() {
-    if (!pool.length) {
-      setFeedback({
-        type: 'error',
-        text: mineOnly
-          ? 'Нет карточек только из ваших слов. Добавьте слова в «Мои» или снимите фильтр.'
-          : 'В этом наборе нет карточек.',
-      })
-      return
-    }
-    clearPendingAdvance()
-    navHistoryRef.current = []
-    navIndexRef.current = -1
-    setCanGoPrev(false)
-    const nextSession = beginPractice({
-      poolIds: pool.map((card) => card.id),
-      mode: preferences.pickMode,
-    })
-    advanceToNextCard(nextSession)
-  }
-
-  function stopPractice() {
-    clearPendingAdvance()
-    endPractice()
-    setCurrentCardId(null)
-    setLocked(false)
-    setChoiceFlash(null)
-    setFilledParticle(null)
-    setShowTranscript(false)
-  }
 
   function toggleTranscript() {
     if (!activeCard || view !== 'practice') return
@@ -471,113 +343,18 @@ function ParticlesTrainerView({
   toggleTranscriptRef.current = toggleTranscript
 
   function handleChoice(particle: CoreParticle) {
-    if (!activeCard || view !== 'practice' || locked || pendingAdvanceRef.current) return
-    const now = Date.now()
-    const activeRound = roundRef.current
-    const correct = particle === activeCard.answer
-    setLocked(true)
-    setChoiceFlash({ pick: particle, correct })
-
-    if (!correct) {
-      const withMistake = {
-        ...sessionRef.current,
-        mistakeQueue: [activeCard.id, ...sessionRef.current.mistakeQueue].slice(
-          0,
-          PARTICLE_HYPERPARAMS.queueSize,
-        ),
-      }
-      sessionRef.current = withMistake
-      setSession(withMistake)
-      roundRef.current = {
-        ...activeRound,
-        mistakes: activeRound.mistakes + 1,
-      }
-      setFilledParticle(activeCard.answer)
-      setFeedback({
-        type: 'error',
-        text: `Нужно «${activeCard.answer}» · ${PARTICLE_LABELS[activeCard.answer]}`,
-      })
-      onUpdateStats(activeCard.id, 'wrong', {
-        now,
-        latencyMs: now - activeRound.shownAt,
-        mistakesOnCard: activeRound.mistakes + 1,
-        inputMode: 'instant',
-      })
-      recordAnswer(false)
-      queueAdvance(() => {
-        setLocked(false)
-        setChoiceFlash(null)
-        setFilledParticle(null)
-        setFeedback({ type: 'idle', text: '' })
-      }, 1100)
-      return
-    }
-
-    const poolSize = pool.length || 1
-    let nextSession = pushRecentCard(sessionRef.current, activeCard.id)
-    nextSession = {
-      ...nextSession,
-      mistakeQueue: nextSession.mistakeQueue.filter((id) => id !== activeCard.id),
-    }
-    const clean = activeRound.mistakes === 0 && !activeRound.hintUsed
-    if (clean) {
-      nextSession = setCardCooldown(nextSession, activeCard.id, successCooldownTurns(poolSize, true))
-    }
-    sessionRef.current = nextSession
-    setSession(nextSession)
-    setFilledParticle(particle)
-    recordAnswered(clean ? 1 : 0)
-    recordAnswer(clean)
-    onUpdateStats(activeCard.id, 'correct', {
-      now,
-      latencyMs: now - activeRound.shownAt,
-      mistakesOnCard: activeRound.mistakes,
-      hintUsed: activeRound.hintUsed,
-      inputMode: 'instant',
+    if (!activeCard) return
+    handlePick({
+      pick: particle,
+      cardId: activeCard.id,
+      correct: particle === activeCard.answer,
+      successText: `${formatParticlePrompt(activeCard.prompt, activeCard.answer)} · ${activeCard.glossRu}`,
+      errorText: `Нужно «${activeCard.answer}» · ${PARTICLE_LABELS[activeCard.answer]}`,
+      onCorrect: () => setFilledParticle(particle),
+      onWrong: () => setFilledParticle(activeCard.answer),
+      onWrongUnlock: () => setFilledParticle(null),
     })
-    setFeedback({
-      type: 'success',
-      text: `${formatParticlePrompt(activeCard.prompt, activeCard.answer)} · ${activeCard.glossRu}`,
-    })
-    queueAdvance(() => advanceToNextCard(nextSession), 850)
   }
-
-  function skipToAdjacent(direction: 'prev' | 'next') {
-    if (view !== 'practice') return
-    clearPendingAdvance()
-    setLocked(false)
-    setChoiceFlash(null)
-    setFilledParticle(null)
-
-    if (direction === 'prev') {
-      if (navIndexRef.current <= 0) return
-      navIndexRef.current -= 1
-      setCanGoPrev(navIndexRef.current > 0)
-      const prevId = navHistoryRef.current[navIndexRef.current]
-      if (!prevId) return
-      showCard(prevId, sessionRef.current, { countPresentation: false })
-      return
-    }
-
-    if (navIndexRef.current >= 0 && navIndexRef.current < navHistoryRef.current.length - 1) {
-      navIndexRef.current += 1
-      setCanGoPrev(navIndexRef.current > 0)
-      const nextId = navHistoryRef.current[navIndexRef.current]
-      if (!nextId) return
-      showCard(nextId, sessionRef.current, { countPresentation: false })
-      return
-    }
-
-    const currentId = currentCardId
-    const baseSession = currentId
-      ? pushRecentCard(sessionRef.current, currentId)
-      : sessionRef.current
-    sessionRef.current = baseSession
-    setSession(baseSession)
-    advanceToNextCard(baseSession)
-  }
-
-  skipToAdjacentRef.current = skipToAdjacent
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -601,22 +378,16 @@ function ParticlesTrainerView({
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [])
+  }, [skipToAdjacentRef])
 
   function choiceClass(particle: CoreParticle): string {
-    const classes = ['particles-choice']
-    if (!choiceFlash) return classes.join(' ')
-    if (particle === choiceFlash.pick) {
-      classes.push(choiceFlash.correct ? 'is-correct' : 'is-wrong')
-    } else if (!choiceFlash.correct && particle === activeCard?.answer) {
-      classes.push('is-reveal')
-    }
-    return classes.join(' ')
+    return choiceItemClass('particles-choice', particle, choiceFlash, activeCard?.answer)
   }
 
-  const cheatSheetPopup = cheatOpen ? (
-    <CheatSheetPopup doc={PARTICLES_CHEAT_SHEET} onClose={() => setCheatOpen(false)} />
-  ) : null
+  const cheatTriggers = (
+    <CheatSheetTriggers state={cheats} testIdPrefix="" sheets={['particles']} wrap={false} />
+  )
+  const cheatSheetPopup = <CheatSheetPopups state={cheats} />
 
   const kanjiInfoPopup = infoKanji ? (
     <KanjiInfoCard
@@ -641,11 +412,7 @@ function ParticlesTrainerView({
               кандзи — карточка знака; слова предложения можно добавить в «Мои».
             </p>
           </div>
-          <CheatSheetTrigger
-            label="Шпаргалка"
-            testId="open-particles-cheatsheet"
-            onClick={() => setCheatOpen(true)}
-          />
+          {cheatTriggers}
         </header>
 
         <section className="particles-setup-shell">
@@ -792,31 +559,42 @@ function ParticlesTrainerView({
                 className={`particles-prompt-stack ${feedback.type === 'success' ? 'is-ok' : ''} ${feedback.type === 'error' ? 'is-bad' : ''}`.trim()}
                 aria-live="polite"
               >
-                <ParticleClozeLine
+                <ClozeLine
                   text={activeCard.prompt}
                   fill={revealedParticle}
                   emptyLabel="＿"
                   className="particles-sentence"
+                  blankClassName="particles-blank"
                   testId="particle-prompt"
-                  kanjiInfo
-                  onOpenKanjiInfo={setInfoKanji}
+                  segmentClassName="particles-sentence-text"
+                  renderSegment={(segment, key) => (
+                    <KanjiWritingHotspots
+                      key={key}
+                      writing={segment}
+                      className="particles-sentence-text"
+                      onOpenInfo={setInfoKanji}
+                    />
+                  )}
                 />
                 {showTranscript ? (
                   <>
-                    <ParticleClozeLine
+                    <ClozeLine
                       text={activeCard.kana}
                       fill={revealedParticle ? particleBlankFill(revealedParticle, 'kana') : null}
                       emptyLabel="＿"
                       className="particles-kana"
+                      blankClassName="particles-blank"
                       testId="particle-kana"
+                      segmentClassName="particles-sentence-text"
                     />
-                    <ParticleClozeLine
+                    <ClozeLine
                       text={activeCard.romaji}
                       fill={revealedParticle ? particleBlankFill(revealedParticle, 'romaji') : null}
                       emptyLabel="···"
                       className="particles-romaji"
-                      blankClassName="is-romaji"
+                      blankClassName="particles-blank is-romaji"
                       testId="particle-romaji"
+                      segmentClassName="particles-sentence-text"
                     />
                   </>
                 ) : null}
@@ -852,21 +630,21 @@ function ParticlesTrainerView({
               />
             </div>
 
-            <div className="particles-pad" role="group" aria-label="Выбор частицы">
-              {choices.map((particle) => (
-                <button
-                  key={particle}
-                  type="button"
-                  className={choiceClass(particle)}
-                  data-testid={`particle-choice-${particle}`}
-                  disabled={locked}
-                  onClick={() => handleChoice(particle)}
-                >
+            <ChoicePad
+              className="particles-pad"
+              ariaLabel="Выбор частицы"
+              options={choices}
+              onPick={handleChoice}
+              disabled={locked}
+              itemClassName={choiceClass}
+              testIdFor={(particle) => `particle-choice-${particle}`}
+              render={(particle) => (
+                <>
                   <span className="particles-choice-glyph">{particle}</span>
                   <span className="particles-choice-romaji">{PARTICLE_ROMAJI[particle]}</span>
-                </button>
-              ))}
-            </div>
+                </>
+              )}
+            />
 
             <div className="particles-footer">
               <p className={`particles-feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>
@@ -876,11 +654,7 @@ function ParticlesTrainerView({
                     : 'Выберите частицу · Space — чтение и ответ · колёсико — карточка знака')}
               </p>
               <div className="particles-footer-actions">
-                <CheatSheetTrigger
-                  label="Шпаргалка"
-                  testId="open-particles-cheatsheet"
-                  onClick={() => setCheatOpen(true)}
-                />
+                {cheatTriggers}
                 {canGoPrev ? (
                   <button
                     type="button"

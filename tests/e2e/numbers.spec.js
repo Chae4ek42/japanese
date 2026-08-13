@@ -11,6 +11,18 @@ test('header navigates to numbers trainer', async ({ page }) => {
   await expect(page.getByTestId('open-numbers')).toBeVisible()
 })
 
+test('numbers: counter and clock modes change the pool', async ({ page }) => {
+  await openFreshApp(page)
+  await openNumbersTrainer(page)
+  await page.getByTestId('numbers-mode-counter').click()
+  await expect(page.getByTestId('numbers-pool-count')).toContainText('50')
+  await expect(page.getByTestId('numbers-range-10')).toHaveCount(0)
+  await page.getByTestId('numbers-mode-clock').click()
+  await expect(page.getByTestId('numbers-pool-count')).toContainText('24')
+  await page.getByTestId('start-numbers').click()
+  await expect(page.getByTestId('current-number')).toBeVisible()
+})
+
 test('numbers: space reveals kanji and kana, then advances', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Numbers flow covered on desktop.')
   await openFreshApp(page)

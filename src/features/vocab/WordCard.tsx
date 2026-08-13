@@ -1,7 +1,7 @@
 import type { KanjiWord } from '../../shared/lib/types'
-import { speakJapanese } from '../../shared/lib/speech'
 import { isCustomWordId } from './customWords'
 import { wordReadings, wordVariantIds } from './mergeHomographs'
+import { WordActions } from './WordActions'
 
 export interface WordCardProps {
   word: KanjiWord
@@ -104,47 +104,15 @@ export function WordCard({
         ) : null}
       </div>
 
-      <div className="vocab-word-actions">
-        <button
-          type="button"
-          className="vocab-icon-button"
-          data-testid={`vocab-speak-${word.writing}`}
-          aria-label={`Озвучить ${word.writing}`}
-          onClick={() => speakJapanese(speakKana)}
-        >
-          ▶︎
-        </button>
-        {custom && wordId && onEdit ? (
-          <button
-            type="button"
-            className="vocab-save-button"
-            data-testid={`vocab-edit-${wordId}`}
-            onClick={() => onEdit(word)}
-          >
-            Изменить
-          </button>
-        ) : null}
-        {wordId && onToggleTraining ? (
-          <button
-            type="button"
-            className={inTrainingList ? 'vocab-save-button is-saved' : 'vocab-save-button'}
-            data-testid={`vocab-training-${wordId}`}
-            onClick={() => onToggleTraining(word)}
-          >
-            {inTrainingList ? 'В наборе' : '+ В набор'}
-          </button>
-        ) : null}
-        {wordId ? (
-          <button
-            type="button"
-            className={isSaved ? 'vocab-save-button is-saved' : 'vocab-save-button'}
-            data-testid={`vocab-toggle-${wordId}`}
-            onClick={() => onToggleSaved(word)}
-          >
-            {custom ? 'Удалить' : isSaved ? 'В моих' : '+ В мои'}
-          </button>
-        ) : null}
-      </div>
+      <WordActions
+        word={word}
+        isSaved={isSaved}
+        onToggleSaved={onToggleSaved}
+        onEdit={onEdit}
+        inTrainingList={inTrainingList}
+        onToggleTraining={onToggleTraining}
+        speakKana={speakKana}
+      />
     </article>
   )
 }

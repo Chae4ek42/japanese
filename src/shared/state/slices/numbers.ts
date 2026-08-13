@@ -1,6 +1,6 @@
 import type { AppState, StatsRecord } from '../../lib/types'
 
-const VALID_NUMBER_MODES = new Set(['plain', 'age'])
+const VALID_NUMBER_MODES = new Set(['plain', 'age', 'counter', 'clock'])
 const VALID_RANGE_IDS = new Set(['10', '99', '999'])
 const VALID_PICK_MODES = new Set(['adaptive', 'even'])
 

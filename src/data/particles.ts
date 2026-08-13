@@ -378,11 +378,7 @@ export function formatParticlePrompt(prompt: string, fill?: string): string {
   return prompt.replace('___', fill)
 }
 
-export function splitParticlePrompt(prompt: string): { before: string; after: string } {
-  const index = prompt.indexOf('___')
-  if (index < 0) return { before: prompt, after: '' }
-  return { before: prompt.slice(0, index), after: prompt.slice(index + 3) }
-}
+export { splitCloze as splitParticlePrompt } from '../shared/lib/cloze'
 
 /** Fill for kana line uses the particle glyph; romaji uses reading. */
 export function particleBlankFill(

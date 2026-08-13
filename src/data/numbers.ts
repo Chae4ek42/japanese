@@ -14,7 +14,21 @@ export const NUMBER_MODES = [
     label: 'Возраст',
     hint: 'Возраст в годах → выражение с 歳.',
   },
+  {
+    id: 'counter' as const,
+    label: 'Счётчики',
+    hint: '1–10 с 本・枚・人・匹・つ. Особые чтения: いっぽん, ひとり, みっつ.',
+  },
+  {
+    id: 'clock' as const,
+    label: 'Время',
+    hint: 'Часы 1–12 и половина: よじ, しちじ, くじ, よじはん.',
+  },
 ]
+
+export function numberModeUsesRange(mode: NumberMode): boolean {
+  return mode === 'plain' || mode === 'age'
+}
 
 export const NUMBER_RANGES = [
   { id: '10' as const, label: '1–10', min: 1, max: 10 },
@@ -189,7 +203,7 @@ export function formatAgePrompt(n: number): string {
   return `${value} ${suffix}`
 }
 
-export function createNumberCard(n: number, mode: NumberMode): NumberCard {
+export function createNumberCard(n: number, mode: 'plain' | 'age'): NumberCard {
   const value = Number(n)
   const reading = mode === 'age' ? formatAgeReading(value) : formatNumberReading(value)
   const id = `${mode}:${value}`
@@ -205,6 +219,146 @@ export function createNumberCard(n: number, mode: NumberMode): NumberCard {
   }
 }
 
+export type CounterId = 'hon' | 'mai' | 'nin' | 'hiki' | 'tsu'
+
+export const COUNTER_META: Array<{ id: CounterId; kanji: string; label: string }> = [
+  { id: 'hon', kanji: '本', label: 'длинные предметы' },
+  { id: 'mai', kanji: '枚', label: 'плоские' },
+  { id: 'nin', kanji: '人', label: 'люди' },
+  { id: 'hiki', kanji: '匹', label: 'мелкие животные' },
+  { id: 'tsu', kanji: 'つ', label: 'универсальный 1–10' },
+]
+
+const COUNTER_READINGS: Record<CounterId, Array<{ kana: string; romaji: string }>> = {
+  hon: [
+    { kana: 'いっぽん', romaji: 'ippon' },
+    { kana: 'にほん', romaji: 'nihon' },
+    { kana: 'さんぼん', romaji: 'sanbon' },
+    { kana: 'よんほん', romaji: 'yonhon' },
+    { kana: 'ごほん', romaji: 'gohon' },
+    { kana: 'ろっぽん', romaji: 'roppon' },
+    { kana: 'ななほん', romaji: 'nanahon' },
+    { kana: 'はっぽん', romaji: 'happon' },
+    { kana: 'きゅうほん', romaji: 'kyuuhon' },
+    { kana: 'じゅっぽん', romaji: 'juppon' },
+  ],
+  mai: [
+    { kana: 'いちまい', romaji: 'ichimai' },
+    { kana: 'にまい', romaji: 'nimai' },
+    { kana: 'さんまい', romaji: 'sanmai' },
+    { kana: 'よんまい', romaji: 'yonmai' },
+    { kana: 'ごまい', romaji: 'gomai' },
+    { kana: 'ろくまい', romaji: 'rokumai' },
+    { kana: 'ななまい', romaji: 'nanamai' },
+    { kana: 'はちまい', romaji: 'hachimai' },
+    { kana: 'きゅうまい', romaji: 'kyuumai' },
+    { kana: 'じゅうまい', romaji: 'juumai' },
+  ],
+  nin: [
+    { kana: 'ひとり', romaji: 'hitori' },
+    { kana: 'ふたり', romaji: 'futari' },
+    { kana: 'さんにん', romaji: 'sannin' },
+    { kana: 'よにん', romaji: 'yonin' },
+    { kana: 'ごにん', romaji: 'gonin' },
+    { kana: 'ろくにん', romaji: 'rokunin' },
+    { kana: 'しちにん', romaji: 'shichinin' },
+    { kana: 'はちにん', romaji: 'hachinin' },
+    { kana: 'きゅうにん', romaji: 'kyuunin' },
+    { kana: 'じゅうにん', romaji: 'juunin' },
+  ],
+  hiki: [
+    { kana: 'いっぴき', romaji: 'ippiki' },
+    { kana: 'にひき', romaji: 'nihiki' },
+    { kana: 'さんびき', romaji: 'sanbiki' },
+    { kana: 'よんひき', romaji: 'yonhiki' },
+    { kana: 'ごひき', romaji: 'gohiki' },
+    { kana: 'ろっぴき', romaji: 'roppiki' },
+    { kana: 'ななひき', romaji: 'nanahiki' },
+    { kana: 'はっぴき', romaji: 'happiki' },
+    { kana: 'きゅうひき', romaji: 'kyuuhiki' },
+    { kana: 'じゅっぴき', romaji: 'juppiki' },
+  ],
+  tsu: [
+    { kana: 'ひとつ', romaji: 'hitotsu' },
+    { kana: 'ふたつ', romaji: 'futatsu' },
+    { kana: 'みっつ', romaji: 'mittsu' },
+    { kana: 'よっつ', romaji: 'yottsu' },
+    { kana: 'いつつ', romaji: 'itsutsu' },
+    { kana: 'むっつ', romaji: 'muttsu' },
+    { kana: 'ななつ', romaji: 'nanatsu' },
+    { kana: 'やっつ', romaji: 'yattsu' },
+    { kana: 'ここのつ', romaji: 'kokonotsu' },
+    { kana: 'とお', romaji: 'too' },
+  ],
+}
+
+export function createCounterCard(n: number, counterId: CounterId): NumberCard {
+  const value = Number(n)
+  if (!Number.isInteger(value) || value < 1 || value > 10) {
+    throw new RangeError(`Счётчик вне диапазона 1–10: ${n}`)
+  }
+  const meta = COUNTER_META.find((item) => item.id === counterId)
+  if (!meta) {
+    throw new RangeError(`Неизвестный счётчик: ${counterId}`)
+  }
+  const reading = COUNTER_READINGS[counterId][value - 1]
+  const kanji = counterId === 'tsu' && value === 10 ? '十' : `${numberToKanji(value)}${meta.kanji}`
+  return {
+    id: `counter:${counterId}:${value}`,
+    value,
+    mode: 'counter',
+    symbol: `${value}${meta.kanji === 'つ' && value === 10 ? '' : meta.kanji === 'つ' ? 'つ' : meta.kanji}`,
+    kanji,
+    kana: reading.kana,
+    romaji: reading.romaji,
+  }
+}
+
+function clockHourReading(hour: number): Pick<NumberReading, 'kana' | 'romaji'> {
+  if (hour === 4) return { kana: 'よじ', romaji: 'yoji' }
+  if (hour === 7) return { kana: 'しちじ', romaji: 'shichiji' }
+  if (hour === 9) return { kana: 'くじ', romaji: 'kuji' }
+  const base = formatNumberReading(hour)
+  return { kana: `${base.kana}じ`, romaji: `${base.romaji}ji` }
+}
+
+export function createClockCard(hour: number, half = false): NumberCard {
+  const value = Number(hour)
+  if (!Number.isInteger(value) || value < 1 || value > 12) {
+    throw new RangeError(`Час вне диапазона 1–12: ${hour}`)
+  }
+  const head = clockHourReading(value)
+  const kanjiHead = `${numberToKanji(value)}時`
+  return {
+    id: `clock:${value}:${half ? '30' : '00'}`,
+    value,
+    mode: 'clock',
+    symbol: `${value}:${half ? '30' : '00'}`,
+    kanji: half ? `${kanjiHead}半` : kanjiHead,
+    kana: half ? `${head.kana}はん` : head.kana,
+    romaji: half ? `${head.romaji}han` : head.romaji,
+  }
+}
+
+function buildCounterPool(): NumberCard[] {
+  const pool: NumberCard[] = []
+  for (const counter of COUNTER_META) {
+    for (let value = 1; value <= 10; value += 1) {
+      pool.push(createCounterCard(value, counter.id))
+    }
+  }
+  return pool
+}
+
+function buildClockPool(): NumberCard[] {
+  const pool: NumberCard[] = []
+  for (let hour = 1; hour <= 12; hour += 1) {
+    pool.push(createClockCard(hour, false))
+    pool.push(createClockCard(hour, true))
+  }
+  return pool
+}
+
 export function buildNumberPool({
   mode,
   rangeMin,
@@ -214,14 +368,24 @@ export function buildNumberPool({
   rangeMin: number
   rangeMax: number
 }): NumberCard[] {
-  const pool: NumberCard[] = []
+  if (mode === 'counter') return buildCounterPool()
+  if (mode === 'clock') return buildClockPool()
 
+  const pool: NumberCard[] = []
   for (let value = rangeMin; value <= rangeMax; value += 1) {
     pool.push(createNumberCard(value, mode))
   }
-
   return pool
 }
+
+export const CHEAT_SHEET_COUNTERS = [1, 3, 6, 8, 10].flatMap((value) =>
+  (['hon', 'nin', 'tsu'] as CounterId[]).map((counterId) => createCounterCard(value, counterId)),
+)
+
+export const CHEAT_SHEET_CLOCK = [4, 7, 9, 10].flatMap((hour) => [
+  createClockCard(hour, false),
+  createClockCard(hour, true),
+])
 
 export const CHEAT_SHEET_DIGITS = Array.from({ length: 10 }, (_, index) => {
   const value = index + 1

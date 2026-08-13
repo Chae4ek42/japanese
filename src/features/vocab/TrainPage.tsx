@@ -2,19 +2,13 @@ import { useState } from 'react'
 import './styles.css'
 import { DEFAULT_VOCAB_PREFERENCES } from '../../shared/state/app-state'
 import { useVocabState } from '../../shared/state/AppStateContext'
-import { PARTICLES_CHEAT_SHEET, VERB_FORMS_CHEAT_SHEET } from '../../data/cheatSheets'
-import {
-  CheatSheetActions,
-  CheatSheetPopup,
-  CheatSheetTrigger,
-} from '../../shared/ui/CheatSheetPopup'
+import { CheatSheetsBar } from '../../shared/ui/CheatSheetsBar'
 import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
 import { VocabTrainer } from './VocabTrainer'
 
 export function TrainPage() {
   const vocab = useVocabState()
   const [infoKanji, setInfoKanji] = useState<string | null>(null)
-  const [cheatSheet, setCheatSheet] = useState<'particles' | 'verbs' | null>(null)
 
   if (!vocab) return null
 
@@ -24,18 +18,7 @@ export function TrainPage() {
         <div>
           <h2>Тренажёр слов</h2>
         </div>
-        <CheatSheetActions>
-          <CheatSheetTrigger
-            label="Шпаргалка: частицы"
-            testId="train-open-particles-cheatsheet"
-            onClick={() => setCheatSheet('particles')}
-          />
-          <CheatSheetTrigger
-            label="Шпаргалка: глаголы"
-            testId="train-open-verbs-cheatsheet"
-            onClick={() => setCheatSheet('verbs')}
-          />
-        </CheatSheetActions>
+        <CheatSheetsBar testIdPrefix="train" />
       </header>
 
       <VocabTrainer
@@ -78,13 +61,6 @@ export function TrainPage() {
           onToggleMyWord={vocab.toggleMyWord}
           onToggleTrainingWord={(id) => vocab.toggleTrainingWord(id)}
         />
-      ) : null}
-
-      {cheatSheet === 'particles' ? (
-        <CheatSheetPopup doc={PARTICLES_CHEAT_SHEET} onClose={() => setCheatSheet(null)} />
-      ) : null}
-      {cheatSheet === 'verbs' ? (
-        <CheatSheetPopup doc={VERB_FORMS_CHEAT_SHEET} onClose={() => setCheatSheet(null)} />
       ) : null}
     </main>
   )

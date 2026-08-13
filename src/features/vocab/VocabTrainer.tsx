@@ -19,14 +19,10 @@ import {
   resolveActiveTrainingSetId,
 } from '../../shared/lib/trainingSets'
 import {
-  DEFAULT_HYPERPARAMS,
-  createStatsRecord,
   isProblemByRecentAnswers,
-  pickNextCardId,
-  projectRecentAnswers,
   pushRecentCard,
 } from '../../shared/lib/trainer'
-import { afterSuccessfulCard, enqueueMistake, prepareShownCard } from '../../shared/lib/trainerCore'
+import { enqueueMistake, prepareShownCard } from '../../shared/lib/trainerCore'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { useAnalyticsState } from '../../shared/state/AppStateContext'
 import { DEFAULT_LATENCY_MODEL, isForgivableTypo } from '../../shared/lib/review/grade'
@@ -37,11 +33,22 @@ import {
   buildWideVocabDistractorPool,
   evaluateRomajiReadings,
   normalizeRomajiDraft,
-  pickEvenVocabCardId,
   pickNextSourceCard,
   wordToVocabCard,
 } from './pool'
 import { consumeAutostartTrain } from './autostart'
+import { pickNextVocabCardId } from './vocabPick'
+import {
+  applyOptimisticStat,
+  dropCardFromPracticeSession,
+  nextSessionAfterVocabGrade,
+  problemWordIdsForCard,
+} from './vocabGrade'
+import {
+  buildVocabLiveSnapshot,
+  restoreVocabLiveFields,
+  widenLegacyVocabInFlight,
+} from './vocabLiveSession'
 import { mergeWordsByWriting } from './mergeHomographs'
 import { buildMeaningPrompt, buildMixedPrompt, type VocabMixedPrompt } from './mixed'
 import {
@@ -49,14 +56,10 @@ import {
   cardHintsFromVocab,
   drillModeToAspect,
   deriveRoundGrade,
-  gradeAndAdvanceReview,
   isSessionCleanAnswer,
   masteryOutcomeFromRound,
   patchReviewWeights,
-  pickReviewCard,
-  removeCardFromReviewSession,
   appendCardToReviewSession,
-  defaultInFlightLimit,
   resolveCardMemory,
   startReviewPracticeSession,
 } from './reviewSession'
@@ -390,46 +393,29 @@ export function VocabTrainer({
   useEffect(() => {
     if (didRestoreLiveSessionRef.current) return
     didRestoreLiveSessionRef.current = true
-    if (
-      !liveSession ||
-      liveSession.view !== 'practice' ||
-      !liveSession.currentCardId ||
-      !liveSession.session.poolIds.includes(liveSession.currentCardId)
-    ) {
-      return
-    }
+    const restored = restoreVocabLiveFields(liveSession)
+    if (!restored) return
 
-    const cardId = liveSession.currentCardId
-    let restoredSession = liveSession.session
-    // Legacy live sessions stored no inFlightLimit → stuck at K=5. Widen for drill.
-    if (
-      restoredSession.review &&
-      restoredSession.review.inFlightLimit == null &&
-      preferencesRef.current.sessionMode !== 'srs'
-    ) {
-      restoredSession = {
-        ...restoredSession,
-        review: {
-          ...restoredSession.review,
-          inFlightLimit: defaultInFlightLimit(restoredSession.poolIds.length, false),
-        },
-      }
-    }
+    const cardId = restored.currentCardId
+    const restoredSession = widenLegacyVocabInFlight(
+      restored.session,
+      preferencesRef.current.sessionMode,
+    )
     sessionRef.current = restoredSession
     setSession(restoredSession)
-    setSessionStats(liveSession.sessionStats)
+    setSessionStats(restored.sessionStats)
     setCurrentCardId(cardId)
     setView('practice')
-    setSessionWeightMultipliers(liveSession.weightMultipliers ?? {})
-    sessionWeightMultipliersRef.current = liveSession.weightMultipliers ?? {}
+    setSessionWeightMultipliers(restored.weightMultipliers)
+    sessionWeightMultipliersRef.current = restored.weightMultipliers
     const restoredAddedAt =
-      liveSession.poolAddedAt && Object.keys(liveSession.poolAddedAt).length
-        ? liveSession.poolAddedAt
-        : seedPoolAddedAt(liveSession.session.poolIds)
+      restored.poolAddedAt && Object.keys(restored.poolAddedAt).length
+        ? restored.poolAddedAt
+        : seedPoolAddedAt(restored.session.poolIds)
     replacePoolAddedAt(restoredAddedAt)
-    navHistoryRef.current = liveSession.navHistory ?? []
-    navIndexRef.current = liveSession.navIndex ?? -1
-    setCanGoPrev((liveSession.navIndex ?? -1) > 0)
+    navHistoryRef.current = restored.navHistory
+    navIndexRef.current = restored.navIndex
+    setCanGoPrev(restored.navIndex > 0)
     resetRound(Date.now())
     setInputValue('')
     setSelectedChoice(null)
@@ -454,16 +440,18 @@ export function VocabTrainer({
   useEffect(() => {
     if (!onSaveLiveSession) return
     if (view !== 'practice' || !currentCardId) return
-    onSaveLiveSession({
-      session,
-      currentCardId,
-      view,
-      sessionStats,
-      weightMultipliers: sessionWeightMultipliers,
-      poolAddedAt: sessionPoolAddedAt,
-      navHistory: navHistoryRef.current,
-      navIndex: navIndexRef.current,
-    })
+    onSaveLiveSession(
+      buildVocabLiveSnapshot({
+        session,
+        currentCardId,
+        view,
+        sessionStats,
+        weightMultipliers: sessionWeightMultipliers,
+        poolAddedAt: sessionPoolAddedAt,
+        navHistory: navHistoryRef.current,
+        navIndex: navIndexRef.current,
+      }),
+    )
   }, [
     view,
     currentCardId,
@@ -575,14 +563,6 @@ export function VocabTrainer({
     }
   }
 
-  function statsWithDefaults(pool: VocabCard[]) {
-    const map = { ...statsRef.current }
-    for (const card of pool) {
-      map[card.id] = map[card.id] ?? createStatsRecord()
-    }
-    return map
-  }
-
   function rememberNavCard(cardId: string) {
     const trimmed = navHistoryRef.current.slice(0, navIndexRef.current + 1)
     trimmed.push(cardId)
@@ -649,58 +629,23 @@ export function VocabTrainer({
     }
   }
 
-  function zeroWeightExcludeIds(weights: Record<string, number>, extraIds: string[] = []): string[] {
-    const ids = new Set(extraIds)
-    for (const [id, weight] of Object.entries(weights)) {
-      if (weight <= 0) ids.add(id)
-    }
-    return [...ids]
-  }
-
-  function pickNextVocabCardId(pool: VocabCard[], currentCardId: string | null, session: PracticeSession) {
-    const weights = sessionWeightMultipliersRef.current
-    const activePool = pool.filter((card) => (weights[card.id] ?? 1) > 0)
-    const pickPool = activePool.length ? activePool : pool
-    const excludeIds = zeroWeightExcludeIds(weights, currentCardId ? [currentCardId] : [])
-    const pickMode = preferencesRef.current.pickMode
-
-    // Even mode must win over the v2 review sequencer — otherwise mid-session
-    // toggles look like a no-op while review keeps driving picks.
-    if (pickMode === 'even') {
-      const prefs = preferencesRef.current
-      return pickEvenVocabCardId(pickPool, {
-        excludeIds,
-        weightMultipliers: weights,
-        showCounts: session.showCounts ?? {},
-        boostShows: prefs.evenBoostShows,
-        boostFactor: prefs.evenBoostFactor,
-        decayPower: prefs.evenDecayPower,
-      })
-    }
-
-    if (usesReviewV2(session) && session.review) {
-      const picked = pickReviewCard(
-        session,
-        pickPool,
-        memoryRef.current,
-        statsRef.current,
-        preferencesRef.current,
-      )
-      sessionRef.current = picked.session
-      setSession(picked.session)
-      if (picked.done) return null
-      return picked.cardId
-    }
-
-    return pickNextCardId(
-      pickPool,
-      statsWithDefaults(pickPool),
-      session,
-      pickMode,
-      DEFAULT_HYPERPARAMS,
-      Math.random,
-      { weightMultipliers: weights },
-    )
+  function pickNextVocabCardIdForSession(
+    pool: VocabCard[],
+    currentCardId: string | null,
+    session: PracticeSession,
+  ) {
+    return pickNextVocabCardId(pool, currentCardId, session, {
+      weights: sessionWeightMultipliersRef.current,
+      pickMode: preferencesRef.current.pickMode,
+      preferences: preferencesRef.current,
+      usesReviewV2: usesReviewV2(session),
+      memory: memoryRef.current,
+      stats: statsRef.current,
+      applySession: (next) => {
+        sessionRef.current = next
+        setSession(next)
+      },
+    })
   }
 
   function handlePickModeChange(mode: 'adaptive' | 'even') {
@@ -747,7 +692,7 @@ export function VocabTrainer({
     const optionsPool = distractorPool.length >= 6 ? distractorPool : pool
 
     let nextSession = nextSessionOverride ?? sessionRef.current
-    const nextId = pickNextVocabCardId(pool, currentCardIdRef.current, nextSession)
+    const nextId = pickNextVocabCardIdForSession(pool, currentCardIdRef.current, nextSession)
     nextSession = sessionRef.current
     if (!nextId) {
       if (usesReviewV2(nextSession) && nextSession.review?.done) {
@@ -817,7 +762,7 @@ export function VocabTrainer({
     const session = sessionRef.current
     const pickSession: PracticeSession =
       usesReviewV2(session) || !currentId ? session : pushRecentCard(session, currentId)
-    const nextId = pickNextVocabCardId(pool, currentId, pickSession)
+    const nextId = pickNextVocabCardIdForSession(pool, currentId, pickSession)
     if (!nextId || nextId === currentId) {
       if (pool.length < 2) return
       const fallback = pool.find((card) => card.id !== currentId)
@@ -998,24 +943,17 @@ export function VocabTrainer({
       })
     }
 
-    let nextSession = sessionRef.current
-    if (usesReviewV2(nextSession) && nextSession.review) {
-      nextSession = gradeAndAdvanceReview({
-        session: nextSession,
-        cardId: card.id,
-        grade,
-        pool: getPracticePool(),
-      })
-    } else if (grade >= 3 || (!wrong && grade === 2 && !activeRound.hintUsed)) {
-      const poolSize = getPracticePool().length || nextSession.poolIds.length || 1
-      nextSession = afterSuccessfulCard(nextSession, card.id, {
-        kind: statsOutcome === 'correct' ? 'correct' : 'hint',
-        poolSize,
-        clean,
-      })
-    } else if (wrong || grade === 1) {
-      nextSession = enqueueMistake(nextSession, card.id)
-    }
+    let nextSession = nextSessionAfterVocabGrade({
+      session: sessionRef.current,
+      cardId: card.id,
+      grade,
+      wrong,
+      hintUsed: activeRound.hintUsed,
+      statsOutcome,
+      clean,
+      usesReviewV2: usesReviewV2(sessionRef.current),
+      pool: getPracticePool(),
+    })
 
     if (countSession) {
       recordCleanAnswer(clean)
@@ -1025,45 +963,15 @@ export function VocabTrainer({
     setSession(nextSession)
     patchRound({ wrongRecorded: true })
 
-    const problemIds = card.variantIds?.length ? card.variantIds : [card.id]
-    // Global optimistic stats (planner / problem detection) — persisted via onApplyGradedReview.
-    const globalExisting = statsRef.current[card.id] ?? createStatsRecord()
-    const globalRecent = projectRecentAnswers(globalExisting.recentAnswers, statsOutcome)
-    const globalClears = globalExisting.clears + (statsOutcome === 'correct' ? 1 : 0)
-    const globalErrors = globalExisting.errors + (statsOutcome === 'wrong' ? 1 : 0)
-    const globalHints = globalExisting.hints + (statsOutcome === 'hint' ? 1 : 0)
-    const globalTotal = globalClears + globalErrors + globalHints
-    statsRef.current = {
-      ...statsRef.current,
-      [card.id]: {
-        ...globalExisting,
-        clears: globalClears,
-        errors: globalErrors,
-        hints: globalHints,
-        recentAnswers: globalRecent,
-        eventAccuracy: globalTotal ? Math.round((globalClears / globalTotal) * 100) : 0,
-      },
-    }
+    const problemIds = problemWordIdsForCard(card)
+    const globalNext = applyOptimisticStat(statsRef.current[card.id], statsOutcome)
+    statsRef.current = { ...statsRef.current, [card.id]: globalNext }
 
-    // Session sidebar: start from a clean slate each training run.
-    const sessionExisting = liveStatsRef.current[card.id] ?? createStatsRecord()
-    const sessionRecent = projectRecentAnswers(sessionExisting.recentAnswers, statsOutcome)
-    const sessionClears = sessionExisting.clears + (statsOutcome === 'correct' ? 1 : 0)
-    const sessionErrors = sessionExisting.errors + (statsOutcome === 'wrong' ? 1 : 0)
-    const sessionHints = sessionExisting.hints + (statsOutcome === 'hint' ? 1 : 0)
-    const sessionTotal = sessionClears + sessionErrors + sessionHints
-    const nextSessionStats: StatsRecord = {
-      ...sessionExisting,
-      clears: sessionClears,
-      errors: sessionErrors,
-      hints: sessionHints,
-      recentAnswers: sessionRecent,
-      eventAccuracy: sessionTotal ? Math.round((sessionClears / sessionTotal) * 100) : 0,
-    }
+    const nextSessionStats = applyOptimisticStat(liveStatsRef.current[card.id], statsOutcome)
     liveStatsRef.current = { ...liveStatsRef.current, [card.id]: nextSessionStats }
     setLiveStats(liveStatsRef.current)
 
-    if (isProblemByRecentAnswers(globalRecent)) {
+    if (isProblemByRecentAnswers(globalNext.recentAnswers)) {
       onAddProblemWords?.(problemIds)
     } else {
       onRemoveProblemWords?.(problemIds)
@@ -1251,20 +1159,10 @@ export function VocabTrainer({
   }
 
   function dropCardFromSession(cardId: string): PracticeSession {
-    const currentSession = sessionRef.current
-    const nextSession = usesReviewV2(currentSession)
-      ? removeCardFromReviewSession(currentSession, cardId)
-      : {
-          ...currentSession,
-          poolIds: (
-            currentSession.poolIds.length
-              ? currentSession.poolIds
-              : getPracticePool().map((card) => card.id)
-          ).filter((id) => id !== cardId),
-          mistakeQueue: currentSession.mistakeQueue.filter((id) => id !== cardId),
-          recentHistory: currentSession.recentHistory.filter((id) => id !== cardId),
-          lastCardId: currentSession.lastCardId === cardId ? null : currentSession.lastCardId,
-        }
+    const nextSession = dropCardFromPracticeSession(sessionRef.current, cardId, {
+      usesReviewV2: usesReviewV2(sessionRef.current),
+      fallbackPoolIds: getPracticePool().map((card) => card.id),
+    })
     setSession(nextSession)
     sessionRef.current = nextSession
     setSessionWeightMultipliers((prev) => {

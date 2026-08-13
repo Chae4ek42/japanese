@@ -30,6 +30,7 @@ describe('routes', () => {
     assert.deepEqual(parsePath('/theory'), { page: 'theory' })
     assert.deepEqual(parsePath('/accounts'), { page: 'accounts' })
     assert.deepEqual(parsePath('/particles'), { page: 'particles' })
+    assert.deepEqual(parsePath('/verbs'), { page: 'verbs' })
     assert.deepEqual(parsePath('/reader'), { page: 'reader' })
   })
 
@@ -42,12 +43,14 @@ describe('routes', () => {
     assert.equal(isKnownPath('/theory'), true)
     assert.equal(isKnownPath('/accounts'), true)
     assert.equal(isKnownPath('/particles'), true)
+    assert.equal(isKnownPath('/verbs'), true)
     assert.equal(isKnownPath('/reader'), true)
   })
 
   it('строит пути из маршрута и страницы', () => {
     assert.equal(pathForRoute({ page: 'numbers' }), '/numbers')
     assert.equal(pathForRoute({ page: 'particles' }), '/particles')
+    assert.equal(pathForRoute({ page: 'verbs' }), '/verbs')
     assert.equal(pathForRoute({ page: 'reader' }), '/reader')
     assert.equal(pathForRoute({ page: 'train' }), '/train')
     assert.equal(pathForRoute({ page: 'mine' }), '/mine')
@@ -59,7 +62,21 @@ describe('routes', () => {
     assert.equal(pathForPage('theory'), '/theory')
     assert.equal(pathForPage('accounts'), '/accounts')
     assert.equal(pathForPage('particles'), '/particles')
+    assert.equal(pathForPage('verbs'), '/verbs')
     assert.equal(pathForPage('reader'), '/reader')
+  })
+
+  it('реестр страниц покрывает все пути навбара', async () => {
+    const { PAGE_META, navItems, homeEntries } = await import('../../src/shared/lib/pages.ts')
+    assert.equal(navItems('primary').length > 0, true)
+    assert.equal(navItems('more').some((page) => page.id === 'vocab'), true)
+    assert.equal(homeEntries('practice').some((page) => page.home.testId === 'open-kana'), true)
+    assert.equal(homeEntries('practice').some((page) => page.id === 'verbs'), true)
+    assert.equal(navItems('primary').some((page) => page.id === 'verbs'), true)
+    assert.equal(
+      PAGE_META.every((page) => pathForPage(page.id) === page.path),
+      true,
+    )
   })
 
   it('shouldHandleClientNav пропускает модификаторы', () => {

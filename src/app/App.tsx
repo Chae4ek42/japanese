@@ -5,6 +5,7 @@ import { KanaTrainer } from '../features/kana/KanaTrainer'
 import { KanjiPage } from '../features/kanji/KanjiPage'
 import { NumbersTrainer } from '../features/numbers/NumbersTrainer'
 import { ParticlesTrainer } from '../features/particles/ParticlesTrainer'
+import { VerbsTrainer } from '../features/verbs/VerbsTrainer'
 import { TextReaderPage } from '../features/reader/TextReaderPage'
 import { DictionaryPage } from '../features/vocab/DictionaryPage'
 import { MineWordsPage } from '../features/vocab/MineWordsPage'
@@ -14,6 +15,7 @@ import { AnalyticsPage } from '../features/analytics/AnalyticsPage'
 import { AccountGate } from '../features/accounts/AccountGate'
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import { useActiveTimeTracker } from '../shared/lib/useActiveTimeTracker'
+import type { AppPage } from '../shared/lib/types'
 import {
   AppStateProvider,
   useAccounts,
@@ -21,6 +23,53 @@ import {
   useAppState,
 } from '../shared/state/AppStateContext'
 import { useBackupApp } from '../shared/state/backup'
+
+function AppPageView({ page, onNavigate }: { page: AppPage; onNavigate: (page: AppPage) => void }) {
+  switch (page) {
+    case 'home':
+      return <HomePage onNavigate={onNavigate} />
+    case 'kanji':
+      return <KanjiPage />
+    case 'train':
+      return <TrainPage />
+    case 'vocab':
+      return <DictionaryPage />
+    case 'mine':
+      return <MineWordsPage />
+    case 'theory':
+      return <TheoryPage onOpenTrain={() => onNavigate('train')} onOpenPage={onNavigate} />
+    case 'analytics':
+      return <AnalyticsPage />
+    case 'reader':
+      return <TextReaderPage />
+    case 'kana':
+      return (
+        <main className="trainer-layout">
+          <KanaTrainer />
+        </main>
+      )
+    case 'numbers':
+      return (
+        <main className="trainer-layout">
+          <NumbersTrainer />
+        </main>
+      )
+    case 'particles':
+      return (
+        <main className="trainer-layout">
+          <ParticlesTrainer />
+        </main>
+      )
+    case 'verbs':
+      return (
+        <main className="trainer-layout">
+          <VerbsTrainer />
+        </main>
+      )
+    default:
+      return <HomePage onNavigate={onNavigate} />
+  }
+}
 
 function AppRoutes() {
   const appState = useAppState()
@@ -79,43 +128,7 @@ function AppRoutes() {
         importInputRef={fileInputRef}
         onImportFileChange={onImportFileChange}
       />
-
-      {page === 'home' ? (
-        <HomePage
-          onOpenKana={() => goPage('kana')}
-          onOpenKanji={() => goPage('kanji')}
-          onOpenNumbers={() => goPage('numbers')}
-          onOpenParticles={() => goPage('particles')}
-          onOpenReader={() => goPage('reader')}
-          onOpenVocab={() => goPage('vocab')}
-          onOpenMine={() => goPage('mine')}
-          onOpenVocabTrain={() => goPage('train')}
-          onOpenTheory={() => goPage('theory')}
-          onOpenAnalytics={() => goPage('analytics')}
-        />
-      ) : page === 'kanji' ? (
-        <KanjiPage />
-      ) : page === 'train' ? (
-        <TrainPage />
-      ) : page === 'vocab' ? (
-        <DictionaryPage />
-      ) : page === 'mine' ? (
-        <MineWordsPage />
-      ) : page === 'theory' ? (
-        <TheoryPage onOpenTrain={() => goPage('train')} />
-      ) : page === 'analytics' ? (
-        <AnalyticsPage />
-      ) : page === 'particles' ? (
-        <main className="trainer-layout">
-          <ParticlesTrainer />
-        </main>
-      ) : page === 'reader' ? (
-        <TextReaderPage />
-      ) : (
-        <main className="trainer-layout">
-          {page === 'kana' ? <KanaTrainer /> : <NumbersTrainer />}
-        </main>
-      )}
+      <AppPageView page={page} onNavigate={goPage} />
     </div>
   )
 }

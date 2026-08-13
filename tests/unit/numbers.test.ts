@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import {
   buildNumberPool,
+  createClockCard,
+  createCounterCard,
   createNumberCard,
   formatAgePrompt,
   formatAgeReading,
@@ -66,5 +68,32 @@ describe('набор чисел', () => {
     assert.equal(pool.length, 5)
     assert.equal(pool[0].value, 1)
     assert.equal(pool[4].value, 5)
+  })
+})
+
+describe('счётчики и часы', () => {
+  it('本 и 人 с особыми чтениями', () => {
+    const hon3 = createCounterCard(3, 'hon')
+    assert.equal(hon3.symbol, '3本')
+    assert.equal(hon3.kana, 'さんぼん')
+    assert.equal(createCounterCard(1, 'nin').kana, 'ひとり')
+    assert.equal(createCounterCard(2, 'nin').kana, 'ふたり')
+    assert.equal(createCounterCard(1, 'tsu').kana, 'ひとつ')
+  })
+
+  it('часы: 4・7・9 и половина', () => {
+    const four = createClockCard(4, false)
+    assert.equal(four.symbol, '4:00')
+    assert.equal(four.kana, 'よじ')
+    assert.equal(createClockCard(7, false).kana, 'しちじ')
+    assert.equal(createClockCard(9, true).kana, 'くじはん')
+    assert.equal(createClockCard(9, true).kanji, '九時半')
+  })
+
+  it('пулы счётчиков и часов фиксированного размера', () => {
+    const counters = buildNumberPool({ mode: 'counter', rangeMin: 1, rangeMax: 99 })
+    assert.equal(counters.length, 50)
+    const clock = buildNumberPool({ mode: 'clock', rangeMin: 1, rangeMax: 99 })
+    assert.equal(clock.length, 24)
   })
 })

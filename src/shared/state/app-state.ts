@@ -16,13 +16,18 @@ import {
   sanitizeParticlesPreferences,
   sanitizeParticlesStats,
 } from './slices/particles'
+import {
+  DEFAULT_VERBS_PREFERENCES,
+  sanitizeVerbsPreferences,
+  sanitizeVerbsStats,
+} from './slices/verbs'
 import { DEFAULT_READER_STATE, sanitizeReaderState } from './slices/reader'
 
 import { MAIN_TRAINING_SET_ID, createMainTrainingSet } from '../lib/trainingSets'
 
-export const CURRENT_VERSION = 30 as const
+export const CURRENT_VERSION = 32 as const
 export const KNOWN_VERSIONS = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, CURRENT_VERSION,
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, CURRENT_VERSION,
 ]
 
 export { DEFAULT_VOCAB_PREFERENCES }
@@ -50,10 +55,17 @@ export function createDefaultAppState(): AppState {
         pickMode: 'adaptive',
       },
       stats: {},
+      liveSession: null,
     },
     particles: {
       preferences: { ...DEFAULT_PARTICLES_PREFERENCES },
       stats: {},
+      liveSession: null,
+    },
+    verbs: {
+      preferences: { ...DEFAULT_VERBS_PREFERENCES },
+      stats: {},
+      liveSession: null,
     },
     kanji: {
       learned: [],
@@ -145,6 +157,12 @@ export function normalizeAppState(parsed: unknown): AppState | null {
           ? (source.numbers as Record<string, unknown>).stats
           : undefined,
       ),
+      liveSession: sanitizeCardTrainerLiveSession(
+        source.numbers && typeof source.numbers === 'object'
+          ? (source.numbers as Record<string, unknown>).liveSession
+          : undefined,
+        fallback.numbers.liveSession,
+      ),
     },
     particles: {
       preferences: sanitizeParticlesPreferences(
@@ -157,6 +175,31 @@ export function normalizeAppState(parsed: unknown): AppState | null {
         source.particles && typeof source.particles === 'object'
           ? (source.particles as Record<string, unknown>).stats
           : undefined,
+      ),
+      liveSession: sanitizeCardTrainerLiveSession(
+        source.particles && typeof source.particles === 'object'
+          ? (source.particles as Record<string, unknown>).liveSession
+          : undefined,
+        fallback.particles.liveSession,
+      ),
+    },
+    verbs: {
+      preferences: sanitizeVerbsPreferences(
+        source.verbs && typeof source.verbs === 'object'
+          ? (source.verbs as Record<string, unknown>).preferences
+          : undefined,
+        fallback.verbs.preferences,
+      ),
+      stats: sanitizeVerbsStats(
+        source.verbs && typeof source.verbs === 'object'
+          ? (source.verbs as Record<string, unknown>).stats
+          : undefined,
+      ),
+      liveSession: sanitizeCardTrainerLiveSession(
+        source.verbs && typeof source.verbs === 'object'
+          ? (source.verbs as Record<string, unknown>).liveSession
+          : undefined,
+        fallback.verbs.liveSession,
       ),
     },
     kanji: sanitizeKanjiState(source.kanji, fallback.kanji),

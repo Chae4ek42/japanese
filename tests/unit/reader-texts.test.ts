@@ -5,7 +5,7 @@ import {
   sanitizeReaderSavedText,
   titleFromReaderText,
 } from '../../src/shared/state/slices/reader.ts'
-import { createDefaultAppState, normalizeAppState } from '../../src/shared/state/app-state.ts'
+import { createDefaultAppState, CURRENT_VERSION, normalizeAppState } from '../../src/shared/state/app-state.ts'
 
 describe('reader saved texts', () => {
   it('собирает заголовок из начала текста', () => {
@@ -48,7 +48,9 @@ describe('reader saved texts', () => {
     delete raw.reader
     const next = normalizeAppState(raw)
     assert.ok(next)
-    assert.equal(next!.version, 30)
+    assert.equal(next!.version, CURRENT_VERSION)
+    assert.equal(next!.numbers.liveSession, null)
+    assert.equal(next!.particles.liveSession, null)
     assert.deepEqual(next!.reader, { texts: [], activeTextId: null, draft: '' })
   })
 })

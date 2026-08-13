@@ -271,48 +271,6 @@ export function VocabSetup({
               </div>
             </div>
 
-            {showWordJlptFilter ? (
-              <div className="control-group">
-                <span className="group-label">Фильтр JLPT</span>
-                <WordJlptFilter
-                  selected={preferences.wordJlptLevels ?? []}
-                  testIdPrefix="vocab-word-jlpt"
-                  onChange={(next) => onPatchPreferences({ wordJlptLevels: next })}
-                />
-              </div>
-            ) : null}
-
-            <div className="control-group">
-              <span className="group-label">Разговорные</span>
-              <div className="segmented-control" role="group" aria-label="Тренировать разговорные слова">
-                <button
-                  type="button"
-                  data-testid="vocab-include-colloquial-on"
-                  className={
-                    preferences.includeColloquial !== false
-                      ? 'segmented-button is-active'
-                      : 'segmented-button'
-                  }
-                  onClick={() => onPatchPreferences({ includeColloquial: true })}
-                >
-                  Включать
-                </button>
-                <button
-                  type="button"
-                  data-testid="vocab-include-colloquial-off"
-                  className={
-                    preferences.includeColloquial === false
-                      ? 'segmented-button is-active'
-                      : 'segmented-button'
-                  }
-                  onClick={() => onPatchPreferences({ includeColloquial: false })}
-                >
-                  Исключать
-                </button>
-              </div>
-              <span className="control-hint">слова с пометой (разг.) / (прост.)</span>
-            </div>
-
             <div className="vocab-srs-settings" data-testid="vocab-srs-settings">
               <span className="group-label">Сессия</span>
               <div className="vocab-srs-settings-grid">
@@ -363,76 +321,6 @@ export function VocabSetup({
                       : 'очередь от даты добавления'}
                   </span>
                 </label>
-
-                <div className="vocab-srs-field vocab-srs-field-wide">
-                  <div className="vocab-srs-retention-head">
-                    <span className="vocab-srs-field-label">Удержание</span>
-                    <span className="vocab-srs-retention-value" data-testid="vocab-target-retention-value">
-                      {Math.round((preferences.targetRetention ?? 0.9) * 100)}%
-                    </span>
-                  </div>
-                  <div
-                    className="vocab-srs-retention"
-                    role="group"
-                    aria-label="Целевое удержание"
-                  >
-                    <input
-                      type="range"
-                      min={85}
-                      max={95}
-                      step={1}
-                      list="vocab-retention-ticks"
-                      data-testid="vocab-target-retention"
-                      value={Math.round((preferences.targetRetention ?? 0.9) * 100)}
-                      onChange={(event) =>
-                        onPatchPreferences({
-                          targetRetention: Number(event.target.value) / 100,
-                        })
-                      }
-                    />
-                    <datalist id="vocab-retention-ticks">
-                      <option value="85" />
-                      <option value="90" />
-                      <option value="95" />
-                    </datalist>
-                    <div className="vocab-srs-retention-presets">
-                      {(
-                        [
-                          { value: 0.85, label: '85%', hint: 'Реже' },
-                          { value: 0.9, label: '90%', hint: 'Баланс' },
-                          { value: 0.95, label: '95%', hint: 'Чаще' },
-                        ] as const
-                      ).map((option) => {
-                        const active =
-                          Math.round((preferences.targetRetention ?? 0.9) * 100) ===
-                          Math.round(option.value * 100)
-                        return (
-                          <button
-                            key={option.value}
-                            type="button"
-                            data-testid={`vocab-retention-${Math.round(option.value * 100)}`}
-                            className={
-                              active
-                                ? 'vocab-srs-retention-preset is-active'
-                                : 'vocab-srs-retention-preset'
-                            }
-                            onClick={() => onPatchPreferences({ targetRetention: option.value })}
-                          >
-                            <span className="vocab-srs-retention-preset-label">{option.label}</span>
-                            <span className="vocab-srs-retention-preset-hint">{option.hint}</span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                    <p className="control-hint vocab-srs-retention-hint">
-                      {(preferences.targetRetention ?? 0.9) >= 0.93
-                        ? 'Карточки due раньше — больше повторений, меньше забывания.'
-                        : (preferences.targetRetention ?? 0.9) <= 0.87
-                          ? 'Карточки due позже — меньше нагрузки, выше риск забыть.'
-                          : 'Баланс между частотой повторов и объёмом сессии.'}
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -708,48 +596,6 @@ export function VocabSetup({
               </div>
             ) : null}
 
-            {showWordJlptFilter ? (
-              <div className="control-group">
-                <span className="group-label">Фильтр JLPT</span>
-                <WordJlptFilter
-                  selected={preferences.wordJlptLevels ?? []}
-                  testIdPrefix="vocab-word-jlpt"
-                  onChange={(next) => onPatchPreferences({ wordJlptLevels: next })}
-                />
-              </div>
-            ) : null}
-
-            <div className="control-group">
-              <span className="group-label">Разговорные</span>
-              <div className="segmented-control" role="group" aria-label="Тренировать разговорные слова">
-                <button
-                  type="button"
-                  data-testid="vocab-include-colloquial-on"
-                  className={
-                    preferences.includeColloquial !== false
-                      ? 'segmented-button is-active'
-                      : 'segmented-button'
-                  }
-                  onClick={() => onPatchPreferences({ includeColloquial: true })}
-                >
-                  Включать
-                </button>
-                <button
-                  type="button"
-                  data-testid="vocab-include-colloquial-off"
-                  className={
-                    preferences.includeColloquial === false
-                      ? 'segmented-button is-active'
-                      : 'segmented-button'
-                  }
-                  onClick={() => onPatchPreferences({ includeColloquial: false })}
-                >
-                  Исключать
-                </button>
-              </div>
-              <span className="control-hint">слова с пометой (разг.) / (прост.)</span>
-            </div>
-
             {showNewWordLimit ? (
               <div className="control-group">
                 <span className="group-label">Слов за раз</span>
@@ -793,102 +639,6 @@ export function VocabSetup({
               </div>
             ) : null}
 
-            <div className="control-group">
-              <span className="group-label">Подбор</span>
-              <div className="segmented">
-                {pickOptions.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    data-testid={`vocab-pick-${option.id}`}
-                    className={
-                      preferences.pickMode === option.id
-                        ? 'segmented-button is-active'
-                        : 'segmented-button'
-                    }
-                    onClick={() => onPatchPreferences({ pickMode: option.id })}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {preferences.pickMode === 'even' ? (
-              <div className="vocab-srs-settings" data-testid="vocab-even-settings">
-                <span className="group-label">Равномерный режим</span>
-                <div className="vocab-srs-settings-grid">
-                  <label className="vocab-srs-field">
-                    <span className="vocab-srs-field-label">Повышенный вес</span>
-                    <span className="vocab-srs-control">
-                      <input
-                        type="number"
-                        min={0}
-                        max={20}
-                        data-testid="vocab-even-boost-shows"
-                        value={preferences.evenBoostShows ?? 3}
-                        onChange={(event) => {
-                          const parsed = Number(event.target.value)
-                          if (!Number.isFinite(parsed)) return
-                          onPatchPreferences({
-                            evenBoostShows: Math.min(20, Math.max(0, Math.round(parsed))),
-                          })
-                        }}
-                      />
-                      <span className="vocab-srs-unit">показов</span>
-                    </span>
-                    <span className="control-hint">первые N показов слова в сессии</span>
-                  </label>
-
-                  <label className="vocab-srs-field">
-                    <span className="vocab-srs-field-label">Множитель</span>
-                    <span className="vocab-srs-control">
-                      <input
-                        type="number"
-                        min={1}
-                        max={10}
-                        step={0.5}
-                        data-testid="vocab-even-boost-factor"
-                        value={preferences.evenBoostFactor ?? 2}
-                        onChange={(event) => {
-                          const parsed = Number(event.target.value)
-                          if (!Number.isFinite(parsed)) return
-                          onPatchPreferences({
-                            evenBoostFactor: Math.min(10, Math.max(1, parsed)),
-                          })
-                        }}
-                      />
-                      <span className="vocab-srs-unit">×</span>
-                    </span>
-                    <span className="control-hint">во сколько раз сильнее вес</span>
-                  </label>
-
-                  <label className="vocab-srs-field vocab-srs-field-wide">
-                    <span className="vocab-srs-field-label">Сила выравнивания</span>
-                    <span className="vocab-srs-control">
-                      <input
-                        type="number"
-                        min={1}
-                        max={4}
-                        step={0.5}
-                        data-testid="vocab-even-decay-power"
-                        value={preferences.evenDecayPower ?? 2}
-                        onChange={(event) => {
-                          const parsed = Number(event.target.value)
-                          if (!Number.isFinite(parsed)) return
-                          onPatchPreferences({
-                            evenDecayPower: Math.min(4, Math.max(1, parsed)),
-                          })
-                        }}
-                      />
-                      <span className="vocab-srs-unit">степень</span>
-                    </span>
-                    <span className="control-hint">вес ≈ 1 / (1 + показы)^степень</span>
-                  </label>
-                </div>
-              </div>
-            ) : null}
-
             <p className="control-hint" data-testid="vocab-pool-count">
               {poolCount === sourcePoolCount
                 ? `${sourcePoolCount} слов по критериям`
@@ -898,28 +648,242 @@ export function VocabSetup({
           </>
         )}
 
-        {preferences.drillMode === 'romaji' ? (
-          <div className="control-group">
-            <span className="group-label">Ввод</span>
-            <div className="segmented">
-              {inputModeOptions.map((option) => (
-                <button
-                  key={option.id}
-                  type="button"
-                  data-testid={`vocab-input-${option.id}`}
-                  className={
-                    preferences.inputMode === option.id
-                      ? 'segmented-button is-active'
-                      : 'segmented-button'
+        <details className="vocab-setup-more" data-testid="vocab-setup-more">
+          <summary data-testid="vocab-setup-more-toggle">Ещё настройки</summary>
+
+          {isSrs ? (
+            <div className="vocab-srs-field vocab-srs-field-wide">
+              <div className="vocab-srs-retention-head">
+                <span className="vocab-srs-field-label">Удержание</span>
+                <span className="vocab-srs-retention-value" data-testid="vocab-target-retention-value">
+                  {Math.round((preferences.targetRetention ?? 0.9) * 100)}%
+                </span>
+              </div>
+              <div className="vocab-srs-retention" role="group" aria-label="Целевое удержание">
+                <input
+                  type="range"
+                  min={85}
+                  max={95}
+                  step={1}
+                  list="vocab-retention-ticks"
+                  data-testid="vocab-target-retention"
+                  value={Math.round((preferences.targetRetention ?? 0.9) * 100)}
+                  onChange={(event) =>
+                    onPatchPreferences({
+                      targetRetention: Number(event.target.value) / 100,
+                    })
                   }
-                  onClick={() => onPatchPreferences({ inputMode: option.id })}
-                >
-                  {option.label}
-                </button>
-              ))}
+                />
+                <datalist id="vocab-retention-ticks">
+                  <option value="85" />
+                  <option value="90" />
+                  <option value="95" />
+                </datalist>
+                <div className="vocab-srs-retention-presets">
+                  {(
+                    [
+                      { value: 0.85, label: '85%', hint: 'Реже' },
+                      { value: 0.9, label: '90%', hint: 'Баланс' },
+                      { value: 0.95, label: '95%', hint: 'Чаще' },
+                    ] as const
+                  ).map((option) => {
+                    const active =
+                      Math.round((preferences.targetRetention ?? 0.9) * 100) ===
+                      Math.round(option.value * 100)
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        data-testid={`vocab-retention-${Math.round(option.value * 100)}`}
+                        className={
+                          active
+                            ? 'vocab-srs-retention-preset is-active'
+                            : 'vocab-srs-retention-preset'
+                        }
+                        onClick={() => onPatchPreferences({ targetRetention: option.value })}
+                      >
+                        <span className="vocab-srs-retention-preset-label">{option.label}</span>
+                        <span className="vocab-srs-retention-preset-hint">{option.hint}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+                <p className="control-hint vocab-srs-retention-hint">
+                  {(preferences.targetRetention ?? 0.9) >= 0.93
+                    ? 'Карточки due раньше — больше повторений, меньше забывания.'
+                    : (preferences.targetRetention ?? 0.9) <= 0.87
+                      ? 'Карточки due позже — меньше нагрузки, выше риск забыть.'
+                      : 'Баланс между частотой повторов и объёмом сессии.'}
+                </p>
+              </div>
             </div>
+          ) : null}
+
+          {showWordJlptFilter ? (
+            <div className="control-group">
+              <span className="group-label">Фильтр JLPT</span>
+              <WordJlptFilter
+                selected={preferences.wordJlptLevels ?? []}
+                testIdPrefix="vocab-word-jlpt"
+                onChange={(next) => onPatchPreferences({ wordJlptLevels: next })}
+              />
+            </div>
+          ) : null}
+
+          <div className="control-group">
+            <span className="group-label">Разговорные</span>
+            <div className="segmented-control" role="group" aria-label="Тренировать разговорные слова">
+              <button
+                type="button"
+                data-testid="vocab-include-colloquial-on"
+                className={
+                  preferences.includeColloquial !== false
+                    ? 'segmented-button is-active'
+                    : 'segmented-button'
+                }
+                onClick={() => onPatchPreferences({ includeColloquial: true })}
+              >
+                Включать
+              </button>
+              <button
+                type="button"
+                data-testid="vocab-include-colloquial-off"
+                className={
+                  preferences.includeColloquial === false
+                    ? 'segmented-button is-active'
+                    : 'segmented-button'
+                }
+                onClick={() => onPatchPreferences({ includeColloquial: false })}
+              >
+                Исключать
+              </button>
+            </div>
+            <span className="control-hint">слова с пометой (разг.) / (прост.)</span>
           </div>
-        ) : null}
+
+          {!isSrs ? (
+            <>
+              <div className="control-group">
+                <span className="group-label">Подбор</span>
+                <div className="segmented">
+                  {pickOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      data-testid={`vocab-pick-${option.id}`}
+                      className={
+                        preferences.pickMode === option.id
+                          ? 'segmented-button is-active'
+                          : 'segmented-button'
+                      }
+                      onClick={() => onPatchPreferences({ pickMode: option.id })}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {preferences.pickMode === 'even' ? (
+                <div className="vocab-srs-settings" data-testid="vocab-even-settings">
+                  <span className="group-label">Равномерный режим</span>
+                  <div className="vocab-srs-settings-grid">
+                    <label className="vocab-srs-field">
+                      <span className="vocab-srs-field-label">Повышенный вес</span>
+                      <span className="vocab-srs-control">
+                        <input
+                          type="number"
+                          min={0}
+                          max={20}
+                          data-testid="vocab-even-boost-shows"
+                          value={preferences.evenBoostShows ?? 3}
+                          onChange={(event) => {
+                            const parsed = Number(event.target.value)
+                            if (!Number.isFinite(parsed)) return
+                            onPatchPreferences({
+                              evenBoostShows: Math.min(20, Math.max(0, Math.round(parsed))),
+                            })
+                          }}
+                        />
+                        <span className="vocab-srs-unit">показов</span>
+                      </span>
+                      <span className="control-hint">первые N показов слова в сессии</span>
+                    </label>
+
+                    <label className="vocab-srs-field">
+                      <span className="vocab-srs-field-label">Множитель</span>
+                      <span className="vocab-srs-control">
+                        <input
+                          type="number"
+                          min={1}
+                          max={10}
+                          step={0.5}
+                          data-testid="vocab-even-boost-factor"
+                          value={preferences.evenBoostFactor ?? 2}
+                          onChange={(event) => {
+                            const parsed = Number(event.target.value)
+                            if (!Number.isFinite(parsed)) return
+                            onPatchPreferences({
+                              evenBoostFactor: Math.min(10, Math.max(1, parsed)),
+                            })
+                          }}
+                        />
+                        <span className="vocab-srs-unit">×</span>
+                      </span>
+                      <span className="control-hint">во сколько раз сильнее вес</span>
+                    </label>
+
+                    <label className="vocab-srs-field vocab-srs-field-wide">
+                      <span className="vocab-srs-field-label">Сила выравнивания</span>
+                      <span className="vocab-srs-control">
+                        <input
+                          type="number"
+                          min={1}
+                          max={4}
+                          step={0.5}
+                          data-testid="vocab-even-decay-power"
+                          value={preferences.evenDecayPower ?? 2}
+                          onChange={(event) => {
+                            const parsed = Number(event.target.value)
+                            if (!Number.isFinite(parsed)) return
+                            onPatchPreferences({
+                              evenDecayPower: Math.min(4, Math.max(1, parsed)),
+                            })
+                          }}
+                        />
+                        <span className="vocab-srs-unit">степень</span>
+                      </span>
+                      <span className="control-hint">вес ≈ 1 / (1 + показы)^степень</span>
+                    </label>
+                  </div>
+                </div>
+              ) : null}
+            </>
+          ) : null}
+
+          {preferences.drillMode === 'romaji' ? (
+            <div className="control-group">
+              <span className="group-label">Ввод</span>
+              <div className="segmented">
+                {inputModeOptions.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    data-testid={`vocab-input-${option.id}`}
+                    className={
+                      preferences.inputMode === option.id
+                        ? 'segmented-button is-active'
+                        : 'segmented-button'
+                    }
+                    onClick={() => onPatchPreferences({ inputMode: option.id })}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </details>
 
         <div className="primary-actions">
           <button
