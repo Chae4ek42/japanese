@@ -1,4 +1,4 @@
-import type { ReviewGrade, ReviewSessionState } from '../types'
+import type { MemoryCardState, ReviewGrade, ReviewSessionState } from '../types'
 import { createSeededRng } from './rng'
 
 /** Default / SRS working-set size. Drill uses a larger limit via `inFlightLimit`. */
@@ -183,10 +183,31 @@ export function pickNextCard(
   return { kind: 'waiting', state: next }
 }
 
+function graduateCard(state: ReviewSessionState, cardId: string): ReviewSessionState {
+  const next = {
+    ...state,
+    inFlight: state.inFlight.filter((id) => id !== cardId),
+    graduatedIds: state.graduatedIds.includes(cardId)
+      ? state.graduatedIds
+      : [...state.graduatedIds, cardId],
+    dueTurns: { ...state.dueTurns },
+  }
+  delete next.dueTurns[cardId]
+  return next
+}
+
+/**
+ * In-session scheduling after a grade.
+ * Pass the card's memory state *before* `applyReview`:
+ * - `review` / `leech`: one Hard+ recall leaves the session (Anki-like).
+ * - `new` / `learning` / `relearning`: two Goods (Easy counts as Good, not a skip).
+ * - omitted: legacy — Easy still graduates immediately, Good needs a second look.
+ */
 export function applyGradeToSequencer(
   state: ReviewSessionState,
   cardId: string,
   grade: ReviewGrade,
+  memoryState?: MemoryCardState,
 ): ReviewSessionState {
   const next: ReviewSessionState = {
     ...state,
@@ -203,12 +224,20 @@ export function applyGradeToSequencer(
   }
 
   const working = Math.max(1, activeInFlight(next).length)
+  const isMature = memoryState === 'review' || memoryState === 'leech'
+  const isLearner =
+    memoryState === 'new' || memoryState === 'learning' || memoryState === 'relearning'
 
   if (grade === 1) {
     next.goodStreaks[cardId] = 0
     // Rotate through the whole working set before the same new/failing card returns.
     next.dueTurns[cardId] = next.turn + learningLag(working, 3)
     return next
+  }
+
+  if (isMature && grade >= 2) {
+    next.goodStreaks[cardId] = (next.goodStreaks[cardId] ?? 0) + 1
+    return graduateCard(next, cardId)
   }
 
   if (grade === 2) {
@@ -218,15 +247,13 @@ export function applyGradeToSequencer(
     return next
   }
 
-  // good / easy
+  // good / easy on a learner (or when memory state is unknown)
   const streak = (next.goodStreaks[cardId] ?? 0) + 1
   next.goodStreaks[cardId] = streak
 
-  if (grade === 4 || streak >= 2) {
-    next.inFlight = next.inFlight.filter((id) => id !== cardId)
-    if (!next.graduatedIds.includes(cardId)) next.graduatedIds.push(cardId)
-    delete next.dueTurns[cardId]
-    return next
+  const easySkipsSecondLook = grade === 4 && !isLearner
+  if (easySkipsSecondLook || streak >= 2) {
+    return graduateCard(next, cardId)
   }
 
   const baseLag = GOOD_LAGS[Math.min(streak - 1, GOOD_LAGS.length - 1)] ?? 30

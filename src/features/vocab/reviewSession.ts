@@ -1,5 +1,6 @@
 import type {
   LatencyModel,
+  MemoryCardState,
   MemoryState,
   PracticeSession,
   ReviewGrade,
@@ -219,9 +220,16 @@ export function gradeAndAdvanceReview(input: {
   cardId: string
   grade: ReviewGrade
   pool: VocabCard[]
+  /** Memory queue state before this answer's `applyReview`. */
+  memoryState?: MemoryCardState
 }): PracticeSession {
   if (!input.session.review) return input.session
-  let review = applyGradeToSequencer(input.session.review, input.cardId, input.grade)
+  let review = applyGradeToSequencer(
+    input.session.review,
+    input.cardId,
+    input.grade,
+    input.memoryState,
+  )
 
   const card = input.pool.find((item) => item.id === input.cardId)
   if (card && input.grade === 1) {

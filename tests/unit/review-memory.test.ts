@@ -3,6 +3,8 @@ import { describe, it } from 'node:test'
 import {
   applyReview,
   createNewMemoryState,
+  formatReviewInterval,
+  INITIAL_S,
   intervalEffectHolds,
   intervalHours,
   migrateFromMastery,
@@ -25,6 +27,22 @@ describe('review memory model', () => {
     const s = 30
     const hours = intervalHours(s, 0.9)
     assert.ok(Math.abs(hours - s) < 1e-6)
+  })
+
+  it('formats next-review intervals in Russian', () => {
+    assert.equal(formatReviewInterval(0.2), '12 мин')
+    assert.equal(formatReviewInterval(8), '8 ч')
+    assert.equal(formatReviewInterval(48), '2 дн.')
+    assert.equal(formatReviewInterval(21 * 24), '3 нед.')
+    assert.equal(formatReviewInterval(90 * 24), '3 мес.')
+  })
+
+  it('first easy uses the good interval, not 24h', () => {
+    const next = applyReview(createNewMemoryState(1000), 4, 1000)
+    assert.equal(next.s, INITIAL_S[3])
+    assert.ok(next.s < INITIAL_S[4])
+    const later = applyReview(next, 4, 1000 + 10 * 3_600_000)
+    assert.ok(later.s > next.s)
   })
 
   it('failure never increases stability', () => {

@@ -21,6 +21,11 @@ export const INITIAL_S: Record<ReviewGrade, number> = {
   4: 24,
 }
 
+/** First contact never jumps to the mature Easy interval (24h). */
+export function initialStability(grade: ReviewGrade): number {
+  return grade === 4 ? INITIAL_S[3] : INITIAL_S[grade]
+}
+
 export const LEECH_LAPSES = 6
 export const LEECH_STABILITY_HOURS = 24
 export const LEECH_DEFER_HOURS = 7 * 24
@@ -57,6 +62,19 @@ export function intervalHours(stabilityHours: number, targetRetention: number): 
   const r = clamp(targetRetention, 0.5, 0.99)
   if (stabilityHours <= 0) return 0
   return stabilityHours * (81 / 19) * (r ** -2 - 1)
+}
+
+/** Short Russian label for the next due interval. */
+export function formatReviewInterval(hours: number): string {
+  if (!Number.isFinite(hours) || hours <= 0) return 'скоро'
+  const minutes = hours * 60
+  if (minutes < 50) return `${Math.max(1, Math.round(minutes))} мин`
+  if (hours < 20) return `${Math.max(1, Math.round(hours))} ч`
+  const days = hours / 24
+  if (days < 10.5) return `${Math.max(1, Math.round(days))} дн.`
+  const weeks = days / 7
+  if (weeks < 6.5) return `${Math.max(1, Math.round(weeks))} нед.`
+  return `${Math.max(1, Math.round(days / 30))} мес.`
 }
 
 export function dueAt(state: MemoryState, targetRetention: number): number {
@@ -142,7 +160,7 @@ export function applyReview(
 
   if (prev.state === 'new' || prev.reps === 0) {
     const d = initialDifficulty(hints, grade)
-    const s = INITIAL_S[grade]
+    const s = initialStability(grade)
     let next: MemoryState = {
       ...prev,
       s,

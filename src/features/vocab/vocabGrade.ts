@@ -1,4 +1,5 @@
 import type {
+  MemoryCardState,
   PracticeSession,
   ReviewGrade,
   StatsOutcome,
@@ -44,10 +45,17 @@ export function nextSessionAfterVocabGrade(input: {
   clean: boolean
   usesReviewV2: boolean
   pool: VocabCard[]
+  memoryState?: MemoryCardState
 }): PracticeSession {
   const { session, cardId, grade, wrong, hintUsed, statsOutcome, clean, usesReviewV2, pool } = input
   if (usesReviewV2 && session.review) {
-    return gradeAndAdvanceReview({ session, cardId, grade, pool })
+    return gradeAndAdvanceReview({
+      session,
+      cardId,
+      grade,
+      pool,
+      memoryState: input.memoryState,
+    })
   }
   if (grade >= 3 || (!wrong && grade === 2 && !hintUsed)) {
     const poolSize = pool.length || session.poolIds.length || 1

@@ -161,4 +161,58 @@ describe('review sequencer', () => {
     state = applyGradeToSequencer(state, pick.cardId, 2)
     assert.equal(state.goodStreaks[pick.cardId], 1)
   })
+
+  it('graduates a mature review after one good', () => {
+    let state = createReviewSessionState(['a', 'b'], { seed: 5, inFlightLimit: 2 })
+    const pick = pickNextCard(state)
+    assert.equal(pick.kind, 'card')
+    if (pick.kind !== 'card') return
+    const after = applyGradeToSequencer(pick.state, pick.cardId, 3, 'review')
+    assert.ok(after.graduatedIds.includes(pick.cardId))
+    assert.equal(after.inFlight.includes(pick.cardId), false)
+  })
+
+  it('graduates a mature review after hard', () => {
+    let state = createReviewSessionState(['a'], { seed: 6, inFlightLimit: 1 })
+    const pick = pickNextCard(state)
+    assert.equal(pick.kind, 'card')
+    if (pick.kind !== 'card') return
+    const after = applyGradeToSequencer(pick.state, pick.cardId, 2, 'review')
+    assert.ok(after.graduatedIds.includes(pick.cardId))
+  })
+
+  it('keeps a new card in-flight after the first easy', () => {
+    let state = createReviewSessionState(['a', 'b'], { seed: 8, inFlightLimit: 2 })
+    const pick = pickNextCard(state)
+    assert.equal(pick.kind, 'card')
+    if (pick.kind !== 'card') return
+    const after = applyGradeToSequencer(pick.state, pick.cardId, 4, 'new')
+    assert.equal(after.graduatedIds.includes(pick.cardId), false)
+    assert.ok(after.inFlight.includes(pick.cardId))
+    assert.equal(after.goodStreaks[pick.cardId], 1)
+  })
+
+  it('graduates a learner after two goods', () => {
+    let state = createReviewSessionState(['a'], { seed: 9, inFlightLimit: 1 })
+    const pick = pickNextCard(state)
+    assert.equal(pick.kind, 'card')
+    if (pick.kind !== 'card') return
+    state = applyGradeToSequencer(pick.state, pick.cardId, 3, 'new')
+    assert.equal(state.graduatedIds.includes(pick.cardId), false)
+    state = applyGradeToSequencer(state, pick.cardId, 3, 'learning')
+    assert.ok(state.graduatedIds.includes(pick.cardId))
+  })
+
+  it('does not graduate a failed review on the next good', () => {
+    let state = createReviewSessionState(['a'], { seed: 10, inFlightLimit: 1 })
+    const pick = pickNextCard(state)
+    assert.equal(pick.kind, 'card')
+    if (pick.kind !== 'card') return
+    state = applyGradeToSequencer(pick.state, pick.cardId, 1, 'review')
+    assert.equal(state.graduatedIds.includes(pick.cardId), false)
+    state = applyGradeToSequencer(state, pick.cardId, 3, 'relearning')
+    assert.equal(state.graduatedIds.includes(pick.cardId), false)
+    state = applyGradeToSequencer(state, pick.cardId, 3, 'relearning')
+    assert.ok(state.graduatedIds.includes(pick.cardId))
+  })
 })

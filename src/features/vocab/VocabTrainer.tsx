@@ -63,7 +63,12 @@ import {
   resolveCardMemory,
   startReviewPracticeSession,
 } from './reviewSession'
-import type { PriorDifficultyHints } from '../../shared/lib/review/memory'
+import {
+  applyReview,
+  formatReviewInterval,
+  intervalHours,
+  type PriorDifficultyHints,
+} from '../../shared/lib/review/memory'
 import type { StatsOutcome, UpdateStatsContext } from '../../shared/lib/types'
 import { VocabPractice } from './VocabPractice'
 import { VocabSessionSidebar } from './VocabSessionSidebar'
@@ -891,6 +896,7 @@ export function VocabTrainer({
     const prefs = preferencesRef.current
     const latencyMs = Math.max(200, now - activeRound.shownAt)
     const aspect = drillModeToAspect(prefs.drillMode)
+    const priorMem = resolveCardMemory(memoryRef.current, statsRef.current, card.id, aspect, now)
     const answerLength = answerLengthForCard(card.answers, prefs.drillMode)
     const statsOutcome = masteryOutcomeFromRound({
       wrong,
@@ -944,6 +950,7 @@ export function VocabTrainer({
       })
     }
 
+    const prevReview = sessionRef.current.review
     let nextSession = nextSessionAfterVocabGrade({
       session: sessionRef.current,
       cardId: card.id,
@@ -954,6 +961,7 @@ export function VocabTrainer({
       clean,
       usesReviewV2: usesReviewV2(sessionRef.current),
       pool: getPracticePool(),
+      memoryState: priorMem.state,
     })
 
     if (countSession) {
@@ -979,7 +987,19 @@ export function VocabTrainer({
     }
 
     if (!advance) return
-    if (grade >= 3) setFeedback({ type: 'success', text: '' })
+    const justGraduated =
+      Boolean(nextSession.review?.graduatedIds.includes(card.id)) &&
+      !prevReview?.graduatedIds.includes(card.id)
+    if (justGraduated && prefs.sessionMode === 'srs' && grade >= 2) {
+      const nextMem = applyReview(priorMem, grade, now, cardHintsFromVocab(card))
+      const hours = intervalHours(nextMem.s, prefs.targetRetention ?? 0.9)
+      setFeedback({
+        type: 'success',
+        text: `Следующий повтор: ${formatReviewInterval(hours)}`,
+      })
+    } else if (grade >= 3) {
+      setFeedback({ type: 'success', text: '' })
+    }
     queueAdvance(() => advanceToNextCard(nextSession), delay)
   }
 
