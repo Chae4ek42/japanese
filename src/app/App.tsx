@@ -41,7 +41,7 @@ function AppPageView({ page, onNavigate }: { page: AppPage; onNavigate: (page: A
     case 'analytics':
       return <AnalyticsPage />
     case 'reader':
-      return <TextReaderPage />
+      return <TextReaderPage onNavigate={onNavigate} />
     case 'kana':
       return (
         <main className="trainer-layout">
