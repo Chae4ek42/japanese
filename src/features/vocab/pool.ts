@@ -426,9 +426,11 @@ export function buildKanjiPracticeVocabPool(
 export function pickNextSourceCard(
   sourcePool: VocabCard[],
   sessionPoolIds: string[],
+  extraSkipIds: Iterable<string> = [],
 ): VocabCard | null {
-  const inSession = new Set(sessionPoolIds)
-  return sourcePool.find((card) => !inSession.has(card.id)) ?? null
+  const skip = new Set(sessionPoolIds)
+  for (const id of extraSkipIds) skip.add(id)
+  return sourcePool.find((card) => !skip.has(card.id)) ?? null
 }
 
 export function pickUniformVocabCardId(

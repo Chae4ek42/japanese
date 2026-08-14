@@ -324,10 +324,13 @@ describe('vocab pool', () => {
       {},
       { applyNewWordLimit: false },
     )
-    assert.ok(full.length >= 3)
+    assert.ok(full.length >= 4)
     const sessionIds = full.slice(0, 2).map((card) => card.id)
     const next = pickNextSourceCard(full, sessionIds)
     assert.equal(next?.id, full[2]!.id)
+    const skipped = pickNextSourceCard(full, sessionIds, [full[2]!.id])
+    assert.equal(skipped?.id, full[3]!.id)
+    assert.equal(pickNextSourceCard(full.slice(0, 2), sessionIds, []), null)
   })
 
   it('uniform picker chooses from the full pool without bias to the first card', () => {
