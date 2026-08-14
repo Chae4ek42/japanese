@@ -81,8 +81,10 @@ const LEGACY_READING_GROUP_IDS: Record<string, string> = {
   'reading-n3': 'reading-adverbs',
   'reading-n2': 'reading-onomatopoeia',
   'reading-n1': 'reading-onomatopoeia',
-  'reading-hira': 'reading-hiragana',
-  'reading-kata': 'reading-katakana',
+  'reading-hira': 'reading-demo',
+  'reading-kata': 'reading-demo',
+  'reading-hiragana': 'reading-demo',
+  'reading-katakana': 'reading-demo',
 }
 
 function clampFloat(value: unknown, min: number, max: number, fallback: number): number {

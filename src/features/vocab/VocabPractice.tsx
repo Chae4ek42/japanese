@@ -121,7 +121,7 @@ export function VocabPractice({
   const swipeHandlers = {
     onSwipeLeft: onSkipPrev,
     onSwipeRight: onSkipNext,
-    onSwipeDown: drillMode === 'romaji' ? onRevealHint : undefined,
+    onSwipeDown: isChoiceDrill || drillMode === 'romaji' ? onRevealHint : undefined,
     onSwipeUp:
       drillMode === 'romaji' && inputMode === 'submit' && onSubmitAnswer ? onSubmitAnswer : undefined,
   }
@@ -404,10 +404,10 @@ export function VocabPractice({
                   {choiceOptions.map((option, index) => {
                     const isSelected = selectedChoice === option
                     const isCorrect = option === correctAnswer
-                    const showResult = Boolean(selectedChoice)
+                    const showResult = Boolean(selectedChoice) || round.hintUsed
                     let className = 'vocab-choice-button'
                     if (showResult && isCorrect) className += ' is-correct'
-                    if (showResult && isSelected && !isCorrect) className += ' is-wrong'
+                    if (selectedChoice && isSelected && !isCorrect) className += ' is-wrong'
                     if (prompt?.kind === 'writing') className += ' is-writing'
                     return (
                       <button
@@ -426,6 +426,20 @@ export function VocabPractice({
                 <div className="feedback-row">
                   <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
                 </div>
+                {isMobile ? (
+                  <div className="answer-actions">
+                    <button
+                      type="button"
+                      className="hint-button"
+                      data-testid="vocab-hint-button"
+                      disabled={round.hintUsed || Boolean(selectedChoice)}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={onRevealHint}
+                    >
+                      Подсказка
+                    </button>
+                  </div>
+                ) : null}
               </>
             )}
 

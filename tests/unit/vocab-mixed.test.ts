@@ -50,6 +50,22 @@ describe('vocab mixed prompts', () => {
     assert.ok(kinds.has('writing'))
   })
 
+  it('для слова каной не спрашивает чтение', () => {
+    const kanaPool: VocabCard[] = [
+      card({ id: 'a', writing: 'どうも', kana: 'どうも', romaji: 'doumo', meaning: 'спасибо / очень' }),
+      card({ id: 'b', writing: 'ちょっと', kana: 'ちょっと', romaji: 'chotto', meaning: 'немножко' }),
+      card({ id: 'c', writing: 'とても', kana: 'とても', romaji: 'totemo', meaning: 'очень' }),
+      card({ id: 'd', writing: 'いつも', kana: 'いつも', romaji: 'itsumo', meaning: 'всегда' }),
+      card({ id: 'e', writing: 'まだ', kana: 'まだ', romaji: 'mada', meaning: 'ещё' }),
+      card({ id: 'f', writing: 'もう', kana: 'もう', romaji: 'mou', meaning: 'уже' }),
+    ]
+    for (let i = 0; i < 30; i += 1) {
+      const prompt = buildMixedPrompt(kanaPool[0]!, kanaPool, { rng: () => i / 30 })
+      assert.ok(prompt)
+      assert.notEqual(prompt!.kind, 'reading')
+    }
+  })
+
   it('writing prompt спрашивает написание по значению', () => {
     let writingPrompt = null
     for (let i = 0; i < 30; i += 1) {

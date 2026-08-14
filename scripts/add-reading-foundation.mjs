@@ -20,8 +20,6 @@ const IDS_PATH = path.join(ROOT, 'src', 'data', 'words', 'reading-foundation-ids
 
 const KANJI_RE = /[\u4e00-\u9fff\u3400-\u4dbf]/u
 const LATIN_RE = /[A-Za-zＡ-Ｚａ-ｚ0-9０-９]/
-const HIRAGANA_RE = /^[\u3040-\u309Fーゝゞ]+$/
-const KATAKANA_RE = /^[\u30A0-\u30FFーヽヾ]+$/
 const RARE_KANJI_TAGS = new Set(['rK', 'oK', 'iK', 'sK'])
 const KANA_PREFERRED_IDS = new Set(
   JSON.parse(readFileSync(path.join(ROOT, 'src/data/words/kana-preferred-ids.json'), 'utf8')),
@@ -41,36 +39,28 @@ const READING_THEMES = [
       'ここ', 'そこ', 'あそこ', 'どこ', 'こちら', 'そちら', 'あちら', 'どちら',
       'こっち', 'そっち', 'あっち', 'どっち',
       'こう', 'そう', 'ああ', 'どう', 'こんな', 'そんな', 'あんな', 'どんな',
-      'これから', 'これまで', 'それで', 'それなら', 'それとも',
     ],
   },
   {
     id: 'reading-questions',
     label: 'Чтение · вопросы',
     description: '誰／何／いつ／なぜ…',
-    keys: [
-      '誰', 'だれ', '何', 'なに', 'いつ', 'どこ', 'なぜ', 'どうして', 'どう', 'どれ',
-      'いくら', 'いくつ', 'どちら', 'どっち', 'どのくらい', 'どれくらい',
-    ],
+    keys: ['誰', 'だれ', '何', 'なに', 'いつ', 'なぜ', 'どうして', 'いくら', 'いくつ'],
   },
   {
     id: 'reading-pronouns',
     label: 'Чтение · местоимения',
     description: 'я／ты／люди',
     keys: [
-      '私', 'わたし', 'あたし', 'わたくし', '僕', 'ぼく', '俺', 'おれ',
-      'あなた', '君', 'きみ', 'お前', 'おまえ', '彼', 'かれ', '彼女', 'かのじょ',
-      '私たち', 'わたしたち', 'みんな', 'みな', 'みなさん', '皆さん',
+      '私', 'わたし', '僕', 'ぼく', '俺', 'おれ', 'あなた', '君', 'きみ',
+      '彼', 'かれ', '彼女', 'かのじょ', 'みんな', 'みなさん', '皆さん',
     ],
   },
   {
     id: 'reading-copula',
     label: 'Чтение · связка',
     description: 'です／だ／である…',
-    keys: [
-      'です', 'である', 'だ', 'でした', 'だった', 'じゃない', 'ではない',
-      'でしょう', 'だろう', 'ですよ', 'ですね',
-    ],
+    keys: ['です', 'だ', 'である', 'でした', 'だった', 'じゃない', 'ではない', 'でしょう', 'だろう'],
   },
   {
     id: 'reading-particles',
@@ -78,10 +68,8 @@ const READING_THEMES = [
     description: 'から／まで／だけ／について…',
     keys: [
       'から', 'まで', 'など', 'のに', 'ので', 'けど', 'けれど', 'けれども',
-      'と', 'や', 'へ', 'か', 'よ', 'ね', 'さ', 'ぞ', 'な', 'かな', 'こそ',
-      'だけ', 'しか', 'ばかり', 'ほど', 'くらい', 'ぐらい', 'ずつ',
-      'について', 'として', 'によって', 'にとって', 'に対して', 'において',
-      'ながら', 'たり', 'とか', 'でも', 'すら', 'さえ', 'ばかりか',
+      'だけ', 'しか', 'ばかり', 'ほど', 'くらい', 'ぐらい',
+      'について', 'として', 'によって', 'にとって',
     ],
   },
   {
@@ -90,9 +78,8 @@ const READING_THEMES = [
     description: 'そして／しかし／でも…',
     keys: [
       'そして', 'それから', 'それで', 'しかし', 'でも', 'また', 'または',
-      'あるいは', 'つまり', 'たとえば', '例えば', 'したがって', 'ただし',
-      'ところで', 'ちなみに', '一方', 'そのうえ', 'おまけに', 'それに',
-      'それでも', 'それなのに', 'だから', 'なので', 'ゆえに',
+      'つまり', 'たとえば', '例えば', 'ところで', 'だから', 'なので',
+      'それでも', 'それに',
     ],
   },
   {
@@ -102,15 +89,9 @@ const READING_THEMES = [
     keys: [
       'まだ', 'もう', 'いつも', 'とても', 'すごく', 'ちょっと', 'すこし', '少し',
       'たくさん', 'あまり', 'ぜんぜん', '全く', 'まったく', 'きっと', 'たぶん',
-      'おそらく', 'やはり', 'やっぱり', 'ほんとう', '本当', 'ほんと',
-      'もちろん', 'ぜひ', 'ちょうど', 'すぐ', 'すぐに', 'ゆっくり', 'いろいろ',
-      'はっきり', 'しっかり', 'すっかり', 'ちょうど', 'かなり', 'ずいぶん',
-      'もっと', 'いちばん', '一番', 'まず', 'やっと', 'ついに', 'すでに',
-      'ほとんど', 'だいたい', 'たいてい', 'たまに', 'ときどき', '時々',
-      'いつも', 'ずっと', 'ぜひ', 'どうぞ', 'どうも', 'ぜひとも',
-      'きっと', 'まさか', 'ぜひ', 'ちゃんと', 'きちんと', 'ぴったり',
-      'いきなり', 'ふと', 'じっと', 'じっと', 'そっと', 'わざと', 'わざわざ',
-      'なるべく', 'できるだけ', 'できるだけ', 'ぜひ', 'きっと',
+      'やはり', 'やっぱり', 'もちろん', 'すぐ', 'すぐに', 'ゆっくり',
+      'もっと', 'まず', 'やっと', 'ほとんど', 'だいたい', 'たまに',
+      'ときどき', '時々', 'ずっと', 'どうも', 'ちゃんと',
     ],
   },
   {
@@ -119,9 +100,7 @@ const READING_THEMES = [
     description: 'する／いる／ください…',
     keys: [
       'ください', '下さい', 'しまう', 'いる', 'ある', 'なる', 'する', 'できる',
-      'みる', '見る', 'いく', '行く', 'くる', '来る', 'いう', '言う',
-      'くれる', 'あげる', 'もらう', 'おく', 'おく', 'みせる', '見せる',
-      'はじめる', '始める', 'おわる', '終わる', 'つづける', '続ける',
+      'くれる', 'あげる', 'もらう', 'いく', '行く', 'くる', '来る',
     ],
   },
   {
@@ -130,9 +109,7 @@ const READING_THEMES = [
     description: 'こと／もの／とき／ため…',
     keys: [
       'こと', 'もの', 'とき', '時', 'ところ', 'ため', 'よう', 'つもり', 'はず', 'わけ',
-      'まえ', '前', 'あと', '後', 'なか', '中', 'うえ', '上', 'した', '下',
-      'ばあい', '場合', 'ほう', '方', 'あいだ', '間', 'うち', 'そば', '近く',
-      'ほか', '他', 'など', 'なんか', 'なんて',
+      'まえ', '前', 'あと', '後', 'ばあい', '場合',
     ],
   },
   {
@@ -142,11 +119,8 @@ const READING_THEMES = [
     keys: [
       'ありがとう', 'ありがとうございます', 'すみません', 'ごめんなさい',
       'こんにちは', 'こんばんは', 'おはよう', 'おはようございます',
-      'さようなら', 'さよなら', 'じゃあ', 'じゃ', 'はい', 'いいえ', 'ええ', 'うん',
-      'ようこそ', 'いらっしゃいませ', 'いってきます', 'いってらしゃい',
-      'ただいま', 'おかえり', 'お疲れ', 'おつかれ', 'よろしく', 'お願いします',
-      'もう一度', '大丈夫', 'だいじょうぶ', 'だめ', 'いい', 'よい', 'ない',
-      'どういたしまして', 'お願い', 'お願いします',
+      'さようなら', 'はい', 'いいえ', 'よろしく', 'お願いします',
+      '大丈夫', 'だいじょうぶ',
     ],
   },
   {
@@ -155,79 +129,21 @@ const READING_THEMES = [
     description: 'おいしい／すごい／かわいい…',
     keys: [
       'おいしい', 'すごい', 'かわいい', 'おもしろい', '面白い', 'たのしい', '楽しい',
-      'うれしい', '嬉しい', 'かなしい', '悲しい', 'つらい', 'きつい', 'やばい',
-      'だめ', 'いい', 'よい', 'ない', 'すごい', 'すごい', 'かっこいい',
-      'きれい', '静か', 'しずか', '元気', 'げんき', '大丈夫', 'だいじょうぶ',
-      '大変', 'たいへん', '簡単', 'かんたん', '同じ', 'おなじ', '違う', 'ちがう',
+      'うれしい', '嬉しい', 'きれい', '静か', 'しずか', '元気', 'げんき',
+      '簡単', 'かんたん', '同じ', 'おなじ', '違う', 'ちがう',
     ],
   },
-]
-
-/** Meaning / form heuristics for leftover foundation words (after curated keys). */
-const THEME_HEURISTICS = [
   {
     id: 'reading-onomatopoeia',
     label: 'Чтение · ономатопея',
-    description: 'звукоподражания и mimetics',
-    test: (word, gloss) => {
-      if (/ономат|подражан|звук/i.test(gloss)) return true
-      const w = word.writing
-      // Reduplication: がぶがぶ / ウロウロ / いそいそ
-      if (/^([\u3040-\u309Fぁ-ゖ]{2,3})\1$/u.test(w)) return true
-      if (/^([\u30A0-\u30FFァ-ヶ]{2,3})\1$/u.test(w)) return true
-      if (/^([\u3040-\u309Fぁ-ゖ]{2,3})っ?\1$/u.test(w)) return true
-      return false
-    },
+    description: 'частые mimetics',
+    keys: ['どきどき', 'わくわく', 'いらいら', 'がっかり', 'びっくり', 'にこにこ', 'ぺらぺら', 'ぼんやり'],
   },
   {
     id: 'reading-interjections',
     label: 'Чтение · междометия',
     description: 'ах!／эй!／ну…',
-    test: (word, gloss) =>
-      /межд|возглас|обращение|запинк/i.test(gloss) ||
-      ['あら', 'おや', 'おい', 'あっ', 'えっ', 'うわ', 'ええっ', 'えっと', 'ねえ', 'ほら', 'さあ', 'よし'].includes(
-        word.writing,
-      ),
-  },
-  {
-    id: 'reading-adverbs',
-    label: 'Чтение · наречия',
-    description: 'еще／уже／очень／сразу…',
-    test: (word, gloss) => {
-      if (/нареч|часто|степени|образа действия|совсем|очень|сразу|медленно|быстро|тихо|аккуратн|украдк|точно/i.test(gloss)) {
-        return true
-      }
-      // Common adverb shapes: 〜り / 〜っと (あっさり, うっかり, きっと)
-      if (HIRAGANA_RE.test(word.writing) && /(り|っと)$/u.test(word.writing) && word.writing.length >= 3) {
-        return true
-      }
-      return false
-    },
-  },
-  {
-    id: 'reading-connectors',
-    label: 'Чтение · союзы',
-    description: 'そして／しかし／でも…',
-    test: (_word, gloss) => /союз|связк|вдобавок|поэтому|однако|хотя|затем|далее/i.test(gloss),
-  },
-  {
-    id: 'reading-greetings',
-    label: 'Чтение · приветствия',
-    description: 'ありがとう／すみません…',
-    test: (_word, gloss) => /приветств|благодар|извини|пожалуйста|добро пожаловать/i.test(gloss),
-  },
-  {
-    id: 'reading-adjectives',
-    label: 'Чтение · прилагательные',
-    description: 'おいしい／すごい／かわいい…',
-    test: (_word, gloss) => /прилаг|настроен|качество|характер/i.test(gloss),
-  },
-  {
-    id: 'reading-aux',
-    label: 'Чтение · глаголы-опоры',
-    description: 'する／いる／ください…',
-    test: (word, gloss) =>
-      /гл\.|глагол/i.test(gloss) && HIRAGANA_RE.test(word.writing) && /(る|う|く|す|つ|ぬ|む|ぐ|ぶ)$/u.test(word.writing),
+    keys: ['あら', 'おや', 'おい', 'さあ', 'ほら', 'ねえ', 'よし', 'えっと'],
   },
 ]
 
@@ -404,16 +320,11 @@ function resolveKeysToIds(keys, words, foundationIds, assigned) {
   return ids
 }
 
-function wordGloss(word) {
-  return (word.meanings ?? []).join(' ')
-}
-
 /**
  * Partition the kana-preferred foundation pool into standalone thematic groups.
- * Curated keys first, then meaning heuristics, then script leftovers.
+ * Curated keys only — leftover dumps stay out of the catalog.
  */
 function buildThematicReadingGroups(words, foundationIds) {
-  const byId = new Map(words.map((w) => [w.id, w]))
   const assigned = new Set()
   const buckets = new Map()
 
@@ -435,61 +346,8 @@ function buildThematicReadingGroups(words, foundationIds) {
     group.wordIds.push(...resolveKeysToIds(theme.keys, words, foundationIds, assigned))
   }
 
-  // Heuristic pass for remaining foundation ids.
-  for (const id of foundationIds) {
-    if (assigned.has(id)) continue
-    const word = byId.get(id)
-    if (!word) continue
-    const gloss = wordGloss(word)
-    let matched = null
-    for (const heuristic of THEME_HEURISTICS) {
-      if (heuristic.test(word, gloss)) {
-        matched = heuristic
-        break
-      }
-    }
-    if (!matched) continue
-    const group = ensure(matched)
-    group.wordIds.push(id)
-    assigned.add(id)
-  }
-
-  // Script leftovers for study-sized groups. Long gairaigo stay in the bank
-  // for search but are not dumped into a 2000-word «катакана» group.
-  const kataGroup = ensure({
-    id: 'reading-katakana',
-    label: 'Чтение · катакана',
-    description: 'короткие заимствования (≤3 знака)',
-  })
-  const hiraGroup = ensure({
-    id: 'reading-hiragana',
-    label: 'Чтение · прочая хирагана',
-    description: 'остальные слова хираганой',
-  })
-
-  for (const id of foundationIds) {
-    if (assigned.has(id)) continue
-    const word = byId.get(id)
-    if (!word) continue
-    if (KATAKANA_RE.test(word.writing) && word.writing.length <= 3) {
-      kataGroup.wordIds.push(id)
-      assigned.add(id)
-      continue
-    }
-    if (HIRAGANA_RE.test(word.writing)) {
-      hiraGroup.wordIds.push(id)
-      assigned.add(id)
-    }
-  }
-
   const sortIds = (ids) => [...new Set(ids)].sort((a, b) => Number(a) - Number(b))
-  const order = [
-    ...READING_THEMES.map((t) => t.id),
-    'reading-onomatopoeia',
-    'reading-interjections',
-    'reading-katakana',
-    'reading-hiragana',
-  ]
+  const order = READING_THEMES.map((t) => t.id)
 
   return order
     .map((id) => buckets.get(id))

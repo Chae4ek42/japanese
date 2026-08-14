@@ -22,21 +22,19 @@
     "withComponents": 2319,
     "readingFoundation": 2878,
     "readingGroups": {
-      "reading-demo": 25,
-      "reading-questions": 9,
-      "reading-pronouns": 13,
+      "reading-demo": 23,
+      "reading-questions": 7,
+      "reading-pronouns": 9,
       "reading-copula": 4,
-      "reading-particles": 30,
-      "reading-connectors": 34,
-      "reading-adverbs": 105,
-      "reading-aux": 20,
-      "reading-frames": 26,
-      "reading-greetings": 25,
-      "reading-adjectives": 22,
-      "reading-onomatopoeia": 127,
-      "reading-interjections": 16,
-      "reading-katakana": 611,
-      "reading-hiragana": 177
+      "reading-particles": 13,
+      "reading-connectors": 9,
+      "reading-adverbs": 26,
+      "reading-aux": 12,
+      "reading-frames": 13,
+      "reading-greetings": 11,
+      "reading-adjectives": 13,
+      "reading-onomatopoeia": 6,
+      "reading-interjections": 7
     }
   }
 }

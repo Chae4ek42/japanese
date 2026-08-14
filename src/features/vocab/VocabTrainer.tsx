@@ -186,6 +186,8 @@ export function VocabTrainer({
   const [inputValue, setInputValue] = useState('')
   const [currentPrompt, setCurrentPrompt] = useState<VocabMixedPrompt | null>(null)
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null)
+  const selectedChoiceRef = useRef<string | null>(null)
+  selectedChoiceRef.current = selectedChoice
   const [canGoPrev, setCanGoPrev] = useState(false)
   /** Per-card stats for this session only (sidebar). Global stats stay in `stats` / AppState. */
   const [liveStats, setLiveStats] = useState<Record<string, StatsRecord>>({})
@@ -506,9 +508,8 @@ export function VocabTrainer({
         return
       }
 
-      if (event.code === 'Space' && preferencesRef.current.drillMode === 'romaji') {
-        // Input field handles Space via onKeyDown when focused.
-        if (typingInField) return
+      if (event.code === 'Space') {
+        if (preferencesRef.current.drillMode === 'romaji' && typingInField) return
         event.preventDefault()
         revealHintRef.current()
       }
@@ -1125,10 +1126,19 @@ export function VocabTrainer({
 
   function revealHint() {
     if (viewRef.current !== 'practice' || !activeCardRef.current) return
-    if (preferencesRef.current.drillMode !== 'romaji') return
-    patchRound({ hintUsed: true })
-    setFeedback({ type: 'hint', text: '' })
-    inputRef.current?.focus()
+    if (roundRef.current.hintUsed) return
+    const mode = preferencesRef.current.drillMode
+    if (mode === 'romaji') {
+      patchRound({ hintUsed: true })
+      setFeedback({ type: 'hint', text: '' })
+      inputRef.current?.focus()
+      return
+    }
+    if (mode === 'choice' || mode === 'mixed') {
+      if (selectedChoiceRef.current) return
+      patchRound({ hintUsed: true })
+      setFeedback({ type: 'hint', text: '' })
+    }
   }
 
   revealHintRef.current = revealHint

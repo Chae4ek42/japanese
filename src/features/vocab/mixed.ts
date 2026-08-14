@@ -66,9 +66,16 @@ function availableKinds(card: VocabCard, pool: VocabCard[]): VocabPromptKind[] {
   const otherWritings = pool.filter((item) => item.id !== card.id && item.writing?.trim()).length
 
   if (meaningOk && writingOk && otherMeanings >= 1) kinds.push('meaning')
-  if (readingOk && writingOk && otherReadings >= 1) kinds.push('reading')
+  if (readingOk && writingOk && otherReadings >= 1 && writingHasKanji(card.writing)) {
+    kinds.push('reading')
+  }
   if (writingOk && meaningOk && otherWritings >= 1) kinds.push('writing')
   return kinds
+}
+
+/** Reading MCQ is redundant when the stem is already kana. */
+export function writingHasKanji(writing: string): boolean {
+  return /[\u3400-\u9fff]/u.test(writing)
 }
 
 /**

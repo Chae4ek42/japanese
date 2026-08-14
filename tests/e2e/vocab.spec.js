@@ -87,6 +87,8 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
   await page.getByTestId('start-vocab').click()
   await expect(page.getByTestId('vocab-choice-grid')).toBeVisible()
   await expect(page.getByTestId('vocab-choice-0')).toBeVisible()
+  await page.keyboard.press('Space')
+  await expect(page.locator('.vocab-choice-button.is-correct')).toBeVisible()
 })
 
 test('vocab trainer mobile: hint button reveals reading', async ({ page }, testInfo) => {
