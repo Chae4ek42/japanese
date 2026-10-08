@@ -29,7 +29,8 @@ import {
   tokenizeJapanese,
   tokenWordIds,
 } from '../../shared/lib/jp-tokenize'
-import { useIsMobileTouch, preventTouchFocus } from '../../shared/lib/media'
+import { useIsMobileTouch } from '../../shared/lib/media'
+import { HintButton } from '../../shared/ui/HintButton'
 import { useChoiceDrill } from '../../shared/lib/useChoiceDrill'
 import {
   useAnalyticsState,
@@ -601,20 +602,18 @@ function ParticlesTrainerView({
               </div>
               {isMobile ? (
                 <div className="particles-transcript-actions">
-                  <button
-                    type="button"
+                  <HintButton
                     className={
                       showTranscript
                         ? 'hint-button particles-transcript-button is-on'
                         : 'hint-button particles-transcript-button'
                     }
-                    data-testid="particles-transcript-button"
-                    aria-pressed={showTranscript}
-                    onPointerDown={preventTouchFocus}
+                    testId="particles-transcript-button"
+                    pressed={showTranscript}
                     onClick={toggleTranscript}
                   >
                     {showTranscript ? 'Скрыть подсказку' : 'Подсказка'}
-                  </button>
+                  </HintButton>
                 </div>
               ) : null}
               <p className="particles-gloss" data-testid="particles-gloss">

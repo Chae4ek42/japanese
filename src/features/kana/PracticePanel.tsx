@@ -1,7 +1,8 @@
 import type { ChangeEvent, KeyboardEvent, RefObject } from 'react'
 import type { FeedbackState, InputMode, KanaCard, RoundState, SessionStats } from '../../shared/lib/types'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
-import { preventTouchFocus } from '../../shared/lib/media'
+import { HintButton } from '../../shared/ui/HintButton'
+import { hintTapJustHappened } from '../../shared/lib/media'
 import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 
 export interface PracticePanelProps {
@@ -73,6 +74,9 @@ export function PracticePanel({
           value={inputValue}
           onChange={onInputChange}
           onKeyDown={onInputKeyDown}
+          onFocus={(event) => {
+            if (hintTapJustHappened()) event.currentTarget.blur()
+          }}
           placeholder={round.hintUsed ? activeCard.answers[0] : 'ромадзи'}
         />
 
@@ -81,15 +85,9 @@ export function PracticePanel({
         </div>
 
         <div className="answer-actions">
-          <button
-            type="button"
-            className="hint-button"
-            data-testid="hint-button"
-            onPointerDown={preventTouchFocus}
-            onClick={onRevealHint}
-          >
+          <HintButton testId="hint-button" onClick={onRevealHint}>
             Подсказка
-          </button>
+          </HintButton>
           <ShortcutNote
             keyboard={
               <>

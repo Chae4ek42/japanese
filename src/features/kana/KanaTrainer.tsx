@@ -23,7 +23,7 @@ import {
 } from '../../shared/lib/trainer'
 import { afterSuccessfulCard, enqueueMistake, prepareShownCard } from '../../shared/lib/trainerCore'
 import { useLiveTrainerSession } from '../../shared/lib/useLiveTrainerSession'
-import { readIsMobileTouch } from '../../shared/lib/media'
+import { hintTapJustHappened, readIsMobileTouch } from '../../shared/lib/media'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { SetupPanel } from './SetupPanel'
 import { PracticePanel } from './PracticePanel'
@@ -132,6 +132,7 @@ function KanaTrainerView({
   })
 
   useEffect(() => {
+    if (hintTapJustHappened()) return
     if (practiceState === 'practice') {
       inputRef.current?.focus()
     }
@@ -411,7 +412,7 @@ function KanaTrainerView({
       type: 'hint',
       text: `Подсказка: ${currentCard.answers.join(' / ')}`,
     })
-    if (!readIsMobileTouch()) inputRef.current?.focus()
+    if (!(hintTapJustHappened() || readIsMobileTouch())) inputRef.current?.focus()
   }
 
   function toggleGroup(groupId: string) {

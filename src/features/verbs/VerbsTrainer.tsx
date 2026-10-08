@@ -14,7 +14,8 @@ import {
 } from '../../data/verbs'
 import { choiceItemClass } from '../../shared/lib/choiceDrill'
 import { useChoiceDrill } from '../../shared/lib/useChoiceDrill'
-import { useIsMobileTouch, preventTouchFocus } from '../../shared/lib/media'
+import { useIsMobileTouch } from '../../shared/lib/media'
+import { HintButton } from '../../shared/ui/HintButton'
 import type {
   CardTrainerLiveSession,
   StatsOutcome,
@@ -301,20 +302,18 @@ function VerbsTrainerView({
               </div>
               {isMobile ? (
                 <div className="particles-transcript-actions">
-                  <button
-                    type="button"
+                  <HintButton
                     className={
                       showHint
                         ? 'hint-button particles-transcript-button is-on'
                         : 'hint-button particles-transcript-button'
                     }
-                    data-testid="verbs-hint-button"
-                    aria-pressed={showHint}
-                    onPointerDown={preventTouchFocus}
+                    testId="verbs-hint-button"
+                    pressed={showHint}
                     onClick={toggleHint}
                   >
                     {showHint ? 'Скрыть подсказку' : 'Подсказка'}
-                  </button>
+                  </HintButton>
                 </div>
               ) : null}
             </div>

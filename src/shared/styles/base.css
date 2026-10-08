@@ -1397,6 +1397,10 @@ kbd {
   font-size: 0.8rem;
 }
 
+.hint-button[aria-disabled='true'] {
+  opacity: 0.45;
+}
+
 .hint-button:hover {
   border-color: #111;
   color: #111;

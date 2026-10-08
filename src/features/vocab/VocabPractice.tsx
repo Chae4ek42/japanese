@@ -8,8 +8,9 @@ import type {
   InputMode,
   KanjiWord,
 } from '../../shared/lib/types'
-import { preventTouchFocus, useIsMobileTouch } from '../../shared/lib/media'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
+import { HintButton } from '../../shared/ui/HintButton'
+import { hintTapJustHappened, useIsMobileTouch } from '../../shared/lib/media'
 import { HighlightedReading } from '../kanji/HighlightedReading'
 import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
 import {
@@ -378,6 +379,9 @@ export function VocabPractice({
                   value={inputValue}
                   onChange={onInputChange}
                   onKeyDown={onInputKeyDown}
+                  onFocus={(event) => {
+                    if (hintTapJustHappened()) event.currentTarget.blur()
+                  }}
                   placeholder={round.hintUsed ? activeCard.romaji : 'ромадзи'}
                 />
                 <div className="feedback-row">
@@ -385,16 +389,13 @@ export function VocabPractice({
                 </div>
                 {isMobile ? (
                   <div className="answer-actions">
-                    <button
-                      type="button"
-                      className="hint-button"
-                      data-testid="vocab-hint-button"
+                    <HintButton
+                      testId="vocab-hint-button"
                       disabled={round.hintUsed}
-                      onPointerDown={preventTouchFocus}
                       onClick={onRevealHint}
                     >
                       Подсказка
-                    </button>
+                    </HintButton>
                   </div>
                 ) : null}
               </>
@@ -428,16 +429,13 @@ export function VocabPractice({
                 </div>
                 {isMobile ? (
                   <div className="answer-actions">
-                    <button
-                      type="button"
-                      className="hint-button"
-                      data-testid="vocab-hint-button"
+                    <HintButton
+                      testId="vocab-hint-button"
                       disabled={round.hintUsed || Boolean(selectedChoice)}
-                      onPointerDown={preventTouchFocus}
                       onClick={onRevealHint}
                     >
                       Подсказка
-                    </button>
+                    </HintButton>
                   </div>
                 ) : null}
               </>

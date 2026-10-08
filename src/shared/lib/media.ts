@@ -42,8 +42,33 @@ export function isTextEntryTarget(target: EventTarget | null): boolean {
   )
 }
 
-/** Keep a tap from focusing a control, so a closed mobile keyboard stays closed. */
-export function preventTouchFocus(event: { pointerType: string; preventDefault: () => void }): void {
-  if (event.pointerType === 'mouse') return
-  event.preventDefault()
+const HINT_FOCUS_BLOCK_MS = 400
+let hintTapAt = 0
+
+/** A hint control was just touched; ignore focus that the tap would move onto an input. */
+export function markHintTap(): void {
+  hintTapAt = Date.now()
+}
+
+export function hintTapJustHappened(): boolean {
+  return hintTapAt > 0 && Date.now() - hintTapAt < HINT_FOCUS_BLOCK_MS
+}
+
+function blurFocusedField(): void {
+  const active = document.activeElement
+  if (
+    active instanceof HTMLInputElement ||
+    active instanceof HTMLTextAreaElement ||
+    (active instanceof HTMLElement && active.isContentEditable)
+  ) {
+    active.blur()
+  }
+}
+
+/** Close the software keyboard if a hint tap (or the following focus move) opened it. */
+export function dismissMobileKeyboard(): void {
+  blurFocusedField()
+  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(blurFocusedField)
+  window.setTimeout(blurFocusedField, 0)
+  window.setTimeout(blurFocusedField, 60)
 }
