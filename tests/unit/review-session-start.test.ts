@@ -131,6 +131,26 @@ describe('startReviewPracticeSession', () => {
     assert.equal(session.poolIds.length, 12)
     assert.equal(newCount, 12)
     assert.equal(session.review?.inFlightLimit, 12)
+    assert.equal(session.review?.passesToGraduate, 2)
+  })
+
+  it('в адаптивном дрилле берёт размер круга и число успехов из настроек', () => {
+    const { session } = startReviewPracticeSession({
+      scope: Array.from({ length: 12 }, (_, i) => card(`w${i}`)),
+      preferences: {
+        ...DEFAULT_VOCAB_PREFERENCES,
+        sessionMode: 'drill',
+        pickMode: 'adaptive',
+        adaptiveInFlight: 5,
+        adaptivePasses: 3,
+      },
+      memory: {},
+      stats: {},
+      newUsedToday: 0,
+      spacedRepetition: false,
+    })
+    assert.equal(session.review?.inFlightLimit, 5)
+    assert.equal(session.review?.passesToGraduate, 3)
   })
 
   it('в SRS держит узкий in-flight лимит', () => {
@@ -152,6 +172,7 @@ describe('startReviewPracticeSession', () => {
       spacedRepetition: true,
     })
     assert.equal(session.review?.inFlightLimit, 5)
+    assert.equal(session.review?.passesToGraduate, undefined)
   })
 
   it('в SRS режет сессию до due + newPerDay, старые добавления раньше', () => {

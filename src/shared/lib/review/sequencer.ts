@@ -32,11 +32,13 @@ export function createReviewSessionState(
     seed = 1,
     weightMultipliers = {},
     inFlightLimit,
+    passesToGraduate,
   }: {
     mode?: 'adaptive' | 'even'
     seed?: number
     weightMultipliers?: Record<string, number>
     inFlightLimit?: number
+    passesToGraduate?: number
   } = {},
 ): ReviewSessionState {
   return {
@@ -54,6 +56,7 @@ export function createReviewSessionState(
     targetAnswers: 0,
     done: false,
     inFlightLimit,
+    passesToGraduate,
   }
 }
 
@@ -198,10 +201,11 @@ function graduateCard(state: ReviewSessionState, cardId: string): ReviewSessionS
 
 /**
  * In-session scheduling after a grade.
- * Pass the card's memory state *before* `applyReview`:
- * - `review` / `leech`: one Hard+ recall leaves the session (Anki-like).
+ * `passesToGraduate` (drill adaptive) counts Good/Easy for every card.
+ * Without it:
+ * - `review` / `leech`: one Hard+ recall leaves the session.
  * - `new` / `learning` / `relearning`: two Goods (Easy counts as Good, not a skip).
- * - omitted: legacy — Easy still graduates immediately, Good needs a second look.
+ * - omitted memory: Easy graduates immediately, Good needs a second look.
  */
 export function applyGradeToSequencer(
   state: ReviewSessionState,
@@ -232,6 +236,20 @@ export function applyGradeToSequencer(
     next.goodStreaks[cardId] = 0
     // Rotate through the whole working set before the same new/failing card returns.
     next.dueTurns[cardId] = next.turn + learningLag(working, 3)
+    return next
+  }
+
+  const passesNeeded = next.passesToGraduate
+  if (typeof passesNeeded === 'number' && passesNeeded >= 1) {
+    if (grade === 2) {
+      next.dueTurns[cardId] = next.turn + learningLag(working, 5)
+      return next
+    }
+    const streak = (next.goodStreaks[cardId] ?? 0) + 1
+    next.goodStreaks[cardId] = streak
+    if (streak >= passesNeeded) return graduateCard(next, cardId)
+    const baseLag = GOOD_LAGS[Math.min(streak - 1, GOOD_LAGS.length - 1)] ?? 30
+    next.dueTurns[cardId] = next.turn + learningLag(working, baseLag)
     return next
   }
 

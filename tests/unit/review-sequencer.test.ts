@@ -181,6 +181,34 @@ describe('review sequencer', () => {
     assert.ok(after.graduatedIds.includes(pick.cardId))
   })
 
+  it('keeps a review card until the drill pass count is met', () => {
+    let state = createReviewSessionState(['a'], {
+      seed: 6,
+      inFlightLimit: 1,
+      passesToGraduate: 2,
+    })
+    const pick = pickNextCard(state)
+    assert.equal(pick.kind, 'card')
+    if (pick.kind !== 'card') return
+    state = applyGradeToSequencer(pick.state, pick.cardId, 3, 'review')
+    assert.equal(state.graduatedIds.includes(pick.cardId), false)
+    state = applyGradeToSequencer(state, pick.cardId, 4, 'review')
+    assert.ok(state.graduatedIds.includes(pick.cardId))
+  })
+
+  it('graduates on the first good when the drill asks for one pass', () => {
+    let state = createReviewSessionState(['a'], {
+      seed: 7,
+      inFlightLimit: 1,
+      passesToGraduate: 1,
+    })
+    const pick = pickNextCard(state)
+    assert.equal(pick.kind, 'card')
+    if (pick.kind !== 'card') return
+    const after = applyGradeToSequencer(pick.state, pick.cardId, 3, 'new')
+    assert.ok(after.graduatedIds.includes(pick.cardId))
+  })
+
   it('keeps a new card in-flight after the first easy', () => {
     let state = createReviewSessionState(['a', 'b'], { seed: 8, inFlightLimit: 2 })
     const pick = pickNextCard(state)

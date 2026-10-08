@@ -40,6 +40,8 @@ import {
   toggleWordJlptLevel,
 } from '../kanji/WordJlptFilter'
 
+import { VocabAdaptiveSettings } from './VocabAdaptiveSettings'
+
 const PICK_OPTIONS: Array<{ id: VocabPickMode; label: string }> = [
   { id: 'adaptive', label: 'Адаптивный' },
   { id: 'even', label: 'Равномерный' },
@@ -70,6 +72,14 @@ export interface VocabSessionSidebarProps {
   showWordJlptFilter?: boolean
   /** Hide adaptive/even switch (SRS sessions). */
   hidePickMode?: boolean
+  adaptiveInFlight?: number
+  adaptivePasses?: number
+  adaptiveWeakFirst?: boolean
+  onAdaptiveChange?: (patch: {
+    adaptiveInFlight?: number
+    adaptivePasses?: number
+    adaptiveWeakFirst?: boolean
+  }) => void
   onPickModeChange: (mode: VocabPickMode) => void
   onLevelChange?: (level: VocabLevelFilter) => void
   onWordJlptChange?: (levels: KanjiWordJlptLevel[]) => void
@@ -91,6 +101,10 @@ export function VocabSessionSidebar({
   canAddSourceWord = false,
   showWordJlptFilter = false,
   hidePickMode = false,
+  adaptiveInFlight = 0,
+  adaptivePasses = 2,
+  adaptiveWeakFirst = true,
+  onAdaptiveChange,
   onPickModeChange,
   onLevelChange,
   onWordJlptChange,
@@ -169,6 +183,15 @@ export function VocabSessionSidebar({
               </button>
             ))}
           </div>
+          {pickMode === 'adaptive' && onAdaptiveChange ? (
+            <VocabAdaptiveSettings
+              compact
+              inFlight={adaptiveInFlight}
+              passes={adaptivePasses}
+              weakFirst={adaptiveWeakFirst}
+              onChange={onAdaptiveChange}
+            />
+          ) : null}
         </section>
       ) : hasFilters ? (
         <section className="vocab-session-block">

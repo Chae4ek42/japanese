@@ -234,6 +234,11 @@ export interface ReviewSessionState {
    * Drill sets a larger value so adaptive doesn't loop on five words.
    */
   inFlightLimit?: number
+  /**
+   * Drill adaptive: goods required before a card leaves the circle.
+   * Missing → SRS rules (mature card leaves on one Hard+).
+   */
+  passesToGraduate?: number
 }
 
 /** Compact append-only review log row (IndexedDB). */
@@ -401,6 +406,15 @@ export interface VocabPreferences {
   evenBoostFactor: number
   /** Even pick mode: exponent for soft decay 1/(1+shows)^power. */
   evenDecayPower: number
+  /**
+   * Adaptive drill: cards kept in the working set at once.
+   * 0 = size from the pool. Ignored in SRS.
+   */
+  adaptiveInFlight: number
+  /** Adaptive drill: successful answers before a card leaves the circle. SRS ignores this. */
+  adaptivePasses: number
+  /** Adaptive drill: introduce learning and due cards before the rest of the list. */
+  adaptiveWeakFirst: boolean
   /**
    * Which training set to practice when source === 'list'.
    * Falls back to activeTrainingSetId when missing/invalid.

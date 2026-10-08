@@ -63,6 +63,8 @@ import {
   appendCardToReviewSession,
   resolveCardMemory,
   startReviewPracticeSession,
+  clampAdaptivePasses,
+  resolveAdaptiveInFlight,
 } from './reviewSession'
 import {
   applyReview,
@@ -659,10 +661,13 @@ export function VocabTrainer({
     onPatchPreferences({ pickMode: mode })
     preferencesRef.current = { ...preferencesRef.current, pickMode: mode }
     const current = sessionRef.current
+    const review = current.review
+      ? applyAdaptiveKnobs({ ...current.review, mode }, preferencesRef.current)
+      : current.review
     const nextSession: PracticeSession = {
       ...current,
       mode,
-      review: current.review ? { ...current.review, mode } : current.review,
+      review,
     }
     sessionRef.current = nextSession
     setSession(nextSession)
@@ -670,6 +675,33 @@ export function VocabTrainer({
       type: 'idle',
       text: mode === 'even' ? 'Режим: равномерный' : 'Режим: адаптивный',
     })
+  }
+
+  function handleAdaptiveChange(patch: {
+    adaptiveInFlight?: number
+    adaptivePasses?: number
+    adaptiveWeakFirst?: boolean
+  }) {
+    onPatchPreferences(patch)
+    preferencesRef.current = { ...preferencesRef.current, ...patch }
+    const review = sessionRef.current.review
+    if (!review || preferencesRef.current.pickMode !== 'adaptive') return
+    const nextReview = applyAdaptiveKnobs(review, preferencesRef.current)
+    const nextSession = { ...sessionRef.current, review: nextReview }
+    sessionRef.current = nextSession
+    setSession(nextSession)
+  }
+
+  function applyAdaptiveKnobs(
+    review: NonNullable<PracticeSession['review']>,
+    prefs: typeof preferencesRef.current,
+  ) {
+    if (prefs.sessionMode === 'srs' || prefs.pickMode !== 'adaptive') return review
+    return {
+      ...review,
+      inFlightLimit: resolveAdaptiveInFlight(review.planIds.length, prefs.adaptiveInFlight),
+      passesToGraduate: clampAdaptivePasses(prefs.adaptivePasses),
+    }
   }
 
   function getDistractorPool() {
@@ -1534,6 +1566,10 @@ export function VocabTrainer({
         canAddSourceWord={canAddSourceWord && preferences.sessionMode !== 'srs'}
         showWordJlptFilter={showWordJlptFilter}
         hidePickMode={preferences.sessionMode === 'srs'}
+        adaptiveInFlight={preferences.adaptiveInFlight ?? 0}
+        adaptivePasses={preferences.adaptivePasses ?? 2}
+        adaptiveWeakFirst={preferences.adaptiveWeakFirst !== false}
+        onAdaptiveChange={preferences.sessionMode === 'srs' ? undefined : handleAdaptiveChange}
         onPickModeChange={handlePickModeChange}
         onLevelChange={handleSessionLevelChange}
         onWordJlptChange={handleSessionWordJlptChange}

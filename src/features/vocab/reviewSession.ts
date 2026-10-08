@@ -28,6 +28,26 @@ import {
 } from '../../shared/lib/review'
 import { memoryKey, migrateFromMastery, urgency } from '../../shared/lib/review/memory'
 
+/** 0 = pick the working-set size from the pool. Otherwise 3…30. */
+export function clampAdaptiveInFlight(value: number | undefined): number {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return 0
+  return Math.min(30, Math.max(3, Math.round(value)))
+}
+
+export function clampAdaptivePasses(value: number | undefined): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 2
+  return Math.min(3, Math.max(1, Math.round(value)))
+}
+
+/** Working-set size for a drill adaptive session. */
+export function resolveAdaptiveInFlight(planSize: number, preference: number | undefined): number {
+  const requested = clampAdaptiveInFlight(preference)
+  const auto = defaultInFlightLimit(planSize, false)
+  if (requested <= 0) return auto
+  if (planSize <= 0) return requested
+  return Math.min(planSize, requested)
+}
+
 export function resolveCardMemory(
   memory: Record<string, MemoryState>,
   stats: Record<string, StatsRecord>,
@@ -105,6 +125,7 @@ export function startReviewPracticeSession(input: {
   })
   const aspect = drillModeToAspect(input.preferences.drillMode)
   const even = input.preferences.pickMode === 'even'
+  const weakFirst = input.preferences.adaptiveWeakFirst !== false
   const plan = buildSessionPlan({
     scope: input.scope.map((card) => ({
       id: card.id,
@@ -119,8 +140,9 @@ export function startReviewPracticeSession(input: {
     newUsedToday: spaced ? Math.max(0, input.newUsedToday) : 0,
     weightMultipliers: input.weightMultipliers,
     avgLatencyMs: input.avgLatencyMs,
-    // Spaced mine always uses due/new buckets; even only affects in-session pick.
-    even: spaced ? false : even,
+    // Spaced mine always uses due/new buckets. Even, and adaptive with
+    // «как в списке», keep the scope order.
+    even: spaced ? false : even || !weakFirst,
   })
 
   const planned = new Set(plan.planIds)
@@ -131,11 +153,15 @@ export function startReviewPracticeSession(input: {
         ...scopeIds.filter((id) => !planned.has(id)),
       ]
 
+  const drillAdaptive = !spaced && !even
   const review = createReviewSessionState(poolIds, {
     mode: even ? 'even' : 'adaptive',
     seed: sessionSeed(now),
     weightMultipliers: weights,
-    inFlightLimit: defaultInFlightLimit(poolIds.length, spaced),
+    inFlightLimit: drillAdaptive
+      ? resolveAdaptiveInFlight(poolIds.length, input.preferences.adaptiveInFlight)
+      : defaultInFlightLimit(poolIds.length, spaced),
+    passesToGraduate: drillAdaptive ? clampAdaptivePasses(input.preferences.adaptivePasses) : undefined,
   })
   review.targetAnswers = plan.targetAnswers
 

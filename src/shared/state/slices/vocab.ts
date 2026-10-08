@@ -48,9 +48,18 @@ export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
   evenBoostShows: 3,
   evenBoostFactor: 2,
   evenDecayPower: 2,
+  adaptiveInFlight: 0,
+  adaptivePasses: 2,
+  adaptiveWeakFirst: true,
   trainingSetId: MAIN_TRAINING_SET_ID,
   includeColloquial: true,
   showColloquial: true,
+}
+
+function sanitizeAdaptiveInFlight(value: unknown, fallback: number): number {
+  const n = clampInt(value, 0, 30, fallback)
+  if (n <= 0) return 0
+  return Math.max(3, n)
 }
 
 function sanitizeSelectedKanji(raw: unknown, fallback: string[]): string[] {
@@ -150,6 +159,12 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
     evenBoostShows: clampInt(source.evenBoostShows, 0, 20, fallback.evenBoostShows),
     evenBoostFactor: clampFloat(source.evenBoostFactor, 1, 10, fallback.evenBoostFactor),
     evenDecayPower: clampFloat(source.evenDecayPower, 1, 4, fallback.evenDecayPower),
+    adaptiveInFlight: sanitizeAdaptiveInFlight(source.adaptiveInFlight, fallback.adaptiveInFlight),
+    adaptivePasses: clampInt(source.adaptivePasses, 1, 3, fallback.adaptivePasses),
+    adaptiveWeakFirst:
+      typeof source.adaptiveWeakFirst === 'boolean'
+        ? source.adaptiveWeakFirst
+        : fallback.adaptiveWeakFirst,
     trainingSetId:
       typeof source.trainingSetId === 'string' && source.trainingSetId.trim()
         ? source.trainingSetId.trim()

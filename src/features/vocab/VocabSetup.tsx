@@ -23,6 +23,7 @@ import {
   getVocabGroupsByKind,
 } from './groups'
 import { VocabCalibration } from './VocabCalibration'
+import { VocabAdaptiveSettings } from './VocabAdaptiveSettings'
 import { VocabSetupPool } from './VocabSetupPool'
 
 const sessionModeOptions: Array<{ id: VocabSessionMode; label: string; hint: string }> = [
@@ -783,6 +784,15 @@ export function VocabSetup({
                   ))}
                 </div>
               </div>
+
+              {preferences.pickMode === 'adaptive' ? (
+                <VocabAdaptiveSettings
+                  inFlight={preferences.adaptiveInFlight ?? 0}
+                  passes={preferences.adaptivePasses ?? 2}
+                  weakFirst={preferences.adaptiveWeakFirst !== false}
+                  onChange={onPatchPreferences}
+                />
+              ) : null}
 
               {preferences.pickMode === 'even' ? (
                 <div className="vocab-srs-settings" data-testid="vocab-even-settings">
