@@ -14,7 +14,7 @@ import {
 } from '../../data/verbs'
 import { choiceItemClass } from '../../shared/lib/choiceDrill'
 import { useChoiceDrill } from '../../shared/lib/useChoiceDrill'
-import { useIsMobileTouch } from '../../shared/lib/media'
+import { useIsMobileTouch, preventTouchFocus } from '../../shared/lib/media'
 import type {
   CardTrainerLiveSession,
   StatsOutcome,
@@ -310,6 +310,7 @@ function VerbsTrainerView({
                     }
                     data-testid="verbs-hint-button"
                     aria-pressed={showHint}
+                    onPointerDown={preventTouchFocus}
                     onClick={toggleHint}
                   >
                     {showHint ? 'Скрыть подсказку' : 'Подсказка'}

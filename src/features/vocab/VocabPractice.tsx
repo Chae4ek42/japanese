@@ -8,7 +8,7 @@ import type {
   InputMode,
   KanjiWord,
 } from '../../shared/lib/types'
-import { useIsMobileTouch } from '../../shared/lib/media'
+import { preventTouchFocus, useIsMobileTouch } from '../../shared/lib/media'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
 import { HighlightedReading } from '../kanji/HighlightedReading'
 import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
@@ -390,7 +390,7 @@ export function VocabPractice({
                       className="hint-button"
                       data-testid="vocab-hint-button"
                       disabled={round.hintUsed}
-                      onMouseDown={(event) => event.preventDefault()}
+                      onPointerDown={preventTouchFocus}
                       onClick={onRevealHint}
                     >
                       Подсказка
@@ -433,7 +433,7 @@ export function VocabPractice({
                       className="hint-button"
                       data-testid="vocab-hint-button"
                       disabled={round.hintUsed || Boolean(selectedChoice)}
-                      onMouseDown={(event) => event.preventDefault()}
+                      onPointerDown={preventTouchFocus}
                       onClick={onRevealHint}
                     >
                       Подсказка

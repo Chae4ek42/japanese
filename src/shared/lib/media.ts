@@ -34,11 +34,16 @@ export function readIsMobileTouch(): boolean {
   return coarse || narrow
 }
 
-export function isInteractiveTouchTarget(target: EventTarget | null): boolean {
+/** Text fields keep the caret and the keyboard; swipes may start everywhere else. */
+export function isTextEntryTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return false
   return Boolean(
-    target.closest(
-      'input, textarea, select, button, a, label, [role="button"], [contenteditable="true"], .vocab-card-editor, .custom-word-form',
-    ),
+    target.closest('input, textarea, select, [contenteditable="true"], .vocab-card-editor, .custom-word-form'),
   )
+}
+
+/** Keep a tap from focusing a control, so a closed mobile keyboard stays closed. */
+export function preventTouchFocus(event: { pointerType: string; preventDefault: () => void }): void {
+  if (event.pointerType === 'mouse') return
+  event.preventDefault()
 }

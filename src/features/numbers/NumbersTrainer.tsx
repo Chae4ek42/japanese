@@ -22,6 +22,7 @@ import {
 import { pickNextCardId, pushRecentCard } from '../../shared/lib/trainer'
 import { afterSuccessfulCard, prepareShownCard } from '../../shared/lib/trainerCore'
 import { useLiveTrainerSession } from '../../shared/lib/useLiveTrainerSession'
+import { preventTouchFocus } from '../../shared/lib/media'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { useAnalyticsState, useNumbersState } from '../../shared/state/AppStateContext'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
@@ -511,6 +512,7 @@ function NumbersTrainerView({
                 type="button"
                 className="hint-button"
                 data-testid="numbers-hint-button"
+                onPointerDown={preventTouchFocus}
                 onClick={() => (revealed ? finalizeAndAdvance() : revealAnswer())}
               >
                 {revealed ? 'Дальше' : 'Показать'}

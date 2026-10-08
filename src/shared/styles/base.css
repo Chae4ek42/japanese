@@ -726,15 +726,22 @@
     line-height: 1.45;
   }
 
-  .practice-panel.has-mobile-swipes .practice-stage,
+  .practice-panel.has-mobile-swipes,
   .kanji-trainer.has-mobile-swipes {
-    touch-action: manipulation;
+    touch-action: pan-y;
+    overscroll-behavior: contain;
     user-select: none;
     -webkit-user-select: none;
   }
 
   .practice-panel.has-mobile-swipes .answer-input,
-  .practice-panel.has-mobile-swipes textarea {
+  .practice-panel.has-mobile-swipes textarea,
+  .practice-panel.has-mobile-swipes input,
+  .practice-panel.has-mobile-swipes select,
+  .kanji-trainer.has-mobile-swipes input,
+  .kanji-trainer.has-mobile-swipes textarea,
+  .kanji-trainer.has-mobile-swipes select {
+    touch-action: manipulation;
     user-select: text;
     -webkit-user-select: text;
   }

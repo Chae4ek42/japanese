@@ -1,6 +1,7 @@
 import type { ChangeEvent, KeyboardEvent, RefObject } from 'react'
 import type { FeedbackState, InputMode, KanaCard, RoundState, SessionStats } from '../../shared/lib/types'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
+import { preventTouchFocus } from '../../shared/lib/media'
 import { ShortcutNote } from '../../shared/ui/ShortcutNote'
 
 export interface PracticePanelProps {
@@ -84,7 +85,7 @@ export function PracticePanel({
             type="button"
             className="hint-button"
             data-testid="hint-button"
-            onMouseDown={(event) => event.preventDefault()}
+            onPointerDown={preventTouchFocus}
             onClick={onRevealHint}
           >
             Подсказка

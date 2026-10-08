@@ -23,6 +23,7 @@ import {
 } from '../../shared/lib/trainer'
 import { afterSuccessfulCard, enqueueMistake, prepareShownCard } from '../../shared/lib/trainerCore'
 import { useLiveTrainerSession } from '../../shared/lib/useLiveTrainerSession'
+import { readIsMobileTouch } from '../../shared/lib/media'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { SetupPanel } from './SetupPanel'
 import { PracticePanel } from './PracticePanel'
@@ -410,7 +411,7 @@ function KanaTrainerView({
       type: 'hint',
       text: `Подсказка: ${currentCard.answers.join(' / ')}`,
     })
-    inputRef.current?.focus()
+    if (!readIsMobileTouch()) inputRef.current?.focus()
   }
 
   function toggleGroup(groupId: string) {

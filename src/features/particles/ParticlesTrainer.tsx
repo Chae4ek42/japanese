@@ -29,7 +29,7 @@ import {
   tokenizeJapanese,
   tokenWordIds,
 } from '../../shared/lib/jp-tokenize'
-import { useIsMobileTouch } from '../../shared/lib/media'
+import { useIsMobileTouch, preventTouchFocus } from '../../shared/lib/media'
 import { useChoiceDrill } from '../../shared/lib/useChoiceDrill'
 import {
   useAnalyticsState,
@@ -610,6 +610,7 @@ function ParticlesTrainerView({
                     }
                     data-testid="particles-transcript-button"
                     aria-pressed={showTranscript}
+                    onPointerDown={preventTouchFocus}
                     onClick={toggleTranscript}
                   >
                     {showTranscript ? 'Скрыть подсказку' : 'Подсказка'}

@@ -23,6 +23,7 @@ import {
   pushRecentCard,
 } from '../../shared/lib/trainer'
 import { enqueueMistake, prepareShownCard } from '../../shared/lib/trainerCore'
+import { readIsMobileTouch } from '../../shared/lib/media'
 import { usePracticeSession } from '../../shared/lib/usePracticeSession'
 import { useAnalyticsState } from '../../shared/state/AppStateContext'
 import { DEFAULT_LATENCY_MODEL, isForgivableTypo } from '../../shared/lib/review/grade'
@@ -1151,7 +1152,7 @@ export function VocabTrainer({
     if (mode === 'romaji') {
       patchRound({ hintUsed: true })
       setFeedback({ type: 'hint', text: '' })
-      inputRef.current?.focus()
+      if (!readIsMobileTouch()) inputRef.current?.focus()
       return
     }
     if (mode === 'choice' || mode === 'mixed') {
