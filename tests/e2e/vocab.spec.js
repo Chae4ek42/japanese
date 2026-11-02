@@ -72,6 +72,7 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
   }
 
   await page.getByTestId('vocab-answer-input').focus()
+  const writing = await page.getByTestId('vocab-current-writing').innerText()
   await page.keyboard.press('Space')
   await expect(page.getByTestId('vocab-hint-panel')).toBeVisible()
   const romajiParts = await page.locator('[data-testid="vocab-hint-panel"] .kanji-word-romaji').allInnerTexts()
@@ -80,7 +81,12 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
     .filter(Boolean)
     .join('/')
   await page.getByTestId('vocab-answer-input').fill(answer)
-  await expect(page.locator('.practice-stage')).toHaveClass(/is-success/)
+  await expect(page.getByTestId('session-chips').locator('.session-chip')).toHaveText([
+    '1 карточка',
+    /^0% чисто/,
+    /^серия 0/,
+  ])
+  await expect(page.getByTestId('vocab-current-writing')).not.toHaveText(writing)
 
   await page.getByText('← К настройкам').click()
   await page.getByTestId('vocab-drill-choice').click()
@@ -113,28 +119,31 @@ test('vocab trainer mobile: no keyboard input, hint and navigation work', async 
   await expect(page.getByTestId('vocab-hint-button')).toBeEnabled()
 })
 
-test('vocab trainer: skip next scores as correct, previous navigates history', async ({ page }, testInfo) => {
+test('vocab trainer: skip navigation preserves history without changing session counters', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Skip navigation covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
   await page.getByTestId('start-vocab').click()
 
   const first = await page.getByTestId('vocab-current-writing').innerText()
+  const sessionChips = page.getByTestId('session-chips').locator('.session-chip')
+  const initialSessionChips = ['0 карточек', /^100% чисто/, /^серия 0/]
+  await expect(sessionChips).toHaveText(initialSessionChips)
   await expect(page.getByTestId('vocab-skip-prev')).toBeDisabled()
 
   await page.getByTestId('vocab-skip-next').click()
   await expect(page.getByTestId('vocab-current-writing')).not.toHaveText(first)
   await expect(page.getByTestId('vocab-skip-prev')).toBeEnabled()
-  await expect(page.getByTestId('session-chips')).toContainText('1 карточек')
-  await expect(page.getByTestId('session-chips')).toContainText('серия 1')
+  await expect(sessionChips).toHaveText(initialSessionChips)
 
   const second = await page.getByTestId('vocab-current-writing').innerText()
   await page.getByTestId('vocab-skip-prev').click()
   await expect(page.getByTestId('vocab-current-writing')).toHaveText(first)
+  await expect(sessionChips).toHaveText(initialSessionChips)
 
   await page.getByTestId('vocab-skip-next').click()
   await expect(page.getByTestId('vocab-current-writing')).toHaveText(second)
-  await expect(page.getByTestId('session-chips')).toContainText('1 карточек')
+  await expect(sessionChips).toHaveText(initialSessionChips)
 })
 
 test('vocab trainer: arrow keys navigate cards', async ({ page }, testInfo) => {
