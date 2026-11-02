@@ -1652,6 +1652,9 @@ export function VocabTrainer({
       onInputKeyDown={handleInputKeyDown}
       onRevealHint={revealHint}
       onDontKnow={handleDontKnow}
+      onRemember={() => {
+        if (!pendingAdvanceRef.current) finalizeCorrect(roundRef.current.hintUsed ? 'hint' : 'correct')
+      }}
       onChoose={handleChoose}
       onSkipPrev={() => skipToAdjacent('prev')}
       onSkipNext={() => skipToAdjacent('next')}

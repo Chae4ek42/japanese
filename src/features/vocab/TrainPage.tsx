@@ -2,7 +2,6 @@ import { useState } from 'react'
 import './styles.css'
 import { DEFAULT_VOCAB_PREFERENCES } from '../../shared/state/app-state'
 import { useVocabState } from '../../shared/state/AppStateContext'
-import { CheatSheetsBar } from '../../shared/ui/CheatSheetsBar'
 import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
 import { VocabTrainer } from './VocabTrainer'
 
@@ -18,7 +17,6 @@ export function TrainPage() {
         <div>
           <h2>Тренажёр слов</h2>
         </div>
-        <CheatSheetsBar testIdPrefix="train" />
       </header>
 
       <VocabTrainer

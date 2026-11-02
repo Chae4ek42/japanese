@@ -180,7 +180,7 @@ export function AccountGate({ onEntered, onCancel }: AccountGateProps) {
   return (
     <main className="account-gate" data-testid="account-gate">
       <header className="account-gate-hero">
-        <p className="account-gate-kicker">JP тренажёры</p>
+        <p className="account-gate-kicker">Японский</p>
         <h1 className="account-gate-title">{switching ? 'Смена аккаунта' : 'Аккаунты'}</h1>
         {switching ? (
           <p className="account-gate-lead">

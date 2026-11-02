@@ -16,6 +16,8 @@ export interface PracticeShellProps {
   stopTestId?: string
   stopLabel?: string
   children?: ReactNode
+  topline?: ReactNode
+  stageHeader?: ReactNode
   /** Mobile swipe shortcuts (←→ Space Enter). Ignored on desktop. */
   swipes?: SwipeGestureHandlers
   swipesEnabled?: boolean
@@ -36,6 +38,8 @@ export function PracticeShell({
   stopTestId,
   stopLabel = '← К настройкам',
   children,
+  topline,
+  stageHeader,
   swipes,
   swipesEnabled = true,
   swipeScope = 'panel',
@@ -56,15 +60,16 @@ export function PracticeShell({
       className={`practice-panel ${swipesActive ? 'has-mobile-swipes' : ''} ${className}`.trim()}
       data-testid={testId}
     >
-      <div className="practice-topline">
+      {topline !== undefined ? topline : <div className="practice-topline">
         <button type="button" className="text-button" data-testid={stopTestId} onClick={onStop}>
           {stopLabel}
         </button>
         <SessionChips sessionStats={sessionStats} unit={unit} />
-      </div>
+      </div>}
 
       <div className={`practice-layout ${aside ? 'has-aside' : ''} ${stageClassName}`.trim()}>
         <div ref={stageRef} className={`practice-stage ${feedbackType ? `is-${feedbackType}` : ''}`.trim()}>
+          {stageHeader}
           {children}
         </div>
         {aside ? <aside className={`practice-aside ${asideClassName}`.trim()}>{aside}</aside> : null}

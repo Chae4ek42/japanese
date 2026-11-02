@@ -6,7 +6,7 @@ import { AUTOSTART_TRAIN_KEY } from '../../features/vocab/autostart'
 import { wordVariantIds } from '../../features/vocab/mergeHomographs'
 import { resolveTrainingListWords } from '../../features/vocab/pool'
 
-export function TrainingSetsMenu({ onNavigate }: { onNavigate: (page: AppPage) => void }) {
+export function TrainingSetsMenu({ onNavigate, compact = false }: { onNavigate: (page: AppPage) => void; compact?: boolean }) {
   const vocab = useVocabState()
   const [open, setOpen] = useState(false)
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -111,9 +111,14 @@ export function TrainingSetsMenu({ onNavigate }: { onNavigate: (page: AppPage) =
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={panelId}
+        aria-label={compact ? `Наборы для тренировки, слов: ${activeCount}` : undefined}
         onClick={() => setOpen((value) => !value)}
       >
-        Наборы
+        {compact ? (
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="m3 7 9-4 9 4-9 4ZM3 12l9 4 9-4M3 17l9 4 9-4" />
+          </svg>
+        ) : 'Наборы'}
         <span className="sets-menu-badge" data-testid="training-sets-active-count">
           {activeCount}
         </span>

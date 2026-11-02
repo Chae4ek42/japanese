@@ -2130,8 +2130,12 @@
 
 .vocab-mobile-answer-actions {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.vocab-mobile-answer-actions:not(:has(.vocab-remember-button)) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
 }
 
 .vocab-mobile-answer-actions button {
@@ -2140,14 +2144,14 @@
   padding: 10px 8px;
   border: 1px solid #e7e3dc;
   border-radius: 13px;
-  font-size: 0.84rem;
+  font-size: 0.8rem;
   -webkit-tap-highlight-color: transparent;
 }
 
 .vocab-mobile-answer-actions .hint-button {
-  background: #20211f;
-  border-color: #20211f;
-  color: #fff;
+  background: #f6f4ef;
+  border-color: #e3ded4;
+  color: #696253;
 }
 
 .vocab-mobile-answer-actions .hint-button:disabled {
@@ -2157,9 +2161,16 @@
   opacity: 1;
 }
 
-.vocab-mobile-answer-actions .ghost-button {
-  background: #f7f6f3;
-  color: var(--muted-strong);
+.vocab-mobile-answer-actions .vocab-remember-button {
+  background: #eaf4ec;
+  border-color: #cfe2d3;
+  color: #336947;
+}
+
+.vocab-mobile-answer-actions .vocab-forgot-button {
+  background: #fbefed;
+  border-color: #eed6d1;
+  color: #984c41;
 }
 
 .vocab-mobile-swipe-note {
@@ -2268,4 +2279,65 @@
   height: auto;
   max-height: none;
   border: 0;
+}
+
+.train-page:has(.vocab-practice--mobile) > .vocab-page-head {
+  display: none;
+}
+
+.vocab-practice--mobile .practice-layout {
+  margin-top: 0;
+}
+
+.vocab-practice--mobile .practice-stage {
+  gap: 18px;
+  padding: 12px 14px 10px;
+}
+
+.vocab-mobile-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.vocab-mobile-card-title {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.vocab-mobile-card-title > span {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.vocab-mobile-card-head .session-chips.is-compact {
+  gap: 0;
+  justify-content: flex-start;
+  color: var(--muted);
+}
+
+.vocab-mobile-card-head .session-chip {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.64rem;
+  white-space: nowrap;
+}
+
+.vocab-mobile-card-head .session-chip + .session-chip::before {
+  content: '·';
+  margin: 0 5px;
+  color: #aaa;
+}
+
+.vocab-mobile-card-head .vocab-mobile-action {
+  flex-shrink: 0;
+}
+
+.vocab-practice--mobile .question-symbol {
+  margin: 10px 0;
 }

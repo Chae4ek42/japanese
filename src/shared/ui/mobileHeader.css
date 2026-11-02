@@ -1,0 +1,131 @@
+.app-shell:has(.site-header--mobile) {
+  gap: 12px;
+}
+
+.site-header.site-header--mobile {
+  gap: 6px;
+  padding: 0 0 6px;
+}
+
+.site-header--mobile .site-header-top {
+  align-items: center;
+  min-height: 44px;
+}
+
+.site-header--mobile .site-logo {
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+.site-header--mobile .site-header-actions {
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+
+.mobile-header-icon,
+.site-header--mobile .sets-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 9px;
+  border: 0;
+  border-radius: 12px;
+  background: #f6f5f2;
+  color: #55564f;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-header-icon svg,
+.site-header--mobile .sets-menu-trigger svg {
+  width: 22px;
+  height: 22px;
+}
+
+.site-header--mobile .sets-menu-badge {
+  min-width: 18px;
+  height: 18px;
+  font-size: 0.64rem;
+}
+
+.site-header--mobile .site-nav {
+  gap: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.site-header--mobile .site-nav-link {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 6px 1px;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.77rem;
+}
+
+.site-header--mobile .site-nav-link.is-active {
+  border-bottom-color: #333;
+  color: #222;
+  font-weight: 700;
+}
+
+.mobile-account-menu {
+  position: relative;
+}
+
+.mobile-account-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 70;
+  width: min(290px, calc(100vw - 24px));
+  padding: 8px;
+  border: 1px solid #e7e3dc;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 12px 36px rgba(30, 26, 20, 0.12);
+}
+
+.mobile-account-panel .accounts-menu {
+  display: block;
+}
+
+.mobile-account-panel .accounts-menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  padding: 10px;
+}
+
+.mobile-account-data {
+  display: grid;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #efede8;
+}
+
+.mobile-account-data button {
+  min-height: 44px;
+  padding: 10px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted-strong);
+  font: inherit;
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.mobile-account-data button:active {
+  background: #f6f5f2;
+}

@@ -23,7 +23,7 @@ test('home screen renders landing page', async ({ page }) => {
   await expect(page.getByTestId('open-vocab')).toBeVisible()
   await expect(page.getByTestId('open-vocab-train')).toBeVisible()
   await expect(page.getByTestId('open-theory')).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'JP тренажёры' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Японский' })).toBeVisible()
 })
 
 test('header navigates to kana trainer', async ({ page }) => {

@@ -20,6 +20,7 @@ import {
 } from './customWords'
 import type { VocabMixedPrompt } from './mixed'
 import { VocabMobileActions } from './VocabMobileActions'
+import { VocabMobileHeader } from './VocabMobileHeader'
 
 export interface VocabPracticeProps {
   activeCard: VocabCard | null
@@ -173,6 +174,8 @@ export function VocabPractice({
       onStop={onStop}
       stopLabel={isMobile ? '← Настройки' : undefined}
       sessionStats={sessionStats}
+      topline={isMobile ? null : undefined}
+      stageHeader={isMobile ? <VocabMobileHeader sessionStats={sessionStats} onSettings={onStop} /> : undefined}
       feedbackType={feedback.type}
       swipes={swipeHandlers}
       swipesEnabled={!editing}
@@ -188,9 +191,9 @@ export function VocabPractice({
       stageClassName="vocab-practice-layout"
     >
       <div className="question-block">
-        <p className="script-badge" data-testid="vocab-prompt-badge">
+        {!isMobile || editing ? <p className="script-badge" data-testid="vocab-prompt-badge">
           {editing ? 'Правка слова' : drillBadge(drillMode, prompt)}
-        </p>
+        </p> : null}
         <div className="question-symbol" aria-live="polite">
           {isChoiceDrill && prompt?.stemMode === 'text' && !editing ? (
             <p className="vocab-question-stem" data-testid="vocab-current-stem">
@@ -256,9 +259,7 @@ export function VocabPractice({
               ) : null}
             </div>
           ) : (
-            <p className="question-note">
-              {isMobile ? 'Вспомните чтение' : 'Введите ромадзи чтения (любой вариант)'}
-            </p>
+            !isMobile ? <p className="question-note">Введите ромадзи чтения (любой вариант)</p> : null
           )
         ) : (
           <p className="question-note">{prompt?.note ?? 'Выберите верный ответ'}</p>
@@ -440,25 +441,26 @@ export function VocabPractice({
             {isMobile ? (
               <>
                 <div className="vocab-mobile-answer-actions">
+                  {onRemember && drillMode === 'romaji' ? (
+                    <button type="button" className="vocab-remember-button" data-testid="vocab-remember" onClick={onRemember}>
+                      Помню
+                    </button>
+                  ) : null}
+                  {onDontKnow ? (
+                    <button type="button" className="vocab-forgot-button" data-testid="vocab-dont-know" onClick={onDontKnow}>
+                      Не помню
+                    </button>
+                  ) : null}
                   <button
                     type="button"
                     className="hint-button"
                     data-testid="vocab-hint-button"
                     disabled={round.hintUsed || Boolean(selectedChoice)}
+                    aria-pressed={round.hintUsed}
                     onClick={onRevealHint}
                   >
-                    {round.hintUsed ? 'Ответ открыт' : 'Подсказка'}
+                    Подсказка
                   </button>
-                  {onRemember ? (
-                    <button type="button" className="primary-button" data-testid="vocab-remember" onClick={onRemember}>
-                      Помню
-                    </button>
-                  ) : null}
-                  {onDontKnow ? (
-                    <button type="button" className="ghost-button" data-testid="vocab-dont-know" onClick={onDontKnow}>
-                      Не помню
-                    </button>
-                  ) : null}
                 </div>
                 <p className="vocab-mobile-swipe-note" aria-label="Свайп влево — следующее слово, вправо — предыдущее">
                   <span>← дальше</span><span className={!canGoPrev ? 'is-unavailable' : undefined}>назад →</span>

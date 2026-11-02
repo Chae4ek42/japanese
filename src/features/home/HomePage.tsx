@@ -46,7 +46,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
   return (
     <main className="home-page">
       <section className="home-hero">
-        <h1 className="home-title">JP тренажёры</h1>
+        <h1 className="home-title">Японский</h1>
         <p className="home-lead">Продолжите сессию или откройте раздел.</p>
       </section>
 

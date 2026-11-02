@@ -54,7 +54,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'home',
     path: PATHS.home,
-    documentTitle: 'JP тренажёры',
+    documentTitle: 'Японский',
     navLabel: 'Главная',
     navTestId: 'nav-main',
     navGroup: 'primary',
@@ -62,7 +62,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'kana',
     path: PATHS.kana,
-    documentTitle: 'Кана — JP тренажёры',
+    documentTitle: 'Кана — Японский',
     navLabel: 'Кана',
     navTestId: 'nav-kana',
     navGroup: 'primary',
@@ -78,7 +78,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'kanji',
     path: PATHS.kanji,
-    documentTitle: 'Кандзи — JP тренажёры',
+    documentTitle: 'Кандзи — Японский',
     navLabel: 'Кандзи',
     navTestId: 'nav-kanji',
     navGroup: 'primary',
@@ -93,7 +93,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'numbers',
     path: PATHS.numbers,
-    documentTitle: 'Числа — JP тренажёры',
+    documentTitle: 'Числа — Японский',
     navLabel: 'Числа',
     navTestId: 'nav-numbers',
     navGroup: 'primary',
@@ -109,7 +109,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'particles',
     path: PATHS.particles,
-    documentTitle: 'Частицы — JP тренажёры',
+    documentTitle: 'Частицы — Японский',
     navLabel: 'Частицы',
     navTestId: 'nav-particles',
     navGroup: 'primary',
@@ -125,7 +125,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'verbs',
     path: PATHS.verbs,
-    documentTitle: 'Глаголы — JP тренажёры',
+    documentTitle: 'Глаголы — Японский',
     navLabel: 'Глаголы',
     navTestId: 'nav-verbs',
     navGroup: 'primary',
@@ -141,7 +141,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'train',
     path: PATHS.train,
-    documentTitle: 'Слова — JP тренажёры',
+    documentTitle: 'Слова — Японский',
     navLabel: 'Слова',
     navTestId: 'nav-train',
     navGroup: 'primary',
@@ -156,7 +156,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'reader',
     path: PATHS.reader,
-    documentTitle: 'Текст — JP тренажёры',
+    documentTitle: 'Текст — Японский',
     navLabel: 'Текст',
     navTestId: 'nav-reader',
     navGroup: 'primary',
@@ -171,7 +171,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'vocab',
     path: PATHS.vocab,
-    documentTitle: 'Словарь — JP тренажёры',
+    documentTitle: 'Словарь — Японский',
     navLabel: 'Словарь',
     navTestId: 'nav-vocab',
     navGroup: 'primary',
@@ -186,7 +186,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'mine',
     path: PATHS.mine,
-    documentTitle: 'Мои слова — JP тренажёры',
+    documentTitle: 'Мои слова — Японский',
     navLabel: 'Мои слова',
     navTestId: 'nav-mine',
     navGroup: 'primary',
@@ -201,7 +201,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'theory',
     path: PATHS.theory,
-    documentTitle: 'Теория — JP тренажёры',
+    documentTitle: 'Теория — Японский',
     navLabel: 'Теория',
     navTestId: 'nav-theory',
     navGroup: 'primary',
@@ -216,7 +216,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'analytics',
     path: PATHS.analytics,
-    documentTitle: 'Аналитика — JP тренажёры',
+    documentTitle: 'Аналитика — Японский',
     navLabel: 'Аналитика',
     navTestId: 'nav-analytics',
     navGroup: 'primary',
@@ -231,7 +231,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'accounts',
     path: PATHS.accounts,
-    documentTitle: 'Аккаунты — JP тренажёры',
+    documentTitle: 'Аккаунты — Японский',
     navLabel: 'Аккаунты',
     navTestId: 'nav-accounts',
     navGroup: 'none',
