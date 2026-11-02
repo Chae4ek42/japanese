@@ -91,16 +91,26 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
   await expect(page.locator('.vocab-choice-button.is-correct')).toBeVisible()
 })
 
-test('vocab trainer mobile: hint button reveals reading', async ({ page }, testInfo) => {
+test('vocab trainer mobile: no keyboard input, hint and navigation work', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-chrome', 'Mobile-only hint button.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
   await page.getByTestId('start-vocab').click()
-  await expect(page.getByTestId('vocab-answer-input')).toBeVisible()
+  await expect(page.getByTestId('vocab-current-writing')).toBeVisible()
+  await expect(page.getByTestId('vocab-answer-input')).toHaveCount(0)
+  await expect(page.locator('input:focus, textarea:focus')).toHaveCount(0)
   await expect(page.getByTestId('vocab-hint-button')).toBeVisible()
   await page.getByTestId('vocab-hint-button').click()
   await expect(page.getByTestId('vocab-hint-panel')).toBeVisible()
   await expect(page.getByTestId('vocab-hint-button')).toBeDisabled()
+  await expect(page.locator('input:focus, textarea:focus')).toHaveCount(0)
+
+  const first = await page.getByTestId('vocab-current-writing').innerText()
+  await page.getByTestId('vocab-skip-next').click()
+  await expect(page.getByTestId('vocab-current-writing')).not.toHaveText(first)
+  await expect(page.getByTestId('vocab-answer-input')).toHaveCount(0)
+  await expect(page.locator('input:focus, textarea:focus')).toHaveCount(0)
+  await expect(page.getByTestId('vocab-hint-button')).toBeEnabled()
 })
 
 test('vocab trainer: skip next scores as correct, previous navigates history', async ({ page }, testInfo) => {

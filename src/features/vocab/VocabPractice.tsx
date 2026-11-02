@@ -242,7 +242,9 @@ export function VocabPractice({
               ) : null}
             </div>
           ) : (
-            <p className="question-note">Введите ромадзи чтения (любой вариант)</p>
+            <p className="question-note">
+              {isMobile ? 'Вспомните чтение и проверьте себя по подсказке' : 'Введите ромадзи чтения (любой вариант)'}
+            </p>
           )
         ) : (
           <p className="question-note">{prompt?.note ?? 'Выберите верный ответ'}</p>
@@ -367,23 +369,25 @@ export function VocabPractice({
           <>
             {drillMode === 'romaji' ? (
               <>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className="answer-input"
-                  data-testid="vocab-answer-input"
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  spellCheck="false"
-                  enterKeyHint={inputMode === 'submit' ? 'go' : 'done'}
-                  value={inputValue}
-                  onChange={onInputChange}
-                  onKeyDown={onInputKeyDown}
-                  onFocus={(event) => {
-                    if (hintTapJustHappened()) event.currentTarget.blur()
-                  }}
-                  placeholder={round.hintUsed ? activeCard.romaji : 'ромадзи'}
-                />
+                {!isMobile ? (
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    className="answer-input"
+                    data-testid="vocab-answer-input"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck="false"
+                    enterKeyHint={inputMode === 'submit' ? 'go' : 'done'}
+                    value={inputValue}
+                    onChange={onInputChange}
+                    onKeyDown={onInputKeyDown}
+                    onFocus={(event) => {
+                      if (hintTapJustHappened()) event.currentTarget.blur()
+                    }}
+                    placeholder={round.hintUsed ? activeCard.romaji : 'ромадзи'}
+                  />
+                ) : null}
                 <div className="feedback-row">
                   <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
                 </div>

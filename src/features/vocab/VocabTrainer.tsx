@@ -473,7 +473,7 @@ export function VocabTrainer({
   ])
 
   useEffect(() => {
-    if (hintTapJustHappened()) return
+    if (hintTapJustHappened() || readIsMobileTouch()) return
     if (view === 'practice' && preferences.drillMode === 'romaji') {
       inputRef.current?.focus()
     }
