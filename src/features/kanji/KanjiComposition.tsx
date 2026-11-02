@@ -21,6 +21,7 @@ interface KanjiCompositionProps {
   compact?: boolean
   highlightElement?: string | null
   onHoverElement?: (element: string | null) => void
+  emptyMessage?: string
 }
 
 export function KanjiComposition({
@@ -29,6 +30,7 @@ export function KanjiComposition({
   compact = false,
   highlightElement = null,
   onHoverElement,
+  emptyMessage,
 }: KanjiCompositionProps) {
   const info = getKanjiInfo(character)
   const components = getKanjiComponents(character)
@@ -38,7 +40,7 @@ export function KanjiComposition({
   const usedIn = selfComponent ? getKanjiUsingComponent(character, compact ? 8 : 16) : []
 
   if (!components.length && !mnemonic && !usedIn.length) {
-    return null
+    return emptyMessage ? <p className="kanji-info-empty">{emptyMessage}</p> : null
   }
 
   return (

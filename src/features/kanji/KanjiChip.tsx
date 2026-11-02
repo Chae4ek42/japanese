@@ -28,7 +28,7 @@ export function KanjiChip({
 
   const title = onOpenInfo
     ? isMobile
-      ? 'Долгое нажатие — карточка знака'
+      ? 'Нажмите — карточка знака'
       : 'Колёсико — карточка знака'
     : undefined
 
@@ -39,6 +39,10 @@ export function KanjiChip({
       data-testid={testId ?? `kanji-chip-${character}`}
       className={className}
       title={title}
+      aria-label={onOpenInfo ? `Карточка кандзи ${character}` : undefined}
+      onClick={() => {
+        if (isMobile) onOpenInfo?.(character)
+      }}
       onAuxClick={handleAuxClick}
       onMouseDown={(event) => {
         if (event.button === 1) event.preventDefault()

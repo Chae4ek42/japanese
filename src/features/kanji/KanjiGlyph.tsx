@@ -40,7 +40,7 @@ interface KanjiGlyphProps {
   /** Middle-click a component to open its card. */
   onActivateElement?: (element: string) => void
   onAuxClickCharacter?: (event: React.MouseEvent<HTMLElement>) => void
-  /** Mobile long-press opens the focused character card. */
+  /** Mobile tap or long-press opens the focused character card. */
   onLongPressCharacter?: () => void
   size?: 'card' | 'hero'
   className?: string
@@ -280,7 +280,7 @@ export function KanjiGlyph({
       title={
         onActivateElement || onLongPressCharacter
           ? isMobile
-            ? 'Долгое нажатие — карточка знака'
+            ? onLongPressCharacter ? 'Нажмите — карточка знака' : 'Состав знака — во вкладке «Состав»'
             : 'Колёсико по части знака — открыть карточку'
           : undefined
       }
@@ -294,6 +294,17 @@ export function KanjiGlyph({
       onPointerLeave={handlePointerLeave}
       onContextMenu={longPress.onContextMenu}
       onClickCapture={longPress.onClickCapture}
+      onClick={() => {
+        if (isMobile) onLongPressCharacter?.()
+      }}
+      role={isMobile && onLongPressCharacter ? 'button' : undefined}
+      tabIndex={isMobile && onLongPressCharacter ? 0 : undefined}
+      onKeyDown={(event) => {
+        if (isMobile && onLongPressCharacter && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault()
+          onLongPressCharacter()
+        }
+      }}
       onAuxClick={handleAuxClick}
       onMouseDown={(event) => {
         if (event.button === 1) event.preventDefault()

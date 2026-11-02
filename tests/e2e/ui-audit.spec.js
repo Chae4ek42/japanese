@@ -27,6 +27,9 @@ const ROUTES = [
     open: async (page) => {
       await page.getByTestId('nav-kanji').click()
       await page.getByTestId('kanji-cell-日').click()
+      if (await page.getByTestId('kanji-info-card').isVisible()) {
+        await page.getByTestId('kanji-info-practice').click()
+      }
       await page.getByTestId('kanji-trainer').waitFor({ state: 'visible' })
     },
   },

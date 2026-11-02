@@ -500,6 +500,7 @@ export function VocabTrainer({
 
   useEffect(() => {
     const handleWindowKeyDown = (event: KeyboardEvent) => {
+      if (event.target instanceof Element && event.target.closest('[role="dialog"]')) return
       if (viewRef.current !== 'practice' || !activeCardRef.current) return
       const typingInField =
         event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement

@@ -1105,19 +1105,18 @@
   place-items: center;
   padding: 24px;
   background: rgba(18, 18, 18, 0.42);
-  overflow: auto;
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .kanji-info-card {
   width: min(560px, calc(100vw - 48px));
   max-width: min(560px, calc(100vw - 48px));
   min-width: 0;
-  max-height: min(860px, calc(100vh - 48px));
-  overflow-x: hidden;
-  overflow-y: auto;
-  display: grid;
-  gap: 16px;
-  padding: 22px 22px 18px;
+  max-height: min(860px, calc(100dvh - 48px));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--border);
   border-radius: 14px;
   background: #fff;
@@ -1143,6 +1142,70 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  flex: 0 0 auto;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.kanji-info-heading {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.kanji-info-title {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.kanji-info-title > span {
+  margin-left: 6px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.kanji-info-body {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 20px;
+  display: grid;
+  gap: 20px;
+  scrollbar-gutter: stable;
+}
+
+.kanji-info-overview {
+  display: grid;
+  gap: 16px;
+}
+
+.kanji-info-card [hidden] {
+  display: none;
+}
+
+.kanji-info-strokes {
+  margin: -6px 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.kanji-info-word-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.kanji-info-card button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.kanji-info-card button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .kanji-info-badges {
@@ -1250,7 +1313,9 @@
   flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
-  padding-top: 4px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  flex: 0 0 auto;
 }
 
 .kanji-info-empty {
@@ -1359,18 +1424,230 @@
     width: 100%;
   }
 
+}
+
+@media (max-width: 820px), (hover: none) and (pointer: coarse) {
   .kanji-info-overlay {
-    padding: 0;
-    align-items: flex-end;
+    padding: env(safe-area-inset-top, 0px) 0 0;
+    place-items: end center;
+    background: rgba(25, 22, 19, 0.5);
   }
 
   .kanji-info-card {
     width: 100%;
-    max-width: none;
-    min-width: 0;
-    max-height: min(90vh, 780px);
-    margin: 0;
-    border-radius: 16px 16px 0 0;
-    padding: 18px 16px max(18px, env(safe-area-inset-bottom, 0px));
+    max-width: 640px;
+    height: 94dvh;
+    max-height: 100%;
+    border: 0;
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -12px 48px rgba(25, 22, 19, 0.18);
+  }
+
+  .kanji-info-head {
+    padding: 14px 16px 10px;
+    border: 0;
+  }
+
+  .kanji-info-badges {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .kanji-info-head-actions {
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+
+  .kanji-info-head-actions button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f4f2ef;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .kanji-info-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    margin: 0 16px 10px;
+    padding: 4px;
+    border-radius: 14px;
+    background: #f4f2ef;
+    flex: 0 0 auto;
+  }
+
+  .kanji-info-tabs button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px 4px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted-strong);
+    cursor: pointer;
+  }
+
+  .kanji-info-tabs button[aria-selected='true'] {
+    background: #fff;
+    color: var(--accent);
+    box-shadow: 0 1px 5px rgba(25, 22, 19, 0.08);
+  }
+
+  .kanji-info-tab-count {
+    padding: 2px 5px;
+    border-radius: 6px;
+    background: rgba(17, 17, 17, 0.05);
+    font-size: 0.68rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kanji-info-body {
+    flex: 1 1 auto;
+    display: block;
+    padding: 8px 16px 20px;
+    scrollbar-gutter: auto;
+  }
+
+  .kanji-info-overview {
+    gap: 18px;
+  }
+
+  .kanji-info-char {
+    width: 144px;
+    padding: 10px;
+    border: 1px solid #e9e4dc;
+    border-radius: 20px;
+    background: #faf8f4;
+  }
+
+  .kanji-info-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .kanji-info-list li {
+    padding: 8px 12px;
+    background: #f7f5f1;
+    border: 0;
+    font-size: 1rem;
+  }
+
+  .kanji-info-strokes {
+    font-size: 0.8rem;
+  }
+
+  .kanji-info-card .kanji-hero-readings {
+    display: grid;
+    gap: 8px;
+  }
+
+  .kanji-info-card .kanji-reading {
+    padding: 12px;
+    border-radius: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .kanji-info-learn-button {
+    width: 100%;
+    min-height: 46px;
+  }
+
+  .kanji-info-learn-button[aria-pressed='true'] {
+    color: #0f6b3f;
+    background: #edf5ef;
+    border-color: #c4dcca;
+  }
+
+  .kanji-info-words {
+    gap: 12px;
+  }
+
+  .kanji-info-words li,
+  .kanji-info-words li:first-child {
+    padding: 14px;
+    border: 1px solid #e9e4dc;
+    border-radius: 16px;
+    background: #faf9f6;
+  }
+
+  .kanji-info-word-main {
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .kanji-info-word-writing {
+    font-size: 1.3rem;
+    overflow-wrap: anywhere;
+    flex: 1 1 0;
+  }
+
+  .kanji-info-word-speak {
+    width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #e9e4dc;
+  }
+
+  .kanji-info-word-meaning {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .kanji-info-word-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 12px;
+  }
+
+  .kanji-info-word-actions button {
+    min-height: 44px;
+    padding: 8px;
+    border: 1px solid #ddd7cd;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 0.8rem;
+    text-decoration: none;
+  }
+
+  .kanji-info-word-actions button[aria-pressed='true'] {
+    color: #0f6b3f;
+    border-color: #c4dcca;
+    background: #edf5ef;
+  }
+
+  .kanji-info-card .kanji-composition-chip,
+  .kanji-info-card .kanji-composition-used-chip {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .kanji-info-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 12px 16px max(12px, env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    box-shadow: 0 -4px 18px rgba(25, 22, 19, 0.04);
+  }
+
+  .kanji-info-actions button {
+    min-height: 48px;
+    padding: 10px 8px;
+    font-size: 0.85rem;
   }
 }

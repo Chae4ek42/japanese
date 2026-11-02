@@ -53,7 +53,7 @@ function KanjiGridCell({
   const isMobile = useIsMobileTouch()
   const longPress = useLongPress(onOpenInfo, { enabled: isMobile })
   const title = isMobile
-    ? `${meaningsLabel} · ${sampleCount} слов · долгое нажатие — карточка`
+    ? `${meaningsLabel} · ${sampleCount} слов · нажмите, чтобы открыть карточку`
     : `${meaningsLabel} · ${sampleCount} слов · колёсико — карточка`
 
   return (
@@ -62,7 +62,7 @@ function KanjiGridCell({
       data-testid={`kanji-cell-${character}`}
       className={learned ? 'kanji-cell is-learned' : 'kanji-cell'}
       title={title}
-      onClick={onPractice}
+      onClick={isMobile ? onOpenInfo : onPractice}
       onAuxClick={(event) => {
         if (event.button === 1) {
           event.preventDefault()
