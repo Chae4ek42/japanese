@@ -132,7 +132,7 @@ export function addWordsToTrainingSet(
   const target = getTrainingSet(sets, setId)
   if (!target) return sets
   const known = new Set(target.wordIds)
-  const toAdd = wordIds.filter((id) => id && !known.has(id))
+  const toAdd = sanitizeWordIdList(wordIds).filter((id) => !known.has(id))
   if (!toAdd.length) return sets
   return patchTrainingSetWords(sets, setId, [...target.wordIds, ...toAdd], now)
 }

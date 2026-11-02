@@ -1,0 +1,8 @@
+.contexts-page { max-width: 850px; margin: 0 auto; padding: 24px 18px; }
+.context-exercise, .word-contexts { border: 1px solid var(--border-color, #8886); border-radius: 14px; padding: 18px; margin: 16px 0; }
+.context-sentence { font-size: 1.5rem; line-height: 1.9; overflow-wrap: anywhere; }
+.context-exercise form, .word-contexts form { display: grid; gap: 12px; }
+.context-exercise label, .word-contexts label { display: grid; gap: 6px; }
+.context-exercise input, .word-contexts input, .word-contexts textarea { box-sizing: border-box; width: 100%; padding: 10px; color: inherit; background: var(--surface, transparent); border: 1px solid #8888; border-radius: 8px; font: inherit; }
+.context-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.word-contexts article { border-bottom: 1px solid #8885; padding-bottom: 12px; margin-bottom: 12px; }

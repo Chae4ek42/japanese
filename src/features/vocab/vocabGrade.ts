@@ -9,11 +9,13 @@ import type {
 import { createStatsRecord, projectRecentAnswers } from '../../shared/lib/trainer'
 import { afterSuccessfulCard, enqueueMistake } from '../../shared/lib/trainerCore'
 import { gradeAndAdvanceReview, removeCardFromReviewSession } from './reviewSession'
+import { dropAdaptiveWord, gradeAdaptiveWord, updateWordPractice, wordPracticeStats } from './adaptiveWindow'
 
 /** Sidebar / planner stats after one round, without mutating mastery fields. */
 export function applyOptimisticStat(
   existing: StatsRecord | undefined,
   outcome: StatsOutcome,
+  now = Date.now(),
 ): StatsRecord {
   const base = existing ?? createStatsRecord()
   const recentAnswers = projectRecentAnswers(base.recentAnswers, outcome)
@@ -28,6 +30,7 @@ export function applyOptimisticStat(
     hints,
     recentAnswers,
     eventAccuracy: total ? Math.round((clears / total) * 100) : 0,
+    wordPractice: updateWordPractice(existing, outcome, now),
   }
 }
 
@@ -46,8 +49,12 @@ export function nextSessionAfterVocabGrade(input: {
   usesReviewV2: boolean
   pool: VocabCard[]
   memoryState?: MemoryCardState
+  nextStats?: StatsRecord
 }): PracticeSession {
   const { session, cardId, grade, wrong, hintUsed, statsOutcome, clean, usesReviewV2, pool } = input
+  if (session.adaptive) {
+    return { ...session, adaptive: gradeAdaptiveWord(session.adaptive, cardId, statsOutcome, wordPracticeStats(input.nextStats)) }
+  }
   if (usesReviewV2 && session.review) {
     return gradeAndAdvanceReview({
       session,
@@ -76,6 +83,9 @@ export function dropCardFromPracticeSession(
   cardId: string,
   opts: { usesReviewV2: boolean; fallbackPoolIds: string[] },
 ): PracticeSession {
+  if (session.adaptive) {
+    return { ...session, poolIds: session.poolIds.filter((id) => id !== cardId), adaptive: dropAdaptiveWord(session.adaptive, cardId) }
+  }
   if (opts.usesReviewV2) return removeCardFromReviewSession(session, cardId)
   const poolIds = (session.poolIds.length ? session.poolIds : opts.fallbackPoolIds).filter(
     (id) => id !== cardId,

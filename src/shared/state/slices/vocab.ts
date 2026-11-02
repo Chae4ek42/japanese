@@ -23,8 +23,7 @@ import { sanitizeCardTrainerLiveSession } from './live-session'
 const VALID_VOCAB_DRILLS = new Set(['romaji', 'choice', 'mixed'])
 const VALID_VOCAB_SOURCES = new Set(['level', 'group', 'mine', 'kanji', 'list', 'problem'])
 const VALID_VOCAB_LEVELS = new Set([5, 4, 3, 2, 1])
-const VALID_PICK_MODES = new Set(['adaptive', 'even'])
-const VALID_SESSION_MODES = new Set(['drill', 'srs'])
+const VALID_SESSION_MODES = new Set(['drill', 'adaptive', 'srs'])
 const VALID_INPUT_MODES = new Set(['instant', 'submit'])
 const VALID_MEMORY_STATES = new Set(['new', 'learning', 'review', 'relearning', 'leech'])
 
@@ -34,7 +33,7 @@ export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
   source: 'level',
   level: 5,
   groupId: 'family',
-  pickMode: 'adaptive',
+  pickMode: 'even',
   inputMode: 'instant',
   wordJlptLevels: [],
   newWordLimit: -1,
@@ -134,12 +133,10 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
     drillMode: VALID_VOCAB_DRILLS.has(String(source.drillMode))
       ? (source.drillMode as VocabPreferences['drillMode'])
       : fallback.drillMode,
-    source: sessionMode === 'srs' ? 'mine' : resolvedSource,
+    source: sessionMode === 'srs' || sessionMode === 'adaptive' ? 'mine' : resolvedSource,
     level: VALID_VOCAB_LEVELS.has(levelRaw) ? (levelRaw as VocabPreferences['level']) : fallback.level,
     groupId,
-    pickMode: VALID_PICK_MODES.has(String(source.pickMode))
-      ? (source.pickMode as VocabPreferences['pickMode'])
-      : fallback.pickMode,
+    pickMode: sessionMode === 'drill' ? 'even' : 'adaptive',
     inputMode: VALID_INPUT_MODES.has(String(source.inputMode))
       ? (source.inputMode as VocabPreferences['inputMode'])
       : fallback.inputMode,
@@ -330,7 +327,9 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
   const myWordsRaw = Array.isArray(source.myWords)
     ? source.myWords.filter((item): item is string => typeof item === 'string' && item.length > 0)
     : [...fallback.myWords]
-  const myWords = [...new Set([...myWordsRaw, ...Object.keys(customWords).filter((id) => id.startsWith('custom:'))])]
+  const myWords = [...new Set(Array.isArray(source.myWords)
+    ? myWordsRaw
+    : [...myWordsRaw, ...Object.keys(customWords).filter((id) => id.startsWith('custom:'))])]
 
   const myWordAddedAtRaw =
     source.myWordAddedAt && typeof source.myWordAddedAt === 'object'
@@ -375,9 +374,27 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
 
   const stats =
     source.stats && typeof source.stats === 'object' ? { ...(source.stats as Record<string, StatsRecord>) } : {}
+  for (const [id, record] of Object.entries(stats)) {
+    if (!record?.wordPractice) continue
+    const progress = record.wordPractice
+    stats[id] = { ...record, wordPractice: {
+      strength: clampFloat(progress.strength, 0, 1, 0.15),
+      attempts: clampInt(progress.attempts, 0, Number.MAX_SAFE_INTEGER, 0),
+      streak: clampInt(progress.streak, 0, Number.MAX_SAFE_INTEGER, 0),
+      lapses: clampInt(progress.lapses, 0, Number.MAX_SAFE_INTEGER, 0),
+      lastAnsweredAt: clampFloat(progress.lastAnsweredAt, 0, Number.MAX_SAFE_INTEGER, 0),
+    } }
+  }
 
   const preferences = sanitizeVocabPreferences(source.preferences, fallback.preferences)
   const trainingSetId = resolveActiveTrainingSetId(preferences.trainingSetId, trainingSets)
+  let liveSession = sanitizeCardTrainerLiveSession(source.liveSession, fallback.liveSession ?? null)
+  if (liveSession && !liveSession.session.vocabMode && !liveSession.session.adaptive) {
+    const spaced = preferences.sessionMode === 'srs'
+    liveSession = { ...liveSession, session: {
+      ...liveSession.session, vocabMode: spaced ? 'srs' : 'drill', mode: spaced ? 'adaptive' : 'even',
+    } }
+  }
 
   return {
     myWords,
@@ -393,6 +410,6 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
     memory: sanitizeMemoryMap(source.memory),
     latencyModel: sanitizeLatencyModel(source.latencyModel, fallback.latencyModel ?? DEFAULT_LATENCY_MODEL),
     reviewDay: sanitizeReviewDay(source.reviewDay),
-    liveSession: sanitizeCardTrainerLiveSession(source.liveSession, fallback.liveSession ?? null),
+    liveSession,
   }
 }

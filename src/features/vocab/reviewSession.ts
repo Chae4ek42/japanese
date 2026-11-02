@@ -27,26 +27,7 @@ import {
   appendToReviewPlan,
 } from '../../shared/lib/review'
 import { memoryKey, migrateFromMastery, urgency } from '../../shared/lib/review/memory'
-
-/** 0 = pick the working-set size from the pool. Otherwise 3…30. */
-export function clampAdaptiveInFlight(value: number | undefined): number {
-  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) return 0
-  return Math.min(30, Math.max(3, Math.round(value)))
-}
-
-export function clampAdaptivePasses(value: number | undefined): number {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return 2
-  return Math.min(3, Math.max(1, Math.round(value)))
-}
-
-/** Working-set size for a drill adaptive session. */
-export function resolveAdaptiveInFlight(planSize: number, preference: number | undefined): number {
-  const requested = clampAdaptiveInFlight(preference)
-  const auto = defaultInFlightLimit(planSize, false)
-  if (requested <= 0) return auto
-  if (planSize <= 0) return requested
-  return Math.min(planSize, requested)
-}
+import { createAdaptiveWindow, wordPracticeStats } from './adaptiveWindow'
 
 export function resolveCardMemory(
   memory: Record<string, MemoryState>,
@@ -114,6 +95,15 @@ export function startReviewPracticeSession(input: {
     .map((card) => card.id)
     .filter((id) => (weights[id] ?? 1) > 0)
 
+  if (!spaced && input.preferences.sessionMode === 'adaptive') {
+    return {
+      session: { poolIds: scopeIds, recentHistory: [], lastCardId: null, mistakeQueue: [], sinceQueuePick: 0,
+        mode: 'adaptive', vocabMode: 'adaptive', adaptive: createAdaptiveWindow(scopeIds, input.stats, now) },
+      planEmpty: scopeIds.length === 0, dueCount: 0,
+      newCount: scopeIds.filter((id) => wordPracticeStats(input.stats[id]).attempts === 0).length,
+    }
+  }
+
   const knobs = clampReviewKnobs({
     targetRetention: input.preferences.targetRetention,
     // Non-spaced: scope already capped by «Слов за раз» — take the whole set.
@@ -124,8 +114,7 @@ export function startReviewPracticeSession(input: {
     sessionMinutes: input.preferences.sessionMinutes,
   })
   const aspect = drillModeToAspect(input.preferences.drillMode)
-  const even = input.preferences.pickMode === 'even'
-  const weakFirst = input.preferences.adaptiveWeakFirst !== false
+  const even = !spaced
   const plan = buildSessionPlan({
     scope: input.scope.map((card) => ({
       id: card.id,
@@ -140,9 +129,8 @@ export function startReviewPracticeSession(input: {
     newUsedToday: spaced ? Math.max(0, input.newUsedToday) : 0,
     weightMultipliers: input.weightMultipliers,
     avgLatencyMs: input.avgLatencyMs,
-    // Spaced mine always uses due/new buckets. Even, and adaptive with
-    // «как в списке», keep the scope order.
-    even: spaced ? false : even || !weakFirst,
+    // SRS uses due/new buckets; ordinary drills keep the scope order.
+    even,
   })
 
   const planned = new Set(plan.planIds)
@@ -153,15 +141,11 @@ export function startReviewPracticeSession(input: {
         ...scopeIds.filter((id) => !planned.has(id)),
       ]
 
-  const drillAdaptive = !spaced && !even
   const review = createReviewSessionState(poolIds, {
     mode: even ? 'even' : 'adaptive',
     seed: sessionSeed(now),
     weightMultipliers: weights,
-    inFlightLimit: drillAdaptive
-      ? resolveAdaptiveInFlight(poolIds.length, input.preferences.adaptiveInFlight)
-      : defaultInFlightLimit(poolIds.length, spaced),
-    passesToGraduate: drillAdaptive ? clampAdaptivePasses(input.preferences.adaptivePasses) : undefined,
+    inFlightLimit: defaultInFlightLimit(poolIds.length, spaced),
   })
   review.targetAnswers = plan.targetAnswers
 
@@ -172,6 +156,7 @@ export function startReviewPracticeSession(input: {
     mistakeQueue: [],
     sinceQueuePick: 0,
     mode: even ? 'even' : 'adaptive',
+    vocabMode: spaced ? 'srs' : 'drill',
     showCounts: {},
     cooldowns: {},
     review,

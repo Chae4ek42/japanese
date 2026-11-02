@@ -37,7 +37,9 @@ import {
 } from '../lib/review'
 import { appendReviewEvent } from '../lib/review/journal'
 import { hoursBetween } from '../lib/review/math'
+import { updateWordPractice } from '../../features/vocab/adaptiveWindow'
 import { useAppStateContext } from './core'
+import { setSavedWords } from '../lib/savedWords'
 
 export function useVocabState() {
   const { appState, setAppState } = useAppStateContext()
@@ -47,34 +49,8 @@ export function useVocabState() {
       if (!wordId) return
       setAppState((prevState) => {
         if (!prevState) return prevState
-        const myWords = prevState.vocab.myWords
-        const removing = myWords.includes(wordId)
-        const nextWords = removing ? myWords.filter((item) => item !== wordId) : [...myWords, wordId]
-        const customWords = { ...prevState.vocab.customWords }
-        const myWordAddedAt = { ...(prevState.vocab.myWordAddedAt ?? {}) }
-        if (removing) {
-          delete myWordAddedAt[wordId]
-          if (wordId.startsWith('custom:')) {
-            delete customWords[wordId]
-          }
-        } else {
-          myWordAddedAt[wordId] = Date.now()
-        }
-        return {
-          ...prevState,
-          vocab: {
-            ...prevState.vocab,
-            myWords: nextWords,
-            myWordAddedAt,
-            customWords,
-            learnedWordIds: removing
-              ? (prevState.vocab.learnedWordIds ?? []).filter((id) => id !== wordId)
-              : prevState.vocab.learnedWordIds ?? [],
-            trainingSets: removing
-              ? prevState.vocab.trainingSets
-              : removeWordsFromAllTrainingSets(prevState.vocab.trainingSets ?? [], [wordId]),
-          },
-        }
+        const vocab = setSavedWords(prevState.vocab, [wordId], !prevState.vocab.myWords.includes(wordId))
+        return vocab === prevState.vocab ? prevState : { ...prevState, vocab }
       })
     },
     [setAppState],
@@ -86,26 +62,8 @@ export function useVocabState() {
       if (!ids.length) return
       setAppState((prevState) => {
         if (!prevState) return prevState
-        const known = new Set(prevState.vocab.myWords)
-        const toAdd = ids.filter((id) => !known.has(id))
-        const sets = prevState.vocab.trainingSets ?? []
-        const nextSets = removeWordsFromAllTrainingSets(sets, ids)
-        if (!toAdd.length && nextSets === sets) return prevState
-        const now = Date.now()
-        const myWordAddedAt = { ...(prevState.vocab.myWordAddedAt ?? {}) }
-        for (const id of toAdd) {
-          myWordAddedAt[id] = now
-        }
-        return {
-          ...prevState,
-          vocab: {
-            ...prevState.vocab,
-            myWords: toAdd.length ? [...prevState.vocab.myWords, ...toAdd] : prevState.vocab.myWords,
-            myWordAddedAt,
-            // «Мои слова» и наборы взаимоисключающие: при добавлении убираем из всех наборов.
-            trainingSets: nextSets,
-          },
-        }
+        const vocab = setSavedWords(prevState.vocab, ids, true)
+        return vocab === prevState.vocab ? prevState : { ...prevState, vocab }
       })
     },
     [setAppState],
@@ -117,24 +75,8 @@ export function useVocabState() {
       if (!ids.size) return
       setAppState((prevState) => {
         if (!prevState) return prevState
-        const nextWords = prevState.vocab.myWords.filter((id) => !ids.has(id))
-        if (nextWords.length === prevState.vocab.myWords.length) return prevState
-        const customWords = { ...prevState.vocab.customWords }
-        const myWordAddedAt = { ...(prevState.vocab.myWordAddedAt ?? {}) }
-        for (const id of ids) {
-          delete myWordAddedAt[id]
-          if (id.startsWith('custom:')) delete customWords[id]
-        }
-        return {
-          ...prevState,
-          vocab: {
-            ...prevState.vocab,
-            myWords: nextWords,
-            myWordAddedAt,
-            customWords,
-            learnedWordIds: (prevState.vocab.learnedWordIds ?? []).filter((id) => !ids.has(id)),
-          },
-        }
+        const vocab = setSavedWords(prevState.vocab, [...ids], false)
+        return vocab === prevState.vocab ? prevState : { ...prevState, vocab }
       })
     },
     [setAppState],
@@ -570,7 +512,8 @@ export function useVocabState() {
           ...prevState.vocab.preferences,
           ...patch,
         }
-        if (nextPrefs.sessionMode === 'srs') {
+        nextPrefs.pickMode = nextPrefs.sessionMode === 'drill' ? 'even' : 'adaptive'
+        if (nextPrefs.sessionMode === 'srs' || nextPrefs.sessionMode === 'adaptive') {
           nextPrefs.source = 'mine'
         }
         // newPerDay (SRS quota) and newWordLimit (session set size) stay independent.
@@ -591,7 +534,10 @@ export function useVocabState() {
       setAppState((prevState) => {
         if (!prevState) return prevState
         const existing = prevState.vocab.stats[cardId] ?? createStatsRecord()
-        const nextStats = updateCardStats(existing, outcome, context, DEFAULT_HYPERPARAMS)
+        const nextStats = {
+          ...updateCardStats(existing, outcome, context, DEFAULT_HYPERPARAMS),
+          wordPractice: updateWordPractice(existing, outcome, context.now),
+        }
 
         // Dual-write: keep mastery path, also touch presentation timestamp on seen.
         let memory = prevState.vocab.memory ?? {}
@@ -669,12 +615,10 @@ export function useVocabState() {
         if (input.masteryOutcome && input.masteryContext) {
           statsMap = {
             ...statsMap,
-            [input.cardId]: updateCardStats(
-              stats,
-              input.masteryOutcome,
-              input.masteryContext,
-              DEFAULT_HYPERPARAMS,
-            ),
+            [input.cardId]: {
+              ...updateCardStats(stats, input.masteryOutcome, input.masteryContext, DEFAULT_HYPERPARAMS),
+              wordPractice: updateWordPractice(stats, input.masteryOutcome, input.now),
+            },
           }
         }
 

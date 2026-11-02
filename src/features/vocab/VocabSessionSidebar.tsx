@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react'
 import type {
+  AdaptiveWindowState,
+  VocabSessionMode,
   KanjiWordJlptLevel,
   StatsRecord,
   VocabCard,
   VocabLevelFilter,
-  VocabPickMode,
   VocabSource,
 } from '../../shared/lib/types'
 import { countsFromRecentAnswers, createStatsRecord } from '../../shared/lib/trainer'
@@ -40,12 +41,6 @@ import {
   toggleWordJlptLevel,
 } from '../kanji/WordJlptFilter'
 
-import { VocabAdaptiveSettings } from './VocabAdaptiveSettings'
-
-const PICK_OPTIONS: Array<{ id: VocabPickMode; label: string }> = [
-  { id: 'adaptive', label: 'Адаптивный' },
-  { id: 'even', label: 'Равномерный' },
-]
 
 const SORT_OPTIONS: Array<{ id: SessionWordSort; label: string }> = [
   { id: 'accuracy-asc', label: 'Точн. ↑' },
@@ -58,7 +53,6 @@ const SOURCE_LEVELS: VocabLevelFilter[] = [5, 4, 3, 2, 1]
 export type SessionWordSort = 'accuracy-asc' | 'accuracy-desc' | 'novelty'
 
 export interface VocabSessionSidebarProps {
-  pickMode: VocabPickMode
   source: VocabSource
   level: VocabLevelFilter
   wordJlptLevels: KanjiWordJlptLevel[]
@@ -70,17 +64,8 @@ export interface VocabSessionSidebarProps {
   poolAddedAt?: Record<string, number>
   canAddSourceWord?: boolean
   showWordJlptFilter?: boolean
-  /** Hide adaptive/even switch (SRS sessions). */
-  hidePickMode?: boolean
-  adaptiveInFlight?: number
-  adaptivePasses?: number
-  adaptiveWeakFirst?: boolean
-  onAdaptiveChange?: (patch: {
-    adaptiveInFlight?: number
-    adaptivePasses?: number
-    adaptiveWeakFirst?: boolean
-  }) => void
-  onPickModeChange: (mode: VocabPickMode) => void
+  sessionMode?: VocabSessionMode
+  adaptiveState?: AdaptiveWindowState
   onLevelChange?: (level: VocabLevelFilter) => void
   onWordJlptChange?: (levels: KanjiWordJlptLevel[]) => void
   onSetWeight: (cardId: string, multiplier: number) => void
@@ -89,7 +74,6 @@ export interface VocabSessionSidebarProps {
 }
 
 export function VocabSessionSidebar({
-  pickMode,
   source,
   level,
   wordJlptLevels,
@@ -100,12 +84,8 @@ export function VocabSessionSidebar({
   poolAddedAt = {},
   canAddSourceWord = false,
   showWordJlptFilter = false,
-  hidePickMode = false,
-  adaptiveInFlight = 0,
-  adaptivePasses = 2,
-  adaptiveWeakFirst = true,
-  onAdaptiveChange,
-  onPickModeChange,
+  sessionMode = 'drill',
+  adaptiveState,
   onLevelChange,
   onWordJlptChange,
   onSetWeight,
@@ -151,63 +131,20 @@ export function VocabSessionSidebar({
         </div>
       </header>
 
-      {!hidePickMode ? (
-        <section className="vocab-session-block">
-          <div className="vocab-session-block-head">
-            <span className="vocab-session-label">Подбор</span>
-            {hasFilters ? (
-              <button
-                type="button"
-                className="vocab-session-reset"
-                data-testid="vocab-session-toggle-filters"
-                onClick={() => setFiltersOpen((open) => !open)}
-              >
-                {filtersOpen ? 'Скрыть фильтры' : 'Фильтры'}
-              </button>
-            ) : null}
-          </div>
-          <div className="vocab-session-pick" role="group" aria-label="Режим подбора">
-            {PICK_OPTIONS.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                className={
-                  pickMode === option.id
-                    ? 'vocab-session-pick-btn is-active'
-                    : 'vocab-session-pick-btn'
-                }
-                data-testid={`vocab-session-pick-${option.id}`}
-                onClick={() => onPickModeChange(option.id)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-          {pickMode === 'adaptive' && onAdaptiveChange ? (
-            <VocabAdaptiveSettings
-              compact
-              inFlight={adaptiveInFlight}
-              passes={adaptivePasses}
-              weakFirst={adaptiveWeakFirst}
-              onChange={onAdaptiveChange}
-            />
-          ) : null}
-        </section>
-      ) : hasFilters ? (
-        <section className="vocab-session-block">
-          <div className="vocab-session-block-head">
-            <span className="vocab-session-label">Интервальная</span>
-            <button
-              type="button"
-              className="vocab-session-reset"
-              data-testid="vocab-session-toggle-filters"
-              onClick={() => setFiltersOpen((open) => !open)}
-            >
-              {filtersOpen ? 'Скрыть фильтры' : 'Фильтры'}
-            </button>
-          </div>
-        </section>
-      ) : null}
+      <section className="vocab-session-block">
+        <div className="vocab-session-block-head">
+          <span className="vocab-session-label" data-testid="vocab-session-mode-label">
+            {sessionMode === 'adaptive' ? 'Адаптивная' : sessionMode === 'srs' ? 'Интервальная' : 'Равномерная'}
+          </span>
+          {hasFilters ? <button type="button" className="vocab-session-reset"
+            data-testid="vocab-session-toggle-filters" onClick={() => setFiltersOpen((open) => !open)}>
+            {filtersOpen ? 'Скрыть фильтры' : 'Фильтры'}
+          </button> : null}
+        </div>
+        {adaptiveState ? <p className="control-hint" data-testid="vocab-adaptive-progress">
+          В группе: {adaptiveState.active.length} · Введено: {adaptiveState.introduced.length} из {cards.length}
+        </p> : null}
+      </section>
 
       {filtersOpen && showSourceLevel ? (
         <section className="vocab-session-block" data-testid="vocab-session-level-filter">
@@ -321,6 +258,7 @@ export function VocabSessionSidebar({
             const answered = clears + errors
             const accuracyLabel = percent === null ? '—' : `${percent}%`
             const detail = answered > 0 ? `${clears}✓ · ${errors}✗` : 'нет ответов'
+            const phase = adaptiveState ? adaptiveState.active.includes(card.id) ? 'в группе' : adaptiveState.introduced.includes(card.id) ? 'повторение' : 'впереди' : ''
             const className = [
               'vocab-session-row',
               isCurrent ? 'is-current' : '',
@@ -341,7 +279,7 @@ export function VocabSessionSidebar({
                     {excluded ? 'вне' : accuracyLabel}
                   </span>
                   <span className="vocab-session-row-meaning">{card.meaning}</span>
-                  <span className="vocab-session-row-detail">{detail}</span>
+                  <span className="vocab-session-row-detail">{detail}{phase ? ` · ${phase}` : ''}</span>
                   {isCurrent ? <span className="vocab-session-now">сейчас</span> : null}
                 </div>
 

@@ -1,5 +1,7 @@
 # Ревью-алгоритм v2: разбор слабых мест и проект замены
 
+Архив предыдущей версии. Текущий подбор слов описан в [adaptive-window.md](adaptive-window.md).
+
 Дата: 2026-08-04. Опирается на `docs/adaptive-review-algorithm.md` (описание текущей реализации).
 Проверено по коду: `src/shared/lib/trainer.ts`, `src/shared/lib/trainerCore.ts`,
 `src/features/vocab/pool.ts`, `src/features/vocab/VocabTrainer.tsx`.

@@ -181,6 +181,8 @@ export function sanitizeAnalyticsState(raw: unknown, fallback: AnalyticsState): 
 
 /** Map router page → analytics section (analytics UI counts as home/прочее). */
 export function sectionFromAppPage(page: string): AnalyticsSection {
+  if (page === 'contexts') return 'train'
+  if (page === 'mistakes') return 'theory'
   if (isAnalyticsSection(page)) return page
   return 'home'
 }

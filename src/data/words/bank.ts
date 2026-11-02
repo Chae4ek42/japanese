@@ -7,8 +7,8 @@ import wordsByKanji from './words-by-kanji.json' with { type: 'json' }
 import components from './components.json' with { type: 'json' }
 import meta from './meta.json' with { type: 'json' }
 import kanaCatalog from './kana-catalog.json' with { type: 'json' }
+import curatedVocabulary from './curated-vocabulary.json' with { type: 'json' }
 
-export const KANJI_BANK_META = meta as KanjiBankMeta
 export const KANJI_LIST = kanjiList as KanjiInfo[]
 export const KANJI_COMPONENTS = components as KanjiComponent[]
 
@@ -36,7 +36,29 @@ function applyKanaCatalog(base: KanjiWord[]): KanjiWord[] {
   return patched
 }
 
-export const KANJI_WORDS = applyKanaCatalog(words as KanjiWord[])
+function applyCuratedVocabulary(base: KanjiWord[]): KanjiWord[] {
+  const overrides = new Map(curatedVocabulary.meaningOverrides.map((item) => [item.id, item.meanings]))
+  const patched = base.map((word) => {
+    const meanings = word.id ? overrides.get(word.id) : undefined
+    return meanings ? { ...word, meanings } : word
+  })
+  return [...patched, ...(curatedVocabulary.words as KanjiWord[])]
+}
+
+export const KANJI_WORDS = applyCuratedVocabulary(applyKanaCatalog(words as KanjiWord[]))
+export const KANJI_BANK_META: KanjiBankMeta = {
+  ...meta,
+  sources: {
+    ...meta.sources,
+    curatedVocabulary: 'Manual editorial extension; see curated-vocabulary.json provenance',
+  },
+  counts: {
+    ...meta.counts,
+    words: KANJI_WORDS.length,
+    curatedVocabulary: curatedVocabulary.words.length,
+    curatedMeaningOverrides: curatedVocabulary.meaningOverrides.length,
+  },
+}
 
 const kanjiById: Record<string, KanjiInfo> = Object.fromEntries(KANJI_LIST.map((item) => [item.character, item]))
 const componentById = new Map<string, KanjiComponent>(KANJI_COMPONENTS.map((item) => [item.id, item]))
@@ -143,6 +165,7 @@ export function getKanjiUsingComponent(id: string, limit = 24): KanjiInfo[] {
 export function getWordsForKanji(character: string): KanjiWord[] {
   const indexes = wordsByKanjiMap[character] ?? []
   const list = indexes.map((index) => KANJI_WORDS[index]).filter(Boolean)
+  list.push(...(curatedVocabulary.words as KanjiWord[]).filter((word) => word.kanji.includes(character)))
   return sortWords(list, character)
 }
 

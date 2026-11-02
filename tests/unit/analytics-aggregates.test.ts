@@ -50,3 +50,35 @@ describe('analyticsAggregates', () => {
     assert.equal(agg.accuracy, 90)
   })
 })
+
+describe('practice evidence in analytics', () => {
+  it('saved words and manual learned marks remain independent from recorded recall', async () => {
+    const { createDefaultAppState } = await import('../../src/shared/state/app-state.ts')
+    const { buildAnalyticsViewModel } = await import('../../src/features/analytics/analyticsAggregates.ts')
+    const state = createDefaultAppState()
+    state.vocab.myWords = ['saved', 'manual', 'practiced']
+    state.vocab.learnedWordIds = ['manual']
+    state.vocab.stats = {
+      manual: { ...createStatsRecord(), mastery: 1, clears: 100 },
+      practiced: { ...createStatsRecord(), wordPractice: { attempts: 4, streak: 4, strength: 0.8, lapses: 0, lastAnsweredAt: 1 } },
+    }
+    state.particles.stats = { p: { ...createStatsRecord(), clears: 2, errors: 1, hints: 1 } }
+    state.verbs.stats = { v: { ...createStatsRecord(), clears: 1, errors: 1 } }
+    const model = buildAnalyticsViewModel(state)
+    assert.equal(model.vocab.learned, 1)
+    assert.equal(model.vocab.evidence.total, 3)
+    assert.equal(model.vocab.evidence.practiced, 1)
+    assert.equal(model.vocab.evidence.confirmed, 1)
+    assert.equal(model.vocab.evidence.attempts, 4)
+    assert.equal(model.particles.resolved, 4)
+    assert.equal(model.particles.accuracy, 50)
+    assert.equal(model.verbs.resolved, 2)
+  })
+
+  it('mere exposures are excluded from accuracy buckets and outcome sample counts', () => {
+    const model = aggregateStatsMap({ a: { ...createStatsRecord(), exposures: 3 } })
+    assert.equal(model.resolved, 0)
+    assert.equal(model.accuracy, null)
+    assert.equal(model.accuracyBuckets.reduce((sum, bucket) => sum + bucket.count, 0), 0)
+  })
+})

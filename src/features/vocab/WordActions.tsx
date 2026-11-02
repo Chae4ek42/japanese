@@ -76,7 +76,7 @@ export function WordActions({
           data-testid={`vocab-toggle-${wordId}`}
           onClick={() => onToggleSaved(word)}
         >
-          {custom ? 'Удалить' : isSaved ? 'В моих' : '+ В мои'}
+          {isSaved ? 'В моих' : '+ В мои'}
         </button>
       ) : null}
       {wordId && onToggleLearned ? (

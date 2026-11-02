@@ -9,6 +9,7 @@ import type {
 import { DEFAULT_HYPERPARAMS, createStatsRecord, pickNextCardId } from '../../shared/lib/trainer'
 import { pickEvenVocabCardId } from './pool'
 import { pickReviewCard } from './reviewSession'
+import { pickAdaptiveWord } from './adaptiveWindow'
 
 export function zeroWeightExcludeIds(
   weights: Record<string, number>,
@@ -35,10 +36,17 @@ export function pickNextVocabCardId(
     applySession: (session: PracticeSession) => void
   },
 ): string | null {
-  const { weights, pickMode, preferences, usesReviewV2, memory, stats, applySession } = ctx
+  const { weights, preferences, usesReviewV2, memory, stats, applySession } = ctx
+  const pickMode = session.mode
   const activePool = pool.filter((card) => (weights[card.id] ?? 1) > 0)
   const pickPool = activePool.length ? activePool : pool
   const excludeIds = zeroWeightExcludeIds(weights, currentCardId ? [currentCardId] : [])
+
+  if (session.adaptive) {
+    const picked = pickAdaptiveWord(session.adaptive, activePool.map((card) => card.id))
+    applySession({ ...session, adaptive: picked.state })
+    return picked.cardId
+  }
 
   if (pickMode === 'even') {
     return pickEvenVocabCardId(pickPool, {

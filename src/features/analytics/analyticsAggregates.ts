@@ -1,3 +1,4 @@
+import { summarizeWordLearning } from '../../shared/lib/learningProgress'
 import { KANJI_LIST, getJoyoKanji } from '../../data/words/bank'
 import { getTopConfusions } from '../../shared/lib/trainer'
 import { getDayKey } from '../../shared/lib/trainer'
@@ -95,6 +96,7 @@ export function aggregateStatsMap(stats: Record<string, StatsRecord>) {
     else if (record.mastery < 0.7) mastery.learning += 1
     else mastery.strong += 1
 
+    if (!events) continue
     const acc = record.eventAccuracy
     if (acc < 40) accuracyBuckets[0]!.count += 1
     else if (acc < 70) accuracyBuckets[1]!.count += 1
@@ -108,6 +110,7 @@ export function aggregateStatsMap(stats: Record<string, StatsRecord>) {
     errors,
     hints,
     exposures,
+    resolved,
     touched,
     accuracy: resolved ? Math.round((clears / resolved) * 100) : null,
     mastery,
@@ -193,6 +196,10 @@ export function buildAnalyticsViewModel(state: AppState, now = Date.now()) {
     state.vocab.preferences.targetRetention ?? 0.9,
     now,
   )
+  const evidence = summarizeWordLearning(
+    new Set([...state.vocab.myWords, ...state.vocab.learnedWordIds, ...Object.keys(state.vocab.stats)]),
+    state.vocab.stats,
+  )
   const kanji = aggregateKanjiLearned(state.kanji.learned)
   const kana = aggregateKana(state.kana.history, state.kana.stats)
   const numbers = aggregateStatsMap(state.numbers.stats)
@@ -211,6 +218,7 @@ export function buildAnalyticsViewModel(state: AppState, now = Date.now()) {
     historyRows: [...analytics.days].sort((a, b) => b.dayKey.localeCompare(a.dayKey)).slice(0, 14),
     vocab: {
       ...vocabStats,
+      evidence,
       memory,
       myWords: state.vocab.myWords.length,
       learned: state.vocab.learnedWordIds.length,
@@ -220,6 +228,8 @@ export function buildAnalyticsViewModel(state: AppState, now = Date.now()) {
     kanji,
     kana,
     numbers,
+    particles: aggregateStatsMap(state.particles.stats),
+    verbs: aggregateStatsMap(state.verbs.stats),
   }
 }
 

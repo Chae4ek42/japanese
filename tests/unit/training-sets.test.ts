@@ -45,4 +45,39 @@ describe('training sets', () => {
     assert.deepEqual(sets.find((s) => s.id === MAIN_TRAINING_SET_ID)?.wordIds, ['1', '2', '3'])
     assert.deepEqual(sets.find((s) => s.id === 'set_x')?.wordIds, [])
   })
+
+  it('копирует в целевой набор без удаления из других и без повторов', () => {
+    const original = [
+      createMainTrainingSet(['shared'], 1),
+      { id: 'theme', name: 'Тема', wordIds: [], createdAt: 1, updatedAt: 1 },
+    ]
+    const copied = addWordsToTrainingSet(original, 'theme', ['shared', 'shared'], 2)
+    assert.strictEqual(copied[0], original[0])
+    assert.deepEqual(copied[1]!.wordIds, ['shared'])
+    const removed = removeWordsFromTrainingSet(copied, 'theme', ['shared'], 3)
+    assert.deepEqual(removed[0]!.wordIds, ['shared'])
+    assert.deepEqual(removed[1]!.wordIds, [])
+  })
+
+  it('перемещение затрагивает только исходный и целевой наборы', () => {
+    const original = [
+      createMainTrainingSet(['shared'], 1),
+      { id: 'from', name: 'Из', wordIds: ['shared'], createdAt: 1, updatedAt: 1 },
+      { id: 'to', name: 'В', wordIds: ['shared'], createdAt: 1, updatedAt: 1 },
+    ]
+    const moved = moveWordsBetweenTrainingSets(original, {
+      fromSetId: 'from', toSetId: 'to', wordIds: ['shared'],
+    }, 2)
+    assert.strictEqual(moved[0], original[0])
+    assert.deepEqual(moved[1]!.wordIds, [])
+    assert.deepEqual(moved[2]!.wordIds, ['shared'])
+  })
+
+  it('сохраняет пересекающиеся наборы при чтении резервной копии', () => {
+    const original = [
+      createMainTrainingSet(['shared'], 1),
+      { id: 'theme', name: 'Тема', wordIds: ['shared'], createdAt: 1, updatedAt: 1 },
+    ]
+    assert.deepEqual(sanitizeTrainingSets(JSON.parse(JSON.stringify(original)), [], [], 2), original)
+  })
 })

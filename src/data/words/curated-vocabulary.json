@@ -1,0 +1,1053 @@
+{
+  "provenance": {
+    "basis": "editorial",
+    "reviewedAt": "2026-11-02",
+    "description": "Manually selected additions missing from the existing Russian bank. Russian glosses and romanization are authored study aids, not source quotations. IDs are local curated IDs, not JMdict IDs. No JLPT levels are inferred.",
+    "references": [
+      {
+        "id": "irodori-starter",
+        "url": "https://www.irodori.jpf.go.jp/assets/data/wordlist_X.pdf",
+        "publisher": "The Japan Foundation",
+        "scope": "Spot checks: common greetings, サッカー and elementary vocabulary; not a source for every entry."
+      },
+      {
+        "id": "irodori-elementary",
+        "url": "https://www.irodori.jpf.go.jp/assets/data/wordlist_Y.pdf",
+        "publisher": "The Japan Foundation",
+        "scope": "Spot checks: daily life vocabulary and readings; not a complete attribution of these editorial entries."
+      },
+      {
+        "id": "sharp-digital",
+        "url": "https://k-tai.sharp.co.jp/support/s/simple-sumaho4/userguide/simple-sumaho4_guide.pdf",
+        "publisher": "Sharp",
+        "scope": "Digital terminology: アプリ, メール, ログイン, ダウンロード, スマートフォン."
+      },
+      {
+        "id": "jcom-digital",
+        "url": "https://support.myjcom.jp/pdf/mobile/basioactive2/basioactive2_manual.pdf",
+        "publisher": "J:COM",
+        "scope": "Direction of upload/download and スマートフォン."
+      },
+      {
+        "id": "mlit-rental",
+        "url": "https://www.mlit.go.jp/common/001201742.pdf",
+        "publisher": "Ministry of Land, Infrastructure, Transport and Tourism",
+        "scope": "敷金 and 礼金: refundable security deposit versus normally non-refundable key money."
+      }
+    ]
+  },
+  "meaningOverrides": [
+    {
+      "id": "1582920",
+      "meanings": [
+        "этот (перед существительным)"
+      ]
+    },
+    {
+      "id": "1392580",
+      "meanings": [
+        "перед; впереди",
+        "раньше; до (какого-либо события)",
+        "порция (после числительного)"
+      ]
+    },
+    {
+      "id": "1384830",
+      "meanings": [
+        "резать; разрезать; отрезать",
+        "прекращать; прерывать",
+        "как вторая часть глагола: довести действие до конца"
+      ]
+    },
+    {
+      "id": "1197610",
+      "meanings": [
+        "экран; изображение на экране",
+        "кинокадр; лицевая сторона картины"
+      ]
+    },
+    {
+      "id": "1257900",
+      "meanings": [
+        "поиск (информации, слова, данных)"
+      ]
+    },
+    {
+      "id": "1213720",
+      "meanings": [
+        "руководитель; тренер (спортивной команды); режиссёр",
+        "надзор; контроль"
+      ]
+    },
+    {
+      "id": "1360410",
+      "meanings": [
+        "судейство; судья (в спорте)",
+        "суд; разбирательство"
+      ]
+    },
+    {
+      "id": "1350350",
+      "meanings": [
+        "пожарный"
+      ]
+    },
+    {
+      "id": "1470620",
+      "meanings": [
+        "фермер; крестьянская семья; фермерское хозяйство"
+      ]
+    },
+    {
+      "id": "1557500",
+      "meanings": [
+        "невозвратный взнос владельцу жилья при заключении договора аренды",
+        "денежное вознаграждение; благодарность деньгами"
+      ]
+    },
+    {
+      "id": "1413140",
+      "meanings": [
+        "домовладелец; хозяин сдаваемого жилья"
+      ]
+    },
+    {
+      "id": "1272500",
+      "meanings": [
+        "полицейский пост; небольшой полицейский участок",
+        "посменное дежурство"
+      ]
+    },
+    {
+      "id": "1584695",
+      "meanings": [
+        "поверхность; сторона; плоскость",
+        "маска; лицо"
+      ]
+    },
+    {
+      "id": "1594590",
+      "meanings": [
+        "крайний срок; окончание приёма заявок, работ и т. п.",
+        "закрытие; прекращение приёма"
+      ]
+    },
+    {
+      "id": "1313580",
+      "meanings": [
+        "дело; событие; обстоятельство",
+        "こと после глагола или предложения: превращает действие или высказывание в существительное"
+      ]
+    },
+    {
+      "id": "1427430",
+      "meanings": [
+        "триллион; 1 000 000 000 000",
+        "признак; предзнаменование"
+      ]
+    },
+    {
+      "id": "1476450",
+      "meanings": [
+        "кожа; поверхность тела",
+        "натура; склад характера; текстура"
+      ]
+    },
+    {
+      "id": "2844070",
+      "meanings": [
+        "поясница; талия; бёдра",
+        "пояс, талия у одежды",
+        "счётный суффикс для предметов, носимых на поясе"
+      ]
+    },
+    {
+      "id": "1607260",
+      "meanings": [
+        "надевать; носить (обувь, носки, брюки и другую одежду для нижней части тела)",
+        "носить на поясе (меч и т. п.)"
+      ]
+    },
+    {
+      "id": "1207610",
+      "meanings": [
+        "вешать; надевать; включать (зависит от сочетания)",
+        "умножать (в арифметике)",
+        "как часть сложного глагола: начинать; не закончить действие"
+      ]
+    },
+    {
+      "id": "1169250",
+      "meanings": [
+        "тянуть; вытягивать",
+        "вычитать (в арифметике)",
+        "искать слово (в словаре)"
+      ]
+    },
+    {
+      "id": "1165670",
+      "meanings": [
+        "одна чашка; один стакан; одна порция (счёт с 杯)",
+        "полный; дополна; много"
+      ]
+    },
+    {
+      "id": "1435650",
+      "meanings": [
+        "комплексный обед; набор блюд по фиксированной цене",
+        "регулярное питание; постоянная диета"
+      ]
+    },
+    {
+      "id": "1137520",
+      "meanings": [
+        "йогурт"
+      ]
+    },
+    {
+      "id": "1538960",
+      "meanings": [
+        "я дома; я вернулся (формула при возвращении домой)",
+        "сейчас; только что"
+      ]
+    },
+    {
+      "id": "1035860",
+      "meanings": [
+        "апельсин",
+        "оранжевый цвет"
+      ]
+    }
+  ],
+  "words": [
+    {
+      "id": "curated-da",
+      "writing": "だ",
+      "kana": "だ",
+      "romaji": "da",
+      "meanings": [
+        "связка: быть, являться (простая форма です)"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-suru",
+      "writing": "する",
+      "kana": "する",
+      "romaji": "suru",
+      "meanings": [
+        "делать; выполнять",
+        "образует глагол с существительным: 勉強する — учиться"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-hazu",
+      "writing": "はず",
+      "kana": "はず",
+      "romaji": "hazu",
+      "meanings": [
+        "ожидание или вывод: должно быть; предполагается, что…"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-smartphone",
+      "writing": "スマートフォン",
+      "kana": "スマートフォン",
+      "romaji": "sumaato fon",
+      "meanings": [
+        "смартфон"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-mail",
+      "writing": "メール",
+      "kana": "メール",
+      "romaji": "meeru",
+      "meanings": [
+        "электронная почта; электронное письмо"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-app",
+      "writing": "アプリ",
+      "kana": "アプリ",
+      "romaji": "apuri",
+      "meanings": [
+        "приложение (компьютерная программа)"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-login",
+      "writing": "ログイン",
+      "kana": "ログイン",
+      "romaji": "roguin",
+      "meanings": [
+        "вход в систему; вход в учётную запись"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-download",
+      "writing": "ダウンロード",
+      "kana": "ダウンロード",
+      "romaji": "daunroodo",
+      "meanings": [
+        "скачивание; загрузка данных из сети на устройство"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-upload",
+      "writing": "アップロード",
+      "kana": "アップロード",
+      "romaji": "appuroodo",
+      "meanings": [
+        "загрузка данных с устройства на сервер; отправка в сеть"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-click",
+      "writing": "クリック",
+      "kana": "クリック",
+      "romaji": "kurikku",
+      "meanings": [
+        "щелчок мышью; нажатие на элемент интерфейса"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-screenshot",
+      "writing": "スクリーンショット",
+      "kana": "スクリーンショット",
+      "romaji": "sukuriin shotto",
+      "meanings": [
+        "снимок экрана; скриншот"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-offline",
+      "writing": "オフライン",
+      "kana": "オフライン",
+      "romaji": "ofurain",
+      "meanings": [
+        "офлайн; без подключения к сети"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-aircon",
+      "writing": "エアコン",
+      "kana": "エアコン",
+      "romaji": "eakon",
+      "meanings": [
+        "кондиционер"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-pet-bottle",
+      "writing": "ペットボトル",
+      "kana": "ペットボトル",
+      "romaji": "petto botoru",
+      "meanings": [
+        "пластиковая бутылка из ПЭТ"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-eco-bag",
+      "writing": "エコバッグ",
+      "kana": "エコバッグ",
+      "romaji": "eko baggu",
+      "meanings": [
+        "многоразовая сумка для покупок"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-receipt",
+      "writing": "レシート",
+      "kana": "レシート",
+      "romaji": "reshiito",
+      "meanings": [
+        "кассовый чек"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-soccer",
+      "writing": "サッカー",
+      "kana": "サッカー",
+      "romaji": "sakkaa",
+      "meanings": [
+        "футбол"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-microwave",
+      "writing": "電子レンジ",
+      "kana": "でんしレンジ",
+      "romaji": "denshi renji",
+      "meanings": [
+        "микроволновая печь"
+      ],
+      "kanji": [
+        "電",
+        "子"
+      ]
+    },
+    {
+      "id": "curated-video",
+      "writing": "動画",
+      "kana": "どうが",
+      "romaji": "douga",
+      "meanings": [
+        "видеозапись; видео",
+        "движущееся изображение"
+      ],
+      "kanji": [
+        "動",
+        "画"
+      ]
+    },
+    {
+      "id": "curated-shitsurei-shimasu",
+      "writing": "失礼します",
+      "kana": "しつれいします",
+      "romaji": "shitsurei shimasu",
+      "meanings": [
+        "извините (при входе, уходе или прерывании разговора)",
+        "разрешите; до свидания (вежливая формула ухода)"
+      ],
+      "kanji": [
+        "失",
+        "礼"
+      ]
+    },
+    {
+      "id": "curated-onegai-shimasu",
+      "writing": "お願いします",
+      "kana": "おねがいします",
+      "romaji": "onegai shimasu",
+      "meanings": [
+        "пожалуйста; прошу вас (вежливая просьба)"
+      ],
+      "kanji": [
+        "願"
+      ]
+    },
+    {
+      "id": "curated-itadakimasu",
+      "writing": "いただきます",
+      "kana": "いただきます",
+      "romaji": "itadakimasu",
+      "meanings": [
+        "благодарность перед едой: приступаю к еде",
+        "вежливо: принимаю; получаю"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-gochisousama",
+      "writing": "ごちそうさま",
+      "kana": "ごちそうさま",
+      "romaji": "gochisousama",
+      "meanings": [
+        "спасибо за угощение (после еды)"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-okaerinasai",
+      "writing": "お帰りなさい",
+      "kana": "おかえりなさい",
+      "romaji": "okaerinasai",
+      "meanings": [
+        "с возвращением; добро пожаловать домой"
+      ],
+      "kanji": [
+        "帰"
+      ]
+    },
+    {
+      "id": "curated-sayounara",
+      "writing": "さようなら",
+      "kana": "さようなら",
+      "romaji": "sayounara",
+      "meanings": [
+        "до свидания; прощайте"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-shichaku",
+      "writing": "試着",
+      "kana": "しちゃく",
+      "romaji": "shichaku",
+      "meanings": [
+        "примерка одежды"
+      ],
+      "kanji": [
+        "試",
+        "着"
+      ]
+    },
+    {
+      "id": "curated-kangoshi",
+      "writing": "看護師",
+      "kana": "かんごし",
+      "romaji": "kangoshi",
+      "meanings": [
+        "медсестра; медбрат; специалист по уходу за больными"
+      ],
+      "kanji": [
+        "看",
+        "護",
+        "師"
+      ]
+    },
+    {
+      "id": "curated-seki",
+      "writing": "咳",
+      "kana": "せき",
+      "romaji": "seki",
+      "meanings": [
+        "кашель"
+      ],
+      "kanji": [
+        "咳"
+      ]
+    },
+    {
+      "id": "curated-hokenshou",
+      "writing": "保険証",
+      "kana": "ほけんしょう",
+      "romaji": "hokenshou",
+      "meanings": [
+        "страховое удостоверение; документ о медицинском страховании"
+      ],
+      "kanji": [
+        "保",
+        "険",
+        "証"
+      ]
+    },
+    {
+      "id": "curated-toru-photo",
+      "writing": "撮る",
+      "kana": "とる",
+      "romaji": "toru",
+      "meanings": [
+        "фотографировать; снимать (фото или видео)"
+      ],
+      "kanji": [
+        "撮"
+      ]
+    },
+    {
+      "id": "curated-usagi",
+      "writing": "兎",
+      "kana": "うさぎ",
+      "romaji": "usagi",
+      "meanings": [
+        "кролик; заяц"
+      ],
+      "kanji": [
+        "兎"
+      ]
+    },
+    {
+      "id": "curated-nezumi",
+      "writing": "鼠",
+      "kana": "ねずみ",
+      "romaji": "nezumi",
+      "meanings": [
+        "мышь; крыса"
+      ],
+      "kanji": [
+        "鼠"
+      ]
+    },
+    {
+      "id": "curated-kitsune",
+      "writing": "狐",
+      "kana": "きつね",
+      "romaji": "kitsune",
+      "meanings": [
+        "лисица; лиса"
+      ],
+      "kanji": [
+        "狐"
+      ]
+    },
+    {
+      "id": "curated-kamo",
+      "writing": "鴨",
+      "kana": "かも",
+      "romaji": "kamo",
+      "meanings": [
+        "утка (обычно дикая)"
+      ],
+      "kanji": [
+        "鴨"
+      ]
+    },
+    {
+      "id": "curated-kaeru-frog",
+      "writing": "蛙",
+      "kana": "かえる",
+      "romaji": "kaeru",
+      "meanings": [
+        "лягушка"
+      ],
+      "kanji": [
+        "蛙"
+      ]
+    },
+    {
+      "id": "curated-ari",
+      "writing": "蟻",
+      "kana": "あり",
+      "romaji": "ari",
+      "meanings": [
+        "муравей"
+      ],
+      "kanji": [
+        "蟻"
+      ]
+    },
+    {
+      "id": "curated-ippiki",
+      "writing": "一匹",
+      "kana": "いっぴき",
+      "romaji": "ippiki",
+      "meanings": [
+        "одно небольшое животное (счёт с суффиксом 匹)"
+      ],
+      "kanji": [
+        "一",
+        "匹"
+      ]
+    },
+    {
+      "id": "curated-nihiki",
+      "writing": "二匹",
+      "kana": "にひき",
+      "romaji": "nihiki",
+      "meanings": [
+        "два небольших животных (счёт с суффиксом 匹)"
+      ],
+      "kanji": [
+        "二",
+        "匹"
+      ]
+    },
+    {
+      "id": "curated-nihon",
+      "writing": "二本",
+      "kana": "にほん",
+      "romaji": "nihon",
+      "meanings": [
+        "два длинных предмета (счёт с суффиксом 本)"
+      ],
+      "kanji": [
+        "二",
+        "本"
+      ]
+    },
+    {
+      "id": "curated-issatsu",
+      "writing": "一冊",
+      "kana": "いっさつ",
+      "romaji": "issatsu",
+      "meanings": [
+        "одна книга; один том (счёт с суффиксом 冊)"
+      ],
+      "kanji": [
+        "一",
+        "冊"
+      ]
+    },
+    {
+      "id": "curated-nisatsu",
+      "writing": "二冊",
+      "kana": "にさつ",
+      "romaji": "nisatsu",
+      "meanings": [
+        "две книги; два тома (счёт с суффиксом 冊)"
+      ],
+      "kanji": [
+        "二",
+        "冊"
+      ]
+    },
+    {
+      "id": "curated-ichidai",
+      "writing": "一台",
+      "kana": "いちだい",
+      "romaji": "ichidai",
+      "meanings": [
+        "одна машина; один аппарат (счёт с суффиксом 台)"
+      ],
+      "kanji": [
+        "一",
+        "台"
+      ]
+    },
+    {
+      "id": "curated-nidai",
+      "writing": "二台",
+      "kana": "にだい",
+      "romaji": "nidai",
+      "meanings": [
+        "две машины; два аппарата (счёт с суффиксом 台)"
+      ],
+      "kanji": [
+        "二",
+        "台"
+      ]
+    },
+    {
+      "id": "curated-nihai",
+      "writing": "二杯",
+      "kana": "にはい",
+      "romaji": "nihai",
+      "meanings": [
+        "две чашки; два стакана (счёт с суффиксом 杯)"
+      ],
+      "kanji": [
+        "二",
+        "杯"
+      ]
+    },
+    {
+      "id": "curated-niko",
+      "writing": "二個",
+      "kana": "にこ",
+      "romaji": "niko",
+      "meanings": [
+        "две штуки (счёт с суффиксом 個)"
+      ],
+      "kanji": [
+        "二",
+        "個"
+      ]
+    },
+    {
+      "id": "curated-taikin",
+      "writing": "退勤",
+      "kana": "たいきん",
+      "romaji": "taikin",
+      "meanings": [
+        "уход с работы; окончание рабочего дня"
+      ],
+      "kanji": [
+        "退",
+        "勤"
+      ]
+    },
+    {
+      "id": "curated-too",
+      "writing": "十",
+      "kana": "とお",
+      "romaji": "too",
+      "meanings": [
+        "десять (исконно японский счёт предметов)"
+      ],
+      "kanji": [
+        "十"
+      ]
+    },
+    {
+      "id": "curated-mannaka",
+      "writing": "真ん中",
+      "kana": "まんなか",
+      "romaji": "mannaka",
+      "meanings": [
+        "середина; самый центр"
+      ],
+      "kanji": [
+        "真",
+        "中"
+      ]
+    },
+    {
+      "id": "curated-itameru",
+      "writing": "炒める",
+      "kana": "いためる",
+      "romaji": "itameru",
+      "meanings": [
+        "обжаривать, помешивая (в небольшом количестве масла)"
+      ],
+      "kanji": [
+        "炒"
+      ]
+    },
+    {
+      "id": "curated-budou",
+      "writing": "葡萄",
+      "kana": "ぶどう",
+      "romaji": "budou",
+      "meanings": [
+        "виноград"
+      ],
+      "kanji": [
+        "葡",
+        "萄"
+      ]
+    },
+    {
+      "id": "curated-ichigo",
+      "writing": "苺",
+      "kana": "いちご",
+      "romaji": "ichigo",
+      "meanings": [
+        "клубника; земляника"
+      ],
+      "kanji": [
+        "苺"
+      ]
+    },
+    {
+      "id": "curated-lemon",
+      "writing": "レモン",
+      "kana": "レモン",
+      "romaji": "remon",
+      "meanings": [
+        "лимон"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-tataku",
+      "writing": "叩く",
+      "kana": "たたく",
+      "romaji": "tataku",
+      "meanings": [
+        "стучать; ударять",
+        "бить (по барабану и т. п.)"
+      ],
+      "kanji": [
+        "叩"
+      ]
+    },
+    {
+      "id": "curated-kenkyuusha",
+      "writing": "研究者",
+      "kana": "けんきゅうしゃ",
+      "romaji": "kenkyuusha",
+      "meanings": [
+        "исследователь; научный работник"
+      ],
+      "kanji": [
+        "研",
+        "究",
+        "者"
+      ]
+    },
+    {
+      "id": "curated-shikikin",
+      "writing": "敷金",
+      "kana": "しききん",
+      "romaji": "shikikin",
+      "meanings": [
+        "возвратный залог при аренде жилья (с возможными удержаниями)"
+      ],
+      "kanji": [
+        "敷",
+        "金"
+      ]
+    },
+    {
+      "id": "curated-takuhaibin",
+      "writing": "宅配便",
+      "kana": "たくはいびん",
+      "romaji": "takuhaibin",
+      "meanings": [
+        "служба доставки посылок на дом; курьерская доставка"
+      ],
+      "kanji": [
+        "宅",
+        "配",
+        "便"
+      ]
+    },
+    {
+      "id": "curated-saihaitatsu",
+      "writing": "再配達",
+      "kana": "さいはいたつ",
+      "romaji": "saihaitatsu",
+      "meanings": [
+        "повторная доставка"
+      ],
+      "kanji": [
+        "再",
+        "配",
+        "達"
+      ]
+    },
+    {
+      "id": "curated-shoubousha",
+      "writing": "消防車",
+      "kana": "しょうぼうしゃ",
+      "romaji": "shoubousha",
+      "meanings": [
+        "пожарная машина"
+      ],
+      "kanji": [
+        "消",
+        "防",
+        "車"
+      ]
+    },
+    {
+      "id": "curated-gomi",
+      "writing": "ごみ",
+      "kana": "ごみ",
+      "romaji": "gomi",
+      "meanings": [
+        "мусор; отходы"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-sairiyou",
+      "writing": "再利用",
+      "kana": "さいりよう",
+      "romaji": "sairiyou",
+      "meanings": [
+        "повторное использование"
+      ],
+      "kanji": [
+        "再",
+        "利",
+        "用"
+      ]
+    },
+    {
+      "id": "curated-ganko",
+      "writing": "頑固",
+      "kana": "がんこ",
+      "romaji": "ganko",
+      "meanings": [
+        "упрямый; несговорчивый",
+        "стойкий; трудно устранимый (о загрязнении и т. п.)"
+      ],
+      "kanji": [
+        "頑",
+        "固"
+      ]
+    },
+    {
+      "id": "curated-manshitsu",
+      "writing": "満室",
+      "kana": "まんしつ",
+      "romaji": "manshitsu",
+      "meanings": [
+        "все номера заняты; свободных комнат нет"
+      ],
+      "kanji": [
+        "満",
+        "室"
+      ]
+    },
+    {
+      "id": "curated-kuushitsu",
+      "writing": "空室",
+      "kana": "くうしつ",
+      "romaji": "kuushitsu",
+      "meanings": [
+        "свободный номер; незанятая комната"
+      ],
+      "kanji": [
+        "空",
+        "室"
+      ]
+    },
+    {
+      "id": "curated-checkout",
+      "writing": "チェックアウト",
+      "kana": "チェックアウト",
+      "romaji": "chekkuauto",
+      "meanings": [
+        "выезд из гостиницы; оформление выезда"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-chuushoku",
+      "writing": "昼食",
+      "kana": "ちゅうしょく",
+      "romaji": "chuushoku",
+      "meanings": [
+        "обед; дневной приём пищи"
+      ],
+      "kanji": [
+        "昼",
+        "食"
+      ]
+    },
+    {
+      "id": "curated-dokidoki",
+      "writing": "どきどき",
+      "kana": "どきどき",
+      "romaji": "dokidoki",
+      "meanings": [
+        "с сильным сердцебиением; от волнения или страха",
+        "どきどきする — сердце колотится; волноваться"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-nikoniko",
+      "writing": "にこにこ",
+      "kana": "にこにこ",
+      "romaji": "nikoniko",
+      "meanings": [
+        "с улыбкой; улыбаясь",
+        "にこにこする — улыбаться"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-kirakira",
+      "writing": "きらきら",
+      "kana": "きらきら",
+      "romaji": "kirakira",
+      "meanings": [
+        "сверкая; блестя",
+        "きらきらする — сверкать, искриться"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-ee",
+      "writing": "ええ",
+      "kana": "ええ",
+      "romaji": "ee",
+      "meanings": [
+        "да (разговорный ответ)",
+        "что? (переспрос или удивление; зависит от интонации)"
+      ],
+      "kanji": []
+    },
+    {
+      "id": "curated-hee",
+      "writing": "へえ",
+      "kana": "へえ",
+      "romaji": "hee",
+      "meanings": [
+        "вот как!; надо же! (удивление или заинтересованная реакция)"
+      ],
+      "kanji": []
+    }
+  ]
+}

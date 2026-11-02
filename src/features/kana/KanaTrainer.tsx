@@ -1,3 +1,4 @@
+import { consumeTargetedPractice, readTargetedPractice } from '../../shared/lib/targetedPractice'
 import type {
   CardTrainerLiveSession,
   Hyperparams,
@@ -99,9 +100,15 @@ function KanaTrainerView({
   const preferencesRef = useRef(preferences)
   const statsRef = useRef(stats)
 
+  const [targetIntent] = useState(() => readTargetedPractice('kana'))
+  const [targeted, setTargeted] = useState(() => targetIntent ?? (liveSession?.session.targetedIds?.length
+    ? { cardIds: liveSession.session.targetedIds } : null))
+  const targetedStarted = useRef(false)
   const activePool = useMemo(
-    () => buildPool(preferences.scriptMode, preferences.selectedGroups),
-    [preferences.scriptMode, preferences.selectedGroups],
+    () => targeted
+      ? KANA_STATS_CARDS.filter((card) => targeted.cardIds.includes(card.id))
+      : buildPool(preferences.scriptMode, preferences.selectedGroups),
+    [preferences.scriptMode, preferences.selectedGroups, targeted],
   )
   const activeCard = currentCardId
     ? activePool.find((card) => card.id === currentCardId) ??
@@ -115,7 +122,7 @@ function KanaTrainerView({
   }, [preferences, stats])
 
   useLiveTrainerSession({
-    liveSession,
+    liveSession: targetIntent ? null : liveSession,
     view: practiceState,
     currentCardId,
     session,
@@ -156,6 +163,20 @@ function KanaTrainerView({
     }
   }, [])
 
+  const startTargetedRef = useRef<() => void>(() => {})
+  startTargetedRef.current = () => {
+    if (!targetIntent) return
+    const nextSession = beginPractice({ poolIds: activePool.map((card) => card.id), mode: preferences.mode })
+    nextSession.targetedIds = targetIntent.cardIds
+    advanceToNextCard(nextSession)
+  }
+  useEffect(() => {
+    if (!targetIntent || targetedStarted.current || !activePool.length) return
+    targetedStarted.current = true
+    consumeTargetedPractice('kana')
+    startTargetedRef.current()
+  }, [targetIntent, activePool])
+
   function getCardStats(cardId: string) {
     return statsRef.current[cardId] ?? createStatsRecord()
   }
@@ -186,7 +207,7 @@ function KanaTrainerView({
 
   function advanceToNextCard(nextSessionOverride?: PracticeSession) {
     const currentPreferences = preferencesRef.current
-    const pool = buildPool(currentPreferences.scriptMode, currentPreferences.selectedGroups)
+    const pool = targeted ? activePool : buildPool(currentPreferences.scriptMode, currentPreferences.selectedGroups)
     if (!pool.length) {
       setPracticeState('setup')
       setCurrentCardId(null)
@@ -215,6 +236,7 @@ function KanaTrainerView({
   }
 
   function stopPractice() {
+    setTargeted(null)
     clearPendingAdvance()
     endPractice()
     setCurrentCardId(null)
@@ -441,6 +463,7 @@ function KanaTrainerView({
             poolIds: activePool.map((card) => card.id),
             mode: preferences.mode,
           })
+          if (targeted) nextSession.targetedIds = targeted.cardIds
           advanceToNextCard(nextSession)
         }}
         onToggleFineTuning={() => setShowFineTuning((value) => !value)}

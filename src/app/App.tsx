@@ -12,6 +12,8 @@ import { MineWordsPage } from '../features/vocab/MineWordsPage'
 import { TrainPage } from '../features/vocab/TrainPage'
 import { TheoryPage } from '../features/theory/TheoryPage'
 import { AnalyticsPage } from '../features/analytics/AnalyticsPage'
+import { MistakesPage } from '../features/mistakes/MistakesPage'
+import { ContextsPage } from '../features/contexts/ContextsPage'
 import { AccountGate } from '../features/accounts/AccountGate'
 import { useAppRouter } from '../shared/lib/useAppRouter'
 import { useActiveTimeTracker } from '../shared/lib/useActiveTimeTracker'
@@ -35,11 +37,15 @@ function AppPageView({ page, onNavigate }: { page: AppPage; onNavigate: (page: A
     case 'vocab':
       return <DictionaryPage />
     case 'mine':
-      return <MineWordsPage />
+      return <MineWordsPage onNavigate={onNavigate} />
     case 'theory':
       return <TheoryPage onOpenTrain={() => onNavigate('train')} onOpenPage={onNavigate} />
     case 'analytics':
       return <AnalyticsPage />
+    case 'mistakes':
+      return <MistakesPage onNavigate={onNavigate} />
+    case 'contexts':
+      return <ContextsPage onNavigate={onNavigate} />
     case 'reader':
       return <TextReaderPage onNavigate={onNavigate} />
     case 'kana':

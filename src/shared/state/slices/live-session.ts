@@ -4,6 +4,7 @@ import type {
   PracticeView,
   ReviewSessionState,
   SessionStats,
+  AdaptiveWindowState,
 } from '../../lib/types'
 import { createInitialSession } from '../../lib/trainer'
 
@@ -103,6 +104,7 @@ function sanitizePracticeSession(raw: unknown): PracticeSession | null {
   if (!poolIds.length) return null
   const base = createInitialSession({ poolIds })
   const review = sanitizeReviewSession(source.review)
+  const adaptive = sanitizeAdaptiveWindow(source.adaptive, poolIds)
   return {
     ...base,
     recentHistory: Array.isArray(source.recentHistory)
@@ -126,6 +128,37 @@ function sanitizePracticeSession(raw: unknown): PracticeSession | null {
         ? { ...(source.cooldowns as Record<string, number>) }
         : {},
     ...(review ? { review } : {}),
+    ...(adaptive ? { adaptive } : {}),
+    vocabMode: source.vocabMode === 'drill' || source.vocabMode === 'adaptive' || source.vocabMode === 'srs'
+      ? source.vocabMode : undefined,
+    targetedIds: Array.isArray(source.targetedIds)
+      ? [...new Set(source.targetedIds.filter((id): id is string => typeof id === 'string' && poolIds.includes(id)))]
+      : undefined,
+  }
+}
+
+function sanitizeAdaptiveWindow(raw: unknown, poolIds: string[]): AdaptiveWindowState | undefined {
+  if (!raw || typeof raw !== 'object') return undefined
+  const source = raw as Record<string, unknown>
+  if (source.version !== 1) return undefined
+  const allow = new Set(poolIds)
+  const ids = (value: unknown) => Array.isArray(value)
+    ? [...new Set(value.filter((id): id is string => typeof id === 'string' && allow.has(id)))] : []
+  const number = (value: unknown, fallback = 0) => typeof value === 'number' && Number.isFinite(value)
+    ? Math.max(0, Math.round(value)) : fallback
+  const map = (value: unknown): Record<string, number> => value && typeof value === 'object'
+    ? Object.fromEntries(Object.entries(value).filter(([id, n]) => allow.has(id) && typeof n === 'number' && Number.isFinite(n))) : {}
+  const order = ids(source.order)
+  for (const id of poolIds) if (!order.includes(id)) order.push(id)
+  const cursor = Math.min(order.length, number(source.cursor))
+  const introduced = [...new Set([...order.slice(0, cursor), ...ids(source.introduced)])]
+  return {
+    version: 1, order, cursor, introduced,
+    turn: number(source.turn), active: ids(source.active).filter((id) => introduced.includes(id)).slice(0, 5),
+    due: map(source.due), lastShown: map(source.lastShown), attempts: map(source.attempts),
+    streaks: map(source.streaks), intervals: map(source.intervals),
+    lastReviewTurn: typeof source.lastReviewTurn === 'number' && Number.isFinite(source.lastReviewTurn) ? source.lastReviewTurn : -4,
+    lastCardId: typeof source.lastCardId === 'string' && allow.has(source.lastCardId) ? source.lastCardId : null,
   }
 }
 

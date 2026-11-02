@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { KanjiWord } from '../../shared/lib/types'
+import type { AppPage, KanjiWord } from '../../shared/lib/types'
+import { WordContexts } from '../contexts/WordContexts'
 import './styles.css'
 import { useLoadMoreOnScroll } from '../../shared/lib/useLoadMoreOnScroll'
 import { useKanjiState, useVocabState } from '../../shared/state/AppStateContext'
@@ -16,7 +17,7 @@ const PAGE_SIZE = 40
 
 type MineView = 'saved' | 'learned' | 'training' | 'problem'
 
-export function MineWordsPage() {
+export function MineWordsPage({ onNavigate }: { onNavigate?: (page: AppPage) => void }) {
   const vocab = useVocabState()
   const kanji = useKanjiState()
   const [mineView, setMineView] = useState<MineView>('saved')
@@ -307,6 +308,7 @@ export function MineWordsPage() {
 
       <DictionaryWordList
         words={visible}
+        renderWordDetails={(word) => <WordContexts word={word} onNavigate={onNavigate} />}
         isSaved={(word) => isWordSaved(word, myWordSet)}
         onToggleSaved={handleToggleSaved}
         onEdit={mineView === 'saved' ? setEditingWord : undefined}

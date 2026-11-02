@@ -142,10 +142,11 @@ export function limitVocabCards(cards: VocabCard[], limit: number): VocabCard[] 
 /** Apply «Слов за раз» when the source supports it (mine/problem/full-set skip). */
 export function applyVocabNewWordLimit(
   cards: VocabCard[],
-  preferences: Pick<VocabPreferences, 'source' | 'newWordLimit' | 'trainFullGroup'>,
+  preferences: Pick<VocabPreferences, 'source' | 'newWordLimit' | 'trainFullGroup'> & Partial<Pick<VocabPreferences, 'sessionMode'>>,
 ): VocabCard[] {
   const newWordLimit = preferences.newWordLimit ?? -1
   const skipLimit =
+    preferences.sessionMode === 'adaptive' ||
     preferences.source === 'mine' ||
     preferences.source === 'problem' ||
     ((preferences.source === 'group' ||
@@ -248,6 +249,9 @@ export function buildVocabPool(
     problemWordIds?: string[]
   } = {},
 ): VocabCard[] {
+  if (preferences.sessionMode === 'adaptive') {
+    preferences = { ...preferences, source: 'mine', wordJlptLevels: [], mineIncludeLearned: true, includeColloquial: true, newWordLimit: -1 }
+  }
   let words: KanjiWord[] = []
   let preserveOrder = false
 

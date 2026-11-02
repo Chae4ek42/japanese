@@ -4,6 +4,9 @@ import type { AppPage, KanjiWord } from '../../shared/lib/types'
 import { speakJapanese } from '../../shared/lib/speech'
 import { tokenizeWithKuromoji } from '../../shared/lib/kuromoji-tokenizer'
 import { useVocabState, useReaderState } from '../../shared/state/AppStateContext'
+import { useContextsState } from '../../shared/state/contexts-slice'
+import { getWordLearningEvidence } from '../../shared/lib/learningProgress'
+import { readerSourceSentences } from './contexts'
 import { markAutostartTrain } from '../vocab/autostart'
 import { CheatSheetPopups, CheatSheetTriggers, useCheatSheets } from '../../shared/ui/CheatSheetsBar'
 import { KanjiInfoCard } from '../kanji/KanjiInfoCard'
@@ -53,6 +56,7 @@ type TranslateState = { status: 'idle' | 'loading' | 'ready' | 'error'; text?: s
 export function TextReaderPage({ onNavigate }: { onNavigate: (page: AppPage) => void }) {
   const vocab = useVocabState()
   const reader = useReaderState()
+  const contexts = useContextsState()
   const [text, setText] = useState('')
   const [draftReady, setDraftReady] = useState(false)
   const [tokens, setTokens] = useState<ReaderToken[]>([])
@@ -82,6 +86,15 @@ export function TextReaderPage({ onNavigate }: { onNavigate: (page: AppPage) => 
     [vocab?.trainingWordIds],
   )
   const sentences = useMemo(() => groupTokensIntoSentences(tokens), [tokens])
+  const sourceSentences = useMemo(() => readerSourceSentences(text, sentences), [text, sentences])
+  const unpracticed = contentReaderTokens(tokens).filter((token) => !token.words.some((word) =>
+    wordVariantIds(word).some((id) => getWordLearningEvidence(vocab?.stats[id]).status !== 'unpracticed'),
+  ))
+  const unresolvedCount = tokens.filter((token) => token.kind === 'content' && !token.words.length).length
+  function learningStatus(token: ReaderToken) {
+    const evidence = token.words.flatMap((word) => wordVariantIds(word).map((id) => getWordLearningEvidence(vocab?.stats[id])))
+    return evidence.some((item) => item.confirmed) ? 'confirmed' : evidence.some((item) => item.attempts > 0) ? 'learning' : 'unpracticed'
+  }
   const selected = tokens.find((token) => token.id === selectedId) ?? null
   const knownCount = contentReaderTokens(tokens).length
   const missingMine = contentReaderTokens(tokens).filter(
@@ -210,11 +223,27 @@ export function TextReaderPage({ onNavigate }: { onNavigate: (page: AppPage) => 
       return
     }
     vocab.addMyWords(ids)
+    if (selected) saveTokenContext(selected, word)
+  }
+
+  function saveTokenContext(token: ReaderToken, word: KanjiWord = token.words[0]!) {
+    if (!contexts || !word) return
+    const index = sentences.findIndex((sentence) => sentence.tokens.some((item) => item.id === token.id))
+    const source = sourceSentences[index]
+    const wordId = wordVariantIds(word)[0]
+    if (!source || !wordId || !source.sentence.includes(token.surface)) return
+    const translated = translations[sentences[index]!.id]
+    contexts.addExamples([{ wordId, sentence: source.sentence, surface: token.surface, reading: token.reading || undefined,
+      meaning: word.meanings[0], translation: translated?.status === 'ready' ? translated.text : undefined,
+      sourceKind: 'reader', sourceId: `${reader?.activeTextId ?? 'draft'}#${source.start}`,
+      sourceTitle: `${activeSaved ? displayReaderTitle(activeSaved) : titleFromReaderText(text)} · предложение ${index + 1}`,
+    }])
   }
 
   function addAllMissing() {
     if (!vocab || !missingMine.length) return
     vocab.addMyWords(primaryVariantIds(missingMine))
+    missingMine.forEach((token) => saveTokenContext(token))
   }
 
   function toggleTraining(word: KanjiWord) {
@@ -226,17 +255,20 @@ export function TextReaderPage({ onNavigate }: { onNavigate: (page: AppPage) => 
       return
     }
     vocab.addTrainingWords(ids)
+    if (selected) saveTokenContext(selected, word)
   }
 
   function addAllMissingTraining() {
     if (!vocab || !missingTraining.length) return
     vocab.addTrainingWords(primaryVariantIds(missingTraining))
+    missingTraining.forEach((token) => saveTokenContext(token))
   }
 
   function startTrainUnknown() {
-    if (!vocab || !missingMine.length) return
-    const ids = primaryVariantIds(missingMine)
+    if (!vocab || !unpracticed.length) return
+    const ids = primaryVariantIds(unpracticed)
     vocab.addTrainingWords(ids)
+    unpracticed.forEach((token) => saveTokenContext(token))
     vocab.patchPreferences({
       sessionMode: 'drill',
       source: 'list',
@@ -450,6 +482,7 @@ export function TextReaderPage({ onNavigate }: { onNavigate: (page: AppPage) => 
                         token={token}
                         selected={selectedId === token.id}
                         myWordSet={myWordSet}
+                        learningStatus={learningStatus(token)}
                         onSelect={() => {
                           setSelectedId(token.id)
                           setActiveSentenceId(sentence.id)
@@ -531,7 +564,14 @@ export function TextReaderPage({ onNavigate }: { onNavigate: (page: AppPage) => 
             <p className="reader-panel-empty">Выберите слово в разборе</p>
           )}
 
-          {missingMine.length || missingTraining.length ? (
+          {selected?.words[0] ? <div className="reader-context-actions">
+            <p>{learningStatus(selected) === 'unpracticed' ? 'Пока нет практики этого слова' : learningStatus(selected) === 'confirmed' ? 'Есть повторные успешные ответы' : 'Есть практика, закрепление продолжается'}</p>
+            <button className="ghost-button" onClick={() => saveTokenContext(selected)}>Сохранить предложение со словом</button>
+            <button className="text-button" onClick={() => onNavigate('contexts')}>Практика в предложениях ({contexts?.examples.length ?? 0})</button>
+            {contexts?.examples.some((item) => item.surface === selected.surface && selected.words.some((word) => wordVariantIds(word).includes(item.wordId)) && sourceSentences.some((source) => source?.sentence === item.sentence)) ? <p role="status">Пример сохранён</p> : null}
+          </div> : null}
+          <p className="reader-learning-legend">Без практики: {unpracticed.length} · Не найдено в словаре: {unresolvedCount}. Добавление в «Мои» не подтверждает знание.</p>
+          {missingMine.length || missingTraining.length || unpracticed.length ? (
             <div className="reader-add-all-group">
               {missingMine.length ? (
                 <button
@@ -553,14 +593,14 @@ export function TextReaderPage({ onNavigate }: { onNavigate: (page: AppPage) => 
                   + Все найденные в набор ({missingTraining.length})
                 </button>
               ) : null}
-              {missingMine.length ? (
+              {unpracticed.length ? (
                 <button
                   type="button"
                   className="primary-button reader-add-all"
                   data-testid="reader-train-unknown"
                   onClick={startTrainUnknown}
                 >
-                  Тренировать неизвестные ({missingMine.length})
+                  Тренировать слова без практики ({unpracticed.length})
                 </button>
               ) : null}
             </div>
@@ -641,12 +681,14 @@ function ReaderTokenView({
   token,
   selected,
   myWordSet,
+  learningStatus,
   onSelect,
   onOpenKanji,
 }: {
   token: ReaderToken
   selected: boolean
   myWordSet: Set<string>
+  learningStatus: 'unpracticed' | 'learning' | 'confirmed'
   onSelect: () => void
   onOpenKanji: (character: string) => void
 }) {
@@ -662,6 +704,7 @@ function ReaderTokenView({
     'reader-token',
     `is-${token.kind}`,
     known ? 'is-known' : 'is-unknown',
+    known ? `is-${learningStatus}` : 'is-unresolved',
     inMine ? 'is-mine' : '',
     selected ? 'is-selected' : '',
   ]
@@ -673,6 +716,7 @@ function ReaderTokenView({
       type="button"
       className={classes}
       data-testid={`reader-token-${token.surface}`}
+      title={!known ? 'Нет совпадения в словаре' : learningStatus === 'unpracticed' ? 'Нет практики' : learningStatus === 'confirmed' ? 'Повторные успешные ответы' : 'В процессе закрепления'}
       onClick={onSelect}
     >
       {token.hasKanji ? (

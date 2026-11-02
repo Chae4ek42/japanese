@@ -22,6 +22,8 @@ import {
   sanitizeVerbsStats,
 } from './slices/verbs'
 import { DEFAULT_READER_STATE, sanitizeReaderState } from './slices/reader'
+import { DEFAULT_THEORY_STATE, sanitizeTheoryState } from './slices/theory'
+import { DEFAULT_CONTEXT_STATE, sanitizeContextState } from './slices/contexts'
 
 import { MAIN_TRAINING_SET_ID, createMainTrainingSet } from '../lib/trainingSets'
 
@@ -97,6 +99,8 @@ export function createDefaultAppState(): AppState {
     },
     analytics: createDefaultAnalyticsState(),
     reader: { ...DEFAULT_READER_STATE, texts: [] },
+    theory: { ...DEFAULT_THEORY_STATE, lessons: {} },
+    contexts: { ...DEFAULT_CONTEXT_STATE, examples: [], stats: {} },
   }
 }
 
@@ -206,5 +210,7 @@ export function normalizeAppState(parsed: unknown): AppState | null {
     vocab,
     analytics: sanitizeAnalyticsState(source.analytics, fallback.analytics),
     reader: sanitizeReaderState(source.reader, fallback.reader),
+    theory: sanitizeTheoryState(source.theory),
+    contexts: sanitizeContextState(source.contexts),
   }
 }

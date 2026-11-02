@@ -41,6 +41,8 @@ export const PATHS = {
   train: '/train',
   theory: '/theory',
   analytics: '/analytics',
+  mistakes: '/mistakes',
+  contexts: '/contexts',
   accounts: '/accounts',
 } as const
 
@@ -235,6 +237,16 @@ export const PAGE_META: PageMeta[] = [
     navLabel: 'Аккаунты',
     navTestId: 'nav-accounts',
     navGroup: 'none',
+  },
+  {
+    id: 'mistakes', path: PATHS.mistakes, documentTitle: 'Трудности — Японский',
+    navLabel: 'Трудности', navTestId: 'nav-mistakes', navGroup: 'primary',
+    home: { symbol: '復', title: 'Журнал трудностей', action: 'Разобрать', testId: 'open-mistakes', group: 'practice' },
+  },
+  {
+    id: 'contexts', path: PATHS.contexts, documentTitle: 'Слова в предложениях — Японский',
+    navLabel: 'В предложениях', navTestId: 'nav-contexts', navGroup: 'none',
+    home: { symbol: '例', title: 'Слова в предложениях', action: 'Тренировать', testId: 'open-contexts', group: 'practice' },
   },
 ]
 

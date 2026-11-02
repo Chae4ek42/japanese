@@ -147,6 +147,10 @@ export function TrainingSetsMenu({ onNavigate, compact = false }: { onNavigate: 
             </button>
           </div>
 
+          <p className="sets-menu-preview">
+            Слово может быть в нескольких наборах и в «Моих словах». Прогресс у него общий.
+          </p>
+
           <ul className="sets-menu-list">
             {trainingSets.map((set) => {
               const isActive = set.id === activeTrainingSetId
@@ -227,7 +231,7 @@ export function TrainingSetsMenu({ onNavigate, compact = false }: { onNavigate: 
                                   {set.id !== MAIN_TRAINING_SET_ID ? (
                                     <button
                                       type="button"
-                                      title="В основной"
+                                      title="Переместить в основной набор и убрать из этого"
                                       data-testid={`training-set-word-to-main-${word.id}`}
                                       onClick={() =>
                                         moveTrainingWords({
@@ -237,7 +241,7 @@ export function TrainingSetsMenu({ onNavigate, compact = false }: { onNavigate: 
                                         })
                                       }
                                     >
-                                      → осн.
+                                      Переместить
                                     </button>
                                   ) : null}
                                   <button
@@ -288,6 +292,7 @@ export function TrainingSetsMenu({ onNavigate, compact = false }: { onNavigate: 
                         <button
                           type="button"
                           data-testid={`training-set-to-main-${set.id}`}
+                          title="Переместить все слова в основной набор и убрать из этого"
                           disabled={!set.wordIds.length}
                           onClick={() =>
                             moveTrainingWords({
@@ -297,7 +302,7 @@ export function TrainingSetsMenu({ onNavigate, compact = false }: { onNavigate: 
                             })
                           }
                         >
-                          В основной
+                          Переместить в основной
                         </button>
                         <button
                           type="button"

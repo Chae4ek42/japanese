@@ -1,3 +1,4 @@
+import { consumeTargetedPractice, readTargetedPractice } from '../../shared/lib/targetedPractice'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './styles.css'
 import {
@@ -74,7 +75,13 @@ function VerbsTrainerView({
   const { recordAnswer } = useAnalyticsState()
   const isMobile = useIsMobileTouch()
   const cheats = useCheatSheets()
-  const pool = useMemo(() => buildVerbPool(preferences.focus), [preferences.focus])
+  const [targetIntent] = useState(() => readTargetedPractice('verbs'))
+  const [targeted, setTargeted] = useState(() => targetIntent ?? (liveSession?.session.targetedIds?.length
+    ? { cardIds: liveSession.session.targetedIds } : null))
+  const targetedStarted = useRef(false)
+  const pool = useMemo(() => targeted
+    ? buildVerbPool('all').filter((card) => targeted.cardIds.includes(card.id))
+    : buildVerbPool(preferences.focus), [preferences.focus, targeted])
   const statsMap = useMemo(() => {
     const map = { ...stats }
     for (const card of pool) {
@@ -90,10 +97,12 @@ function VerbsTrainerView({
 
   const drill = useChoiceDrill({
     pool,
+    targetedIds: targeted?.cardIds,
+    onStopPractice: () => setTargeted(null),
     statsMap,
     pickMode: preferences.pickMode,
     hyperparams: VERB_HYPERPARAMS,
-    liveSession,
+    liveSession: targetIntent ? null : liveSession,
     onSaveLiveSession,
     onClearLiveSession,
     onUpdateStats,
@@ -105,6 +114,13 @@ function VerbsTrainerView({
       setShowHint(false)
     },
   })
+
+  useEffect(() => {
+    if (!targetIntent || targetedStarted.current || !pool.length) return
+    targetedStarted.current = true
+    consumeTargetedPractice('verbs')
+    drill.startPractice()
+  }, [targetIntent, pool, drill])
 
   const activeCard: VerbCard | null = drill.currentCardId ? getVerbCard(drill.currentCardId) : null
   const practiceRef = useRef({ view: drill.view, activeCard })

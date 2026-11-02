@@ -19,6 +19,8 @@ import type {
  */
 export function useChoiceDrill<TCard extends { id: string }>({
   pool,
+  targetedIds,
+  onStopPractice,
   statsMap,
   pickMode,
   hyperparams,
@@ -31,6 +33,8 @@ export function useChoiceDrill<TCard extends { id: string }>({
   onShowCard,
 }: {
   pool: TCard[]
+  targetedIds?: string[]
+  onStopPractice?: () => void
   statsMap: Record<string, StatsRecord>
   pickMode: 'adaptive' | 'even'
   hyperparams: Hyperparams
@@ -189,10 +193,12 @@ export function useChoiceDrill<TCard extends { id: string }>({
       poolIds: nextPool.map((card) => card.id),
       mode: pickModeRef.current,
     })
+    if (targetedIds) nextSession.targetedIds = targetedIds
     advanceToNextCard(nextSession)
   }
 
   function stopPractice() {
+    onStopPractice?.()
     clearPendingAdvance()
     endPractice()
     setCurrentCardId(null)

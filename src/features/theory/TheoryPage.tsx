@@ -1,5 +1,7 @@
+import { summarizeWordLearning } from '../../shared/lib/learningProgress'
+import { LESSON_CHECKS, scoreLessonCheck } from './lessonChecks'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useVocabState } from '../../shared/state/AppStateContext'
+import { useTheoryState, useVocabState } from '../../shared/state/AppStateContext'
 import { CheatSheetsBar } from '../../shared/ui/CheatSheetsBar'
 import { getVocabGroup } from '../vocab/groups'
 import { AUTOSTART_TRAIN_KEY } from '../vocab/autostart'
@@ -12,6 +14,7 @@ import {
   type TheoryUnit,
 } from './units'
 import './styles.css'
+import { consumeTheoryLessonRequest, requestedTheoryLesson } from './theoryNavigation'
 
 const EMPTY_IDS: string[] = []
 
@@ -41,7 +44,11 @@ export function TheoryPage({
   onOpenPage?: (page: AppPage) => void
 }) {
   const vocab = useVocabState()
-  const [unitId, setUnitId] = useState(THEORY_UNITS[0]?.id ?? '')
+  const theory = useTheoryState()
+  const [answers, setAnswers] = useState<number[]>([])
+  const [checkSubmitted, setCheckSubmitted] = useState(false)
+  const [unitId, setUnitId] = useState(() => requestedTheoryLesson() ?? THEORY_UNITS[0]?.id ?? '')
+  useEffect(() => { consumeTheoryLessonRequest() }, [])
   const [note, setNote] = useState('')
   const [chooser, setChooser] = useState<SetChooser | null>(null)
   const contentRef = useRef<HTMLElement | null>(null)
@@ -61,7 +68,10 @@ export function TheoryPage({
   )
   const unitFullyInTraining =
     unitWordIds.length > 0 && unitInTraining >= unitWordIds.length
-  const progressRatio = unitWordIds.length ? unitInTraining / unitWordIds.length : 0
+  const wordEvidence = summarizeWordLearning(unitWordIds, vocab?.stats ?? {})
+  const progressRatio = unitWordIds.length ? wordEvidence.confirmed / unitWordIds.length : 0
+  const lessonProgress = unit ? theory?.lessons[unit.id] : undefined
+  const questions = unit ? LESSON_CHECKS[unit.id] ?? [] : []
 
   const navProgress = useMemo(() => {
     const map = new Map<string, { total: number; inSet: number }>()
@@ -105,6 +115,8 @@ export function TheoryPage({
 
   function selectUnit(id: string) {
     setUnitId(id)
+    setAnswers([])
+    setCheckSubmitted(false)
     setNote('')
     setChooser(null)
   }
@@ -255,16 +267,16 @@ export function TheoryPage({
           </p>
           <CheatSheetsBar testIdPrefix="theory" />
         </div>
-        <div className="theory-hero-stat" aria-label="Прогресс текущего урока">
+        <div className="theory-hero-stat" aria-label="Слова с подтверждённым воспроизведением">
           <div
             className="theory-progress-ring"
             style={{ ['--theory-progress' as string]: String(progressRatio) }}
           >
             <strong>
-              {unitInTraining}/{unitWordIds.length || '—'}
+              {wordEvidence.confirmed}/{unitWordIds.length || '—'}
             </strong>
           </div>
-          <span>в «{activeSetName}»</span>
+          <span>слов с повторным воспроизведением</span>
         </div>
       </header>
 
@@ -275,8 +287,8 @@ export function TheoryPage({
             {THEORY_UNITS.map((item, index) => {
               const progress = navProgress.get(item.id)
               const active = item.id === unit.id
-              const done =
-                Boolean(progress?.total) && progress!.inSet >= progress!.total
+              const lesson = theory?.lessons[item.id]
+              const done = Boolean(lesson?.questionCount && lesson.lastScore === lesson.questionCount)
               return (
                 <button
                   key={item.id}
@@ -299,11 +311,9 @@ export function TheoryPage({
                   </span>
                   <span className="theory-rail-copy">
                     <span className="theory-rail-title">{unitNavLabel(item)}</span>
-                    {progress?.total ? (
-                      <span className="theory-rail-meta">
-                        {progress.inSet}/{progress.total}
-                      </span>
-                    ) : null}
+                    <span className="theory-rail-meta">
+                        {progress?.inSet ?? 0}/{progress?.total ?? 0} в наборе · {lesson?.readAt ? 'прочитано' : 'не отмечено'}{lesson?.questionCount ? ` · проверка ${lesson.lastScore}/${lesson.questionCount}` : ''}
+                    </span>
                   </span>
                 </button>
               )
@@ -378,13 +388,25 @@ export function TheoryPage({
               ) : null}
               {unitWordIds.length ? (
                 <span>
-                  Слова урока · <strong>{unitInTraining}</strong> / {unitWordIds.length}
+                  В наборе · <strong>{unitInTraining}</strong> / {unitWordIds.length}
                 </span>
               ) : null}
               <div className="theory-unit-progress" aria-hidden="true">
                 <span style={{ width: `${Math.round(progressRatio * 100)}%` }} />
               </div>
             </div>
+
+            <section className="theory-section" aria-label="Прогресс урока">
+              <p className="theory-paragraph">
+                Чтение: {lessonProgress?.readAt ? 'отмечено вами' : 'пока не отмечено'}.
+                {' '}Проверка: {lessonProgress?.questionCount ? `${lessonProgress.lastScore}/${lessonProgress.questionCount} в последней попытке · попыток ${lessonProgress.checkAttempts}` : 'ещё не пройдена'}.
+              </p>
+              <p className="theory-paragraph">
+                Слова: проверено {wordEvidence.practiced}/{wordEvidence.total}, повторное воспроизведение {wordEvidence.confirmed}.
+                {' '}Условие: три ответа подряд без ошибки и расчётная сила от 70%.
+                {' '}Слова в наборе — план практики; чтение и эта короткая проверка не подтверждают долговременное знание темы.
+              </p>
+            </section>
 
             {unit.sections.map((section, sectionIndex) => {
               const sectionIds =
@@ -489,6 +511,33 @@ export function TheoryPage({
                 </section>
               )
             })}
+            <section className="theory-section theory-check" data-testid="theory-lesson-check">
+              <h4 className="theory-section-title">Короткая проверка</h4>
+              <p className="theory-paragraph">Выберите ответы без подсказок. Результат относится только к этим {questions.length} вопросам.</p>
+              <button type="button" className="theory-btn theory-btn-ghost" onClick={() => theory?.markTheoryRead(unit.id)}>
+                {lessonProgress?.readAt ? 'Прочитано · ваша отметка' : 'Отметить как прочитанное'}
+              </button>
+              {questions.map((question, questionIndex) => (
+                <fieldset key={`${unit.id}-${questionIndex}`} className="theory-check-question" disabled={checkSubmitted}>
+                  <legend>{questionIndex + 1}. {question.prompt}</legend>
+                  {question.options.map((option, optionIndex) => (
+                    <label key={option}>
+                      <input type="radio" name={`lesson-${unit.id}-${questionIndex}`} checked={answers[questionIndex] === optionIndex}
+                        onChange={() => setAnswers((current) => { const next = [...current]; next[questionIndex] = optionIndex; return next })} />
+                      {option}
+                    </label>
+                  ))}
+                  {checkSubmitted ? <p>{answers[questionIndex] === question.answer ? 'Верно. ' : 'Неверно. '}{question.explanation}</p> : null}
+                </fieldset>
+              ))}
+              <div className="theory-toolbar">
+                <button type="button" className="theory-btn theory-btn-primary" disabled={checkSubmitted || questions.some((_, index) => answers[index] == null)}
+                  onClick={() => { theory?.recordTheoryCheck(unit.id, scoreLessonCheck(questions, answers), questions.length); setCheckSubmitted(true) }}>
+                  Проверить ответы
+                </button>
+                {checkSubmitted ? <button type="button" className="theory-btn theory-btn-ghost" onClick={() => { setAnswers([]); setCheckSubmitted(false) }}>Повторить проверку</button> : null}
+              </div>
+            </section>
           </article>
         </div>
       </div>

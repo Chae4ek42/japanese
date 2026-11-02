@@ -1,3 +1,4 @@
+import { consumeTargetedPractice, readTargetedPractice } from '../../shared/lib/targetedPractice'
 import type {
   CardTrainerLiveSession,
   ParticlesPickMode,
@@ -268,13 +269,18 @@ function ParticlesTrainerView({
   cheatOpenRef.current = cheats.sheet !== null
   infoKanjiRef.current = infoKanji
 
+  const [targetIntent] = useState(() => readTargetedPractice('particles'))
+  const [targeted, setTargeted] = useState(() => targetIntent ?? (liveSession?.session.targetedIds?.length
+    ? { cardIds: liveSession.session.targetedIds } : null))
+  const targetedStarted = useRef(false)
   const pool = useMemo(() => {
+    if (targeted) return buildParticlePool('all').filter((card) => targeted.cardIds.includes(card.id))
     let cards = buildParticlePool(focus)
     if (mineOnly) {
       cards = cards.filter((card) => sentenceKnownByMine(particleCardSurface(card), myWordSet))
     }
     return cards
-  }, [focus, mineOnly, myWordSet])
+  }, [focus, mineOnly, myWordSet, targeted])
 
   const statsMap = useMemo(() => {
     const map = { ...stats }
@@ -286,10 +292,12 @@ function ParticlesTrainerView({
 
   const drill = useChoiceDrill({
     pool,
+    targetedIds: targeted?.cardIds,
+    onStopPractice: () => setTargeted(null),
     statsMap,
     pickMode: preferences.pickMode,
     hyperparams: PARTICLE_HYPERPARAMS,
-    liveSession,
+    liveSession: targetIntent ? null : liveSession,
     onSaveLiveSession,
     onClearLiveSession,
     onUpdateStats,
@@ -298,11 +306,18 @@ function ParticlesTrainerView({
       ? 'Нет карточек только из ваших слов. Добавьте слова в «Мои» или снимите фильтр.'
       : 'В этом наборе нет карточек.',
     onShowCard: () => {
-      setChoices(particleChoiceOptions(focus))
+      setChoices(particleChoiceOptions(targeted ? 'all' : focus))
       setFilledParticle(null)
       setShowTranscript(false)
     },
   })
+
+  useEffect(() => {
+    if (!targetIntent || targetedStarted.current || !pool.length) return
+    targetedStarted.current = true
+    consumeTargetedPractice('particles')
+    drill.startPractice()
+  }, [targetIntent, pool, drill])
 
   const {
     view,

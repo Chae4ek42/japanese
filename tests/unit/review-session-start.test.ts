@@ -131,10 +131,11 @@ describe('startReviewPracticeSession', () => {
     assert.equal(session.poolIds.length, 12)
     assert.equal(newCount, 12)
     assert.equal(session.review?.inFlightLimit, 12)
-    assert.equal(session.review?.passesToGraduate, 2)
+    assert.equal(session.review?.passesToGraduate, undefined)
+    assert.equal(session.mode, 'even')
   })
 
-  it('в адаптивном дрилле берёт размер круга и число успехов из настроек', () => {
+  it('обычная тренировка игнорирует старые настройки адаптивного подбора', () => {
     const { session } = startReviewPracticeSession({
       scope: Array.from({ length: 12 }, (_, i) => card(`w${i}`)),
       preferences: {
@@ -149,8 +150,8 @@ describe('startReviewPracticeSession', () => {
       newUsedToday: 0,
       spacedRepetition: false,
     })
-    assert.equal(session.review?.inFlightLimit, 5)
-    assert.equal(session.review?.passesToGraduate, 3)
+    assert.equal(session.mode, 'even')
+    assert.equal(session.review?.passesToGraduate, undefined)
   })
 
   it('в SRS держит узкий in-flight лимит', () => {

@@ -1,3 +1,5 @@
+import { consumeTargetedPractice, readTargetedPractice } from '../../shared/lib/targetedPractice'
+import { allNumberCards } from '../../shared/lib/numberCards'
 import type {
   CardTrainerLiveSession,
   InputMode,
@@ -115,14 +117,18 @@ function NumbersTrainerView({
     [preferences.rangeId],
   )
 
+  const [targetIntent] = useState(() => readTargetedPractice('numbers'))
+  const [targeted, setTargeted] = useState(() => targetIntent ?? (liveSession?.session.targetedIds?.length
+    ? { cardIds: liveSession.session.targetedIds } : null))
+  const targetedStarted = useRef(false)
   const activePool = useMemo(
-    () =>
+    () => targeted ? allNumberCards().filter((card) => targeted.cardIds.includes(card.id)) :
       buildNumberPool({
         mode: preferences.mode,
         rangeMin: activeRange.min,
         rangeMax: activeRange.max,
       }),
-    [activeRange.max, activeRange.min, preferences.mode],
+    [activeRange.max, activeRange.min, preferences.mode, targeted],
   )
 
   const activeCard = useMemo(() => {
@@ -141,7 +147,7 @@ function NumbersTrainerView({
   }, [activePool, stats])
 
   useLiveTrainerSession({
-    liveSession,
+    liveSession: targetIntent ? null : liveSession,
     view,
     currentCardId,
     session,
@@ -165,7 +171,7 @@ function NumbersTrainerView({
     },
   })
 
-  const modeLabel = NUMBER_MODES.find((mode) => mode.id === preferences.mode)?.label ?? 'Числа'
+  const modeLabel = NUMBER_MODES.find((mode) => mode.id === (activeCard?.mode ?? preferences.mode))?.label ?? 'Числа'
 
   function rememberNavCard(cardId: string) {
     const trimmed = navHistoryRef.current.slice(0, navIndexRef.current + 1)
@@ -226,10 +232,21 @@ function NumbersTrainerView({
       poolIds: activePool.map((card) => card.id),
       mode: preferences.pickMode,
     })
+    if (targeted) nextSession.targetedIds = targeted.cardIds
     advanceToNextCard(nextSession)
   }
 
+  const startTargetedRef = useRef<() => void>(() => {})
+  startTargetedRef.current = startPractice
+  useEffect(() => {
+    if (!targetIntent || targetedStarted.current || !activePool.length) return
+    targetedStarted.current = true
+    consumeTargetedPractice('numbers')
+    startTargetedRef.current()
+  }, [targetIntent, activePool])
+
   function stopPractice() {
+    setTargeted(null)
     clearPendingAdvance()
     endPractice()
     navHistoryRef.current = []

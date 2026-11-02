@@ -210,7 +210,7 @@ test('vocab trainer: arrow keys navigate cards', async ({ page }, testInfo) => {
   await expect(page.getByTestId('vocab-current-writing')).toHaveText(second)
 })
 
-test('vocab trainer: in-session panel changes pick mode and shows word stats', async ({ page }, testInfo) => {
+test('vocab trainer: in-session mode is fixed and panel shows word stats', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Sidebar controls covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
@@ -230,8 +230,8 @@ test('vocab trainer: in-session panel changes pick mode and shows word stats', a
   await page.getByTestId('vocab-session-sort-novelty').click()
   await expect(page.getByTestId('vocab-session-sort-novelty')).toHaveAttribute('aria-pressed', 'true')
 
-  await page.getByTestId('vocab-session-pick-even').click()
-  await expect(page.getByTestId('vocab-session-pick-even')).toHaveClass(/is-active/)
+  await expect(page.getByTestId('vocab-session-mode-label')).toHaveText('Равномерная')
+  await expect(page.getByTestId('vocab-session-pick-even')).toHaveCount(0)
   await expect(page.getByTestId('vocab-session-sort')).toBeVisible()
   await expect(page.getByTestId('vocab-session-weight-slider')).toHaveCount(0)
 
@@ -241,8 +241,7 @@ test('vocab trainer: in-session panel changes pick mode and shows word stats', a
   await page.getByTestId('vocab-add-source-word').click()
   await expect(sessionWords).toHaveCount(countBefore + 1)
 
-  await page.getByTestId('vocab-session-pick-adaptive').click()
-  await expect(page.getByTestId('vocab-session-pick-adaptive')).toHaveClass(/is-active/)
+  await expect(page.getByTestId('vocab-session-pick-adaptive')).toHaveCount(0)
   await expect(page.getByTestId('vocab-session-sort')).toBeVisible()
 })
 

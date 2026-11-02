@@ -27,8 +27,8 @@ export function AnalyticsPage() {
           <div>
             <h2>Аналитика</h2>
             <p className="subsection-note">
-              Активное время (без простоя) и прогресс по разделам. Глобальная статистика карточек
-              сохраняется отдельно.
+              Активное время без простоя и результаты ответов. Сохранение слов и ручные отметки
+              не подтверждают знание.
             </p>
           </div>
         </header>
@@ -69,7 +69,7 @@ export function AnalyticsPage() {
           <h3>Слова</h3>
           <div className="analytics-kpi-row">
             <article className="analytics-kpi">
-              <span className="analytics-kpi-label">Точность</span>
+              <span className="analytics-kpi-label">Доля чистых ответов</span>
               <strong>{model.vocab.accuracy == null ? '—' : `${model.vocab.accuracy}%`}</strong>
             </article>
             <article className="analytics-kpi">
@@ -77,7 +77,7 @@ export function AnalyticsPage() {
               <strong>{model.vocab.myWords}</strong>
             </article>
             <article className="analytics-kpi">
-              <span className="analytics-kpi-label">Выученные</span>
+              <span className="analytics-kpi-label">Отмечены вручную</span>
               <strong>{model.vocab.learned}</strong>
             </article>
             <article className="analytics-kpi">
@@ -93,11 +93,24 @@ export function AnalyticsPage() {
               <strong>{model.vocab.memory.counts.due}</strong>
             </article>
           </div>
+          <p className="subsection-note">
+            Повторное воспроизведение: {model.vocab.evidence.confirmed} слов ·
+            проверено {model.vocab.evidence.practiced} из {model.vocab.evidence.total} ·
+            {model.vocab.evidence.attempts} записанных исходов (включая перенесённую историю).
+            {' '}Сила при последних ответах: {model.vocab.evidence.estimatedStrength == null ? '—' : `${Math.round(model.vocab.evidence.estimatedStrength * 100)}%`}.
+            {' '}Это средняя расчётная оценка по проверенным словам, а не процент выученного словаря.
+            Подтверждение здесь: минимум три ответа подряд без ошибки и сила от 70%.
+            {' '}Общая доля чистых ответов рассчитана по {model.vocab.resolved} исходам, включая прежние тренировки.
+          </p>
           <div className="analytics-charts-grid">
-            <MasteryPie mastery={model.vocab.mastery} title="Mastery слов" testId="analytics-chart-vocab-mastery" />
+            <SimplePie data={[
+              { name: 'Повторное воспроизведение', value: model.vocab.evidence.confirmed },
+              { name: 'Есть практика', value: model.vocab.evidence.practiced - model.vocab.evidence.confirmed },
+              { name: 'Без проверок в модели', value: model.vocab.evidence.total - model.vocab.evidence.practiced },
+            ].filter((row) => row.value > 0)} title="Свидетельства практики слов" testId="analytics-chart-vocab-mastery" />
             <NamedBars
               data={model.vocab.accuracyBuckets}
-              title="Точность по карточкам"
+              title="Доля чистых ответов по истории карточек"
               testId="analytics-chart-vocab-accuracy"
             />
             <SimplePie
@@ -112,7 +125,7 @@ export function AnalyticsPage() {
           <h3>Кандзи</h3>
           <div className="analytics-kpi-row">
             <article className="analytics-kpi">
-              <span className="analytics-kpi-label">Выучено</span>
+              <span className="analytics-kpi-label">Отмечено вручную</span>
               <strong>
                 {model.kanji.totalLearned} / {model.kanji.bankTotal}
               </strong>
@@ -131,7 +144,7 @@ export function AnalyticsPage() {
           <h3>Кана</h3>
           <div className="analytics-kpi-row">
             <article className="analytics-kpi">
-              <span className="analytics-kpi-label">Точность</span>
+              <span className="analytics-kpi-label">Доля чистых ответов</span>
               <strong>{model.kana.accuracy == null ? '—' : `${model.kana.accuracy}%`}</strong>
             </article>
             <article className="analytics-kpi">
@@ -140,7 +153,7 @@ export function AnalyticsPage() {
             </article>
           </div>
           <div className="analytics-charts-grid">
-            <MasteryPie mastery={model.kana.mastery} title="Mastery каны" testId="analytics-chart-kana-mastery" />
+            <MasteryPie mastery={model.kana.mastery} title="Расчётная освоенность каны" testId="analytics-chart-kana-mastery" />
             <NamedBars
               data={model.kana.confusions}
               title="Частые путаницы"
@@ -167,6 +180,18 @@ export function AnalyticsPage() {
             testId="analytics-chart-numbers"
           />
         </section>
+
+        {(['particles', 'verbs'] as const).map((section) => (
+          <section className="analytics-section" data-testid={`analytics-${section}`} key={section}>
+            <h3>{section === 'particles' ? 'Частицы' : 'Глагольные формы'}</h3>
+            <p className="subsection-note">
+              Доля чистых ответов: {model[section].accuracy == null ? '—' : `${model[section].accuracy}%`} ·
+              исходов: {model[section].resolved} · карточек с практикой: {model[section].touched}.
+              {' '}Ошибки и подсказки входят в знаменатель; показ карточки не считается ответом.
+            </p>
+            <NamedBars data={model[section].clearsVsErrors} title="Исходы ответов" testId={`analytics-chart-${section}`} />
+          </section>
+        ))}
 
         <section className="analytics-section" data-testid="analytics-history">
           <h3>История (14 дней)</h3>

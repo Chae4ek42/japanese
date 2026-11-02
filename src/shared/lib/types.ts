@@ -22,6 +22,8 @@ export type AppPage =
   | 'train'
   | 'theory'
   | 'analytics'
+  | 'mistakes'
+  | 'contexts'
   | 'accounts'
 
 /** Sections that accumulate active-time analytics. */
@@ -96,6 +98,30 @@ export interface Hyperparams {
 
 export type RecentAnswerOutcome = 'correct' | 'wrong'
 
+export interface WordPracticeStats {
+  strength: number
+  attempts: number
+  streak: number
+  lapses: number
+  lastAnsweredAt: number
+}
+
+export interface AdaptiveWindowState {
+  version: 1
+  turn: number
+  order: string[]
+  cursor: number
+  active: string[]
+  introduced: string[]
+  due: Record<string, number>
+  lastShown: Record<string, number>
+  attempts: Record<string, number>
+  streaks: Record<string, number>
+  intervals: Record<string, number>
+  lastReviewTurn: number
+  lastCardId: string | null
+}
+
 export interface StatsRecord {
   exposures: number
   clears: number
@@ -113,6 +139,8 @@ export interface StatsRecord {
   eventAccuracy: number
   /** Rolling window of correct/wrong for «Проблемные» (last 15). */
   recentAnswers?: RecentAnswerOutcome[]
+  /** Vocabulary recall evidence, shared by all vocabulary training modes. */
+  wordPractice?: WordPracticeStats
 }
 
 export interface DailyHistoryRecord {
@@ -150,6 +178,10 @@ export interface PracticeSession {
   cooldowns?: Record<string, number>
   /** Adaptive-review v2 sequencer state (vocab). */
   review?: ReviewSessionState
+  adaptive?: AdaptiveWindowState
+  vocabMode?: VocabSessionMode
+  /** Explicit short-practice scope, retained when resuming a journal exercise. */
+  targetedIds?: string[]
 }
 
 export interface RoundState {
@@ -353,13 +385,13 @@ export interface KanjiPreferences {
 export type VocabSource = 'level' | 'group' | 'mine' | 'kanji' | 'list' | 'problem'
 export type VocabLevelFilter = 5 | 4 | 3 | 2 | 1
 export type VocabPickMode = 'adaptive' | 'even'
-/** Top-level train mode: free drill vs spaced repetition on «Мои слова». */
-export type VocabSessionMode = 'drill' | 'srs'
+/** Even drill, sliding adaptive window on all my words, or calendar SRS. */
+export type VocabSessionMode = 'drill' | 'adaptive' | 'srs'
 /** Prompt shapes for mixed multiple-choice drills (renshuu-style). */
 export type VocabPromptKind = 'meaning' | 'reading' | 'writing'
 
 export interface VocabPreferences {
-  /** Обычная тренировка vs интервальное повторение (только «Мои слова»). */
+  /** Режим выбирается перед стартом и сохраняется в сессии. */
   sessionMode: VocabSessionMode
   drillMode: VocabDrillMode
   source: VocabSource
@@ -407,13 +439,12 @@ export interface VocabPreferences {
   /** Even pick mode: exponent for soft decay 1/(1+shows)^power. */
   evenDecayPower: number
   /**
-   * Adaptive drill: cards kept in the working set at once.
-   * 0 = size from the pool. Ignored in SRS.
+   * Legacy preference retained for backup compatibility. The sliding window uses fixed constants.
    */
   adaptiveInFlight: number
-  /** Adaptive drill: successful answers before a card leaves the circle. SRS ignores this. */
+  /** Legacy preference retained for backup compatibility; ignored by the new scheduler. */
   adaptivePasses: number
-  /** Adaptive drill: introduce learning and due cards before the rest of the list. */
+  /** Legacy preference retained for backup compatibility; weak-first is always enabled. */
   adaptiveWeakFirst: boolean
   /**
    * Which training set to practice when source === 'list'.
@@ -514,6 +545,43 @@ export interface ReaderState {
   draft: string
 }
 
+export interface TheoryLessonProgress {
+  readAt: number | null
+  checkAttempts: number
+  lastCheckAt: number | null
+  lastScore: number
+  questionCount: number
+}
+
+export interface TheoryState {
+  lessons: Record<string, TheoryLessonProgress>
+}
+
+export interface WordContext {
+  id: string
+  wordId: string
+  sentence: string
+  surface: string
+  reading?: string
+  meaning?: string
+  translation?: string
+  sourceKind: 'reader' | 'theory' | 'manual'
+  sourceId?: string
+  sourceTitle?: string
+  createdAt: number
+}
+
+export interface ContextRecallStats {
+  attempts: number
+  correct: number
+  lastAt: number
+}
+
+export interface ContextState {
+  examples: WordContext[]
+  stats: Record<string, ContextRecallStats>
+}
+
 export interface AppState {
   version: 32
   kana: {
@@ -545,6 +613,8 @@ export interface AppState {
   vocab: VocabState
   analytics: AnalyticsState
   reader: ReaderState
+  theory: TheoryState
+  contexts: ContextState
 }
 
 /** @deprecated Use AppState — kept as alias during migration. */

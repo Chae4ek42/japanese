@@ -23,11 +23,11 @@ import {
   getVocabGroupsByKind,
 } from './groups'
 import { VocabCalibration } from './VocabCalibration'
-import { VocabAdaptiveSettings } from './VocabAdaptiveSettings'
 import { VocabSetupPool } from './VocabSetupPool'
 
 const sessionModeOptions: Array<{ id: VocabSessionMode; label: string; hint: string }> = [
-  { id: 'drill', label: 'Обычная', hint: 'Свободный набор и подбор' },
+  { id: 'drill', label: 'Равномерная', hint: 'Свободная тренировка выбранного набора' },
+  { id: 'adaptive', label: 'Адаптивная', hint: 'Все мои слова: от слабых к выученным' },
   { id: 'srs', label: 'Интервальная', hint: 'Повторения по «Моим словам»' },
 ]
 
@@ -44,11 +44,6 @@ const sourceOptions = [
   { id: 'list' as const, label: 'Набор' },
   { id: 'problem' as const, label: 'Проблемные' },
   { id: 'mine' as const, label: 'Мои слова' },
-]
-
-const pickOptions = [
-  { id: 'adaptive' as const, label: 'Адаптивный' },
-  { id: 'even' as const, label: 'Равномерный' },
 ]
 
 const inputModeOptions = [
@@ -113,6 +108,7 @@ export function VocabSetup({
   onStart,
 }: VocabSetupProps) {
   const isSrs = preferences.sessionMode === 'srs'
+  const isAdaptive = preferences.sessionMode === 'adaptive'
   const newLimit = preferences.newWordLimit ?? -1
   const [newLimitDraft, setNewLimitDraft] = useState<string | null>(null)
   const [kanjiPickLevel, setKanjiPickLevel] = useState<VocabLevelFilter>(5)
@@ -169,11 +165,11 @@ export function VocabSetup({
   }, [newLimit])
 
   function setSessionMode(mode: VocabSessionMode) {
-    if (mode === 'srs') {
-      onPatchPreferences({ sessionMode: 'srs', source: 'mine' })
+    if (mode === 'srs' || mode === 'adaptive') {
+      onPatchPreferences({ sessionMode: mode, source: 'mine', pickMode: 'adaptive' })
       return
     }
-    onPatchPreferences({ sessionMode: 'drill' })
+    onPatchPreferences({ sessionMode: 'drill', pickMode: 'even' })
   }
 
   function toggleSelectedKanji(character: string) {
@@ -187,9 +183,10 @@ export function VocabSetup({
   }
 
   const includedCount = poolCards.filter((card) => !excludedIds.has(card.id)).length
+  const startCount = isAdaptive ? sourcePoolCount : includedCount
 
   return (
-    <div className="vocab-setup-layout" data-testid="vocab-setup">
+    <div className={`vocab-setup-layout${isAdaptive ? ' is-adaptive' : ''}`} data-testid="vocab-setup">
       <section className="panel controls-panel setup-surface vocab-setup">
         <div className="control-group">
           <span className="group-label">Режим</span>
@@ -212,7 +209,9 @@ export function VocabSetup({
             ))}
           </div>
           <p className="control-hint">
-            {isSrs
+            {isAdaptive
+              ? 'Начинаем с пяти самых слабых слов. По мере запоминания добавляем новые, а пройденные возвращаем всё реже.'
+              : isSrs
               ? 'Интервальные повторения колоды «Мои слова» по дате добавления и удержанию.'
               : 'Свободная тренировка любого набора без дневной квоты.'}
           </p>
@@ -237,7 +236,12 @@ export function VocabSetup({
           </div>
         </div>
 
-        {isSrs ? (
+        {isAdaptive ? (
+          <div className="control-group" data-testid="vocab-adaptive-deck">
+            <span className="group-label">Все мои слова</span>
+            <p className="control-hint">{sourcePoolCount} слов, включая выученные. Прогресс сохраняется между тренировками.</p>
+          </div>
+        ) : isSrs ? (
           <>
             <div className="control-group">
               <span className="group-label">Колода</span>
@@ -720,7 +724,7 @@ export function VocabSetup({
             </div>
           ) : null}
 
-          {showWordJlptFilter ? (
+          {!isAdaptive && showWordJlptFilter ? (
             <div className="control-group">
               <span className="group-label">Фильтр JLPT</span>
               <WordJlptFilter
@@ -731,7 +735,7 @@ export function VocabSetup({
             </div>
           ) : null}
 
-          <div className="control-group">
+          {!isAdaptive ? <div className="control-group">
             <span className="group-label">Разговорные</span>
             <div className="segmented-control" role="group" aria-label="Тренировать разговорные слова">
               <button
@@ -760,116 +764,7 @@ export function VocabSetup({
               </button>
             </div>
             <span className="control-hint">слова с пометой (разг.) / (прост.)</span>
-          </div>
-
-          {!isSrs ? (
-            <>
-              <div className="control-group">
-                <span className="group-label">Подбор</span>
-                <div className="segmented">
-                  {pickOptions.map((option) => (
-                    <button
-                      key={option.id}
-                      type="button"
-                      data-testid={`vocab-pick-${option.id}`}
-                      className={
-                        preferences.pickMode === option.id
-                          ? 'segmented-button is-active'
-                          : 'segmented-button'
-                      }
-                      onClick={() => onPatchPreferences({ pickMode: option.id })}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {preferences.pickMode === 'adaptive' ? (
-                <VocabAdaptiveSettings
-                  inFlight={preferences.adaptiveInFlight ?? 0}
-                  passes={preferences.adaptivePasses ?? 2}
-                  weakFirst={preferences.adaptiveWeakFirst !== false}
-                  onChange={onPatchPreferences}
-                />
-              ) : null}
-
-              {preferences.pickMode === 'even' ? (
-                <div className="vocab-srs-settings" data-testid="vocab-even-settings">
-                  <span className="group-label">Равномерный режим</span>
-                  <div className="vocab-srs-settings-grid">
-                    <label className="vocab-srs-field">
-                      <span className="vocab-srs-field-label">Повышенный вес</span>
-                      <span className="vocab-srs-control">
-                        <input
-                          type="number"
-                          min={0}
-                          max={20}
-                          data-testid="vocab-even-boost-shows"
-                          value={preferences.evenBoostShows ?? 3}
-                          onChange={(event) => {
-                            const parsed = Number(event.target.value)
-                            if (!Number.isFinite(parsed)) return
-                            onPatchPreferences({
-                              evenBoostShows: Math.min(20, Math.max(0, Math.round(parsed))),
-                            })
-                          }}
-                        />
-                        <span className="vocab-srs-unit">показов</span>
-                      </span>
-                      <span className="control-hint">первые N показов слова в сессии</span>
-                    </label>
-
-                    <label className="vocab-srs-field">
-                      <span className="vocab-srs-field-label">Множитель</span>
-                      <span className="vocab-srs-control">
-                        <input
-                          type="number"
-                          min={1}
-                          max={10}
-                          step={0.5}
-                          data-testid="vocab-even-boost-factor"
-                          value={preferences.evenBoostFactor ?? 2}
-                          onChange={(event) => {
-                            const parsed = Number(event.target.value)
-                            if (!Number.isFinite(parsed)) return
-                            onPatchPreferences({
-                              evenBoostFactor: Math.min(10, Math.max(1, parsed)),
-                            })
-                          }}
-                        />
-                        <span className="vocab-srs-unit">×</span>
-                      </span>
-                      <span className="control-hint">во сколько раз сильнее вес</span>
-                    </label>
-
-                    <label className="vocab-srs-field vocab-srs-field-wide">
-                      <span className="vocab-srs-field-label">Сила выравнивания</span>
-                      <span className="vocab-srs-control">
-                        <input
-                          type="number"
-                          min={1}
-                          max={4}
-                          step={0.5}
-                          data-testid="vocab-even-decay-power"
-                          value={preferences.evenDecayPower ?? 2}
-                          onChange={(event) => {
-                            const parsed = Number(event.target.value)
-                            if (!Number.isFinite(parsed)) return
-                            onPatchPreferences({
-                              evenDecayPower: Math.min(4, Math.max(1, parsed)),
-                            })
-                          }}
-                        />
-                        <span className="vocab-srs-unit">степень</span>
-                      </span>
-                      <span className="control-hint">вес ≈ 1 / (1 + показы)^степень</span>
-                    </label>
-                  </div>
-                </div>
-              ) : null}
-            </>
-          ) : null}
+          </div> : null}
 
           {preferences.drillMode === 'romaji' ? (
             <div className="control-group">
@@ -904,7 +799,7 @@ export function VocabSetup({
             disabled={
               isSrs
                 ? (minePlanPreview?.sessionSize ?? includedCount) <= 0
-                : includedCount <= 0
+                : startCount <= 0
             }
           >
             Начать
@@ -922,12 +817,12 @@ export function VocabSetup({
         ) : null}
       </section>
 
-      <VocabSetupPool
+      {!isAdaptive ? <VocabSetupPool
         cards={poolCards}
         excludedIds={excludedIds}
         onToggleExclude={onToggleExclude}
         onClearExcluded={onClearExcluded}
-      />
+      /> : null}
     </div>
   )
 }

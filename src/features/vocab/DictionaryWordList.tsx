@@ -17,6 +17,7 @@ export interface DictionaryWordListProps {
   inTrainingList?: (word: KanjiWord) => boolean
   onToggleTraining?: (word: KanjiWord) => void
   onRemoveProblem?: (word: KanjiWord) => void
+  renderWordDetails?: (word: KanjiWord) => ReactNode
 }
 
 function focusChar(writing: string): string {
@@ -46,6 +47,7 @@ export function DictionaryWordList({
   inTrainingList,
   onToggleTraining,
   onRemoveProblem,
+  renderWordDetails,
 }: DictionaryWordListProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [narrow, setNarrow] = useState(() =>
@@ -139,6 +141,7 @@ export function DictionaryWordList({
 
         {expanded ? (
           <div className="kanji-word-detail" data-testid={`vocab-word-detail-${word.writing}`}>
+            {renderWordDetails?.(word)}
             <div className="kanji-word-detail-readings">
               {readings.length > 1 ? (
                 readings.map((reading) => (

@@ -463,7 +463,7 @@ export function VocabPractice({
                   </button>
                 </div>
                 <p className="vocab-mobile-swipe-note" aria-label="Свайп влево — следующее слово, вправо — предыдущее">
-                  <span>← дальше</span><span className={!canGoPrev ? 'is-unavailable' : undefined}>назад →</span>
+                  <span>{adaptiveMode ? '← пропустить' : '← дальше'}</span><span className={!canGoPrev ? 'is-unavailable' : undefined}>назад →</span>
                 </p>
                 <VocabMobileActions
                   currentInMyWords={currentInMyWords}
