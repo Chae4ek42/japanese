@@ -87,4 +87,30 @@ export async function openNumbersTrainer(page) {
   await page.getByTestId('nav-numbers').click()
 }
 
+/** Trusted touch events exercise the browser's scroll and click arbitration. */
+export async function swipeTouch(page, locator, { dx = -120, dy = 0 } = {}) {
+  await locator.scrollIntoViewIfNeeded()
+  const box = await locator.boundingBox()
+  if (!box) throw new Error('Swipe target is not visible')
+  const x = box.x + box.width / 2
+  const y = box.y + box.height / 2
+  const viewport = page.viewportSize()
+  const endX = Math.max(12, Math.min(viewport.width - 12, x + dx))
+  const endY = Math.max(12, Math.min(viewport.height - 12, y + dy))
+  const client = await page.context().newCDPSession(page)
+  try {
+    await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y, id: 1 }] })
+    for (let step = 1; step <= 8; step += 1) {
+      await client.send('Input.dispatchTouchEvent', {
+        type: 'touchMove',
+        touchPoints: [{ x: x + (endX - x) * step / 8, y: y + (endY - y) * step / 8, id: 1 }],
+      })
+      await page.waitForTimeout(16)
+    }
+    await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+  } finally {
+    await client.detach()
+  }
+}
+
 export { expect }

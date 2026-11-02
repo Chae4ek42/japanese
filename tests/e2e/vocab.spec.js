@@ -1,5 +1,5 @@
 import { test } from '@playwright/test'
-import { expect, openFreshApp, clickNav } from './helpers.js'
+import { expect, openFreshApp, clickNav, swipeTouch } from './helpers.js'
 
 test('dictionary: catalog, groups and my words', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Dictionary flow covered on desktop.')
@@ -112,11 +112,57 @@ test('vocab trainer mobile: no keyboard input, hint and navigation work', async 
   await expect(page.locator('input:focus, textarea:focus')).toHaveCount(0)
 
   const first = await page.getByTestId('vocab-current-writing').innerText()
-  await page.getByTestId('vocab-skip-next').click()
+  await expect(page.getByTestId('vocab-skip-next')).toHaveCount(0)
+  await expect(page.getByTestId('vocab-skip-prev')).toHaveCount(0)
+  await swipeTouch(page, page.getByTestId('vocab-current-writing'))
   await expect(page.getByTestId('vocab-current-writing')).not.toHaveText(first)
   await expect(page.getByTestId('vocab-answer-input')).toHaveCount(0)
   await expect(page.locator('input:focus, textarea:focus')).toHaveCount(0)
   await expect(page.getByTestId('vocab-hint-button')).toBeEnabled()
+})
+
+test('vocab trainer mobile: swipes work over controls without tapping them', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chrome', 'Real touch navigation is mobile-only.')
+  await openFreshApp(page)
+  await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('vocab-source-group').click()
+  await page.getByTestId('vocab-train-group-weekdays').click()
+  await page.getByTestId('start-vocab').click()
+  const writing = page.getByTestId('vocab-current-writing')
+  const first = await writing.innerText()
+  await expect(page.getByTestId('vocab-mobile-session')).not.toHaveAttribute('open')
+  await expect(page.getByTestId('vocab-edit-card')).toHaveAttribute('aria-label', 'Изменить слово')
+  await expect(page.getByTestId('vocab-edit-card').locator('svg')).toBeVisible()
+
+  await swipeTouch(page, writing)
+  await expect(writing).not.toHaveText(first)
+  await expect(page.getByTestId('kanji-info-card')).toHaveCount(0)
+  const second = await writing.innerText()
+
+  await swipeTouch(page, page.getByTestId('vocab-edit-card'), { dx: 120 })
+  await expect(writing).toHaveText(first)
+  await expect(page.getByTestId('vocab-card-editor')).toHaveCount(0)
+
+  await swipeTouch(page, page.getByTestId('vocab-hint-button'))
+  await expect(writing).toHaveText(second)
+  await expect(page.getByTestId('vocab-hint-panel')).toHaveCount(0)
+  await page.getByTestId('vocab-toggle-learned').tap()
+  await expect(page.getByTestId('vocab-toggle-learned')).toHaveAttribute('aria-pressed', 'true')
+  await page.getByTestId('vocab-toggle-learned').tap()
+  await expect(page.getByTestId('vocab-toggle-learned')).toHaveAttribute('aria-pressed', 'false')
+
+  await swipeTouch(page, writing, { dx: 8, dy: -100 })
+  await expect(writing).toHaveText(second)
+
+  await page.getByTestId('vocab-edit-card').tap()
+  await expect(page.getByTestId('vocab-card-editor')).toBeVisible()
+  await swipeTouch(page, page.getByTestId('vocab-edit-writing'))
+  await expect(writing).toHaveText(second)
+  await page.getByTestId('vocab-edit-cancel').tap()
+
+  await page.getByTestId('vocab-mobile-session').locator('summary').tap()
+  await swipeTouch(page, page.locator('.vocab-session-row-writing').first())
+  await expect(writing).toHaveText(second)
 })
 
 test('vocab trainer: skip navigation preserves history without changing session counters', async ({ page }, testInfo) => {

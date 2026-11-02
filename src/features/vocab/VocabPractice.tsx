@@ -9,7 +9,6 @@ import type {
   KanjiWord,
 } from '../../shared/lib/types'
 import { PracticeShell } from '../../shared/ui/PracticeShell'
-import { HintButton } from '../../shared/ui/HintButton'
 import { hintTapJustHappened, useIsMobileTouch } from '../../shared/lib/media'
 import { HighlightedReading } from '../kanji/HighlightedReading'
 import { KanjiWritingHotspots } from '../kanji/KanjiWritingHotspots'
@@ -20,6 +19,7 @@ import {
   type ReadingDraft,
 } from './customWords'
 import type { VocabMixedPrompt } from './mixed'
+import { VocabMobileActions } from './VocabMobileActions'
 
 export interface VocabPracticeProps {
   activeCard: VocabCard | null
@@ -41,6 +41,8 @@ export interface VocabPracticeProps {
   onInputKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void
   onRevealHint: () => void
   onDontKnow?: () => void
+  onRemember?: () => void
+  adaptiveMode?: boolean
   onChoose: (answer: string) => void
   onSkipPrev: () => void
   onSkipNext: () => void
@@ -85,6 +87,8 @@ export function VocabPractice({
   onInputKeyDown,
   onRevealHint,
   onDontKnow,
+  onRemember,
+  adaptiveMode = false,
   onChoose,
   onSkipPrev,
   onSkipNext,
@@ -119,9 +123,10 @@ export function VocabPractice({
   const isChoiceDrill = drillMode === 'choice' || drillMode === 'mixed'
   const choiceOptions = prompt?.options ?? []
   const correctAnswer = prompt?.correctAnswer ?? ''
+  const showFeedback = !isMobile || (feedback.type !== 'idle' && Boolean(feedback.text))
   const swipeHandlers = {
-    onSwipeLeft: onSkipPrev,
-    onSwipeRight: onSkipNext,
+    onSwipeLeft: isMobile ? onSkipNext : onSkipPrev,
+    onSwipeRight: isMobile ? onSkipPrev : onSkipNext,
     onSwipeDown: isChoiceDrill || drillMode === 'romaji' ? onRevealHint : undefined,
     onSwipeUp:
       drillMode === 'romaji' && inputMode === 'submit' && onSubmitAnswer ? onSubmitAnswer : undefined,
@@ -164,12 +169,21 @@ export function VocabPractice({
 
   return (
     <PracticeShell
-      className="vocab-practice"
+      className={isMobile ? `vocab-practice vocab-practice--mobile${editing ? ' is-editing' : ''}` : 'vocab-practice'}
       onStop={onStop}
+      stopLabel={isMobile ? '← Настройки' : undefined}
       sessionStats={sessionStats}
       feedbackType={feedback.type}
       swipes={swipeHandlers}
-      aside={aside}
+      swipesEnabled={!editing}
+      swipeScope={isMobile ? 'stage' : 'panel'}
+      horizontalSwipesOnly={isMobile}
+      aside={isMobile && aside ? (
+        <details className="vocab-mobile-session" data-testid="vocab-mobile-session">
+          <summary>Слова сессии <span>{sessionWordCount}</span></summary>
+          {aside}
+        </details>
+      ) : aside}
       asideClassName="vocab-practice-aside"
       stageClassName="vocab-practice-layout"
     >
@@ -243,7 +257,7 @@ export function VocabPractice({
             </div>
           ) : (
             <p className="question-note">
-              {isMobile ? 'Вспомните чтение и проверьте себя по подсказке' : 'Введите ромадзи чтения (любой вариант)'}
+              {isMobile ? 'Вспомните чтение' : 'Введите ромадзи чтения (любой вариант)'}
             </p>
           )
         ) : (
@@ -388,20 +402,9 @@ export function VocabPractice({
                     placeholder={round.hintUsed ? activeCard.romaji : 'ромадзи'}
                   />
                 ) : null}
-                <div className="feedback-row">
+                {showFeedback ? <div className="feedback-row">
                   <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
-                </div>
-                {isMobile ? (
-                  <div className="answer-actions">
-                    <HintButton
-                      testId="vocab-hint-button"
-                      disabled={round.hintUsed}
-                      onClick={onRevealHint}
-                    >
-                      Подсказка
-                    </HintButton>
-                  </div>
-                ) : null}
+                </div> : null}
               </>
             ) : (
               <>
@@ -428,110 +431,143 @@ export function VocabPractice({
                     )
                   })}
                 </div>
-                <div className="feedback-row">
+                {showFeedback ? <div className="feedback-row">
                   <p className={`feedback ${feedback.type ? `is-${feedback.type}` : ''}`}>{feedback.text || ' '}</p>
-                </div>
-                {isMobile ? (
-                  <div className="answer-actions">
-                    <HintButton
-                      testId="vocab-hint-button"
-                      disabled={round.hintUsed || Boolean(selectedChoice)}
-                      onClick={onRevealHint}
-                    >
-                      Подсказка
-                    </HintButton>
-                  </div>
-                ) : null}
+                </div> : null}
               </>
             )}
 
-            <div className="vocab-skip-row" role="group" aria-label="Переход без ответа">
-              <button
-                type="button"
-                className="ghost-button"
-                data-testid="vocab-skip-prev"
-                disabled={!canGoPrev}
-                onClick={onSkipPrev}
-              >
-                ← Предыдущее
-              </button>
-              {onDontKnow ? (
-                <button
-                  type="button"
-                  className="ghost-button"
-                  data-testid="vocab-dont-know"
-                  onClick={onDontKnow}
-                >
-                  Не помню
-                </button>
-              ) : null}
-              <button type="button" className="ghost-button" data-testid="vocab-skip-next" onClick={onSkipNext}>
-                Следующее →
-              </button>
-            </div>
+            {isMobile ? (
+              <>
+                <div className="vocab-mobile-answer-actions">
+                  <button
+                    type="button"
+                    className="hint-button"
+                    data-testid="vocab-hint-button"
+                    disabled={round.hintUsed || Boolean(selectedChoice)}
+                    onClick={onRevealHint}
+                  >
+                    {round.hintUsed ? 'Ответ открыт' : 'Подсказка'}
+                  </button>
+                  {onRemember ? (
+                    <button type="button" className="primary-button" data-testid="vocab-remember" onClick={onRemember}>
+                      Помню
+                    </button>
+                  ) : null}
+                  {onDontKnow ? (
+                    <button type="button" className="ghost-button" data-testid="vocab-dont-know" onClick={onDontKnow}>
+                      Не помню
+                    </button>
+                  ) : null}
+                </div>
+                <p className="vocab-mobile-swipe-note" aria-label="Свайп влево — следующее слово, вправо — предыдущее">
+                  <span>← дальше</span><span className={!canGoPrev ? 'is-unavailable' : undefined}>назад →</span>
+                </p>
+                <VocabMobileActions
+                  currentInMyWords={currentInMyWords}
+                  currentLearned={currentLearned}
+                  currentExcluded={currentExcluded}
+                  sessionWordCount={sessionWordCount}
+                  onEdit={onSaveWordEdit ? openEditor : undefined}
+                  onAddToMine={onAddCurrentToMyWords}
+                  onToggleLearned={onToggleLearned}
+                  onExclude={onExcludeFromSession}
+                  onRestore={onRestoreToSession}
+                  onAddSessionToMine={showAddSessionToMyWords ? onAddSessionToMyWords : undefined}
+                />
+              </>
+            ) : (
+              <>
+                <div className="vocab-skip-row" role="group" aria-label="Переход без ответа">
+                  <button
+                    type="button"
+                    className="ghost-button"
+                    data-testid="vocab-skip-prev"
+                    disabled={!canGoPrev}
+                    onClick={onSkipPrev}
+                  >
+                    ← Предыдущее
+                  </button>
+                  {onDontKnow ? (
+                    <button
+                      type="button"
+                      className="ghost-button"
+                      data-testid="vocab-dont-know"
+                      onClick={onDontKnow}
+                    >
+                      Не помню
+                    </button>
+                  ) : null}
+                  <button type="button" className="ghost-button" data-testid="vocab-skip-next" onClick={onSkipNext}
+                    title={adaptiveMode ? 'Пропустить без ответа — слово считается невспомненным' : undefined}>
+                    Следующее →
+                  </button>
+                </div>
 
-            <div className="vocab-mine-row" role="group" aria-label="Карточка и набор">
-              {onSaveWordEdit ? (
-                <button
-                  type="button"
-                  className="ghost-button"
-                  data-testid="vocab-edit-card"
-                  onClick={openEditor}
-                >
-                  Изменить слово
-                </button>
-              ) : null}
-              {onAddCurrentToMyWords ? (
-                <button
-                  type="button"
-                  className="ghost-button"
-                  data-testid="vocab-add-current-to-mine"
-                  disabled={currentInMyWords}
-                  onClick={onAddCurrentToMyWords}
-                >
-                  {currentInMyWords ? 'Уже в моих словах' : 'Это слово в мои'}
-                </button>
-              ) : null}
-              {onToggleLearned ? (
-                <button
-                  type="button"
-                  className={currentLearned ? 'ghost-button is-learned-on' : 'ghost-button'}
-                  data-testid="vocab-toggle-learned"
-                  onClick={onToggleLearned}
-                >
-                  {currentLearned ? 'Выучено ✓' : 'Выучено'}
-                </button>
-              ) : null}
-              {currentExcluded && onRestoreToSession ? (
-                <button
-                  type="button"
-                  className="ghost-button is-excluded-on"
-                  data-testid="vocab-restore-session"
-                  onClick={onRestoreToSession}
-                >
-                  Вернуть в тренировку
-                </button>
-              ) : onExcludeFromSession ? (
-                <button
-                  type="button"
-                  className="ghost-button"
-                  data-testid="vocab-exclude-session"
-                  onClick={onExcludeFromSession}
-                >
-                  Исключить
-                </button>
-              ) : null}
-              {showAddSessionToMyWords && onAddSessionToMyWords ? (
-                <button
-                  type="button"
-                  className="ghost-button"
-                  data-testid="vocab-add-session-to-mine"
-                  onClick={onAddSessionToMyWords}
-                >
-                  Набор в мои слова ({sessionWordCount})
-                </button>
-              ) : null}
-            </div>
+                <div className="vocab-mine-row" role="group" aria-label="Карточка и набор">
+                  {onSaveWordEdit ? (
+                    <button
+                      type="button"
+                      className="ghost-button"
+                      data-testid="vocab-edit-card"
+                      onClick={openEditor}
+                    >
+                      Изменить слово
+                    </button>
+                  ) : null}
+                  {onAddCurrentToMyWords ? (
+                    <button
+                      type="button"
+                      className="ghost-button"
+                      data-testid="vocab-add-current-to-mine"
+                      disabled={currentInMyWords}
+                      onClick={onAddCurrentToMyWords}
+                    >
+                      {currentInMyWords ? 'Уже в моих словах' : 'Это слово в мои'}
+                    </button>
+                  ) : null}
+                  {onToggleLearned ? (
+                    <button
+                      type="button"
+                      className={currentLearned ? 'ghost-button is-learned-on' : 'ghost-button'}
+                      data-testid="vocab-toggle-learned"
+                      onClick={onToggleLearned}
+                    >
+                      {currentLearned ? 'Выучено ✓' : 'Выучено'}
+                    </button>
+                  ) : null}
+                  {currentExcluded && onRestoreToSession ? (
+                    <button
+                      type="button"
+                      className="ghost-button is-excluded-on"
+                      data-testid="vocab-restore-session"
+                      onClick={onRestoreToSession}
+                    >
+                      Вернуть в тренировку
+                    </button>
+                  ) : onExcludeFromSession ? (
+                    <button
+                      type="button"
+                      className="ghost-button"
+                      data-testid="vocab-exclude-session"
+                      onClick={onExcludeFromSession}
+                    >
+                      Исключить
+                    </button>
+                  ) : null}
+                  {showAddSessionToMyWords && onAddSessionToMyWords ? (
+                    <button
+                      type="button"
+                      className="ghost-button"
+                      data-testid="vocab-add-session-to-mine"
+                      onClick={onAddSessionToMyWords}
+                    >
+                      Набор в мои слова ({sessionWordCount})
+                    </button>
+                  ) : null}
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

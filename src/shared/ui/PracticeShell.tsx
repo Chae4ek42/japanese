@@ -19,6 +19,8 @@ export interface PracticeShellProps {
   /** Mobile swipe shortcuts (←→ Space Enter). Ignored on desktop. */
   swipes?: SwipeGestureHandlers
   swipesEnabled?: boolean
+  swipeScope?: 'panel' | 'stage'
+  horizontalSwipesOnly?: boolean
 }
 
 export function PracticeShell({
@@ -36,9 +38,17 @@ export function PracticeShell({
   children,
   swipes,
   swipesEnabled = true,
+  swipeScope = 'panel',
+  horizontalSwipesOnly = false,
 }: PracticeShellProps) {
   const panelRef = useRef<HTMLElement>(null)
-  const swipesActive = useSwipeGestures(panelRef, swipes ?? {}, Boolean(swipes) && swipesEnabled)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const swipesActive = useSwipeGestures(
+    swipeScope === 'stage' ? stageRef : panelRef,
+    swipes ?? {},
+    Boolean(swipes) && swipesEnabled,
+    { horizontalOnly: horizontalSwipesOnly },
+  )
 
   return (
     <section
@@ -54,7 +64,7 @@ export function PracticeShell({
       </div>
 
       <div className={`practice-layout ${aside ? 'has-aside' : ''} ${stageClassName}`.trim()}>
-        <div className={`practice-stage ${feedbackType ? `is-${feedbackType}` : ''}`.trim()}>
+        <div ref={stageRef} className={`practice-stage ${feedbackType ? `is-${feedbackType}` : ''}`.trim()}>
           {children}
         </div>
         {aside ? <aside className={`practice-aside ${asideClassName}`.trim()}>{aside}</aside> : null}

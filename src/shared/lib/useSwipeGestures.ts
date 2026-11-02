@@ -49,6 +49,7 @@ export function useSwipeGestures(
   targetRef: RefObject<HTMLElement | null>,
   handlers: SwipeGestureHandlers,
   enabled = true,
+  { horizontalOnly = false }: { horizontalOnly?: boolean } = {},
 ): boolean {
   const isMobile = useIsMobileTouch()
   const handlersRef = useRef(handlers)
@@ -74,6 +75,7 @@ export function useSwipeGestures(
     }
 
     const onTouchStart = (event: TouchEvent) => {
+      if (horizontalOnly) blockClicksUntil = 0
       if (event.touches.length !== 1) {
         clear()
         return
@@ -101,6 +103,11 @@ export function useSwipeGestures(
       const absY = Math.abs(dy)
       if (Math.max(absX, absY) < SWIPE_LOCK_PX) return
       sawMove = true
+      // Once a vertical scroll has started, it must not turn into card navigation.
+      if (horizontalOnly && !claimed && absY > absX) {
+        clear()
+        return
+      }
       // Claim horizontal drags so the browser does not turn them into a scroll.
       if (absX < absY) return
       if (event.cancelable) event.preventDefault()
@@ -125,14 +132,16 @@ export function useSwipeGestures(
       )
       if (!direction) return
       const pageScrolled = Math.abs(window.scrollY - startedScrollY) > 8
+      if (horizontalOnly && (pageScrolled || direction === 'up' || direction === 'down')) return
       if ((direction === 'left' || direction === 'right') && moved && !tookHorizontal) return
       if ((direction === 'up' || direction === 'down') && pageScrolled) return
 
       const current = handlersRef.current
-      if (direction === 'left') current.onSwipeLeft?.()
-      else if (direction === 'right') current.onSwipeRight?.()
-      else if (direction === 'up') current.onSwipeUp?.()
-      else current.onSwipeDown?.()
+      const handler = direction === 'left' ? current.onSwipeLeft
+        : direction === 'right' ? current.onSwipeRight
+        : direction === 'up' ? current.onSwipeUp : current.onSwipeDown
+      if (horizontalOnly && !handler) return
+      handler?.()
 
       blockClicksUntil = Date.now() + 500
       if (event.cancelable) event.preventDefault()
@@ -145,20 +154,20 @@ export function useSwipeGestures(
       event.stopPropagation()
     }
 
-    node.addEventListener('touchstart', onTouchStart, { passive: true })
-    node.addEventListener('touchmove', onTouchMove, { passive: false })
-    node.addEventListener('touchend', onTouchEnd, { passive: false })
-    node.addEventListener('touchcancel', clear, { passive: true })
+    node.addEventListener('touchstart', onTouchStart, { passive: true, capture: horizontalOnly })
+    node.addEventListener('touchmove', onTouchMove, { passive: false, capture: horizontalOnly })
+    node.addEventListener('touchend', onTouchEnd, { passive: false, capture: horizontalOnly })
+    node.addEventListener('touchcancel', clear, { passive: true, capture: horizontalOnly })
     node.addEventListener('click', onClickCapture, true)
 
     return () => {
-      node.removeEventListener('touchstart', onTouchStart)
-      node.removeEventListener('touchmove', onTouchMove)
-      node.removeEventListener('touchend', onTouchEnd)
-      node.removeEventListener('touchcancel', clear)
+      node.removeEventListener('touchstart', onTouchStart, horizontalOnly)
+      node.removeEventListener('touchmove', onTouchMove, horizontalOnly)
+      node.removeEventListener('touchend', onTouchEnd, horizontalOnly)
+      node.removeEventListener('touchcancel', clear, horizontalOnly)
       node.removeEventListener('click', onClickCapture, true)
     }
-  }, [active, targetRef])
+  }, [active, targetRef, horizontalOnly])
 
   return active
 }
