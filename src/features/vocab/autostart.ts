@@ -18,3 +18,7 @@ export function consumeAutostartTrain(): boolean {
     return false
   }
 }
+
+export function hasAutostartTrain(): boolean {
+  try { return sessionStorage.getItem(AUTOSTART_TRAIN_KEY) === '1' } catch { return false }
+}

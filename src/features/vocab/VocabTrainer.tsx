@@ -38,7 +38,7 @@ import {
   resolveTrainingListWords,
   wordToVocabCard,
 } from './pool'
-import { consumeAutostartTrain } from './autostart'
+import { consumeAutostartTrain, hasAutostartTrain } from './autostart'
 import { consumeTargetedPractice, readTargetedPractice } from '../../shared/lib/targetedPractice'
 import { pickNextVocabCardId } from './vocabPick'
 import {
@@ -66,12 +66,7 @@ import {
   resolveCardMemory,
   startReviewPracticeSession,
 } from './reviewSession'
-import {
-  applyReview,
-  formatReviewInterval,
-  intervalHours,
-  type PriorDifficultyHints,
-} from '../../shared/lib/review/memory'
+import type { PriorDifficultyHints } from '../../shared/lib/review/memory'
 import type { StatsOutcome, UpdateStatsContext } from '../../shared/lib/types'
 import { VocabPractice } from './VocabPractice'
 import { VocabSessionSidebar } from './VocabSessionSidebar'
@@ -299,23 +294,6 @@ export function VocabTrainer({
     [sourcePool, setupExcludedIds, preferences, targetedWordIds],
   )
 
-  const minePlanPreview = useMemo(() => {
-    if (preferences.sessionMode !== 'srs' || preferences.reviewV2 === false) return null
-    const planned = startReviewPracticeSession({
-      scope: startPool,
-      preferences,
-      memory,
-      stats,
-      newUsedToday: reviewDay.newIntroduced,
-      myWordAddedAt,
-      spacedRepetition: true,
-    })
-    return {
-      dueCount: planned.dueCount,
-      newCount: planned.newCount,
-      sessionSize: planned.session.poolIds.length,
-    }
-  }, [preferences, startPool, memory, stats, reviewDay.newIntroduced, myWordAddedAt])
 
   useEffect(() => {
     setSetupExcludedIds((prev) => {
@@ -349,13 +327,16 @@ export function VocabTrainer({
   }, [currentCardId, activePool, sourcePool, customWords])
 
   const practicePool = useMemo(() => {
+    if (view === 'practice' && session.poolIds.length && (preferences.source === 'problem' || session.adaptive && preferences.reviewScope === 'problem')) {
+      return resolveTrainingListWords(session.poolIds, customWords, hiddenWordIds).map(wordToVocabCard).filter((card): card is VocabCard => card !== null)
+    }
     if (view !== 'practice' || !session.poolIds.length) {
       return activePool
     }
     const allow = new Set(session.poolIds)
     const practice = sourcePool.filter((card) => allow.has(card.id))
     return practice.length ? practice : activePool
-  }, [activePool, sourcePool, session.poolIds, view])
+  }, [activePool, sourcePool, session.poolIds, session.adaptive, view, preferences.source, preferences.reviewScope, customWords, hiddenWordIds])
 
   useEffect(() => {
     preferencesRef.current = preferences
@@ -432,6 +413,13 @@ export function VocabTrainer({
     setSelectedChoice(null)
     setFeedback({ type: 'idle', text: '' })
 
+    if (restored.pendingAdvance) {
+      viewRef.current = 'practice'
+      currentCardIdRef.current = cardId
+      advanceToNextCard(restoredSession)
+      return
+    }
+
     const mode = preferencesRef.current.drillMode
     const card =
       activePool.find((item) => item.id === cardId) ??
@@ -461,6 +449,7 @@ export function VocabTrainer({
         poolAddedAt: sessionPoolAddedAt,
         navHistory: navHistoryRef.current,
         navIndex: navIndexRef.current,
+        pendingAdvance: pendingAdvanceRef.current !== null,
       }),
     )
   }, [
@@ -485,7 +474,7 @@ export function VocabTrainer({
   const startPracticeRef = useRef<() => void>(() => {})
   const autostartPendingRef = useRef<boolean | null>(null)
   if (autostartPendingRef.current === null) {
-    autostartPendingRef.current = consumeAutostartTrain()
+    autostartPendingRef.current = hasAutostartTrain()
   }
 
   useEffect(() => {
@@ -504,6 +493,7 @@ export function VocabTrainer({
     }
     if (!startPool.length) return
     autostartPendingRef.current = false
+    consumeAutostartTrain()
     startPracticeRef.current()
   }, [view, startPool])
 
@@ -595,6 +585,9 @@ export function VocabTrainer({
     if (targetedWordIds) return resolveTrainingListWords(targetedWordIds, customWordsRef.current, hiddenWordIdsRef.current)
       .map(wordToVocabCard).filter((card): card is VocabCard => card !== null)
     const prefs = preferencesRef.current
+    if (viewRef.current === 'practice' && sessionRef.current.poolIds.length && (prefs.source === 'problem' || sessionRef.current.adaptive && prefs.reviewScope === 'problem')) {
+      return resolveTrainingListWords(sessionRef.current.poolIds, customWordsRef.current, hiddenWordIdsRef.current).map(wordToVocabCard).filter((card): card is VocabCard => card !== null)
+    }
     const poolPrefs = sessionRef.current.adaptive ? { ...prefs, sessionMode: 'adaptive' as const } : prefs
     return buildVocabPool(poolPrefs, myWordsRef.current, customWordsRef.current, {
       applyNewWordLimit,
@@ -815,7 +808,7 @@ export function VocabTrainer({
     setCanGoPrev(false)
 
     if (startPreferences.sessionMode === 'adaptive' || startPreferences.reviewV2 !== false) {
-      const spacedRepetition = startPreferences.sessionMode === 'srs'
+      const spacedRepetition = false
       const planned = startReviewPracticeSession({
         scope,
         preferences: startPreferences,
@@ -962,7 +955,6 @@ export function VocabTrainer({
     }
 
     const globalNext = applyOptimisticStat(statsRef.current[card.id], statsOutcome, now)
-    const prevReview = sessionRef.current.review
     let nextSession = nextSessionAfterVocabGrade({
       session: sessionRef.current,
       cardId: card.id,
@@ -995,19 +987,7 @@ export function VocabTrainer({
     }
 
     if (!advance) return
-    const justGraduated =
-      Boolean(nextSession.review?.graduatedIds.includes(card.id)) &&
-      !prevReview?.graduatedIds.includes(card.id)
-    if (justGraduated && prefs.sessionMode === 'srs' && grade >= 2) {
-      const nextMem = applyReview(priorMem, grade, now, cardHintsFromVocab(card))
-      const hours = intervalHours(nextMem.s, prefs.targetRetention ?? 0.9)
-      setFeedback({
-        type: 'success',
-        text: `Следующий повтор: ${formatReviewInterval(hours)}`,
-      })
-    } else if (grade >= 3) {
-      setFeedback({ type: 'success', text: '' })
-    }
+    if (grade >= 3) setFeedback({ type: 'success', text: '' })
     queueAdvance(() => advanceToNextCard(nextSession), delay)
   }
 
@@ -1067,7 +1047,7 @@ export function VocabTrainer({
       card: activeCard,
       grade: 1,
       wrong: true,
-      delay: preferences.drillMode === 'romaji' ? 500 : 900,
+      delay: 0,
     })
   }
 
@@ -1516,8 +1496,7 @@ export function VocabTrainer({
   const showWordJlptFilter =
     preferences.source === 'group' ||
     preferences.source === 'mine' ||
-    preferences.source === 'kanji' ||
-    preferences.sessionMode === 'srs'
+    preferences.source === 'kanji'
 
   const practiceSidebar =
     view === 'practice' ? (
@@ -1559,9 +1538,6 @@ export function VocabTrainer({
         trainingSets={trainingSets}
         problemWordCount={problemWordIds.length}
         excludedIds={setupExcludedIds}
-        memory={memory}
-        reviewDayNewIntroduced={reviewDay.newIntroduced}
-        minePlanPreview={minePlanPreview}
         onPatchPreferences={onPatchPreferences}
         onToggleExclude={(cardId) => {
           setSetupExcludedIds((prev) => {

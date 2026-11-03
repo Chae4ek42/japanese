@@ -321,6 +321,15 @@ export function buildVocabPool(
     cards.push(card)
   }
 
+  if (preferences.sessionMode === 'adaptive' && preferences.reviewScope === 'problem') {
+    const ranks = new Map(problemWordIds.map((id, index) => [id, index]))
+    const ranked = cards.flatMap((card) => {
+      const positions = [card.id, ...(card.variantIds ?? [])].flatMap((id) => ranks.has(id) ? [ranks.get(id)!] : [])
+      return positions.length ? [{ card, rank: Math.min(...positions) }] : []
+    }).sort((a, b) => a.rank - b.rank).map((entry) => entry.card)
+    return preferences.reviewProblemLimit > 0 ? ranked.slice(0, preferences.reviewProblemLimit) : ranked
+  }
+
   if (applyNewWordLimit) {
     return applyVocabNewWordLimit(cards, preferences)
   }

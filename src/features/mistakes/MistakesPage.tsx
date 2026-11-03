@@ -1,77 +1,45 @@
 import { useMemo, useState } from 'react'
-import { useAppState } from '../../shared/state/AppStateContext'
+import { useAppState, useVocabState } from '../../shared/state/AppStateContext'
 import type { AppPage } from '../../shared/lib/types'
-import { requestTargetedPractice, type PracticeSection } from '../../shared/lib/targetedPractice'
-import { collectMistakes, filterMistakes, JOURNAL_SECTIONS, type JournalPeriod, type MistakeEntry } from './journal'
-import { requestTheoryLesson } from '../theory/theoryNavigation'
+import { collectMistakes } from './journal'
 import './styles.css'
-
-function dateLabel(timestamp: number): string {
-  return timestamp ? new Date(timestamp).toLocaleString('ru-RU', { dateStyle: 'medium', timeStyle: 'short' }) : 'Дата не сохранена'
-}
 
 export function MistakesPage({ onNavigate }: { onNavigate: (page: AppPage) => void }) {
   const state = useAppState()
-  const [section, setSection] = useState<PracticeSection | 'all'>('all')
-  const [period, setPeriod] = useState<JournalPeriod>('30')
+  const vocab = useVocabState()
+  const [query, setQuery] = useState('')
   const entries = useMemo(() => state ? collectMistakes(state) : [], [state])
-  const visible = filterMistakes(entries, section, period, Date.now())
-
-  function practice(entry: MistakeEntry) {
-    requestTargetedPractice({ section: entry.section, cardIds: [entry.cardId, ...(entry.confusion ? [entry.confusion.cardId] : [])] })
-    onNavigate(entry.section === 'vocab' ? 'train' : entry.section)
-  }
-
-  function reference(entry: MistakeEntry) {
-    if (entry.section === 'particles' || entry.section === 'verbs') requestTheoryLesson(entry.section)
-    onNavigate(entry.section === 'vocab' ? 'vocab' : 'theory')
-  }
+  const needle = query.trim().toLocaleLowerCase('ru-RU')
+  const visible = entries.filter((entry) => `${entry.title} ${entry.kana} ${entry.meaning}`.toLocaleLowerCase('ru-RU').includes(needle))
+  const inSet = new Set(vocab?.trainingWordIds ?? [])
+  const setName = vocab?.activeTrainingSet?.name ?? 'Основной'
+  const missing = visible.filter((entry) => !inSet.has(entry.id)).map((entry) => entry.id)
 
   return <section className="mistakes-page" data-testid="mistakes-page">
     <header className="mistakes-heading">
-      <span className="mistakes-eyebrow">Повторение с опорой на практику</span>
-      <h1>Журнал ошибок</h1>
-      <p>Карточки, в которых возникали ошибки или требовалась подсказка. Выберите одну и закрепите её в короткой тренировке.</p>
+      <h1>Трудности <span>{entries.length}</span></h1>
+      <p>Слова, которые пока не закрепились. Последние ответы влияют сильнее старых; для оценки нужно хотя бы пять ответов.</p>
     </header>
-    <div className="mistakes-summary" aria-label="Сводка журнала">
-      <div><strong>{entries.length}</strong><span>карточек с трудностями</span></div>
-      <div><strong>{entries.reduce((sum, entry) => sum + entry.recentErrors, 0)}</strong><span>ошибок в последних ответах</span></div>
-      <div><strong>{new Set(entries.map((entry) => entry.section)).size}</strong><span>разделов для повторения</span></div>
+    <div className="mistakes-toolbar">
+      <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Найти слово" aria-label="Найти трудное слово" data-testid="mistakes-search" />
+      <button type="button" className="text-button" disabled={!missing.length} onClick={() => vocab?.addTrainingWords(missing)}>Добавить все в набор</button>
     </div>
-    <div className="mistakes-filters">
-      <label>Раздел<select value={section} onChange={(event) => setSection(event.target.value as PracticeSection | 'all')} data-testid="mistakes-section-filter">
-        <option value="all">Все разделы</option>
-        {Object.entries(JOURNAL_SECTIONS).map(([id, label]) => <option key={id} value={id}>{label}</option>)}
-      </select></label>
-      <label>Последняя трудность<select value={period} onChange={(event) => setPeriod(event.target.value as JournalPeriod)} data-testid="mistakes-period-filter">
-        <option value="7">За 7 дней</option><option value="30">За 30 дней</option><option value="all">За всё время</option>
-      </select></label>
-      <span className="mistakes-count" aria-live="polite">Карточек: {visible.length}</span>
-    </div>
-    <p className="mistakes-data-note">Это сводка по карточкам, а не история отдельных ответов. Счётчики накоплены за всё время; фильтр учитывает дату последней ошибки или подсказки. Последние ответы — до 15 на карточку. Подсказка показана отдельно от ошибки.</p>
+    <p className="mistakes-set-note">Активный набор: <strong>{setName}</strong>. Добавление в набор доступно независимо от «Моих слов».</p>
     {!visible.length ? <div className="mistakes-empty" data-testid="mistakes-empty">
-      <h2>{entries.length ? 'В выбранном периоде ничего нет' : 'Здесь появятся трудные карточки'}</h2>
-      <p>{entries.length ? 'Выберите другой раздел или период «За всё время». Старые карточки без даты доступны там же.' : 'После тренировки журнал соберёт сохранённые ошибки и подсказки из каны, слов, чисел, частиц и глаголов.'}</p>
-      {!entries.length && <button type="button" className="primary-button" onClick={() => onNavigate('train')}>Перейти к словам</button>}
-    </div> : <div className="mistakes-list">
-      {visible.map((entry) => <article className="mistake-card" key={entry.id} data-testid="mistake-card">
-        <div className="mistake-card-top"><span className="mistake-section">{JOURNAL_SECTIONS[entry.section]}</span><time>{dateLabel(entry.lastDifficultyAt)}</time></div>
-        <h2 lang="ja">{entry.title}</h2>
-        <p className="mistake-answer"><span>Правильный ответ</span>{entry.answer}</p>
-        <p className="mistake-detail">{entry.detail}</p>
-        {entry.confusion && <p className="mistake-confusion">Путаница с {entry.confusion.label}: {entry.confusion.count} раз за всё время. Дата каждой путаницы не сохранена.</p>}
-        <div className="mistake-stats">
-          <span>Ошибки <strong>{entry.stats.errors}</strong></span><span>Подсказки <strong>{entry.stats.hints}</strong></span>
-          <span>Верные ответы <strong>{entry.stats.clears}</strong></span><span>Показы <strong>{entry.stats.exposures}</strong></span>
-          <span>Попытки ответа <strong>{entry.stats.wordPractice?.attempts ?? entry.stats.clears + entry.stats.errors}</strong></span>
-          {entry.stats.recentAnswers?.length ? <span>Последние ответы <strong>{entry.recentErrors} ошибок / {entry.stats.recentAnswers.length}</strong></span> : null}
+      <h2>{entries.length ? 'Ничего не найдено' : 'Устойчивых трудностей пока нет'}</h2>
+      <p>{entries.length ? 'Попробуйте другое написание или перевод.' : 'Продолжайте отвечать на слова. Единичные ошибки и слова без достаточного числа ответов здесь не появляются.'}</p>
+      {!entries.length && <button type="button" className="text-button" onClick={() => onNavigate('mine')}>Открыть мои слова</button>}
+    </div> : <div className="mistakes-list" role="list">
+      {visible.map((entry) => <article className="mistake-row" key={entry.id} data-testid="mistake-card" role="listitem">
+        <div className="mistake-word"><strong lang="ja">{entry.title}</strong><span lang="ja">{entry.kana}</span><p>{entry.meaning}</p></div>
+        <div className="mistake-evidence" title="Ошибки среди последних сохранённых ответов. Недавние ответы имеют больший вес при отборе.">
+          <span className="mistake-rate">{Math.round(entry.recentErrorRate * 100)}%</span>
+          <span>взвешенных ошибок</span>
+          <small>{entry.recentErrors} из {entry.recentCount} последних ответов</small>
         </div>
-        <details className="mistake-dates"><summary>Даты и прогресс</summary><p>Последняя ошибка: {dateLabel(entry.stats.lastErrorAt)}<br/>Последняя подсказка: {dateLabel(entry.stats.lastHintAt)}<br/>Текущая серия: {entry.stats.streak}. Лучшая: {entry.stats.bestStreak}.</p></details>
-        <div className="mistake-actions">
-          <button type="button" className="primary-button" onClick={() => practice(entry)}>Потренировать{entry.confusion ? ' пару' : ''}</button>
-          <button type="button" className="text-button" onClick={() => reference(entry)}>{entry.section === 'vocab' ? 'Открыть словарь' : 'Теория и справка'}</button>
-        </div>
+        <button type="button" className={inSet.has(entry.id) ? 'mistake-added' : 'text-button'} disabled={inSet.has(entry.id)} onClick={() => vocab?.addTrainingWords([entry.id])}>{inSet.has(entry.id) ? 'В наборе' : '+ В набор'}</button>
       </article>)}
     </div>}
+    <p className="mistakes-data-note">Оценка использует до 15 последних ответов: вес уменьшается вдвое через каждые три ответа. Старые ошибки уходят из оценки после уверенной серии. Это сводка по словам, а не история отдельных ответов.</p>
   </section>
 }

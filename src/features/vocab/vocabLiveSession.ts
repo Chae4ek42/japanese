@@ -31,6 +31,7 @@ export function restoreVocabLiveFields(liveSession: CardTrainerLiveSession | nul
   poolAddedAt: Record<string, number> | undefined
   navHistory: string[]
   navIndex: number
+  pendingAdvance?: boolean
 } | null {
   if (!isRestorableLiveSession(liveSession)) return null
   return {
@@ -41,6 +42,7 @@ export function restoreVocabLiveFields(liveSession: CardTrainerLiveSession | nul
     poolAddedAt: liveSession.poolAddedAt,
     navHistory: liveSession.navHistory ?? [],
     navIndex: liveSession.navIndex ?? -1,
+    ...(liveSession.pendingAdvance ? { pendingAdvance: true } : {}),
   }
 }
 
@@ -53,6 +55,7 @@ export function buildVocabLiveSnapshot(input: {
   poolAddedAt: Record<string, number>
   navHistory: string[]
   navIndex: number
+  pendingAdvance?: boolean
 }): CardTrainerLiveSession {
   return {
     session: input.session,
@@ -63,5 +66,6 @@ export function buildVocabLiveSnapshot(input: {
     poolAddedAt: input.poolAddedAt,
     navHistory: input.navHistory,
     navIndex: input.navIndex,
+    ...(input.pendingAdvance ? { pendingAdvance: true } : {}),
   }
 }

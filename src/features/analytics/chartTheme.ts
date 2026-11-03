@@ -1,13 +1,13 @@
 import type { AnalyticsSection } from '../../shared/lib/types'
 
 export const CHART_COLORS = {
-  primary: '#2563eb',
-  secondary: '#0f766e',
-  accent: '#c2410c',
+  primary: '#527398',
+  secondary: '#557b67',
+  accent: '#986464',
   muted: '#94a3b8',
-  weak: '#dc2626',
-  learning: '#d97706',
-  strong: '#16a34a',
+  weak: '#a66d6d',
+  learning: '#7c8fa5',
+  strong: '#638873',
   grid: 'rgba(17, 17, 17, 0.08)',
   text: '#334155',
 }
@@ -28,16 +28,16 @@ export const SECTION_LABELS: Record<AnalyticsSection, string> = {
 
 export const SECTION_COLORS: Record<AnalyticsSection, string> = {
   home: '#94a3b8',
-  kana: '#2563eb',
-  kanji: '#7c3aed',
-  numbers: '#0f766e',
-  particles: '#b45309',
-  verbs: '#a21caf',
-  reader: '#0369a1',
-  train: '#c2410c',
-  vocab: '#0891b2',
-  mine: '#db2777',
-  theory: '#0d9488',
+  kana: '#527398',
+  kanji: '#798b9e',
+  numbers: '#557b67',
+  particles: '#8c949b',
+  verbs: '#717b85',
+  reader: '#647e96',
+  train: '#986464',
+  vocab: '#6c8b78',
+  mine: '#a58080',
+  theory: '#8a9c91',
 }
 
 export function formatDurationMs(ms: number): string {

@@ -1,0 +1,28 @@
+.vocab-sessions { display: grid; gap: 18px; }
+.vocab-sessions-intro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.vocab-sessions-intro h3 { margin: 0 0 6px; font-size: 1.15rem; }
+.vocab-sessions-intro p, .vocab-sessions-empty, .vocab-session-progress { margin: 0; color: var(--muted); font-size: .88rem; }
+.vocab-sessions .vocab-session-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+.vocab-session-card { min-width: 0; display: grid; align-content: start; gap: 14px; padding: 20px; border: 1px solid var(--border); border-radius: 16px; background: var(--panel, #fff); box-shadow: 0 5px 18px rgb(60 96 160 / 5%); }
+.vocab-session-card h4 { margin: 0; font-size: 1.08rem; overflow-wrap: anywhere; }
+.vocab-session-details { display: flex; flex-wrap: wrap; gap: 7px 12px; align-items: center; font-size: .8rem; color: var(--muted); }
+.vocab-session-mode { color: #294e76; padding: 4px 8px; border-radius: 6px; background: #eff5fb; }
+.vocab-session-mode.review { color: #276048; background: #eef7f1; }
+.vocab-session-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.vocab-session-actions button, .vocab-session-rename button, .vocab-session-back { min-height: 36px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: inherit; font: inherit; font-size: .8rem; cursor: pointer; }
+.vocab-session-actions .vocab-session-open, .vocab-session-create { border: 1px solid #17191c; border-radius: 9px; background: #17191c; color: #fff; padding: 10px 16px; font: inherit; font-size: .86rem; cursor: pointer; }
+.vocab-session-actions .vocab-session-delete { border-color: transparent; color: #925451; }
+.vocab-session-delete:hover { background: #fff0ef; }
+.vocab-session-rename { display: flex; flex-wrap: wrap; gap: 6px; }
+.vocab-session-rename input { flex: 1 1 100%; min-width: 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: inherit; font: inherit; }
+.vocab-session-current { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; min-width: 0; }
+.vocab-session-current strong { overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .vocab-sessions { gap: 14px; }
+  .vocab-sessions-intro { align-items: stretch; gap: 12px; }
+  .vocab-sessions-intro p { max-width: 32ch; }
+  .vocab-session-create { width: 100%; }
+  .vocab-session-card { padding: 15px; gap: 12px; }
+  .vocab-session-actions button { min-height: 40px; }
+  .vocab-session-actions .vocab-session-open { flex: 1; }
+}

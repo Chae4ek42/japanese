@@ -48,7 +48,6 @@ export function MineWordsPage({ onNavigate }: { onNavigate?: (page: AppPage) => 
   const onRemoveTrainingWords = vocab?.removeTrainingWords ?? (() => {})
   const onToggleTrainingWord = vocab?.toggleTrainingWord ?? (() => {})
   const onSetActiveTrainingSet = vocab?.setActiveTrainingSet ?? (() => {})
-  const onRemoveProblemWords = vocab?.removeProblemWords ?? (() => {})
   const onToggleKanjiLearned = kanji?.toggleLearned
 
   const myWordSet = useMemo(() => new Set(myWords), [myWords])
@@ -134,12 +133,6 @@ export function MineWordsPage({ onNavigate }: { onNavigate?: (page: AppPage) => 
       return
     }
     onAddTrainingWords(ids)
-  }
-
-  function handleRemoveProblem(word: KanjiWord) {
-    const ids = wordVariantIds(word)
-    if (!ids.length) return
-    onRemoveProblemWords(ids)
   }
 
   async function handleCopyWords() {
@@ -316,7 +309,6 @@ export function MineWordsPage({ onNavigate }: { onNavigate?: (page: AppPage) => 
         onToggleLearned={handleToggleLearned}
         inTrainingList={(word) => isWordSaved(word, trainingWordSet)}
         onToggleTraining={handleToggleTraining}
-        onRemoveProblem={showProblemList ? handleRemoveProblem : undefined}
       />
 
       {hasMore ? (

@@ -134,6 +134,9 @@ function AppRoutes() {
         importInputRef={fileInputRef}
         onImportFileChange={onImportFileChange}
       />
+      {page !== 'home' && appState.studyPlan?.steps.some((step) => step.status === 'pending') ? (
+        <div className="study-return"><button type="button" className="text-button" data-testid="return-study-plan" onClick={() => goPage('home')}>← К занятию</button></div>
+      ) : null}
       <AppPageView page={page} onNavigate={goPage} />
     </div>
   )

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import type {
-  MemoryState,
   VocabCard,
   VocabLevelFilter,
   VocabPreferences,
@@ -22,13 +21,11 @@ import {
   getVocabGroup,
   getVocabGroupsByKind,
 } from './groups'
-import { VocabCalibration } from './VocabCalibration'
 import { VocabSetupPool } from './VocabSetupPool'
 
 const sessionModeOptions: Array<{ id: VocabSessionMode; label: string; hint: string }> = [
   { id: 'drill', label: 'Равномерная', hint: 'Свободная тренировка выбранного набора' },
-  { id: 'adaptive', label: 'Адаптивная', hint: 'Все мои слова: от слабых к выученным' },
-  { id: 'srs', label: 'Интервальная', hint: 'Повторения по «Моим словам»' },
+  { id: 'adaptive', label: 'Повторение', hint: 'Небольшое окно слов с постепенным обновлением' },
 ]
 
 const drillOptions = [
@@ -70,10 +67,6 @@ export interface VocabSetupProps {
   excludedIds: Set<string>
   errorText?: string
   infoText?: string
-  memory?: Record<string, MemoryState>
-  reviewDayNewIntroduced?: number
-  /** Preview for SRS: due / new / session size. */
-  minePlanPreview?: { dueCount: number; newCount: number; sessionSize: number } | null
   onPatchPreferences: (patch: Partial<VocabPreferences>) => void
   onToggleExclude: (cardId: string) => void
   onClearExcluded: () => void
@@ -97,9 +90,6 @@ export function VocabSetup({
   excludedIds,
   errorText = '',
   infoText = '',
-  memory = {},
-  reviewDayNewIntroduced = 0,
-  minePlanPreview = null,
   onPatchPreferences,
   onToggleExclude,
   onClearExcluded,
@@ -107,10 +97,10 @@ export function VocabSetup({
   onRemoveTrainingWords,
   onStart,
 }: VocabSetupProps) {
-  const isSrs = preferences.sessionMode === 'srs'
   const isAdaptive = preferences.sessionMode === 'adaptive'
   const newLimit = preferences.newWordLimit ?? -1
   const [newLimitDraft, setNewLimitDraft] = useState<string | null>(null)
+  const [reviewWindowDraft, setReviewWindowDraft] = useState<string | null>(null)
   const [kanjiPickLevel, setKanjiPickLevel] = useState<VocabLevelFilter>(5)
   const mySet = useMemo(() => new Set(myWordIds), [myWordIds])
   const trainingSet = useMemo(() => new Set(trainingWordIds), [trainingWordIds])
@@ -139,13 +129,11 @@ export function VocabSetup({
     activeGroupTrainingIds.length > 0 && activeGroupInTraining >= activeGroupTrainingIds.length
 
   const showFullSetToggle =
-    !isSrs &&
     (preferences.source === 'group' ||
       preferences.source === 'kanji' ||
       preferences.source === 'list')
 
   const showNewWordLimit =
-    !isSrs &&
     preferences.source !== 'mine' &&
     !(
       (preferences.source === 'group' ||
@@ -157,15 +145,14 @@ export function VocabSetup({
   const showWordJlptFilter =
     preferences.source === 'group' ||
     preferences.source === 'mine' ||
-    preferences.source === 'kanji' ||
-    isSrs
+    preferences.source === 'kanji'
 
   useEffect(() => {
     setNewLimitDraft(null)
   }, [newLimit])
 
   function setSessionMode(mode: VocabSessionMode) {
-    if (mode === 'srs' || mode === 'adaptive') {
+    if (mode === 'adaptive') {
       onPatchPreferences({ sessionMode: mode, source: 'mine', pickMode: 'adaptive' })
       return
     }
@@ -210,9 +197,7 @@ export function VocabSetup({
           </div>
           <p className="control-hint">
             {isAdaptive
-              ? 'Начинаем с пяти самых слабых слов. По мере запоминания добавляем новые, а пройденные возвращаем всё реже.'
-              : isSrs
-              ? 'Интервальные повторения колоды «Мои слова» по дате добавления и удержанию.'
+              ? 'Слабые слова повторяются чаще, знакомые — реже. Новые постепенно входят в окно.'
               : 'Свободная тренировка любого набора без дневной квоты.'}
           </p>
         </div>
@@ -238,104 +223,16 @@ export function VocabSetup({
 
         {isAdaptive ? (
           <div className="control-group" data-testid="vocab-adaptive-deck">
-            <span className="group-label">Все мои слова</span>
-            <p className="control-hint">{sourcePoolCount} слов, включая выученные. Прогресс сохраняется между тренировками.</p>
+            <div className="segmented" role="group" aria-label="Слова для повторения">
+              <button type="button" className={preferences.reviewScope !== 'problem' ? 'segmented-button is-active' : 'segmented-button'} data-testid="vocab-review-all" onClick={() => onPatchPreferences({ reviewScope: 'all' })}>Все мои слова</button>
+              <button type="button" className={preferences.reviewScope === 'problem' ? 'segmented-button is-active' : 'segmented-button'} data-testid="vocab-review-problem" onClick={() => onPatchPreferences({ reviewScope: 'problem' })}>Проблемные</button>
+            </div>
+            <div className="vocab-review-controls">
+              <label>Размер окна<input type="number" min={3} max={20} value={reviewWindowDraft ?? String(preferences.reviewWindowSize ?? 5)} data-testid="vocab-review-window" onChange={(event) => { const raw = event.target.value; setReviewWindowDraft(raw); const value = Number(raw); if (raw.trim() && Number.isFinite(value) && value >= 3 && value <= 20) onPatchPreferences({ reviewWindowSize: Math.round(value) }) }} onBlur={() => { if (reviewWindowDraft?.trim()) { const value = Number(reviewWindowDraft); if (Number.isFinite(value)) onPatchPreferences({ reviewWindowSize: Math.max(3, Math.min(20, Math.round(value))) }) } setReviewWindowDraft(null) }} /></label>
+              {preferences.reviewScope === 'problem' ? <label>Самых проблемных<input type="number" min={0} max={10000} value={preferences.reviewProblemLimit ?? 0} data-testid="vocab-review-problem-limit" onChange={(event) => { const value = Number(event.target.value); if (Number.isFinite(value)) onPatchPreferences({ reviewProblemLimit: Math.max(0, Math.min(10000, Math.round(value))) }) }} /><span className="control-hint">0 — все подходящие</span></label> : null}
+            </div>
+            <p className="control-hint">{sourcePoolCount} слов{preferences.reviewScope === 'problem' ? ' · минимум 5 ответов, приоритет последних ошибок' : ', включая отмеченные выученными'}.</p>
           </div>
-        ) : isSrs ? (
-          <>
-            <div className="control-group">
-              <span className="group-label">Колода</span>
-              <p className="control-hint" data-testid="vocab-srs-deck">
-                Мои слова ({myWordsCount})
-              </p>
-              <div className="segmented">
-                <button
-                  type="button"
-                  data-testid="vocab-mine-scope-all"
-                  className={
-                    preferences.mineIncludeLearned !== false
-                      ? 'segmented-button is-active'
-                      : 'segmented-button'
-                  }
-                  onClick={() => onPatchPreferences({ mineIncludeLearned: true })}
-                >
-                  Все
-                </button>
-                <button
-                  type="button"
-                  data-testid="vocab-mine-scope-unlearned"
-                  className={
-                    preferences.mineIncludeLearned === false
-                      ? 'segmented-button is-active'
-                      : 'segmented-button'
-                  }
-                  onClick={() => onPatchPreferences({ mineIncludeLearned: false })}
-                >
-                  Только невыученные
-                </button>
-              </div>
-            </div>
-
-            <div className="vocab-srs-settings" data-testid="vocab-srs-settings">
-              <span className="group-label">Сессия</span>
-              <div className="vocab-srs-settings-grid">
-                <label className="vocab-srs-field">
-                  <span className="vocab-srs-field-label">Длина</span>
-                  <span className="vocab-srs-control">
-                    <input
-                      type="number"
-                      min={5}
-                      max={60}
-                      data-testid="vocab-session-minutes"
-                      value={preferences.sessionMinutes ?? 15}
-                      onChange={(event) => {
-                        const parsed = Number(event.target.value)
-                        if (!Number.isFinite(parsed)) return
-                        onPatchPreferences({
-                          sessionMinutes: Math.min(60, Math.max(5, Math.round(parsed))),
-                        })
-                      }}
-                    />
-                    <span className="vocab-srs-unit">мин</span>
-                  </span>
-                  <span className="control-hint">оценка объёма сессии</span>
-                </label>
-
-                <label className="vocab-srs-field">
-                  <span className="vocab-srs-field-label">Новых в день</span>
-                  <span className="vocab-srs-control">
-                    <input
-                      type="number"
-                      min={0}
-                      max={50}
-                      data-testid="vocab-new-per-day"
-                      value={preferences.newPerDay ?? 10}
-                      onChange={(event) => {
-                        const parsed = Number(event.target.value)
-                        if (!Number.isFinite(parsed)) return
-                        onPatchPreferences({
-                          newPerDay: Math.min(50, Math.max(0, Math.round(parsed))),
-                        })
-                      }}
-                    />
-                    <span className="vocab-srs-unit">слов</span>
-                  </span>
-                  <span className="control-hint">
-                    {reviewDayNewIntroduced > 0
-                      ? `сегодня уже ${reviewDayNewIntroduced}`
-                      : 'очередь от даты добавления'}
-                  </span>
-                </label>
-              </div>
-            </div>
-
-            <p className="control-hint" data-testid="vocab-pool-count">
-              {minePlanPreview
-                ? `Сегодня: ${minePlanPreview.dueCount} к повторению, ${minePlanPreview.newCount} новых → ${minePlanPreview.sessionSize} в сессии (${sourcePoolCount} в колоде)`
-                : `${sourcePoolCount} слов в колоде`}
-              {excludedIds.size ? ` · исключено ${excludedIds.size}` : ''}
-            </p>
-          </>
         ) : (
           <>
             <div className="control-group">
@@ -656,74 +553,6 @@ export function VocabSetup({
         <details className="vocab-setup-more" data-testid="vocab-setup-more">
           <summary data-testid="vocab-setup-more-toggle">Ещё настройки</summary>
 
-          {isSrs ? (
-            <div className="vocab-srs-field vocab-srs-field-wide">
-              <div className="vocab-srs-retention-head">
-                <span className="vocab-srs-field-label">Удержание</span>
-                <span className="vocab-srs-retention-value" data-testid="vocab-target-retention-value">
-                  {Math.round((preferences.targetRetention ?? 0.9) * 100)}%
-                </span>
-              </div>
-              <div className="vocab-srs-retention" role="group" aria-label="Целевое удержание">
-                <input
-                  type="range"
-                  min={85}
-                  max={95}
-                  step={1}
-                  list="vocab-retention-ticks"
-                  data-testid="vocab-target-retention"
-                  value={Math.round((preferences.targetRetention ?? 0.9) * 100)}
-                  onChange={(event) =>
-                    onPatchPreferences({
-                      targetRetention: Number(event.target.value) / 100,
-                    })
-                  }
-                />
-                <datalist id="vocab-retention-ticks">
-                  <option value="85" />
-                  <option value="90" />
-                  <option value="95" />
-                </datalist>
-                <div className="vocab-srs-retention-presets">
-                  {(
-                    [
-                      { value: 0.85, label: '85%', hint: 'Реже' },
-                      { value: 0.9, label: '90%', hint: 'Баланс' },
-                      { value: 0.95, label: '95%', hint: 'Чаще' },
-                    ] as const
-                  ).map((option) => {
-                    const active =
-                      Math.round((preferences.targetRetention ?? 0.9) * 100) ===
-                      Math.round(option.value * 100)
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        data-testid={`vocab-retention-${Math.round(option.value * 100)}`}
-                        className={
-                          active
-                            ? 'vocab-srs-retention-preset is-active'
-                            : 'vocab-srs-retention-preset'
-                        }
-                        onClick={() => onPatchPreferences({ targetRetention: option.value })}
-                      >
-                        <span className="vocab-srs-retention-preset-label">{option.label}</span>
-                        <span className="vocab-srs-retention-preset-hint">{option.hint}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-                <p className="control-hint vocab-srs-retention-hint">
-                  {(preferences.targetRetention ?? 0.9) >= 0.93
-                    ? 'Карточки due раньше — больше повторений, меньше забывания.'
-                    : (preferences.targetRetention ?? 0.9) <= 0.87
-                      ? 'Карточки due позже — меньше нагрузки, выше риск забыть.'
-                      : 'Баланс между частотой повторов и объёмом сессии.'}
-                </p>
-              </div>
-            </div>
-          ) : null}
-
           {!isAdaptive && showWordJlptFilter ? (
             <div className="control-group">
               <span className="group-label">Фильтр JLPT</span>
@@ -796,11 +625,7 @@ export function VocabSetup({
             className="primary-button"
             data-testid="start-vocab"
             onClick={onStart}
-            disabled={
-              isSrs
-                ? (minePlanPreview?.sessionSize ?? includedCount) <= 0
-                : startCount <= 0
-            }
+            disabled={startCount <= 0}
           >
             Начать
           </button>
@@ -809,12 +634,6 @@ export function VocabSetup({
         {errorText ? <p className="feedback is-error">{errorText}</p> : null}
         {infoText ? <p className="feedback is-success">{infoText}</p> : null}
 
-        {isSrs ? (
-          <VocabCalibration
-            memory={memory}
-            targetRetention={preferences.targetRetention ?? 0.9}
-          />
-        ) : null}
       </section>
 
       {!isAdaptive ? <VocabSetupPool

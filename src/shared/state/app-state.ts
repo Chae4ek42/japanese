@@ -24,6 +24,7 @@ import {
 import { DEFAULT_READER_STATE, sanitizeReaderState } from './slices/reader'
 import { DEFAULT_THEORY_STATE, sanitizeTheoryState } from './slices/theory'
 import { DEFAULT_CONTEXT_STATE, sanitizeContextState } from './slices/contexts'
+import { sanitizeStudyPlan } from '../lib/studyPlan'
 
 import { MAIN_TRAINING_SET_ID, createMainTrainingSet } from '../lib/trainingSets'
 
@@ -77,6 +78,8 @@ export function createDefaultAppState(): AppState {
       },
     },
     vocab: {
+      trainingSessions: [],
+      activeSessionId: null,
       myWords: [],
       customWords: {},
       myWordAddedAt: {},
@@ -101,6 +104,7 @@ export function createDefaultAppState(): AppState {
     reader: { ...DEFAULT_READER_STATE, texts: [] },
     theory: { ...DEFAULT_THEORY_STATE, lessons: {} },
     contexts: { ...DEFAULT_CONTEXT_STATE, examples: [], stats: {} },
+    studyPlan: null,
   }
 }
 
@@ -212,5 +216,6 @@ export function normalizeAppState(parsed: unknown): AppState | null {
     reader: sanitizeReaderState(source.reader, fallback.reader),
     theory: sanitizeTheoryState(source.theory),
     contexts: sanitizeContextState(source.contexts),
+    studyPlan: sanitizeStudyPlan(source.studyPlan),
   }
 }

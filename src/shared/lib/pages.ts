@@ -114,7 +114,7 @@ export const PAGE_META: PageMeta[] = [
     documentTitle: 'Частицы — Японский',
     navLabel: 'Частицы',
     navTestId: 'nav-particles',
-    navGroup: 'primary',
+    navGroup: 'none',
     trainerLayout: true,
     home: {
       symbol: 'は',
@@ -130,7 +130,7 @@ export const PAGE_META: PageMeta[] = [
     documentTitle: 'Глаголы — Японский',
     navLabel: 'Глаголы',
     navTestId: 'nav-verbs',
-    navGroup: 'primary',
+    navGroup: 'none',
     trainerLayout: true,
     home: {
       symbol: '動',
@@ -241,7 +241,7 @@ export const PAGE_META: PageMeta[] = [
   {
     id: 'mistakes', path: PATHS.mistakes, documentTitle: 'Трудности — Японский',
     navLabel: 'Трудности', navTestId: 'nav-mistakes', navGroup: 'primary',
-    home: { symbol: '復', title: 'Журнал трудностей', action: 'Разобрать', testId: 'open-mistakes', group: 'practice' },
+    home: { symbol: '復', title: 'Трудности', action: 'Открыть', testId: 'open-mistakes', group: 'practice' },
   },
   {
     id: 'contexts', path: PATHS.contexts, documentTitle: 'Слова в предложениях — Японский',
@@ -267,7 +267,7 @@ export function navItems(group: Exclude<NavGroup, 'none'>): PageMeta[] {
 export function homeEntries(group?: HomeGroup): Array<PageMeta & { home: HomeEntryMeta }> {
   return PAGE_META.filter(
     (page): page is PageMeta & { home: HomeEntryMeta } =>
-      Boolean(page.home) && (group ? page.home!.group === group : true),
+      Boolean(page.home) && page.id !== 'particles' && page.id !== 'verbs' && (group ? page.home!.group === group : true),
   )
 }
 

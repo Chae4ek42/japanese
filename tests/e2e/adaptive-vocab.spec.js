@@ -21,7 +21,8 @@ async function openSeededTrainer(page) {
       },
     }))
   })
-  await page.goto('/train')
+  await page.goto('/train', { waitUntil: 'domcontentloaded' })
+  await page.getByTestId('new-vocab-session').click()
   await expect(page.getByTestId('vocab-setup')).toBeVisible()
 }
 
@@ -36,7 +37,7 @@ test('adaptive: full mine deck, sliding window, saved progress and fixed mode', 
   await expect(page.getByTestId('vocab-word-jlpt-5')).toHaveCount(0)
   await expect(page.getByTestId('vocab-adaptive-in-flight')).toHaveCount(0)
   await page.getByTestId('start-vocab').click()
-  await expect(page.getByTestId('vocab-session-mode-label')).toHaveText('Адаптивная')
+  await expect(page.getByTestId('vocab-session-mode-label')).toHaveText('Повторение')
   await expect(page.getByTestId('vocab-session-pick-even')).toHaveCount(0)
   await expect(page.getByTestId('vocab-session-pick-adaptive')).toHaveCount(0)
   await expect(page.locator('[data-testid^="vocab-session-word-"]')).toHaveCount(12)
@@ -48,13 +49,16 @@ test('adaptive: full mine deck, sliding window, saved progress and fixed mode', 
     await page.getByTestId('vocab-answer-input').fill(`kotoba${writing.replace(/\D/g, '')}`)
     await expect(page.getByTestId('vocab-current-writing')).not.toHaveText(writing)
   }
-  expect(new Set(shown.slice(0, 15)).size).toBe(5)
+  expect(new Set(shown.slice(0, 6)).size).toBeLessThanOrEqual(5)
   expect(new Set(shown).size).toBeGreaterThan(5)
   await expect(page.getByTestId('vocab-adaptive-progress')).toContainText('В группе: 5')
   const current = await page.getByTestId('vocab-current-writing').innerText()
-  await page.reload()
+  await page.reload({ waitUntil: 'domcontentloaded' })
+  await expect(page.getByTestId('new-vocab-session')).toBeVisible()
+  await expect(page.getByTestId('vocab-current-writing')).toHaveCount(0)
+  await page.getByTestId('vocab-session-card').filter({ has: page.getByRole('heading', { name: 'Тренировка 1', exact: true }) }).getByRole('button', { name: 'Продолжить', exact: true }).click()
   await expect(page.getByTestId('vocab-current-writing')).toHaveText(current)
-  await expect(page.getByTestId('vocab-session-mode-label')).toHaveText('Адаптивная')
+  await expect(page.getByTestId('vocab-session-mode-label')).toHaveText('Повторение')
   await expect(page.locator('[data-testid^="vocab-session-word-"]')).toHaveCount(12)
   // Skipping an unanswered card is a failure, never fabricated successful recall.
   await page.getByTestId('vocab-skip-next').click()

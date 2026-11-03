@@ -212,7 +212,7 @@
 
 .kanji-glyph-svg g.is-highlighted path {
   opacity: 1;
-  stroke: #b45a1e;
+  stroke: #527398;
 }
 
 .kanji-glyph-fallback {
@@ -992,22 +992,22 @@
 }
 
 .reading-highlight.is-colorized .reading-seg.is-c2 {
-  color: #8a6a45;
+  color: #8a5555;
   background: rgba(138, 106, 69, 0.08);
 }
 
 .reading-highlight.is-colorized .reading-seg.is-c3 {
-  color: #7a5560;
+  color: #667587;
   background: rgba(122, 85, 96, 0.08);
 }
 
 .reading-highlight.is-colorized .reading-seg.is-c4 {
-  color: #4a7380;
+  color: #617a68;
   background: rgba(74, 115, 128, 0.08);
 }
 
 .reading-highlight.is-colorized .reading-seg.is-c5 {
-  color: #7a6a48;
+  color: #777;
   background: rgba(122, 106, 72, 0.08);
 }
 

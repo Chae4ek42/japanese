@@ -1,6 +1,6 @@
 import type { AdaptiveWindowState, StatsOutcome, StatsRecord, WordPracticeStats } from '../../shared/lib/types'
 
-// Fixed workload: the deck's size never increases the amount being learned at once.
+// The default is independent of deck size; users can choose a bounded workload.
 export const WINDOW_SIZE = 5
 export const READY_STRENGTH = 0.72
 export const MAX_ACTIVE_ATTEMPTS = 8
@@ -56,6 +56,7 @@ export function createAdaptiveWindow(
   ids: string[],
   stats: Record<string, StatsRecord>,
   now = Date.now(),
+  options: { windowSize?: number; seed?: number } = {},
 ): AdaptiveWindowState {
   const order = [...new Set(ids)].sort((a, b) =>
     effectiveWordStrength(wordPracticeStats(stats[a]), now) -
@@ -63,12 +64,44 @@ export function createAdaptiveWindow(
   )
   return {
     version: 1, turn: 0, order, cursor: 0, active: [], introduced: [],
+    windowSize: clamp(Math.round(options.windowSize ?? WINDOW_SIZE), 3, 20),
+    rngState: (options.seed ?? now) >>> 0 || 1,
     due: {}, lastShown: {}, attempts: {}, streaks: {}, intervals: {},
     lastReviewTurn: -REVIEW_GAP, lastCardId: null,
   }
 }
 
-/** Deterministic deadlines + oldest-show fairness; no weighted random draws. */
+/** Seeded draws are persisted, so reloads preserve the next random choice. */
+function random(state: AdaptiveWindowState): number {
+  state.rngState = ((state.rngState ?? 1) + 0x6d2b79f5) >>> 0
+  let value = state.rngState
+  value = Math.imul(value ^ (value >>> 15), value | 1)
+  value ^= value + Math.imul(value ^ (value >>> 7), value | 61)
+  return ((value ^ (value >>> 14)) >>> 0) / 4294967296
+}
+
+function pickLearner(state: AdaptiveWindowState, ids: string[]): string | undefined {
+  if (!ids.length) return undefined
+  const size = state.windowSize ?? WINDOW_SIZE
+  const age = (id: string) => state.turn - (state.lastShown[id] ?? -size)
+  // A hard age bound limits unlucky droughts; ordinary choices remain random.
+  const oldest = [...ids].sort((a, b) => age(b) - age(a))[0]!
+  if (age(oldest) >= size * 4) return oldest
+  const weights = ids.map((id) => {
+    const gap = age(id)
+    const overdue = Math.max(0, state.turn - (state.due[id] ?? state.turn))
+    return (0.5 + gap / size) ** 1.5 * (1 + Math.min(3, overdue / size))
+      * (gap <= 2 ? 0.35 : 1)
+  })
+  let ticket = random(state) * weights.reduce((sum, weight) => sum + weight, 0)
+  for (let index = 0; index < ids.length; index++) {
+    ticket -= weights[index]!
+    if (ticket <= 0) return ids[index]
+  }
+  return ids.at(-1)
+}
+
+/** Deadlines reserve reviews; weighted draws vary the order inside the active group. */
 export function pickAdaptiveWord(
   state: AdaptiveWindowState,
   allowedIds: string[],
@@ -82,7 +115,7 @@ export function pickAdaptiveWord(
   }
   const introduced = new Set(next.introduced)
   // Bounded by deck size, even if excluded entries occur at the end of the plan.
-  while (next.active.length < WINDOW_SIZE && next.cursor < next.order.length) {
+  while (next.active.length < (next.windowSize ?? WINDOW_SIZE) && next.cursor < next.order.length) {
     const id = next.order[next.cursor++]!
     if (!allowed.has(id) || introduced.has(id)) continue
     next.active.push(id)
@@ -107,11 +140,11 @@ export function pickAdaptiveWord(
     (next.lastShown[a] ?? -1) - (next.lastShown[b] ?? -1) ||
     next.order.indexOf(a) - next.order.indexOf(b)
   const dueReviews = eligible(reviews).filter((id) => (next.due[id] ?? 0) <= next.turn).sort(rank)
-  const learners = eligible(next.active).sort(rank)
+  const learners = eligible(next.active)
   // At most one old word per four presentations while there are active learners.
   // Review deadlines age continuously, so even very old cards cannot starve.
   const takeReview = dueReviews.length > 0 && next.turn - next.lastReviewTurn >= REVIEW_GAP
-  const cardId = (takeReview ? dueReviews[0] : learners[0]) ?? eligible(reviews).sort(rank)[0] ?? candidates[0]!
+  const cardId = (takeReview ? dueReviews[0] : pickLearner(next, learners)) ?? eligible(reviews).sort(rank)[0] ?? candidates[0]!
   if (!activeSet.has(cardId)) next.lastReviewTurn = next.turn
   next.lastShown[cardId] = next.turn
   next.lastCardId = cardId

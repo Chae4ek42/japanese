@@ -154,7 +154,9 @@ function sanitizeAdaptiveWindow(raw: unknown, poolIds: string[]): AdaptiveWindow
   const introduced = [...new Set([...order.slice(0, cursor), ...ids(source.introduced)])]
   return {
     version: 1, order, cursor, introduced,
-    turn: number(source.turn), active: ids(source.active).filter((id) => introduced.includes(id)).slice(0, 5),
+    windowSize: Math.min(20, Math.max(3, number(source.windowSize, 5))),
+    rngState: typeof source.rngState === 'number' && Number.isFinite(source.rngState) ? source.rngState >>> 0 : 1,
+    turn: number(source.turn), active: ids(source.active).filter((id) => introduced.includes(id)).slice(0, Math.min(20, Math.max(3, number(source.windowSize, 5)))),
     due: map(source.due), lastShown: map(source.lastShown), attempts: map(source.attempts),
     streaks: map(source.streaks), intervals: map(source.intervals),
     lastReviewTurn: typeof source.lastReviewTurn === 'number' && Number.isFinite(source.lastReviewTurn) ? source.lastReviewTurn : -4,
@@ -208,5 +210,6 @@ export function sanitizeCardTrainerLiveSession(
     poolAddedAt,
     navHistory,
     navIndex,
+    ...(source.pendingAdvance === true ? { pendingAdvance: true } : {}),
   }
 }

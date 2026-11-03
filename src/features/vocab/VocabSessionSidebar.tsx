@@ -134,7 +134,7 @@ export function VocabSessionSidebar({
       <section className="vocab-session-block">
         <div className="vocab-session-block-head">
           <span className="vocab-session-label" data-testid="vocab-session-mode-label">
-            {sessionMode === 'adaptive' ? 'Адаптивная' : sessionMode === 'srs' ? 'Интервальная' : 'Равномерная'}
+            {sessionMode === 'adaptive' ? 'Повторение' : 'Равномерная'}
           </span>
           {hasFilters ? <button type="button" className="vocab-session-reset"
             data-testid="vocab-session-toggle-filters" onClick={() => setFiltersOpen((open) => !open)}>

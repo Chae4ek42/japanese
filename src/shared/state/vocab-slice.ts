@@ -38,6 +38,9 @@ import {
 import { appendReviewEvent } from '../lib/review/journal'
 import { hoursBetween } from '../lib/review/math'
 import { updateWordPractice } from '../../features/vocab/adaptiveWindow'
+import { rankedProblemWordIds } from '../../features/vocab/problemWords'
+import { getWordById } from '../../data/words/bank'
+import { sanitizeVocabPreferences } from './slices/vocab'
 import { useAppStateContext } from './core'
 import { setSavedWords } from '../lib/savedWords'
 
@@ -508,14 +511,7 @@ export function useVocabState() {
     (patch: Partial<VocabPreferences>) => {
       setAppState((prevState) => {
         if (!prevState) return prevState
-        const nextPrefs = {
-          ...prevState.vocab.preferences,
-          ...patch,
-        }
-        nextPrefs.pickMode = nextPrefs.sessionMode === 'drill' ? 'even' : 'adaptive'
-        if (nextPrefs.sessionMode === 'srs' || nextPrefs.sessionMode === 'adaptive') {
-          nextPrefs.source = 'mine'
-        }
+        const nextPrefs = sanitizeVocabPreferences({ ...prevState.vocab.preferences, ...patch }, prevState.vocab.preferences)
         // newPerDay (SRS quota) and newWordLimit (session set size) stay independent.
         return {
           ...prevState,
@@ -725,7 +721,8 @@ export function useVocabState() {
     /** Words in the set used for source === 'list' practice. */
     listTrainingWordIds,
     listTrainingSetId: trainSetId,
-    problemWordIds: appState.vocab.problemWordIds ?? [],
+    problemWordIds: rankedProblemWordIds(Object.keys(appState.vocab.stats), appState.vocab.stats)
+      .filter((id) => !appState.vocab.hiddenWordIds.includes(id) && Boolean(appState.vocab.customWords[id] || getWordById(id))),
     preferences: appState.vocab.preferences,
     stats: appState.vocab.stats,
     memory: appState.vocab.memory ?? {},

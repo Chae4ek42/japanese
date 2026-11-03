@@ -28,10 +28,10 @@
 /* Soft palette — used only with colorize in training */
 .kanji-chip.is-c0 { color: #4a6280; }
 .kanji-chip.is-c1 { color: #4a7a66; }
-.kanji-chip.is-c2 { color: #8a6a45; }
-.kanji-chip.is-c3 { color: #7a5560; }
-.kanji-chip.is-c4 { color: #4a7380; }
-.kanji-chip.is-c5 { color: #7a6a48; }
+.kanji-chip.is-c2 { color: #8a5555; }
+.kanji-chip.is-c3 { color: #667587; }
+.kanji-chip.is-c4 { color: #617a68; }
+.kanji-chip.is-c5 { color: #777; }
 
 .kanji-chip.is-shared-reading {
   border-bottom: 1px dotted currentColor;

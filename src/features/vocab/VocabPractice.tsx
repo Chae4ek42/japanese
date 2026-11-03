@@ -21,6 +21,7 @@ import {
 import type { VocabMixedPrompt } from './mixed'
 import { VocabMobileActions } from './VocabMobileActions'
 import { VocabMobileHeader } from './VocabMobileHeader'
+import './mobile-practice.css'
 
 export interface VocabPracticeProps {
   activeCard: VocabCard | null
@@ -128,9 +129,10 @@ export function VocabPractice({
   const swipeHandlers = {
     onSwipeLeft: isMobile ? onSkipNext : onSkipPrev,
     onSwipeRight: isMobile ? onSkipPrev : onSkipNext,
-    onSwipeDown: isChoiceDrill || drillMode === 'romaji' ? onRevealHint : undefined,
+    onSwipeDown: isMobile ? onDontKnow : onRevealHint,
     onSwipeUp:
-      drillMode === 'romaji' && inputMode === 'submit' && onSubmitAnswer ? onSubmitAnswer : undefined,
+      isMobile ? (drillMode === 'romaji' ? onRemember : undefined) :
+        drillMode === 'romaji' && inputMode === 'submit' && onSubmitAnswer ? onSubmitAnswer : undefined,
   }
 
   function openEditor() {
@@ -180,7 +182,7 @@ export function VocabPractice({
       swipes={swipeHandlers}
       swipesEnabled={!editing}
       swipeScope={isMobile ? 'stage' : 'panel'}
-      horizontalSwipesOnly={isMobile}
+      verticalSwipeTargetSelector={isMobile ? '.question-symbol' : undefined}
       aside={isMobile && aside ? (
         <details className="vocab-mobile-session" data-testid="vocab-mobile-session">
           <summary>Слова сессии <span>{sessionWordCount}</span></summary>
@@ -440,15 +442,10 @@ export function VocabPractice({
 
             {isMobile ? (
               <>
-                <div className="vocab-mobile-answer-actions">
-                  {onRemember && drillMode === 'romaji' ? (
-                    <button type="button" className="vocab-remember-button" data-testid="vocab-remember" onClick={onRemember}>
-                      Помню
-                    </button>
-                  ) : null}
+                <div className="vocab-mobile-answer-actions" role="group" aria-label="Оценка ответа и подсказка">
                   {onDontKnow ? (
                     <button type="button" className="vocab-forgot-button" data-testid="vocab-dont-know" onClick={onDontKnow}>
-                      Не помню
+                      <span aria-hidden="true">↓</span><span>Не помню</span>
                     </button>
                   ) : null}
                   <button
@@ -459,10 +456,15 @@ export function VocabPractice({
                     aria-pressed={round.hintUsed}
                     onClick={onRevealHint}
                   >
-                    Подсказка
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true"><path d="M8 15a6 6 0 1 1 8 0l-1 2H9Z M9 20h6" /></svg><span>Подсказка</span>
                   </button>
+                  {onRemember && drillMode === 'romaji' ? (
+                    <button type="button" className="vocab-remember-button" data-testid="vocab-remember" onClick={onRemember}>
+                      <span aria-hidden="true">↑</span><span>Помню</span>
+                    </button>
+                  ) : null}
                 </div>
-                <p className="vocab-mobile-swipe-note" aria-label="Свайп влево — следующее слово, вправо — предыдущее">
+                <p className="vocab-mobile-swipe-note" aria-label={`Свайп влево — следующее слово, вправо — предыдущее, вниз — не помню${drillMode === 'romaji' ? ', вверх — помню' : ''}`}>
                   <span>{adaptiveMode ? '← пропустить' : '← дальше'}</span><span className={!canGoPrev ? 'is-unavailable' : undefined}>назад →</span>
                 </p>
                 <VocabMobileActions

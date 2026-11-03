@@ -74,8 +74,9 @@ describe('routes', () => {
     assert.equal(navItems('primary').some((page) => page.id === 'theory'), true)
     assert.equal(navItems('primary').some((page) => page.id === 'analytics'), true)
     assert.equal(homeEntries('practice').some((page) => page.home.testId === 'open-kana'), true)
-    assert.equal(homeEntries('practice').some((page) => page.id === 'verbs'), true)
-    assert.equal(navItems('primary').some((page) => page.id === 'verbs'), true)
+    assert.equal(homeEntries('practice').some((page) => page.id === 'verbs'), false)
+    assert.equal(navItems('primary').some((page) => page.id === 'verbs'), false)
+    assert.equal(navItems('primary').some((page) => page.id === 'particles'), false)
     assert.equal(
       PAGE_META.every((page) => pathForPage(page.id) === page.path),
       true,

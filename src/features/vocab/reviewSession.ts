@@ -98,7 +98,7 @@ export function startReviewPracticeSession(input: {
   if (!spaced && input.preferences.sessionMode === 'adaptive') {
     return {
       session: { poolIds: scopeIds, recentHistory: [], lastCardId: null, mistakeQueue: [], sinceQueuePick: 0,
-        mode: 'adaptive', vocabMode: 'adaptive', adaptive: createAdaptiveWindow(scopeIds, input.stats, now) },
+        mode: 'adaptive', vocabMode: 'adaptive', adaptive: createAdaptiveWindow(scopeIds, input.stats, now, { windowSize: input.preferences.reviewWindowSize }) },
       planEmpty: scopeIds.length === 0, dueCount: 0,
       newCount: scopeIds.filter((id) => wordPracticeStats(input.stats[id]).attempts === 0).length,
     }

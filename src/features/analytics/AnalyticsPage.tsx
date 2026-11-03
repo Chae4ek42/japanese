@@ -6,8 +6,8 @@ import { ActiveTimeAreaChart } from './charts/ActiveTimeAreaChart'
 import { KanjiLevelBars } from './charts/KanjiLevelBars'
 import { MasteryPie } from './charts/MasteryPie'
 import { NamedBars } from './charts/NamedBars'
-import { SectionTimeCharts } from './charts/SectionTimeCharts'
 import { SimplePie } from './charts/SimplePie'
+import { SectionTimeCharts } from './charts/SectionTimeCharts'
 import { CHART_COLORS } from './chartTheme'
 import './styles.css'
 
@@ -84,14 +84,6 @@ export function AnalyticsPage() {
               <span className="analytics-kpi-label">Проблемные</span>
               <strong>{model.vocab.problem}</strong>
             </article>
-            <article className="analytics-kpi">
-              <span className="analytics-kpi-label">Новых сегодня</span>
-              <strong>{model.vocab.newToday}</strong>
-            </article>
-            <article className="analytics-kpi">
-              <span className="analytics-kpi-label">Due сейчас</span>
-              <strong>{model.vocab.memory.counts.due}</strong>
-            </article>
           </div>
           <p className="subsection-note">
             Повторное воспроизведение: {model.vocab.evidence.confirmed} слов ·
@@ -112,11 +104,6 @@ export function AnalyticsPage() {
               data={model.vocab.accuracyBuckets}
               title="Доля чистых ответов по истории карточек"
               testId="analytics-chart-vocab-accuracy"
-            />
-            <SimplePie
-              data={model.vocab.memory.pie}
-              title="SRS-состояния"
-              testId="analytics-chart-vocab-srs"
             />
           </div>
         </section>

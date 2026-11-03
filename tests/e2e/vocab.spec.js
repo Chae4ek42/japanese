@@ -23,25 +23,34 @@ test('dictionary: catalog, groups and my words', async ({ page }, testInfo) => {
   await expect(page.getByText('Пока пусто')).toBeVisible()
 })
 
-test('vocab setup: drill vs srs mode switch', async ({ page }, testInfo) => {
+test('vocab setup: even and repetition modes without calendar SRS', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Setup mode switch covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('new-vocab-session').click()
   await expect(page.getByTestId('vocab-setup')).toBeVisible()
   await expect(page.getByTestId('vocab-session-mode-drill')).toHaveClass(/is-active/)
   await expect(page.getByTestId('vocab-source-kanji')).toBeVisible()
   await expect(page.getByTestId('vocab-srs-settings')).toHaveCount(0)
 
-  await page.getByTestId('vocab-session-mode-srs').click()
-  await expect(page.getByTestId('vocab-session-mode-srs')).toHaveClass(/is-active/)
-  await expect(page.getByTestId('vocab-srs-deck')).toBeVisible()
-  await expect(page.getByTestId('vocab-srs-settings')).toBeVisible()
+  await expect(page.getByTestId('vocab-session-mode-srs')).toHaveCount(0)
+  await page.getByTestId('vocab-session-mode-adaptive').click()
+  await expect(page.getByTestId('vocab-session-mode-adaptive')).toHaveClass(/is-active/)
+  await expect(page.getByTestId('vocab-session-mode-adaptive')).toHaveText('Повторение')
+  await expect(page.getByTestId('vocab-adaptive-deck')).toBeVisible()
+  await expect(page.getByTestId('vocab-review-window')).toHaveValue('5')
+  await page.getByTestId('vocab-review-window').fill('8')
+  await expect(page.getByTestId('vocab-review-window')).toHaveValue('8')
+  await page.getByTestId('vocab-review-problem').click()
+  await expect(page.getByTestId('vocab-review-problem-limit')).toBeVisible()
+  await page.getByTestId('vocab-review-problem-limit').fill('10')
+  await expect(page.getByTestId('vocab-review-problem-limit')).toHaveValue('10')
   await expect(page.getByTestId('vocab-source-kanji')).toHaveCount(0)
-  await expect(page.getByTestId('vocab-new-per-day')).toBeVisible()
+  await expect(page.getByTestId('vocab-new-per-day')).toHaveCount(0)
+  await expect(page.getByTestId('vocab-srs-settings')).toHaveCount(0)
   await page.getByTestId('vocab-setup-more-toggle').click()
-  await expect(page.getByTestId('vocab-retention-90')).toBeVisible()
-  await page.getByTestId('vocab-retention-95').click()
-  await expect(page.getByTestId('vocab-target-retention-value')).toHaveText('95%')
+  await expect(page.getByTestId('vocab-retention-90')).toHaveCount(0)
+  await expect(page.getByTestId('vocab-retention-95')).toHaveCount(0)
 
   await page.getByTestId('vocab-session-mode-drill').click()
   await expect(page.getByTestId('vocab-session-mode-drill')).toHaveClass(/is-active/)
@@ -53,6 +62,7 @@ test('vocab trainer: romaji and choice modes', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Vocab trainer covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('new-vocab-session').click()
   await expect(page).toHaveURL(/\/train$/)
   await expect(page.getByTestId('train-page')).toBeVisible()
   await expect(page.getByTestId('vocab-setup')).toBeVisible()
@@ -101,6 +111,7 @@ test('vocab trainer mobile: no keyboard input, hint and navigation work', async 
   test.skip(testInfo.project.name !== 'mobile-chrome', 'Mobile-only hint button.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('new-vocab-session').click()
   await page.getByTestId('start-vocab').click()
   await expect(page.getByTestId('vocab-current-writing')).toBeVisible()
   await expect(page.getByTestId('vocab-answer-input')).toHaveCount(0)
@@ -125,6 +136,7 @@ test('vocab trainer mobile: swipes work over controls without tapping them', asy
   test.skip(testInfo.project.name !== 'mobile-chrome', 'Real touch navigation is mobile-only.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('new-vocab-session').click()
   await page.getByTestId('vocab-source-group').click()
   await page.getByTestId('vocab-train-group-weekdays').click()
   await page.getByTestId('start-vocab').click()
@@ -151,7 +163,7 @@ test('vocab trainer mobile: swipes work over controls without tapping them', asy
   await page.getByTestId('vocab-toggle-learned').tap()
   await expect(page.getByTestId('vocab-toggle-learned')).toHaveAttribute('aria-pressed', 'false')
 
-  await swipeTouch(page, writing, { dx: 8, dy: -100 })
+  await swipeTouch(page, page.getByTestId('vocab-hint-button'), { dx: 8, dy: -100 })
   await expect(writing).toHaveText(second)
 
   await page.getByTestId('vocab-edit-card').tap()
@@ -165,10 +177,56 @@ test('vocab trainer mobile: swipes work over controls without tapping them', asy
   await expect(writing).toHaveText(second)
 })
 
+test('vocab trainer mobile: compact assessment controls and vertical recall gestures', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chrome', 'Mobile assessment flow.')
+  await openFreshApp(page)
+  await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('new-vocab-session').click()
+  await page.getByTestId('vocab-source-group').click()
+  await page.getByTestId('vocab-train-group-weekdays').click()
+  await page.getByTestId('start-vocab').click()
+  const writing = page.getByTestId('vocab-current-writing')
+  const buttons = page.locator('.vocab-mobile-answer-actions button')
+  await expect(buttons).toHaveText(['↓Не помню', 'Подсказка', '↑Помню'])
+  const bounds = await buttons.evaluateAll((items) => items.map((item) => {
+    const { x, y, width, height } = item.getBoundingClientRect()
+    return { x, y, width, height }
+  }))
+  expect(bounds[0].x).toBeLessThan(bounds[1].x)
+  expect(bounds[1].x).toBeLessThan(bounds[2].x)
+  expect(bounds.every((box) => box.y === bounds[0].y && box.height >= 44)).toBe(true)
+  expect(await writing.evaluate((node) => Number.parseFloat(getComputedStyle(node).fontSize))).toBeGreaterThanOrEqual(52)
+
+  const first = await writing.innerText()
+  await swipeTouch(page, writing, { dx: 4, dy: -100 })
+  await expect(writing).not.toHaveText(first)
+  await expect(page.getByTestId('session-chips').locator('.session-chip')).toHaveText([
+    '1 карточка', /^100% чисто/, /^серия 1/,
+  ])
+  await expect(page.getByTestId('kanji-info-card')).toHaveCount(0)
+
+  const second = await writing.innerText()
+  await swipeTouch(page, writing, { dx: 4, dy: 100 })
+  await expect(writing).not.toHaveText(second)
+  await expect(page.getByTestId('session-chips').locator('.session-chip')).toHaveText([
+    '2 карточки', /^50% чисто/, /^серия 0/,
+  ])
+
+  await page.getByTestId('vocab-hint-button').tap()
+  await expect(page.getByTestId('vocab-hint-panel')).toBeVisible()
+  const hinted = await writing.innerText()
+  await swipeTouch(page, writing, { dx: 4, dy: -100 })
+  await expect(writing).not.toHaveText(hinted)
+  await expect(page.getByTestId('session-chips').locator('.session-chip')).toHaveText([
+    '3 карточки', /^33% чисто/, /^серия 0/,
+  ])
+})
+
 test('vocab trainer: skip navigation preserves history without changing session counters', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Skip navigation covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('new-vocab-session').click()
   await page.getByTestId('start-vocab').click()
 
   const first = await page.getByTestId('vocab-current-writing').innerText()
@@ -196,6 +254,7 @@ test('vocab trainer: arrow keys navigate cards', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === 'mobile-chrome', 'Keyboard navigation covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('new-vocab-session').click()
   await page.getByTestId('start-vocab').click()
 
   const first = await page.getByTestId('vocab-current-writing').innerText()
@@ -214,6 +273,7 @@ test('vocab trainer: in-session mode is fixed and panel shows word stats', async
   test.skip(testInfo.project.name === 'mobile-chrome', 'Sidebar controls covered on desktop.')
   await openFreshApp(page)
   await page.getByTestId('open-vocab-train').click()
+  await page.getByTestId('new-vocab-session').click()
   await page.getByTestId('vocab-source-group').click()
   await page.getByTestId('vocab-train-group-weekdays').click()
   await page.getByTestId('vocab-new-word-limit').fill('1')
@@ -264,6 +324,8 @@ test('mine page nav and legacy redirect', async ({ page }, testInfo) => {
   await page.getByTestId('nav-train').click()
   await expect(page).toHaveURL(/\/train$/)
   await expect(page.getByTestId('train-page')).toBeVisible()
+  await expect(page.getByTestId('new-vocab-session')).toBeVisible()
+  await expect(page.getByTestId('vocab-setup')).toHaveCount(0)
 })
 
 test('dictionary: add and edit custom word', async ({ page }, testInfo) => {

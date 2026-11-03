@@ -23,6 +23,7 @@ export interface PracticeShellProps {
   swipesEnabled?: boolean
   swipeScope?: 'panel' | 'stage'
   horizontalSwipesOnly?: boolean
+  verticalSwipeTargetSelector?: string
 }
 
 export function PracticeShell({
@@ -44,6 +45,7 @@ export function PracticeShell({
   swipesEnabled = true,
   swipeScope = 'panel',
   horizontalSwipesOnly = false,
+  verticalSwipeTargetSelector,
 }: PracticeShellProps) {
   const panelRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -51,7 +53,7 @@ export function PracticeShell({
     swipeScope === 'stage' ? stageRef : panelRef,
     swipes ?? {},
     Boolean(swipes) && swipesEnabled,
-    { horizontalOnly: horizontalSwipesOnly },
+    { horizontalOnly: horizontalSwipesOnly, verticalTargetSelector: verticalSwipeTargetSelector },
   )
 
   return (

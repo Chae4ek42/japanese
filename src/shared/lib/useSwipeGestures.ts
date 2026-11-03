@@ -24,6 +24,7 @@ interface TouchOrigin {
   x: number
   y: number
   at: number
+  allowsVertical: boolean
 }
 
 /** Direction of a completed swipe, or null when the motion is a tap or a scroll. */
@@ -49,7 +50,7 @@ export function useSwipeGestures(
   targetRef: RefObject<HTMLElement | null>,
   handlers: SwipeGestureHandlers,
   enabled = true,
-  { horizontalOnly = false }: { horizontalOnly?: boolean } = {},
+  { horizontalOnly = false, verticalTargetSelector }: { horizontalOnly?: boolean; verticalTargetSelector?: string } = {},
 ): boolean {
   const isMobile = useIsMobileTouch()
   const handlersRef = useRef(handlers)
@@ -75,7 +76,7 @@ export function useSwipeGestures(
     }
 
     const onTouchStart = (event: TouchEvent) => {
-      if (horizontalOnly) blockClicksUntil = 0
+      blockClicksUntil = 0
       if (event.touches.length !== 1) {
         clear()
         return
@@ -87,7 +88,11 @@ export function useSwipeGestures(
       const touch = event.touches[0]
       if (!touch) return
       trackingId = touch.identifier
-      origin = { x: touch.clientX, y: touch.clientY, at: Date.now() }
+      origin = {
+        x: touch.clientX, y: touch.clientY, at: Date.now(),
+        allowsVertical: !horizontalOnly && (!verticalTargetSelector ||
+          (event.target instanceof Element && Boolean(event.target.closest(verticalTargetSelector)))),
+      }
       claimed = false
       sawMove = false
       scrollY = window.scrollY
@@ -104,12 +109,12 @@ export function useSwipeGestures(
       if (Math.max(absX, absY) < SWIPE_LOCK_PX) return
       sawMove = true
       // Once a vertical scroll has started, it must not turn into card navigation.
-      if (horizontalOnly && !claimed && absY > absX) {
+      if (!origin.allowsVertical && !claimed && absY > absX) {
         clear()
         return
       }
-      // Claim horizontal drags so the browser does not turn them into a scroll.
-      if (absX < absY) return
+      // Vertical assessment is opt-in for the card surface; other areas keep scrolling.
+      if (absX < absY && (!origin.allowsVertical || absY < absX * SWIPE_AXIS_RATIO)) return
       if (event.cancelable) event.preventDefault()
       claimed = true
     }
@@ -132,7 +137,8 @@ export function useSwipeGestures(
       )
       if (!direction) return
       const pageScrolled = Math.abs(window.scrollY - startedScrollY) > 8
-      if (horizontalOnly && (pageScrolled || direction === 'up' || direction === 'down')) return
+      if (horizontalOnly && pageScrolled) return
+      if (!started.allowsVertical && (direction === 'up' || direction === 'down')) return
       if ((direction === 'left' || direction === 'right') && moved && !tookHorizontal) return
       if ((direction === 'up' || direction === 'down') && pageScrolled) return
 
@@ -140,7 +146,7 @@ export function useSwipeGestures(
       const handler = direction === 'left' ? current.onSwipeLeft
         : direction === 'right' ? current.onSwipeRight
         : direction === 'up' ? current.onSwipeUp : current.onSwipeDown
-      if (horizontalOnly && !handler) return
+      if (!handler) return
       handler?.()
 
       blockClicksUntil = Date.now() + 500
@@ -167,7 +173,7 @@ export function useSwipeGestures(
       node.removeEventListener('touchcancel', clear, horizontalOnly)
       node.removeEventListener('click', onClickCapture, true)
     }
-  }, [active, targetRef, horizontalOnly])
+  }, [active, targetRef, horizontalOnly, verticalTargetSelector])
 
   return active
 }

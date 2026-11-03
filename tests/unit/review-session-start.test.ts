@@ -257,7 +257,7 @@ describe('sanitizeVocabPreferences sessionMode', () => {
     assert.equal(state.preferences.sessionMode, 'drill')
   })
 
-  it('legacy mine+v2 без sessionMode → srs и source mine', () => {
+  it('legacy mine+v2 без sessionMode остаётся равномерной тренировкой', () => {
     const raw = {
       preferences: {
         drillMode: 'romaji',
@@ -278,11 +278,11 @@ describe('sanitizeVocabPreferences sessionMode', () => {
       },
     }
     const migrated = sanitizeVocabState(raw, createDefaultAppState().vocab)
-    assert.equal(migrated.preferences.sessionMode, 'srs')
+    assert.equal(migrated.preferences.sessionMode, 'drill')
     assert.equal(migrated.preferences.source, 'mine')
   })
 
-  it('srs принудительно держит source=mine', () => {
+  it('старый интервальный режим мигрирует в равномерную тренировку', () => {
     const state = sanitizeVocabState(
       {
         preferences: {
@@ -293,7 +293,7 @@ describe('sanitizeVocabPreferences sessionMode', () => {
       },
       createDefaultAppState().vocab,
     )
-    assert.equal(state.preferences.sessionMode, 'srs')
-    assert.equal(state.preferences.source, 'mine')
+    assert.equal(state.preferences.sessionMode, 'drill')
+    assert.equal(state.preferences.source, 'level')
   })
 })

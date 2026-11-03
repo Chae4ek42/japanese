@@ -7,6 +7,7 @@ import type {
   StatsRecord,
   VocabPreferences,
   VocabState,
+  VocabTrainingSession,
 } from '../../lib/types'
 import { DEFAULT_LATENCY_MODEL } from '../../lib/review/grade'
 import { MEMORY_MODEL_VERSION } from '../../lib/review/memory'
@@ -23,12 +24,15 @@ import { sanitizeCardTrainerLiveSession } from './live-session'
 const VALID_VOCAB_DRILLS = new Set(['romaji', 'choice', 'mixed'])
 const VALID_VOCAB_SOURCES = new Set(['level', 'group', 'mine', 'kanji', 'list', 'problem'])
 const VALID_VOCAB_LEVELS = new Set([5, 4, 3, 2, 1])
-const VALID_SESSION_MODES = new Set(['drill', 'adaptive', 'srs'])
+const VALID_SESSION_MODES = new Set(['drill', 'adaptive'])
 const VALID_INPUT_MODES = new Set(['instant', 'submit'])
 const VALID_MEMORY_STATES = new Set(['new', 'learning', 'review', 'relearning', 'leech'])
 
 export const DEFAULT_VOCAB_PREFERENCES: VocabPreferences = {
   sessionMode: 'drill',
+  reviewWindowSize: 5,
+  reviewScope: 'all',
+  reviewProblemLimit: 0,
   drillMode: 'romaji',
   source: 'level',
   level: 5,
@@ -100,7 +104,7 @@ function clampFloat(value: unknown, min: number, max: number, fallback: number):
   return Math.min(max, Math.max(min, n))
 }
 
-function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): VocabPreferences {
+export function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): VocabPreferences {
   const source = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {}
   const levelRaw = typeof source.level === 'number' ? source.level : fallback.level
   const rawGroupId =
@@ -119,21 +123,18 @@ function sanitizeVocabPreferences(raw: unknown, fallback: VocabPreferences): Voc
     ? (source.source as VocabPreferences['source'])
     : fallback.source
   const reviewV2 = typeof source.reviewV2 === 'boolean' ? source.reviewV2 : fallback.reviewV2
-  // Missing sessionMode: default drill. Legacy mine+v2 users who already used
-  // spaced mine sessions keep srs only when source was mine and reviewV2 on.
-  let sessionMode: VocabPreferences['sessionMode'] = fallback.sessionMode
-  if (VALID_SESSION_MODES.has(String(source.sessionMode))) {
-    sessionMode = source.sessionMode as VocabPreferences['sessionMode']
-  } else if (!('sessionMode' in source) && resolvedSource === 'mine' && reviewV2 !== false) {
-    sessionMode = 'srs'
-  }
+  const sessionMode: VocabPreferences['sessionMode'] = VALID_SESSION_MODES.has(String(source.sessionMode))
+    ? source.sessionMode as VocabPreferences['sessionMode'] : 'drill'
 
   return {
     sessionMode,
+    reviewWindowSize: clampInt(source.reviewWindowSize, 3, 20, fallback.reviewWindowSize ?? 5),
+    reviewScope: source.reviewScope === 'problem' ? 'problem' : 'all',
+    reviewProblemLimit: clampInt(source.reviewProblemLimit, 0, 10000, fallback.reviewProblemLimit ?? 0),
     drillMode: VALID_VOCAB_DRILLS.has(String(source.drillMode))
       ? (source.drillMode as VocabPreferences['drillMode'])
       : fallback.drillMode,
-    source: sessionMode === 'srs' || sessionMode === 'adaptive' ? 'mine' : resolvedSource,
+    source: sessionMode === 'adaptive' ? 'mine' : resolvedSource,
     level: VALID_VOCAB_LEVELS.has(levelRaw) ? (levelRaw as VocabPreferences['level']) : fallback.level,
     groupId,
     pickMode: sessionMode === 'drill' ? 'even' : 'adaptive',
@@ -389,14 +390,32 @@ export function sanitizeVocabState(raw: unknown, fallback: VocabState): VocabSta
   const preferences = sanitizeVocabPreferences(source.preferences, fallback.preferences)
   const trainingSetId = resolveActiveTrainingSetId(preferences.trainingSetId, trainingSets)
   let liveSession = sanitizeCardTrainerLiveSession(source.liveSession, fallback.liveSession ?? null)
-  if (liveSession && !liveSession.session.vocabMode && !liveSession.session.adaptive) {
-    const spaced = preferences.sessionMode === 'srs'
-    liveSession = { ...liveSession, session: {
-      ...liveSession.session, vocabMode: spaced ? 'srs' : 'drill', mode: spaced ? 'adaptive' : 'even',
-    } }
+  if (liveSession && (!liveSession.session.vocabMode || liveSession.session.vocabMode === 'srs')) {
+    liveSession = { ...liveSession, session: { ...liveSession.session, vocabMode: 'drill', mode: 'even', review: undefined } }
   }
+  const trainingSessions: VocabTrainingSession[] = []
+  const seenSessions = new Set<string>()
+  for (const item of Array.isArray(source.trainingSessions) ? source.trainingSessions : []) {
+    if (!item || typeof item.id !== 'string' || !item.id || seenSessions.has(item.id)) continue
+    seenSessions.add(item.id)
+    const sessionPreferences = sanitizeVocabPreferences(item.preferences, preferences)
+    let snapshot = sanitizeCardTrainerLiveSession(item.liveSession)
+    if (snapshot?.session.vocabMode === 'srs') snapshot = { ...snapshot, session: { ...snapshot.session, vocabMode: 'drill', mode: 'even', review: undefined } }
+    trainingSessions.push({ id: item.id, name: typeof item.name === 'string' && item.name.trim() ? item.name.trim().slice(0,80) : 'Тренировка слов',
+      createdAt: clampFloat(item.createdAt, 0, Number.MAX_SAFE_INTEGER, Date.now()),
+      updatedAt: clampFloat(item.updatedAt, 0, Number.MAX_SAFE_INTEGER, Date.now()),
+      preferences: sessionPreferences, liveSession: snapshot })
+  }
+  if (!Array.isArray(source.trainingSessions) && liveSession) {
+    trainingSessions.push({ id: 'legacy-vocab-session', name: 'Сохранённая тренировка', createdAt: Date.now(), updatedAt: Date.now(), preferences, liveSession })
+  }
+  const activeSessionId = typeof source.activeSessionId === 'string' && trainingSessions.some((item) => item.id === source.activeSessionId)
+    ? source.activeSessionId : null
+
 
   return {
+    trainingSessions,
+    activeSessionId,
     myWords,
     customWords,
     myWordAddedAt,

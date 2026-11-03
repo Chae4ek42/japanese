@@ -9,6 +9,9 @@ const E2E_ACCOUNT = {
 
 /** Mock server accounts API for e2e (shared registry). */
 export async function mockAccountsApi(page) {
+  // Keep functional browser checks independent of external font availability.
+  await page.route('https://fonts.googleapis.com/**', (route) => route.abort())
+  await page.route('https://fonts.gstatic.com/**', (route) => route.abort())
   let remoteState = null
   const accounts = [structuredClone(E2E_ACCOUNT)]
 
@@ -107,7 +110,26 @@ export async function swipeTouch(page, locator, { dx = -120, dy = 0 } = {}) {
       })
       await page.waitForTimeout(16)
     }
+    // Finish at rest rather than releasing a high-velocity native fling.
+    for (let frame = 0; frame < 6; frame += 1) {
+      await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: endX, y: endY, id: 1 }] })
+      await page.waitForTimeout(16)
+    }
     await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+    // Let native scrolling settle before the next tap; a fling consumes its first tap.
+    await page.evaluate(() => new Promise((resolve) => {
+      let previous = window.scrollY
+      let stable = 0
+      let frames = 0
+      const tick = () => {
+        const current = window.scrollY
+        stable = Math.abs(current - previous) < 0.5 ? stable + 1 : 0
+        previous = current
+        if (stable >= 4 || frames++ >= 60) resolve()
+        else requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    }))
   } finally {
     await client.detach()
   }

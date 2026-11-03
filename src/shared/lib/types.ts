@@ -1,3 +1,5 @@
+import type { StudyPlan } from './studyPlan'
+
 export type ScriptMode = 'hiragana' | 'katakana' | 'both'
 export type KanaPickMode = 'adaptive' | 'even' | 'problem'
 export type InputMode = 'instant' | 'submit'
@@ -108,6 +110,8 @@ export interface WordPracticeStats {
 
 export interface AdaptiveWindowState {
   version: 1
+  windowSize: number
+  rngState: number
   turn: number
   order: string[]
   cursor: number
@@ -393,6 +397,10 @@ export type VocabPromptKind = 'meaning' | 'reading' | 'writing'
 export interface VocabPreferences {
   /** Режим выбирается перед стартом и сохраняется в сессии. */
   sessionMode: VocabSessionMode
+  reviewWindowSize: number
+  reviewScope: 'all' | 'problem'
+  /** 0 = every qualifying problem word. */
+  reviewProblemLimit: number
   drillMode: VocabDrillMode
   source: VocabSource
   level: VocabLevelFilter
@@ -472,6 +480,15 @@ export interface VocabTrainingSet {
   updatedAt: number
 }
 
+export interface VocabTrainingSession {
+  id: string
+  name: string
+  createdAt: number
+  updatedAt: number
+  preferences: VocabPreferences
+  liveSession: CardTrainerLiveSession | null
+}
+
 export interface KanjiWordReading {
   id?: string
   kana: string
@@ -497,6 +514,8 @@ export interface VocabCard {
 }
 
 export interface VocabState {
+  trainingSessions: VocabTrainingSession[]
+  activeSessionId: string | null
   myWords: string[]
   /**
    * User-created words (`custom:…`) and local field overrides for bank ids.
@@ -615,6 +634,7 @@ export interface AppState {
   reader: ReaderState
   theory: TheoryState
   contexts: ContextState
+  studyPlan: StudyPlan | null
 }
 
 /** @deprecated Use AppState — kept as alias during migration. */
@@ -639,6 +659,8 @@ export interface CardTrainerLiveSession {
   /** Vocab-only: skip navigation history. */
   navHistory?: string[]
   navIndex?: number
+  /** Vocab-only: the current answer was recorded before its transition completed. */
+  pendingAdvance?: boolean
 }
 
 export type FeedbackType = 'idle' | 'success' | 'wrong' | 'hint' | 'error'

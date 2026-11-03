@@ -20,7 +20,7 @@ const card = (id: string): VocabCard => ({ id, writing: id, kana: id, romaji: id
 
 function simulate(size: number, turns: number, outcome: (id: string, attempt: number, turn: number) => StatsOutcome) {
   const pool = ids(size)
-  let state = createAdaptiveWindow(pool, {}, NOW)
+  let state = createAdaptiveWindow(pool, {}, NOW, { seed: 42 })
   const stats: Record<string, StatsRecord> = {}
   const shown: string[] = []
   const firstSeen: Record<string, number> = {}
@@ -121,7 +121,7 @@ describe('sliding adaptive window', () => {
     assert.equal(run.state.introduced.length, 100)
   })
 
-  it('remains bounded and deterministic with persistent difficult words and lapses', () => {
+  it('remains bounded and seeded-repeatable with persistent difficult words and lapses', () => {
     const outcomes = (id: string, attempt: number) => Number(id.slice(1)) % 7 === 0 || attempt % 6 === 0 ? 'wrong' as const : 'correct' as const
     const a = simulate(100, 2000, outcomes)
     const b = simulate(100, 2000, outcomes)
@@ -212,5 +212,56 @@ describe('sliding adaptive window', () => {
     assert.equal(restored.preferences.pickMode, 'even')
     assert.equal(restored.liveSession?.session.mode, 'even')
     assert.equal(restored.liveSession?.currentCardId, 'w0')
+  })
+})
+
+
+describe('probabilistic active-group selection', () => {
+  function draws(seed: number, windowSize = 3, turns = 300) {
+    const pool = ids(30)
+    let state = createAdaptiveWindow(pool, {}, NOW, { seed, windowSize })
+    const sequence: string[] = []
+    for (let turn = 0; turn < turns; turn++) {
+      const picked = pickAdaptiveWord(state, pool)
+      state = picked.state
+      sequence.push(picked.cardId!)
+    }
+    return { sequence, state }
+  }
+
+  it('repeats the same seed but varies ordering across seeds, without a three-card cycle', () => {
+    const a = draws(11)
+    assert.deepEqual(a.sequence, draws(11).sequence)
+    assert.notDeepEqual(a.sequence, draws(12).sequence)
+    assert.equal(new Set(a.sequence).size, 3)
+    assert.ok(a.sequence.some((id, index) => index >= 3 && id !== a.sequence[index - 3]), 'three-card cycle')
+    for (let i = 1; i < a.sequence.length; i++) assert.notEqual(a.sequence[i], a.sequence[i - 1])
+  })
+
+  it('bounds waiting time for every learner across seeds and group sizes', () => {
+    for (const size of [3, 5, 12, 20]) {
+      for (const seed of [1, 2, 123, 99999]) {
+        const { sequence, state } = draws(seed, size, 1200)
+        assert.equal(state.active.length, size)
+        const last: Record<string, number> = {}
+        sequence.forEach((id, turn) => {
+          if (last[id] !== undefined) assert.ok(turn - last[id]! <= size * 5)
+          last[id] = turn
+        })
+        assert.equal(Object.keys(last).length, size)
+      }
+    }
+    assert.equal(createAdaptiveWindow(ids(30), {}, NOW, { windowSize: 1 }).windowSize, 3)
+    assert.equal(createAdaptiveWindow(ids(30), {}, NOW, { windowSize: 100 }).windowSize, 20)
+  })
+
+  it('persists a larger active group and RNG without truncating it on reload', () => {
+    const { state, sequence } = draws(123, 12, 10)
+    const session = createInitialSession({ poolIds: ids(30), adaptive: state })
+    const live = sanitizeCardTrainerLiveSession(JSON.parse(JSON.stringify({
+      session, currentCardId: sequence.at(-1), view: 'practice', sessionStats: { answered: 0, clean: 0, streak: 0 },
+    })))
+    assert.deepEqual(live?.session.adaptive, state)
+    assert.deepEqual(pickAdaptiveWord(live!.session.adaptive!, ids(30)), pickAdaptiveWord(state, ids(30)))
   })
 })

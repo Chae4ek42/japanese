@@ -1115,6 +1115,10 @@
   max-width: 760px;
 }
 
+.vocab-review-controls { display: flex; flex-wrap: wrap; gap: 16px; }
+.vocab-review-controls label { display: grid; gap: 6px; color: var(--muted); font-size: .85rem; }
+.vocab-review-controls input { width: 100px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 9px; background: #fff; color: #151515; font: inherit; }
+
 /* Left column defines row height; right matches it and scrolls inside. */
 .vocab-setup-layout > .vocab-setup {
   min-width: 0;

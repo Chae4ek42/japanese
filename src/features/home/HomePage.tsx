@@ -4,51 +4,36 @@ import type { AppPage } from '../../shared/lib/types'
 import {
   useKanaState,
   useNumbersState,
-  useParticlesState,
-  useVerbsState,
-  useVocabState,
 } from '../../shared/state/AppStateContext'
-import { collectContinueItems, countHomeVocabDue } from './dashboard'
+import { collectContinueItems } from './dashboard'
+import { StudyPlanPanel } from './StudyPlanPanel'
 import './styles.css'
 
 export interface HomePageProps {
   onNavigate: (page: AppPage) => void
 }
 
-const PRACTICE = homeEntries('practice')
-const REFERENCE = homeEntries('reference')
+const visibleEntries = (group: 'practice' | 'reference') => homeEntries(group).filter((entry) => entry.id !== 'particles' && entry.id !== 'verbs')
+const PRACTICE = visibleEntries('practice')
+const REFERENCE = visibleEntries('reference')
 
 export function HomePage({ onNavigate }: HomePageProps) {
   const kana = useKanaState()
   const numbers = useNumbersState()
-  const particles = useParticlesState()
-  const verbs = useVerbsState()
-  const vocab = useVocabState()
 
   const continues = collectContinueItems({
-    train: vocab?.liveSession,
     kana: kana?.liveSession,
-    particles: particles?.liveSession,
-    verbs: verbs?.liveSession,
     numbers: numbers?.liveSession,
   })
-  const due = countHomeVocabDue({
-    myWords: vocab?.myWords ?? [],
-    memory: vocab?.memory ?? {},
-    targetRetention: vocab?.preferences.targetRetention ?? 0.9,
-  })
-
-  function openDueReview() {
-    vocab?.patchPreferences({ sessionMode: 'srs', source: 'mine' })
-    onNavigate('train')
-  }
 
   return (
     <main className="home-page">
       <section className="home-hero">
         <h1 className="home-title">Японский</h1>
-        <p className="home-lead">Продолжите сессию или откройте раздел.</p>
+        <p className="home-lead">Практика каждый день.</p>
       </section>
+
+      <StudyPlanPanel onNavigate={onNavigate} />
 
       {continues.length ? (
         <section className="home-now" aria-label="Продолжить">
@@ -70,35 +55,18 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </section>
       ) : null}
 
-      {due.due > 0 || due.newCards > 0 ? (
-        <section className="home-now" aria-label="Повторение">
-          <button
-            type="button"
-            className="home-continue is-secondary"
-            data-testid="home-open-srs"
-            onClick={openDueReview}
-          >
-            <span className="home-continue-kicker">Интервальные</span>
-            <span className="home-continue-title">Повторить слова</span>
-            <span className="home-continue-meta">
-              {due.due ? `${due.due} к повторению` : null}
-              {due.due && due.newCards ? ' · ' : null}
-              {due.newCards ? `${due.newCards} новых` : null}
-            </span>
-          </button>
-        </section>
-      ) : null}
-
-      <HomeCatalog
-        label="Практика"
-        entries={PRACTICE}
-        onNavigate={onNavigate}
-      />
-      <HomeCatalog
-        label="Справочник"
-        entries={REFERENCE}
-        onNavigate={onNavigate}
-      />
+      <div className="home-catalogs">
+        <HomeCatalog
+          label="Практика"
+          entries={PRACTICE}
+          onNavigate={onNavigate}
+        />
+        <HomeCatalog
+          label="Справочник"
+          entries={REFERENCE}
+          onNavigate={onNavigate}
+        />
+      </div>
     </main>
   )
 }
