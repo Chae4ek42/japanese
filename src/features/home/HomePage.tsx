@@ -6,7 +6,6 @@ import {
   useNumbersState,
 } from '../../shared/state/AppStateContext'
 import { collectContinueItems } from './dashboard'
-import { StudyPlanPanel } from './StudyPlanPanel'
 import './styles.css'
 
 export interface HomePageProps {
@@ -32,8 +31,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <h1 className="home-title">Японский</h1>
         <p className="home-lead">Практика каждый день.</p>
       </section>
-
-      <StudyPlanPanel onNavigate={onNavigate} />
 
       {continues.length ? (
         <section className="home-now" aria-label="Продолжить">
