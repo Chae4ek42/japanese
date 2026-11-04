@@ -1,7 +1,7 @@
 import { test } from '@playwright/test'
 import { expect, openFreshApp } from './helpers.js'
 
-test('mobile word trainer has three recall actions and a compact header', async ({ page }, testInfo) => {
+test('mobile word trainer isolates a full-screen card with three recall actions', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-chrome', 'Mobile layout and self-assessment.')
   await openFreshApp(page)
   await expect(page.getByTestId('nav-home')).toHaveText('Японский')
@@ -11,11 +11,12 @@ test('mobile word trainer has three recall actions and a compact header', async 
   await expect(page.getByText('Шпаргалка:', { exact: false })).toHaveCount(0)
   await page.getByTestId('start-vocab').click()
   await expect(page.getByRole('heading', { name: 'Тренажёр слов' })).toBeHidden()
-  await expect(page.getByTestId('vocab-practice-settings')).toBeVisible()
+  await expect(page.getByTestId('vocab-practice-exit')).toBeVisible()
   await expect(page.locator('.vocab-mobile-answer-actions button')).toHaveText(['↓Не помню', 'Подсказка', '↑Помню'])
   await expect(page.locator('.practice-topline')).toHaveCount(0)
   await expect(page.getByTestId('session-chips').locator('.info-tip')).toHaveCount(0)
-  await expect(page.getByTestId('nav-train')).toBeInViewport()
+  await expect(page.getByTestId('nav-train')).toBeHidden()
+  await expect(page.getByTestId('vocab-sessions-back')).toBeHidden()
   await page.screenshot({ path: testInfo.outputPath('compact-trainer.png'), scale: 'css' })
 
   const writing = page.getByTestId('vocab-current-writing')
@@ -43,6 +44,7 @@ test('mobile word trainer has three recall actions and a compact header', async 
     await expect(page.getByTestId(button)).toBeInViewport()
   }
   await page.screenshot({ path: testInfo.outputPath('compact-trainer-small.png'), scale: 'css' })
+  await page.getByTestId('vocab-open-words').tap()
   await page.getByTestId('vocab-practice-settings').tap()
   await expect(page.getByTestId('vocab-setup')).toBeVisible()
 })

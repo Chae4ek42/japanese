@@ -91,6 +91,7 @@ export interface VocabTrainerProps {
   problemWordIds?: string[]
   liveSession?: CardTrainerLiveSession | null
   onSaveLiveSession?: (session: CardTrainerLiveSession | null) => void
+  onPause?: () => void
   onPatchPreferences: (patch: Partial<VocabPreferences>) => void
   onUpdateStats: (
     cardId: string,
@@ -147,6 +148,7 @@ export function VocabTrainer({
   problemWordIds = [],
   liveSession = null,
   onSaveLiveSession,
+  onPause,
   onPatchPreferences,
   onUpdateStats,
   onApplyGradedReview,
@@ -1597,6 +1599,7 @@ export function VocabTrainer({
       onSkipPrev={() => skipToAdjacent('prev')}
       onSkipNext={() => skipToAdjacent('next')}
       onStop={stopPractice}
+      onPause={onPause}
       onSubmitAnswer={handleSubmitAnswer}
       onAddCurrentToMyWords={onAddMyWords ? handleAddCurrentToMyWords : undefined}
       onAddSessionToMyWords={isSetSource && onAddMyWords ? handleAddSessionToMyWords : undefined}

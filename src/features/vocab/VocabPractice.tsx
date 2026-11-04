@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent, type KeyboardEvent, type ReactNode, type RefObject } from 'react'
+import { useEffect, useState, type ChangeEvent, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode, type RefObject } from 'react'
 import type {
   FeedbackState,
   RoundState,
@@ -21,6 +21,8 @@ import {
 import type { VocabMixedPrompt } from './mixed'
 import { VocabMobileActions } from './VocabMobileActions'
 import { VocabMobileHeader } from './VocabMobileHeader'
+import { VocabWordsSheet } from './VocabWordsSheet'
+import { usePracticeFocus } from './usePracticeFocus'
 import './mobile-practice.css'
 
 export interface VocabPracticeProps {
@@ -49,6 +51,7 @@ export interface VocabPracticeProps {
   onSkipPrev: () => void
   onSkipNext: () => void
   onStop: () => void
+  onPause?: () => void
   onSubmitAnswer?: () => void
   onAddCurrentToMyWords?: () => void
   onAddSessionToMyWords?: () => void
@@ -95,6 +98,7 @@ export function VocabPractice({
   onSkipPrev,
   onSkipNext,
   onStop,
+  onPause,
   onSubmitAnswer,
   onAddCurrentToMyWords,
   onAddSessionToMyWords,
@@ -111,6 +115,8 @@ export function VocabPractice({
   const [editWriting, setEditWriting] = useState('')
   const [editReadings, setEditReadings] = useState<ReadingDraft[]>([])
   const [editError, setEditError] = useState('')
+  const [wordsOpen, setWordsOpen] = useState(false)
+  usePracticeFocus(isMobile)
 
   useEffect(() => {
     setEditing(false)
@@ -177,18 +183,13 @@ export function VocabPractice({
       stopLabel={isMobile ? '← Настройки' : undefined}
       sessionStats={sessionStats}
       topline={isMobile ? null : undefined}
-      stageHeader={isMobile ? <VocabMobileHeader sessionStats={sessionStats} onSettings={onStop} /> : undefined}
+      stageHeader={isMobile ? <VocabMobileHeader sessionStats={sessionStats} onSettings={editing ? closeEditor : onPause ?? onStop} onOpenWords={() => setWordsOpen(true)} wordCount={sessionWordCount} editing={editing} wordsOpen={wordsOpen} /> : undefined}
       feedbackType={feedback.type}
       swipes={swipeHandlers}
-      swipesEnabled={!editing}
+      swipesEnabled={!editing && !wordsOpen}
       swipeScope={isMobile ? 'stage' : 'panel'}
       verticalSwipeTargetSelector={isMobile ? '.question-symbol' : undefined}
-      aside={isMobile && aside ? (
-        <details className="vocab-mobile-session" data-testid="vocab-mobile-session">
-          <summary>Слова сессии <span>{sessionWordCount}</span></summary>
-          {aside}
-        </details>
-      ) : aside}
+      aside={isMobile ? undefined : aside}
       asideClassName="vocab-practice-aside"
       stageClassName="vocab-practice-layout"
     >
@@ -196,7 +197,7 @@ export function VocabPractice({
         {!isMobile || editing ? <p className="script-badge" data-testid="vocab-prompt-badge">
           {editing ? 'Правка слова' : drillBadge(drillMode, prompt)}
         </p> : null}
-        <div className="question-symbol" aria-live="polite">
+        <div className="question-symbol" aria-live="polite" style={isMobile ? { '--vocab-glyphs': Math.max(3, [...(isChoiceDrill && prompt ? prompt.stemText : card.writing)].length) } as CSSProperties : undefined}>
           {isChoiceDrill && prompt?.stemMode === 'text' && !editing ? (
             <p className="vocab-question-stem" data-testid="vocab-current-stem">
               {prompt.stemText}
@@ -467,18 +468,6 @@ export function VocabPractice({
                 <p className="vocab-mobile-swipe-note" aria-label={`Свайп влево — следующее слово, вправо — предыдущее, вниз — не помню${drillMode === 'romaji' ? ', вверх — помню' : ''}`}>
                   <span>{adaptiveMode ? '← пропустить' : '← дальше'}</span><span className={!canGoPrev ? 'is-unavailable' : undefined}>назад →</span>
                 </p>
-                <VocabMobileActions
-                  currentInMyWords={currentInMyWords}
-                  currentLearned={currentLearned}
-                  currentExcluded={currentExcluded}
-                  sessionWordCount={sessionWordCount}
-                  onEdit={onSaveWordEdit ? openEditor : undefined}
-                  onAddToMine={onAddCurrentToMyWords}
-                  onToggleLearned={onToggleLearned}
-                  onExclude={onExcludeFromSession}
-                  onRestore={onRestoreToSession}
-                  onAddSessionToMine={showAddSessionToMyWords ? onAddSessionToMyWords : undefined}
-                />
               </>
             ) : (
               <>
@@ -575,6 +564,16 @@ export function VocabPractice({
           </>
         )}
       </div>
+      {isMobile && aside ? <VocabWordsSheet open={wordsOpen} onClose={() => setWordsOpen(false)} actions={<>
+        <div className="vocab-sheet-current"><span>Сейчас</span><strong>{card.writing}</strong></div>
+        <VocabMobileActions
+          currentInMyWords={currentInMyWords} currentLearned={currentLearned} currentExcluded={currentExcluded} sessionWordCount={sessionWordCount}
+          onEdit={onSaveWordEdit ? () => { setWordsOpen(false); openEditor() } : undefined}
+          onAddToMine={onAddCurrentToMyWords} onToggleLearned={onToggleLearned} onExclude={onExcludeFromSession} onRestore={onRestoreToSession}
+          onAddSessionToMine={showAddSessionToMyWords ? onAddSessionToMyWords : undefined}
+        />
+        <button type="button" className="text-button vocab-sheet-settings" data-testid="vocab-practice-settings" onClick={onStop}>Настроить заново</button>
+      </>}>{aside}</VocabWordsSheet> : null}
     </PracticeShell>
   )
 }

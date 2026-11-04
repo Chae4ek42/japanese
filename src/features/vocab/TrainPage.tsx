@@ -69,6 +69,7 @@ export function TrainPage() {
         problemWordIds={vocab.problemWordIds}
         liveSession={activeSession.liveSession}
         onSaveLiveSession={saveLiveSession}
+        onPause={() => { setOpenedId(null); setInfoKanji(null); selectSession(null) }}
         onPatchPreferences={patchPreferences}
         onUpdateStats={vocab.updateStats}
         onApplyGradedReview={vocab.applyGradedReview}

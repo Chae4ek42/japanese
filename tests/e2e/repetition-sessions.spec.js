@@ -39,6 +39,12 @@ async function openSeededChooser(page) {
   await expect(page.getByTestId('vocab-setup')).toHaveCount(0)
 }
 
+async function leaveWorkout(page) {
+  const exit = page.getByTestId('vocab-practice-exit')
+  if (await exit.isVisible()) await exit.click()
+  else await page.getByTestId('vocab-sessions-back').click()
+}
+
 function sessionCard(page, name) {
   return page.getByTestId('vocab-session-card').filter({ has: page.getByRole('heading', { name, exact: true }) })
 }
@@ -99,7 +105,7 @@ test('two saved repetition sessions retain independent scope, window, pool and e
   await expect(page.getByTestId('vocab-current-writing')).toBeVisible()
   await forgetOne(page)
   const firstWriting = await page.getByTestId('vocab-current-writing').innerText()
-  await page.getByTestId('vocab-sessions-back').click()
+  await leaveWorkout(page)
   await nameNewestSession(page, 'Сложные: окно 7')
   const firstSaved = await waitForSavedSession(page, 'Сложные: окно 7', 1)
   expect(firstSaved.preferences).toMatchObject({ sessionMode: 'adaptive', reviewWindowSize: 7, reviewScope: 'problem', reviewProblemLimit: 8 })
@@ -121,7 +127,7 @@ test('two saved repetition sessions retain independent scope, window, pool and e
   await forgetOne(page)
   await forgetOne(page)
   const secondWriting = await page.getByTestId('vocab-current-writing').innerText()
-  await page.getByTestId('vocab-sessions-back').click()
+  await leaveWorkout(page)
   await nameNewestSession(page, 'Все: окно 3')
   const secondSaved = await waitForSavedSession(page, 'Все: окно 3', 2)
   expect(secondSaved.preferences).toMatchObject({ sessionMode: 'adaptive', reviewWindowSize: 3, reviewScope: 'all' })
@@ -135,10 +141,10 @@ test('two saved repetition sessions retain independent scope, window, pool and e
   await expect(page.getByTestId('vocab-session-card')).toHaveCount(2)
   await sessionCard(page, 'Сложные: окно 7').getByRole('button', { name: 'Продолжить', exact: true }).click()
   await expect(page.getByTestId('vocab-current-writing')).toHaveText(firstWriting)
-  await page.getByTestId('vocab-sessions-back').click()
+  await leaveWorkout(page)
   await sessionCard(page, 'Все: окно 3').getByRole('button', { name: 'Продолжить', exact: true }).click()
   await expect(page.getByTestId('vocab-current-writing')).toHaveText(secondWriting)
-  await page.getByTestId('vocab-sessions-back').click()
+  await leaveWorkout(page)
 
   await expect.poll(async () => (await readSessions(page)).map(progressSnapshot).sort((a, b) => a.id.localeCompare(b.id)))
     .toEqual([firstSnapshot, secondSnapshot].sort((a, b) => a.id.localeCompare(b.id)))
@@ -150,7 +156,7 @@ test('two saved repetition sessions retain independent scope, window, pool and e
   for (const [name, writing] of [['Сложные: окно 7', firstWriting], ['Все: окно 3', secondWriting]]) {
     await sessionCard(page, name).getByRole('button', { name: 'Продолжить', exact: true }).click()
     await expect(page.getByTestId('vocab-current-writing')).toHaveText(writing)
-    await page.getByTestId('vocab-sessions-back').click()
+    await leaveWorkout(page)
   }
 })
 
@@ -168,7 +174,7 @@ test('leaving during successful feedback resumes after the recorded answer exact
   if (isMobile) await page.getByTestId('vocab-remember').click()
   else await page.getByTestId('vocab-answer-input').fill(`kotoba${first.replace(/\D/g, '')}`)
   await expect(page.getByTestId('session-chips').locator('.session-chip').first()).toHaveText('1 карточка')
-  await page.getByTestId('vocab-sessions-back').click()
+  await leaveWorkout(page)
   const saved = await waitForSavedSession(page, 'Тренировка 1', 1)
   expect(saved.liveSession.pendingAdvance).toBe(true)
   await page.reload({ waitUntil: 'domcontentloaded' })
@@ -176,7 +182,7 @@ test('leaving during successful feedback resumes after the recorded answer exact
   await expect(page.getByTestId('vocab-current-writing')).not.toHaveText(first)
   await expect(page.getByTestId('session-chips').locator('.session-chip').first()).toHaveText('1 карточка')
   const next = await page.getByTestId('vocab-current-writing').innerText()
-  await page.getByTestId('vocab-sessions-back').click()
+  await leaveWorkout(page)
   expect((await waitForSavedSession(page, 'Тренировка 1', 1)).liveSession.pendingAdvance).toBeUndefined()
   await sessionCard(page, 'Тренировка 1').getByRole('button', { name: 'Продолжить', exact: true }).click()
   await expect(page.getByTestId('vocab-current-writing')).toHaveText(next)
